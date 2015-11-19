@@ -71,8 +71,17 @@ body {
         border-top-left-radius: 0;
     }
 }
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
 }
 
-.tab-content .tab-pane.active:first-child .card {
-    border-top-left-radius: 0;
+.loadingWheel {
+    animation-name: spin; 
+    animation-duration: 3s; /* 3 seconds */
+    animation-iteration-count: infinite; 
+    animation-timing-function: linear;
+    
+    width: 50px;
 }
