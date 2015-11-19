@@ -152,19 +152,9 @@ component {
         var user = createObject("component", "API.com.Nephthys.classes.user.user").init(arguments.userId);
         
         if(user.getUserId() == request.user.getUserId()) {
-            var oldAvatarFilename = user.getAvatarFilename();
-            
-            var uploaded = fileUpload(expandPath("/upload/com.Nephthys.user/avatar/"), "avatar", "image/*", "MakeUnique");
-            
-            var imageFunctionCtrl = createObject("component", "API.com.Nephthys.controller.tools.imageFunctions");
-            imageFunctionCtrl.resize(expandPath("/upload/com.Nephthys.user/avatar/") & uploaded.serverFile, 1024);
-            
-            user.setAvatarFilename(uploaded.serverFile)
+            user.uploadAvatar()
                 .save();
-                
-            if(oldAvatarFilename != "" && fileExists(expandPath("/upload/com.Nephthys.user/avatar/") & oldAvatarFilename)) {
-                fileDelete(expandPath("/upload/com.Nephthys.user/avatar/") & oldAvatarFilename);
-            }
+            
             return {
                 'success' = true,
                 'avatar'  = "/upload/com.Nephthys.user/avatar/" & user.getAvatarFilename()

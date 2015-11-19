@@ -28,8 +28,21 @@ component {
         
         return this;
     }
-    public user function setAvatarFilename(required string avatarFilename) {
-        variables.avatarFilename = arguments.avatarFilename;
+    
+    public user function uploadAvatar() {
+        if(variables.userId != 0) {
+            variables.oldAvatarFilename = variables.avatarFilename;
+            
+            var uploaded = fileUpload(expandPath("/upload/com.Nephthys.user/avatar/"), "avatar", "image/*", "MakeUnique");
+            
+            var imageFunctionCtrl = createObject("component", "API.com.Nephthys.controller.tools.imageFunctions");
+            imageFunctionCtrl.resize(expandPath("/upload/com.Nephthys.user/avatar/") & uploaded.serverFile, 1024);
+            
+            variables.avatarFilename = uploaded.serverFile;
+        }
+        else {
+            throw(type = "nephthys.application.notAllowed", message = "Cannot upload an avatar to a non existing user.");
+        }
         
         return this;
     }
@@ -104,6 +117,10 @@ component {
                        .addParam(name = "active",         value = variables.active,         cfsqltype = "cf_sql_bit")
                        .addParam(name = "avatarFilename", value = variables.avatarFilename, cfsqltype = "cf_sql_varchar")
                        .execute();
+            
+            if(structKeyExists(variables, "oldAvatarFilename") && oldAvatarFilename != "" && fileExists(expandPath("/upload/com.Nephthys.user/avatar/") & oldAvatarFilename)) {
+                fileDelete(expandPath("/upload/com.Nephthys.user/avatar/") & oldAvatarFilename);
+            }
         }
         return this;
     }
