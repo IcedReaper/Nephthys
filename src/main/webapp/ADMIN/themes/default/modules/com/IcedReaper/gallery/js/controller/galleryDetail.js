@@ -2,15 +2,16 @@
     var galleryDetailCtrl = angular.module('galleryDetailCtrl', ["galleryAdminService"]);
     
     galleryDetailCtrl.controller('galleryDetailCtrl', function ($scope, $rootScope, $routeParams, $q, galleryService) {
+        var activePage = "detail";
         // load
         $scope.load = function() {
-            galleryService
-                .getDetails($routeParams.galleryId)
-                .then(function (galleryDetails) {
-                    $scope.gallery = galleryDetails.data;
-                    
-                    $rootScope.$emit('gallery-loaded', {galleryId: galleryDetails.data.galleryId});
-                });
+            return galleryService
+                       .getDetails($routeParams.galleryId)
+                       .then(function (galleryDetails) {
+                           $scope.gallery = galleryDetails.data;
+                           
+                           $rootScope.$emit('gallery-loaded', {galleryId: galleryDetails.data.galleryId});
+                       });
         };
         
         $scope.save = function () {
@@ -22,9 +23,25 @@
                 .then($scope.loadPictures);
         };
         
+        // tabs and paging
+        $scope.showPage = function (page) {
+            activePage = page;
+        };
+        
+        $scope.tabClasses = function (page) {
+            return "nav-link clickable " + (activePage === page ? "active" : "");
+        };
+        
+        $scope.pageClasses = function (page) {
+            return "tab-pane " + (activePage === page ? "active" : "");
+        };
+        
         // init
-        $scope.load();
+        $scope
+            .load()
+            .then($scope.showPage('details'));
         
         $rootScope.galleryId = $routeParams.galleryId;
+        $scope.initialized = false;
     });
 }(window.angular));

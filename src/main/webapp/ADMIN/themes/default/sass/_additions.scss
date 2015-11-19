@@ -58,3 +58,21 @@ body {
 .clickable {
     cursor: pointer;
 }
+
+.nav-tabs .nav-link {
+    color: #FFFFFF;
+}
+
+.tab-content .tab-pane {
+    .card {
+        border-top: 0;
+    }
+    &.active:first-child .card {
+        border-top-left-radius: 0;
+    }
+}
+}
+
+.tab-content .tab-pane.active:first-child .card {
+    border-top-left-radius: 0;
+}

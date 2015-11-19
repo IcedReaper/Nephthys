@@ -11,139 +11,148 @@
         <h1>Gallerie <small>{{gallery.headline}}</small></h1>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-12">
-        <div class="card card-block">
-            <h3>Details</h3>
-            <form novalidate>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="headline">Überschrift</label>
-                            <input type="text" class="form-control" id="headline" placeholder="headline" ng-model="gallery.headline">
-                        </div>
-                        <div class="form-group">
-                            <label for="active">Aktiv</label>
-                            <select class="form-control" ng-model="gallery.active">
-                                <option value="1">Aktiv</option>
-                                <option value="0">Inaktiv</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="link">
-                                Verlinkung<br>
-                                <span class="text text-danger">Achtung! Alte Links sind nach einem Abändern nicht mehr erreichbar!</span>
-                            </label>
-                            <input type="text" class="form-control" id="link" placeholder="Verlinkung" ng-model="gallery.link">
-                        </div>
-                        <div class="form-group">
-                            <label for="foldername">
-                                Ordner<br>
-                                <span class="text text-warning">Dieser Ordner darf noch nicht vorhanden sein. Sollten Sie sich unsicher sein, lassen sie dieses Feld leer, dann wird ein generierter Wert gewählt</span>
-                            </label>
-                            <input type="email" class="form-control" id="foldername" ng-disabled="gallery.galleryId != 0" placeholder="foldername" ng-model="gallery.foldername">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12 icedreaper-gallery-introduction">
-                        <h4>Einleitung</h4>
-                        <div text-angular ng-model="gallery.introduction" ta-toolbar="[['bold','italics','underline','strikeThrough'],['insertLink']]"></div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <h4>Geschichte zur Gallerie</h4>
-                        <div text-angular ng-model="gallery.story"></div>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-12 m-t">
-                        <button class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
-                    </div>
-                </div>
-            </form>
-            
-            <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
-                <h3>{{message.headline}}</h3>
-                <p>{{message.text}}</p>
-                <p>{{message.errorMessage}}</p>
-            </div>
-        </div>
-    </div>
-</div>
 
-<div ng-controller="galleryCategoryCtrl" ng-show="galleryId != 0">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-block">
-                <h3>Kategorien</h3>
-                
-                <tags-input ng-model="categories" on-tag-removing="delete($tag)" on-tag-added="add($tag)" add-on-blur="false">
-                    <auto-complete source="loadAutoCompleteCategories($query)"></auto-complete>
-                </tags-input>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div ng-controller="galleryPictureCtrl" ng-show="galleryId != 0">
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-block">
-                <h3>Neue Bilder hocladen</h3>
-                <form novalidate>
-                    <div class="form-group">
-                        <input type="file" ngf-select ngf-multiple="true" required accept="image/*" ng-model="newPictures" ngf-change="upload()" ngf-keep="'distinct'" ngf-fix-orientation="false">
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a ng-click="showPage('details')" ng-class="tabClasses('details')">Details</a>
+    </li>
+    <li class="nav-item">
+        <a ng-click="showPage('pictures')" ng-class="tabClasses('pictures')" ng-disabled="gallery.galleryId == 0">Bilder</a>
+    </li>
+</ul>
+<div class="tab-content">
+    <div ng-class="pageClasses('details')">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-block">
+                    <h3>Details</h3>
+                    <form novalidate>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="headline">Überschrift</label>
+                                    <input type="text" class="form-control" id="headline" placeholder="headline" ng-model="gallery.headline">
+                                </div>
+                                <div class="form-group">
+                                    <label for="active">Aktiv</label>
+                                    <select class="form-control" ng-model="gallery.active">
+                                        <option value="1">Aktiv</option>
+                                        <option value="0">Inaktiv</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="link">
+                                        Verlinkung<br>
+                                        <span class="text text-danger">Achtung! Alte Links sind nach einem Abändern nicht mehr erreichbar!</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="link" placeholder="Verlinkung" ng-model="gallery.link">
+                                </div>
+                                <div class="form-group">
+                                    <label for="foldername">
+                                        Ordner<br>
+                                        <span class="text text-warning">Dieser Ordner darf noch nicht vorhanden sein. Sollten Sie sich unsicher sein, lassen sie dieses Feld leer, dann wird ein generierter Wert gewählt</span>
+                                    </label>
+                                    <input type="email" class="form-control" id="foldername" ng-disabled="gallery.galleryId != 0" placeholder="foldername" ng-model="gallery.foldername">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 icedreaper-gallery-introduction">
+                                <h4>Einleitung</h4>
+                                <div text-angular ng-model="gallery.introduction" ta-toolbar="[['bold','italics','underline','strikeThrough'],['insertLink']]"></div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Geschichte zur Gallerie</h4>
+                                <div text-angular ng-model="gallery.story"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12 m-t">
+                                <button class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
+                        <h3>{{message.headline}}</h3>
+                        <p>{{message.text}}</p>
+                        <p>{{message.errorMessage}}</p>
                     </div>
-                </form>
+                </div>
+            </div>
+        </div>
+
+        <div ng-controller="galleryCategoryCtrl" ng-show="galleryId != 0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-block">
+                        <h3>Kategorien</h3>
+                        
+                        <tags-input ng-model="categories" on-tag-removing="delete($tag)" on-tag-added="add($tag)" add-on-blur="false">
+                            <auto-complete source="loadAutoCompleteCategories($query)"></auto-complete>
+                        </tags-input>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-block">
-                <h3>Vorhandene Bilder</h3>
-                
-                <div class="row" ng-repeat="p in rowCount(3) track by $index">
-                    <div class="col-md-4" ng-repeat="picture in pictures | limitTo:3:$index*3">
-                        <div class="card">
-                            <img ng-src="{{picture.thumbnailFilename}}" class="card-img-top img-fluid">
-                            
-                            <div class="card-block">
-                                <form novalidate class="form-horizontale">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="caption" class="col-sm-5 col-md-3 control-label">Bezeichnung</label>
+    
+    <div ng-class="pageClasses('pictures')">
+        <div ng-controller="galleryPictureCtrl" ng-show="galleryId != 0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-block">
+                        <h3>Neue Bilder hocladen</h3>
+                        <form novalidate>
+                            <div class="form-group">
+                                <input type="file" ngf-select ngf-multiple="true" required accept="image/*" ng-model="newPictures" ngf-change="upload()" ngf-keep="'distinct'" ngf-fix-orientation="false">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-block">
+                        <h3>Vorhandene Bilder</h3>
+                        
+                        <div class="row" ng-repeat="p in rowCount(3) track by $index">
+                            <div class="col-md-4" ng-repeat="picture in pictures | limitTo:3:$index*3">
+                                <div class="card com-icedreaper-gallery-picture-wrapper">
+                                    <img ng-src="{{picture.thumbnailFilename}}" class="card-img-top">
+                                    
+                                    <div class="com-icedreaper-gallery-picture-details p-t p-r p-l">
+                                        <form novalidate>
+                                            <div class="form-group row">
+                                                <label for="caption" class="col-sm-5 col-md-3 form-control-label">Bezeichnung</label>
                                                 <div class="col-sm-7 col-md-9">
                                                     <input type="text" class="form-control" ng-model="picture.caption" name="caption" id="caption">
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="title" class="col-sm-5 col-md-3 control-label">Titel</label>
+                                            <div class="form-group row">
+                                                <label for="title" class="col-sm-5 col-md-3 form-control-label">Titel</label>
                                                 <div class="col-sm-7 col-md-9">
                                                     <input type="text" class="form-control" ng-model="picture.title" name="title" id="title">
                                                 </div>
                                             </div>
-                                            <div class="form-group">
-                                                <label for="alt" class="col-sm-5 col-md-3 control-label">Alt. Text</label>
+                                            <div class="form-group row">
+                                                <label for="alt" class="col-sm-5 col-md-3 form-control-label">Alt. Text</label>
                                                 <div class="col-sm-7 col-md-9">
                                                     <input type="text" class="form-control" ng-model="picture.alt" name="alt" id="alt">
                                                 </div>
                                             </div>
-                                        </div>
+                                            <div class="form-group row">
+                                                <button class="btn btn-xs btn-success pull-left m-l" ng-click="save(picture)"><span class="fa fa-save"></span> Aktualisieren</button>
+                                                <button class="pull-right btn btn-xs btn-danger pull-right m-r" ng-click="delete(picture.pictureId)"><span class="fa fa-trash-o"></span> Löschen</button>
+                                            </div>
+                                        </form>
                                     </div>
-                                    <div class="row m-t">
-                                        <div class="col-md-12">
-                                            <button class="btn btn-xs btn-success" ng-click="save(picture)"><span class="glyphicon glyphicon-floppy-disk"></span>Aktualisieren</button>
-                                            <button class="pull-right btn btn-xs btn-danger" ng-click="delete(picture.pictureId)"><span class="glyphicon glyphicon-remove"></span>Löschen</button>
-                                        </div>
-                                    </div>
-                                </form>
+                                </div>
                             </div>
                         </div>
                     </div>
