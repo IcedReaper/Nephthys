@@ -19,8 +19,58 @@ component {
         
         return this;
     }
-    public theme function setFolderName(required string folderName) {
-        variables.folderName = arguments.folderName;
+    
+    public theme function uploadAsZip(required string folderName) {
+        if(variables.themeId == 0) {
+            // upload, unzip and install the theme
+            var tmpDirectory = expandPath("/upload/theme/");
+            var destFolder   = tmpDirectory & arguments.folderName;
+            
+            var uploadedAdminThemePath = "/src/main/webapp/ADMIN/themes/" & arguments.folderName;
+            var uplodedWwwThemePath    = "/src/main/webapp/WWW/themes/" & arguments.folderName;
+            var adminThemePath         = expandPath("/ADMIN/themes/" & arguments.folderName);
+            var wwwThemePath           = expandPath("/WWW/themes/" & arguments.folderName);
+            
+            if(directoryExists(adminThemePath) || directoryExists(wwwThemePath)) {
+                throw(type = "nephthys.application.alreadyExists", message = "One of the target folders already exists!");
+            }
+            
+            directoryCreate(tmpDirectory, true, true);
+            
+            var uploaded = fileUpload(tmpDirectory, "file");
+            try {
+                if(uploaded.fileWasSaved) {
+                    directoryCreate(destFolder);
+                    
+                    zip action      = "unzip"
+                        //charset     = "UTF-8"
+                        file        = tmpDirectory & uploaded.serverFile
+                        destination = destFolder
+                        overwrite   = true
+                        recurse     = true;
+                    
+                    directoryCopy(destFolder & uploadedAdminThemePath, adminThemePath, true, "*", true);
+                    directoryCopy(destFolder & uplodedWwwThemePath, wwwThemePath, true, "*", true);
+                    
+                    fileDelete(tmpDirectory & uploaded.serverFile);
+                    directoryDelete(tmpDirectory, true);
+                    
+                    variables.folderName = arguments.folderName;
+                }
+                else {
+                    throw(type = "nephthys.application.uploadFailed", message = "The file could not be saved");
+                }
+            }
+            catch(any e) {
+                directoryDelete(tmpDirectory, true);
+                
+                throw(object=e);
+            }
+        }
+        else {
+            // further todo: update
+            throw(type = "nephthys.application.notAllowed", message = "It is not allowed to overwrite an existing theme");
+        }
         
         return this;
     }
@@ -46,17 +96,17 @@ component {
                                                                 (
                                                                     name,
                                                                     active,
-                                                                    foldername
+                                                                    folderName
                                                                 )
                                                          VALUES (
                                                                     :name,
                                                                     :active,
-                                                                    :foldername
+                                                                    :folderName
                                                                 );
                                                      SELECT last_value newThemeId FROM seq_nephthys_theme_id;")
                                            .addParam(name = "name",       value = variables.name,       cfsqltype = "cf_sql_varchar")
                                            .addParam(name = "active",     value = variables.active,     cfsqltype = "cf_sql_bit")
-                                           .addParam(name = "foldername", value = variables.foldername, cfsqltype = "cf_sql_varchar")
+                                           .addParam(name = "folderName", value = variables.folderName, cfsqltype = "cf_sql_varchar")
                                            .execute()
                                            .getResult()
                                            .newThemeId[1];
@@ -65,12 +115,12 @@ component {
             new Query().setSQL("UPDATE nephthys_theme
                                    SET name       = :name,
                                        active     = :active,
-                                       foldername = :foldername
+                                       folderName = :folderName
                                  WHERE themeId = :themeId")
                        .addParam(name = "themeId",    value = variables.themeId,    cfsqltype = "cf_sql_numeric")
                        .addParam(name = "name",       value = variables.name,       cfsqltype = "cf_sql_varchar")
                        .addParam(name = "active",     value = variables.active,     cfsqltype = "cf_sql_bit")
-                       .addParam(name = "foldername", value = variables.foldername, cfsqltype = "cf_sql_varchar")
+                       .addParam(name = "folderName", value = variables.folderName, cfsqltype = "cf_sql_varchar")
                        .execute();
         }
         
@@ -82,6 +132,9 @@ component {
                                    WHERE themeId = :themeId")
                    .addParam(name = "themeId", value = variables.themeId, cfsqltype = "cf_sql_numeric")
                    .execute();
+        
+        directoryDelete("/ADMIN/themes/" & variables.folderName, true);
+        directoryDelete("/WWW/themes/" & variables.folderName, true);
     }
     
     // I N T E R N A L
