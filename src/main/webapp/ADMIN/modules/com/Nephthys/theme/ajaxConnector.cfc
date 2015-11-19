@@ -44,48 +44,12 @@ component {
         theme.setName(arguments.name);
         
         if(arguments.themeId != 0) {
-            if(arguments.active == 0 && themeList[i].getThemeId() != application.system.settings.getDefaultThemeId()) {
+            if(arguments.active == 1 || (arguments.active == 0 && themeList[i].getThemeId() != application.system.settings.getDefaultThemeId())) {
                 theme.setActive(arguments.active);
             }
         }
         else {
-            theme.setFoldername(arguments.foldername);
-            
-            // upload, unzip and install the theme
-            var tmpDirectory = expandPath("/upload/theme/");
-            var destFolder   = tmpDirectory & arguments.name;
-            
-            var uploadedAdminThemePath = "/src/main/webapp/ADMIN/themes/" & arguments.foldername;
-            var uplodedWwwThemePath    = "/src/main/webapp/WWW/themes/" & arguments.foldername;
-            var adminThemePath         = expandPath("/ADMIN/themes/" & arguments.foldername);
-            var wwwThemePath           = expandPath("/WWW/themes/" & arguments.foldername);
-            
-            if(directoryExists(adminThemePath) || directoryExists(wwwThemePath)) {
-                throw(type = "nephthys.application.alreadyExists", message = "One of the target folders already exists!");
-            }
-            
-            directoryCreate(tmpDirectory, true, true);
-            
-            var uploaded = fileUpload(tmpDirectory, "file");
-            if(uploaded.fileWasSaved) {
-                directoryCreate(destFolder);
-                
-                zip action      = "unzip"
-                    //charset     = "UTF-8"
-                    file        = tmpDirectory & uploaded.serverFile
-                    destination = destFolder
-                    overwrite   = true
-                    recurse     = true;
-                
-                directoryCopy(destFolder & uploadedAdminThemePath, adminThemePath, true, "*", true);
-                directoryCopy(destFolder & uplodedWwwThemePath, wwwThemePath, true, "*", true);
-                
-                fileDelete(tmpDirectory & uploaded.serverFile);
-                directoryDelete(tmpDirectory, true);
-            }
-            else {
-                throw(type = "nephthys.application.uploadFailed", message = "The file could not be saved");
-            }
+            theme.uploadAsZip(arguments.foldername);
         }
         
         theme.save();
@@ -131,11 +95,6 @@ component {
     
     remote struct function delete() {
         var theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(arguments.themeId);
-        
-        var adminThemePath = expandPath("/ADMIN/themes/" & theme.getFoldername());
-        var wwwThemePath = expandPath("/WWW/themes/" & theme.getFoldername());
-        directoryDelete(adminThemePath, true);
-        directoryDelete(wwwThemePath, true);
         
         theme.delete();
         
