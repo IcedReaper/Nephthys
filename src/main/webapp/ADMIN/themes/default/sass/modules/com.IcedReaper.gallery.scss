@@ -1,0 +1,18 @@
+.com-icedreaper-gallery-picture-wrapper {
+    position: relative;
+    
+    > img {
+        width: 100%;
+    }
+    
+    .com-icedreaper-gallery-picture-details {
+        position: absolute;
+        top: 10px;
+        background-color: rgba(255, 255, 255, 0.4);
+        width: 100%;
+        
+        label {
+            font-weight: bold;
+        }
+    }
+}
