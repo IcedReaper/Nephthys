@@ -142,7 +142,7 @@ component {
                 variables.description  = qModuleDetails.description[1];
                 variables.active       = qModuleDetails.active[1];
                 variables.systemModule = qModuleDetails.systemModule[1];
-                varibales.sortOrder    = qModuleDetails.sortOrder[1];
+                variables.sortOrder    = qModuleDetails.sortOrder[1];
             }
             else {
                 throw(type = "nephthys.notFound.module", message = "Could not find module by ID ", detail = variables.moduleId);
