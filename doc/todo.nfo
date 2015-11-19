@@ -56,12 +56,9 @@ Adminbereich
         => Template in ADMIN, welches ein Template in WWW inkludiert, wo dann die richtigen Sachen angezeigt werden; dann halt nur auch schon nicht veröffentlichte Sachen.
     9. Errorlog - WORK ON HOLD
     10. Implement "loading screen" into http interceptor
-    11. Bug: Deaktivierung von Seiten
-    12. Bug: Deaktivieren von Modulen
-    13. Sidebar auf Icons reduzieren
-    14. Dashboard untermodule in andere Dateien verschieben ggf mehr übersicht schaffen
-    15. Assets weiter optimieren
-    16. Dateiopterationen in die Classes verlagern - WICHTIG
+    12. Sidebar auf Icons reduzieren
+    13. Dashboard untermodule in andere Dateien verschieben ggf mehr übersicht schaffen
+    14. Assets weiter optimieren
 
 Module ( in eigenen Repos/Projekten )
     1. Gallery
