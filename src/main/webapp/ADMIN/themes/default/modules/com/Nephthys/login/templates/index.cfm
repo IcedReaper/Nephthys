@@ -1,7 +1,7 @@
 <div class="container">
     <cfif ! structIsEmpty(form)>
         <div class="alert alert-danger" role="alert">
-            <h2><span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span> Falscher Username oder Passwort.</h2>
+            <h2><span class="fa fa-exclamation" aria-hidden="true"></span> Falscher Username oder Passwort.</h2>
             <p>
                 Bitte versuchen Sie es erneut.
             </p>
