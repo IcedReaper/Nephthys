@@ -1,0 +1,6 @@
+OS:                 Debian Linux 8.4
+Webserver:          Nginx
+Application-Server: Tomcat7
+DB:                 PostgreSQL 9.4
+CF-Server:          Lucee 4.5
+(Lucee 5.0.0.98 hat (wohl) einen Bug mit 2 Doppelpunkten in Queries) Stand 1.11.2015

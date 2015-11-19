@@ -1,0 +1,17 @@
+$background-color: #CCCCCC;
+
+canvas {
+    background-color: $background-color;
+    border-radius: 5px;
+}
+
+.bar-legend {
+    background-color: $background-color;
+    border-radius: 5px;
+    color: #000000;
+    font-size: 15px;
+    
+    span {
+        border: 1px solid #000000;
+    }
+}

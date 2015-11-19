@@ -1,0 +1,68 @@
+// Bootstrap 4
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_variables.scss"; // to be changed with own variable settings
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_mixins.scss";
+
+// Reset and dependencies
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_normalize.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_print.scss";
+
+// Core CSS
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_reboot.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_type.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_images.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_code.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_grid.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_tables.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_forms.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_buttons.scss";
+
+// Components
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_animation.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_dropdown.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_button-group.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_input-group.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_custom-forms.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_nav.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_navbar.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_card.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_breadcrumb.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_pagination.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_pager.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_labels.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_jumbotron.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_alert.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_progress.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_media.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_list-group.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_responsive-embed.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_close.scss";
+
+// Components w/ JavaScript
+//@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_modal.scss";
+//@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_tooltip.scss";
+//@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_popover.scss";
+//@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_carousel.scss";
+
+// Utility classes
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_utilities.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_utilities-background.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_utilities-spacing.scss";
+@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_utilities-responsive.scss";
+
+// Font-Awesome
+@import "../../../../../../../../../../Frameworks/Font-Awesome/scss/_variables.scss";
+@import "../../../../../../../../../../Frameworks/Font-Awesome/scss/_mixins.scss";
+@import "../../../../../../../../../../Frameworks/Font-Awesome/scss/_path.scss";
+@import "../../../../../../../../../../Frameworks/Font-Awesome/scss/_core.scss";
+@import "../../../../../../../../../../Frameworks/Font-Awesome/scss/_larger.scss";
+@import "../../../../../../../../../../Frameworks/Font-Awesome/scss/_fixed-width.scss";
+@import "../../../../../../../../../../Frameworks/Font-Awesome/scss/_list.scss";
+@import "../../../../../../../../../../Frameworks/Font-Awesome/scss/_bordered-pulled.scss";
+@import "../../../../../../../../../../Frameworks/Font-Awesome/scss/_animated.scss";
+@import "../../../../../../../../../../Frameworks/Font-Awesome/scss/_rotated-flipped.scss";
+@import "../../../../../../../../../../Frameworks/Font-Awesome/scss/_stacked.scss";
+@import "../../../../../../../../../../Frameworks/Font-Awesome/scss/_icons.scss";
+
+// Theme stuff
+@import "additions";
+@import "charts";

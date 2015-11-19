@@ -1,0 +1,86 @@
+TODO List
+
+Allgemein
+    1. Validierungen
+        1. Mehr Validierungsregeln implementieren
+    2. Tableprefix variabel gestalten ?
+    3. Styling des Errortemplates
+    4. System Settings reihenbasiert nicht spaltenbasiert ausrichten für mehr Flexibilität
+    5. Throw-Types weiter vereinheitlichen
+    6. loginHandler checken ob Name und location passt. => controller.user.userList
+    7. Formbuilder
+    8. getUserInformation zentral ablegen | Aktuell mehrfach identisch vorhanden ?
+        => user informationen für den ajax JSON Rückweg vorbereiten
+    9. Installationssystem
+        Datasources bei der Installation in einer JSON Datei ablegen und in den Applications auslesen
+    10. Updatesystem
+    11. repair modus ?
+    12. Pfade in DB speichern / Controller what else | aktuell hard-coded an mehreren Stellen
+        1. Avatar
+    13. Check if some upload logics need to be in API instead of ADMIN components
+    14. Lizenzen überprüfen
+    15. Mehrsprachigkeit
+        1. i18n
+        2. i10n
+
+Website
+    1. Suche
+        Backend implementieren
+    2. Codeoptimierung
+    3. Userverwaltung ?
+    4. Login
+    5. SCSS bauen
+        bootstrap in SCSS includieren
+        font-awesome statt glyphicon
+
+Adminbereich
+    1. Modulinstallation
+        1. Fileupload von einer zip/rar-Datei (siehe theme installation)
+            Entpacken dieser in die 4 nötigen Ordner Frontend/Backend Admin/Website
+        2. Installation per git-repository
+    2. Berechtigungssystem
+    3. Seitenmanagement
+        1. Contentbearbeitung
+        2. Seitenversionierung
+        3. Mehrsprachigkeit des Contents
+        4. Seitenhierarchie
+        5. Möglichkeit für unterschiedlichen Content bei Übersicht / Detailansicht ?
+    4. Thememanagement
+        1. Themeinstallation per git repository
+            1. Check ob alle Module in dem Theme vorhanden sind. Sonst Warnung
+    5. Modul-Theme-Management
+        Was tun, wenn das Modul in einem Theme nicht vorhanden ist.
+    6. Workflow
+    7. DB Dump anbieten
+    8. Vorschau
+        => Template in ADMIN, welches ein Template in WWW inkludiert, wo dann die richtigen Sachen angezeigt werden; dann halt nur auch schon nicht veröffentlichte Sachen.
+    9. Errorlog - WORK ON HOLD
+    10. Implement "loading screen" into http interceptor
+    11. Bug: Deaktivierung von Seiten
+    12. Bug: Deaktivieren von Modulen
+    13. Sidebar auf Icons reduzieren
+    14. Dashboard untermodule in andere Dateien verschieben ggf mehr übersicht schaffen
+    15. Assets weiter optimieren
+    16. Dateiopterationen in die Classes verlagern - WICHTIG
+
+Module ( in eigenen Repos/Projekten )
+    1. Gallery
+        1. Move plugin into own project
+        2. Admin
+            Statistics
+            Images
+                Upload erstmal ohne Vorschau
+            Mehr Übersicht schaffen
+                Tabs in Angular Realisieren?
+        3. Weitere Möglichkeiten
+            Search
+            Comments ? (Login nötig - Berechtigungen nötig)
+            Release Date
+        4. Routen checken
+    2. Blog
+    3. Reviewsystem
+
+Optimierungen
+    1. Angularcode auf gleiche Basis bringen
+    2. Angularcode optimieren
+    3. CreatorUserId und LastEditUserId übergeben anstatt in der Klasse direkt verwenden?

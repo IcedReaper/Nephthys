@@ -1,0 +1,938 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"cate",
+				"category"
+			],
+			[
+				"getCatego",
+				"getCategoryDetails	fn. this"
+			],
+			[
+				"categ",
+				"categoryId"
+			],
+			[
+				"cf_sq",
+				"cf_sql_numeric"
+			],
+			[
+				"IcedReaper",
+				"icedreaper_gallery_category"
+			],
+			[
+				"gallery",
+				"galleryService"
+			],
+			[
+				"p",
+				"pictures"
+			],
+			[
+				"font",
+				"Font-Awesome"
+			],
+			[
+				"inc",
+				"includeEmptyDirs"
+			],
+			[
+				"in",
+				"includeEmptyDirs"
+			],
+			[
+				"cf_",
+				"cf_sql_bit"
+			],
+			[
+				"IDX_ne",
+				"IDX_nephthys_statistics_login_successful"
+			],
+			[
+				"t",
+				"time"
+			],
+			[
+				"cf_Sql",
+				"cf_sql_numeric"
+			],
+			[
+				"cf",
+				"cfsqltype"
+			],
+			[
+				"pc",
+				"pictureId"
+			],
+			[
+				"ret",
+				"returnPromiseData"
+			],
+			[
+				"preparte",
+				"preparePictureStruct	fn. this"
+			],
+			[
+				"pi",
+				"pictures"
+			],
+			[
+				"cfsql",
+				"cfsqltype"
+			],
+			[
+				"req",
+				"request"
+			],
+			[
+				"cf_sql",
+				"cf_sql_numeric"
+			],
+			[
+				"galler",
+				"galleryId"
+			],
+			[
+				"icedreaper",
+				"IcedReaper_gallery_galleryCategory"
+			],
+			[
+				"js",
+				"jsonContent"
+			],
+			[
+				"prepare",
+				"prepareHtmlKnot"
+			],
+			[
+				"over",
+				"overwrite=\"yes\"	overwrite"
+			],
+			[
+				"ty",
+				"type=\"string\"	type"
+			],
+			[
+				"re",
+				"required=\"true\"	required"
+			],
+			[
+				"CONT",
+				"CONSTRAINT"
+			],
+			[
+				"time",
+				"timestamp"
+			],
+			[
+				"mod",
+				"moduleManager"
+			],
+			[
+				"sqlSt",
+				"sqlStatement"
+			],
+			[
+				"error",
+				"errorHandler"
+			],
+			[
+				"nep",
+				"nephthys_errorSettings"
+			],
+			[
+				"dire",
+				"directoryExists	fn. (cfscript)"
+			],
+			[
+				"direct",
+				"directoryExists	fn. (cfscript)"
+			],
+			[
+				"direc",
+				"directoryDelete	fn. (cfscript)"
+			],
+			[
+				"en",
+				"encryptionAlgorithm"
+			],
+			[
+				"enc",
+				"encryptionAlgorithm"
+			],
+			[
+				"encry",
+				"encryptionMethodId"
+			],
+			[
+				"refresh",
+				"refreshVisitData"
+			],
+			[
+				"tod",
+				"todaysData"
+			],
+			[
+				"ang",
+				"angular-chart"
+			],
+			[
+				"todays",
+				"todaysVisitChartApp"
+			],
+			[
+				"com",
+				"component"
+			],
+			[
+				"reso",
+				"resources"
+			],
+			[
+				"wid",
+				"width"
+			],
+			[
+				"pic",
+				"picture"
+			],
+			[
+				"get",
+				"getRecordCount"
+			],
+			[
+				"opt",
+				"options"
+			],
+			[
+				"cfs",
+				"cfsqltype"
+			],
+			[
+				"q",
+				"qImageIds"
+			],
+			[
+				"gal",
+				"galleryId"
+			],
+			[
+				"render",
+				"renderedContent"
+			],
+			[
+				"wi",
+				"width"
+			],
+			[
+				"cf_sql_",
+				"cf_sql_varchar"
+			],
+			[
+				"argu",
+				"arguments	var (cfscript)"
+			],
+			[
+				"vali",
+				"validationRules"
+			],
+			[
+				"val",
+				"validationRules"
+			],
+			[
+				"arg",
+				"arguments	var (cfscript)"
+			],
+			[
+				"neph",
+				"nephthys_serverSettings"
+			],
+			[
+				"ne",
+				"nephthys_theme"
+			],
+			[
+				"instal",
+				"installedCounter"
+			],
+			[
+				"serial",
+				"serializeJSON	fn. (cfscript)"
+			],
+			[
+				"per",
+				"permissionList"
+			],
+			[
+				"perm",
+				"permissionList"
+			],
+			[
+				"userPer",
+				"userPermissionCtrl"
+			],
+			[
+				"var",
+				"variables"
+			],
+			[
+				"requ",
+				"required"
+			],
+			[
+				"pageVer",
+				"pageVersionId"
+			],
+			[
+				"structKey",
+				"structKeyExists	fn. (cfscript)"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"contents": "Die Geschichten von Emma\n\nEmma ist eine 19 jährige junge Frau, welche noch bei Ihren Eltern lebt.\nAn einem Wochenende im Juni möchten Ihre Eltern für ein paar Tage in den Urlaub fahren.\nDa sie Angst um die Jungfreulichkeit Ihrer Tochter haben und bei Ihr keinen Freund haben möchten, buchen sie eine Babysitterin, die auf beides aufpassen soll. An dem Morgen, als die Eltern in den Urlaub fahren werden, spricht Emmas Mutter mit Ihr.\n\"Emma, kannst Du mal bitte runter kommen?\"\n\"Ja, klar Mutti, einen Moment, bitte.\"\nEmma zog sich etwas an, da sie so wie jede Nacht im Sommer nackt schlief und noch im Bett lag.\nUnten angekommen fing Emma an sich frühstück zu machen; 2 Toast und einen Orangensaft.\n\"Emma, Dein Vater und ich haben uns gestern kurzfristig entschieden für ein paar Tage in den Urlaub zu fahren.\"\n\"Oh schön, wo geht's denn hin und für wie lange?\", fragt Emma.\n\"Nur bis morgen Abend. Und keine Sorge, dass Dir langweilig wird. Wir haben Dir eine Babysitterin gebucht.\"\n\"Aber Ma, ich bin schon 19 und ich brauche keine Babysitterin mehr. Ich kann auch alleine auf mich und das Haus aufpassen.\"\n\"Nein, keine Wiederrede und wir denken, dass es das richtige ist.\"\nMürrisch setzt sich Emma an den Küchentisch und isst Ihr Frühstück.\nEin paar Minuten später, in denen nur schweigen herrste klingelt es.\n\"Hach, das muss deine Babysitterin sein!\"\n\"Ich brauche keine Babysitterin, ich bin schon alt genug!\"\nAls die Mutter die Türe öffnete stand die Bildschöne Paula in der Tür.\nEmma, die bis zu diesem Moment nur Augen für Männer hatte, weitete bei dem Anblick die Augen und Ihre Stimmung hob sich drastisch, allerdings nur intern, da sie es den Eltern nicht zeigen wollte.\nDie Mutter stellte Emma kurz Paula vor, zeigte Ihr das Haus, sodass Sie durch die 2 Tage gut durchkommen würde, und half anschließend Ihrem Mann die letzten Sachen in ihr Auto zu packen. Kurz darauf fuhren sie los und Emma und Paula waren alleine.\n\"Und Emma, was wollen wir heute machen?\"\nEmma, immernoch ein wenig genervt, antwortete dementsprechend, \"Ich weiß nicht, was Du machst, aber ich werde jetzt gleich eine Runde Joga im Keller und danach spiele ich was hier auf der Konsole.\"\n\"Oh das hört sich gut an. Da würde ich gerne mitspielen, wenn das OK für Dich wäre.\"\n\"Ja von mir aus! Ein Runde Mario-Kart geht auch zu 2. wunderbar.\"\nEmma ging daraufhin in Ihr Zimmer, holte Ihr Klamotten für die Jogarunde und ging in den Keller, wo sie sich umzog, die Musik startete und Ihren Jogakurs auf der Jogamatte startete.\nNach ca einer halben Stunde langweilte sich Paula so sehr, dass sie, die auch von Emmas Schönheit angetan war, ebenfalls in den Keller ging um Emma zu beobachten.\nDa Emma dermaßen vertieft und konzentriert war, bemerkte sie Paula nicht. Nach ein paar Augenblicken, in denen Paula schon dermaßen Nass wurde, dass man es durch Ihre Hose sehen konnte, ging sie wieder hoch um zum einen nicht bemerkt zu werden, zum anderen um wieder Trocken zu werden, bevor Emma sie wieder traf.\nOben angekommen setzte Paula sich auf die Couch, machte den Fernseher an und zappte eine Runde durch das Programm.\nWiederum eine halbe Stunde später kam Emma aus dem Keller.\n\"Ah, ich sehe, Du hast es Dir schon bequem gemacht.\"\n\"Ja, Emma, bei mir ist alles prima. Und bei Dir? Hast Du Dich wieder einbekommen?\"\n\"Ja, die Jogastunde tat sehr gut. Ich geh jetzt duschen und danach können wir dann die Runde Mario-Kart spielen.\"\n\"Alles klar.\", sagte Paula und lächelte.\nEmma ging duschen und kam ca 20 Minuten später mit noch nassen Haaren wieder runter.\nSie hatte nun nur noch Unterwäsche und einen Bademantel an; Ihre Lieblingsklamotten an einem Samstag.\n\"Oh Emma siehst Du gut aus.\"\n\"Danke. Du kannst Dich aber auch sehen lassen.\"\n\"Oh Danke für das Kompliment. Sollen wir dann spielen, bevor noch etwas passiert was wir beide nicht wollen?\"\n\"Ja bitte.\"\nEmma legte Mario-Kart ein und beide spielten und liebten es. Nach einigen Stunden einigten sich beide auf ein Abendessen und Paula fing an es zuzubereiten.\nEmma spielte währenddessen ein wenig weiter.\nBeide aßen anschließend den Lachs mit Spinat im Blätterteig.\nAbends guckten beide zusammen einen Film und BluRay bis ca 22:00.\nAnschließend bat Paula Emma ins Bett zu gehen, da sie selber sich sehr Müde fand und nicht wollte, dass Emma länger als Sie wach war, aus Angst vor einer schlechten Bewertung.\nEmma ließ sich darauf ein, ging in Ihr Zimmer, machte Sich Bettfertig und legte sich schlafen. So ging auch Paula in das Gästezimmer, welches direkt neben Emmas Zimmer lag, machte sich ebenfalls Bettfertig und legte sich auch schlafen.\nEmma lag nackt in Ihrem Bett und lies den Tag noch einmal Revue passieren.\nSie wurde ganz feucht und fing an sich selber zu befriedigen. Musste allerdings aufpassen nicht zu laut zu sein, da Ihre Türe offen war und Paula direkt nebenan lag.\nPaula lag ebenfalls im Bett und dachte nur noch an Emma; ganz sichtlich verliebt. Ihre Hand glitt nach ein paar Momenten in Ihre Unterhose und Sie fing an, sich Ihre Möse zu reiben.\nEmma holte Ihren Dildo unter Ihrem Kopfkissen hervor und fing an sich mit diesem zu penetrieren. Voller Anstrengung Ihre Geilheit zu unterbinden und nicht laut loszustöhnen nahm sie Ihr Höschen und packte es in Ihren Mund.\nDoch kurze Zeit später, passierte das Unausweichliche. Ihr entwich ein Stöhner, der zwar nicht sonderlich laut war, allerdings in dem leisen Haus doch deutlich zu hören war. Da Emma allerdings dermaßen geil war, ignorierte sie es, versuchte wieder leiser zu werden, ohne allerdings aufzuhören Ihre Geilheit zu unterbinden.\nNatürlich hörte Paula es und riss direkt die Augen groß auf, voller Hoffnung nun doch Ihren Traum, den Sie den ganzen Tag hatte, Emma zu vernaschen, in die Tat umzusetzen.\nLeise stieg sie aus dem Bett und schlich über den Flur um bei Emma durch die Tür gucken zu können. Das Zimmer war dunkel und Paula sah nichts, aber hörte es ganz eindeutig.\nSie lauschte ein wenig und fing auch hier an, an Ihrer Möse zu spielen. Einen Augenblick später fasste sich Paula ein Herz und schaltete das Licht an.\nEmma schreckte auf und wurde ganz Rot und wollte verstecken, was nicht zu verstecken war.\n\"Raus hier! Raus hier!\", mummelte Emma, die immer noch Ihr Unterhöschen in Ihrem Mund hatte.\nPaula war aber nicht danach.\n\"Emma, ich soll auf dich aufpassen und das ist nicht OK, was Du hier machst! Es geht nicht, dass Du es Dir alleine machst.\", und ging langsam auf Emma zu. Emma wusste nicht, was Sie machen sollte, da es Ihr auf der einen Seite peinlich war, die auf der anderen Seite allerdings Paula sehr süß fand und auf der 3. Seite nicht wusste, wie sie die letzten Worte von Paula zu deuten habe.\n\"..., dass Du es Dir alleine machst...\"\nPaula setzte sich auf die Bettkante, zog Emma das Höschen aus dem Mund und fing an sie zu küssen.\nDaraufhin ließ Emma alle Hämmungen fallen und überfall Paula förmlich. Sie zog sie in Ihr Bett und war innig dabei, Ihren Körper mit Ihrem Mund zu erkunden.\nSie küssten sich, und ließen alle Hämmungen fallen.\nKurze zeit später, fand sich Paula direkt zwischen Emmas Beinen wieder und sie leckte Emma, als wenn sie sich schon seit Jahren kennen und wissen genau, was die andere mag und möchte.",
+			"settings":
+			{
+				"buffer_size": 7157,
+				"line_ending": "Windows",
+				"name": "Die Geschichten von Emma"
+			}
+		},
+		{
+			"file": "doc/todo.nfo",
+			"settings":
+			{
+				"buffer_size": 3229,
+				"line_ending": "Windows"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "pack",
+		"selected_items":
+		[
+			[
+				"pack",
+				"Package Control: Remove Package"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 400.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) ",
+			" import urllib.request,os,hashlib; h = 'eb2297e1a458f27d836c04bb0cbaf282' + 'd0e7a3098092775ccb37ca9d6b2e4b7d'; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by = urllib.request.urlopen( 'http://packagecontrol.io/' + pf.replace(' ', '%20')).read(); dh = hashlib.sha256(by).hexdigest(); print('Error validating download (got %s instead of %s), please try manual install' % (dh, h)) if dh != h else open(os.path.join( ipp, pf), 'wb' ).write(by) "
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/doc",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/sql",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/sql/postgres",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/sql/postgres/install",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/modules",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/modules/com",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/modules/com/IcedReaper",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/modules/com/IcedReaper/gallery",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/js",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/controller",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/service",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/partials",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/templates",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/API",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/API/com",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/API/com/IcedReaper",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/API/com/IcedReaper/gallery",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/WWW",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/WWW/modules",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/WWW/modules/com",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/WWW/modules/com/IcedReaper",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/WWW/modules/com/IcedReaper/gallery"
+	],
+	"file_history":
+	[
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/modules/com/IcedReaper/gallery/ajaxConnector.cfc",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/partials/categoryList.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/WWW/modules/com/IcedReaper/gallery/connector.cfc",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/galleryApp.js",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/partials/categoryDetail.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/controller/categoryDetail.js",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/templates/index.cfm",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/API/com/IcedReaper/gallery/category.cfc",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/Application.cfc",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/service/categoryService.js",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/doc/defaulErrorCodes.nfo",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/dump.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/API/com/Nephthys/controller/tools/formatter.cfc",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/controller/categoryList.js",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/sql/postgres/install/gallery.sql",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/API/com/IcedReaper/gallery/gallery.cfc",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/API/com/IcedReaper/gallery/picture.cfc",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/service/galleryService.js",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/controller/galleryCategory.js",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/partials/galleryList.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/modules/com/Nephthys/dashboard/ajaxConnector.cfc",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/API/com/IcedReaper/gallery/categoryLoader.cfc",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/partials/galleryDetail.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/controller/galleryDetail.js",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/js/globalAngularAjaxSettings.js",
+		"/G/Code/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/js/globalAngularAjaxSettings.js",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/controller/galleryPicture.js",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/build.xml",
+		"/D/myFiles/SourceCode/Frameworks/jQuery/build/release.js",
+		"/D/myFiles/SourceCode/Frameworks/jQuery/build/release/dist.js",
+		"/D/myFiles/SourceCode/Frameworks/jQuery/build/release/cdn.js",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/dashboard/templates/index.cfm",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/errorLog/partials/errorLogList.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/moduleManager/partials/moduleManagerDetail.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/moduleManager/partials/moduleManagerList.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/pages/partials/pagesDetail.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/pages/partials/pagesList.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/serverSettings/partials/serverSettingsDetail.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/theme/partials/themeDetail.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/theme/partials/themeList.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/user/partials/userDetail.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/user/partials/userList.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/controller/galleryList.js",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/pages/partials/pagesStatistics.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/user/partials/userPermissions.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/moduleManager/partials/moduleManagerDBDump.html",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/moduleManager/partials/moduleManagerPermissions.html",
+		"/D/myFiles/SourceCode/Frameworks/Bootstrap/scss/_variables.scss",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/sass/_additions.scss",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/login/templates/index.cfm",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/sass/main.scss",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/index.cfm",
+		"/D/development/localhost/nephthys/admin/themes/default/css/main.css",
+		"/D/development/localhost/nephthys/admin/themes/default/assets/bootstrap/js/bootstrap.js",
+		"/D/myFiles/SourceCode/Frameworks/Bootstrap/Gruntfile.js",
+		"/D/myFiles/SourceCode/Frameworks/Bootstrap/js/.jscsrc",
+		"/D/myFiles/SourceCode/Frameworks/Bootstrap/scss/_utilities-spacing.scss",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/sass/_charts.scss",
+		"/D/myFiles/SourceCode/Frameworks/Bootstrap/scss/_utilities.scss",
+		"/D/myFiles/SourceCode/Frameworks/Font-Awesome/scss/_animated.scss",
+		"/D/myFiles/SourceCode/Frameworks/Font-Awesome/scss/font-awesome.scss",
+		"/D/myFiles/SourceCode/Frameworks/Bootstrap/scss/bootstrap.scss",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/WWW/themes/default/sass/main.scss",
+		"/D/myFiles/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/WWW/themes/default/css/main.css",
+		"/C/Users/IcedReaper/AppData/Roaming/Sublime Text 3/Packages/User/JSON.sublime-settings",
+		"/D/temp/backup/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/WWW/themes/default/css/main.css",
+		"/D/temp/backup/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/WWW/themes/default/sass/main.scss",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/WWW/themes/default/sass/main.scss",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/sass/main.scss",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/index.cfm",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/WWW/themes/default/cass/main.scss",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/css/default.css",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/dashboard/templates/index.cfm",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/dashboard/js/controller/loginStatisticsCtrl.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/dashboard/js/dashboardApp.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/API/com/Nephthys/controller/statistics/login.cfc",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/dashboard/js/service/loginStatisticsService.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/modules/com/Nephthys/dashboard/ajaxConnector.cfc",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/dashboard/js/loginStatisticsApp.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/dashboard/js/service/visitService.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/Application.cfc",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/API/com/Nephthys/controller/security/loginHandler.cfc",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/API/com/Nephthys/classes/error/error.cfc",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/sql/postgres/install/statistics.sql",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/sql/postgres/install/installTables.sql",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/moduleManager/partials/moduleManagerDBDump.html",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/moduleManager/partials/moduleManagerList.html",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/moduleManager/partials/moduleManagerPermissions.html",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/moduleManager/js/moduleManagerApp.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/moduleManager/templates/index.cfm",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/moduleManager/js/controller/moduleManagerPermissions.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/moduleManager/js/controller/moduleManagerDBDump.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/moduleManager/partials/modulePermissions.html",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/user/partials/userList.html",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/theme/partials/themeList.html",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/pages/partials/pagesList.html",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/modules/com/Nephthys/user/ajaxConnector.cfc",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/dashboard/js/visitApp.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/dashboard/js/controller/visitCtrl.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/user/partials/userDetail.html",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/user/js/service/userService.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/theme/js/service/themeService.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/serverSettings/js/service/serverSettingsService.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/pages/js/service/pagesService.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/service/galleryService.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/moduleManager/js/service/moduleManagerService.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/errorLog/js/service/errorLogService.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/user/js/controller/userDetail.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/theme/js/controller/themeDetail.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/serverSettings/js/controller/serverSettingsDetail.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/pages/js/controller/pagesDetail.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/errorLog/js/controller/errorLogDetail.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/moduleManager/js/controller/moduleManagerDetail.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/moduleManager/partials/moduleManagerDetail.html",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/errorLog/js/errorLogApp.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/pages/js/pagesApp.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/serverSettings/js/serverSettingsApp.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/theme/js/themeApp.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/user/js/userApp.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/errorLog/templates/index.cfm",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/user/templates/index.cfm",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/theme/templates/index.cfm",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/serverSettings/templates/index.cfm",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/Nephthys/pages/templates/index.cfm",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/galleryApp.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/controller/galleryPicture.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/controller/galleryCategory.js",
+		"/D/Eigene Dateien/SourceCode/ColdFusion/IcedReaper/Nephthys/src/main/webapp/ADMIN/themes/default/modules/com/IcedReaper/gallery/js/controller/galleryDetail.js"
+	],
+	"find":
+	{
+		"height": 34.0
+	},
+	"find_in_files":
+	{
+		"height": 96.0,
+		"where_history":
+		[
+			"D:\\myFiles\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src\\main\\webapp\\ADMIN\\themes\\default\\modules",
+			"D:\\myFiles\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src\\main\\webapp\\ADMIN\\themes",
+			"D:\\myFiles\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src\\main\\webapp\\ADMIN\\themes\\default\\modules\\com",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src\\main\\webapp\\API",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src,*.cf*",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src\\main\\webapp\\ADMIN\\themes\\default\\modules\\com\\Nephthys\\theme",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src,*.cf*",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src,*.cf*",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src\\main\\webapp\\WWW\\modules\\com\\IcedReaper",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src\\main\\webapp\\ADMIN\\modules",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src,*.cf*",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src\\main\\webapp\\ADMIN\\themes\\default\\modules\\com\\IcedReaper\\Nephthys",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src\\main\\webapp\\ADMIN",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src\\main\\webapp\\ADMIN\\themes\\default\\modules\\pages",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src\\main\\webapp\\ADMIN\\themes\\default\\modules\\user",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src\\main\\webapp\\ADMIN",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys",
+			"D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys\\src\\main\\webapp\\ADMIN"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"prepareCategoryDetails",
+			"categorie",
+			"galleryDetailCtrl",
+			"'",
+			"getCategoryDetails",
+			"galleryListCtrl",
+			"category(",
+			"cate",
+			"gCategories",
+			"loadAutoCompleteCategories",
+			"i",
+			"margin-bottom",
+			"margin-top",
+			"margin-",
+			"[\" ]m\\-",
+			"m-",
+			"well",
+			"glyphicon",
+			"span",
+			"glyphicon",
+			"span",
+			"<span class=\"glyphicon glyphicon-chevron-left\"></span>",
+			"span",
+			"<span class=\"glyphicon glyphicon-floppy-disk\"></span> ",
+			"icon",
+			"destination",
+			"WWW",
+			"moduleManagerPermissionCtrl",
+			"\n                        .then(returnPromiseData)",
+			"'",
+			"writeDump",
+			"theme",
+			"errorLogs",
+			"theme",
+			"user",
+			"getUser(",
+			"user",
+			"getPublished",
+			"user",
+			"userId",
+			"API.com.Nephthys.classes.user.user",
+			"userId",
+			"gallerId",
+			"\"",
+			"function (returnValue) {\n                            return returnValue.data;\n                        }",
+			"row-fluid",
+			"id\\s*!=\\s*0",
+			"id\\s*==\\s*0",
+			"throw\\(type = \"[^nephthys]",
+			"throw\\(type = \"[^nephthys",
+			"throw(",
+			"variables.error",
+			"name",
+			"arguments.",
+			"lower",
+			"Type",
+			"upload",
+			"getActive()",
+			"user",
+			"Theme",
+			"user",
+			"seq",
+			"_seq",
+			"variables.published",
+			"todo",
+			"application.defaultTheme",
+			"default",
+			"getTheme",
+			"default",
+			"getTheme",
+			"datasource",
+			".setDatasource(variables.datasource)",
+			"getUserIdForUsername",
+			".getName()",
+			"_seq",
+			".setDatasource(application",
+			"encrypt[^^ion]",
+			"variables.password",
+			"getEncryptionMethod",
+			"(e)ncypt",
+			"(e)ncryptionMethod",
+			"getSub",
+			"application.loginHandler",
+			"'",
+			"height",
+			"todaysData",
+			"\"",
+			"apictures",
+			"apict",
+			"image",
+			"Image",
+			"image",
+			"Path",
+			"path",
+			"thumbnailPath",
+			"imagePath",
+			"gallery_gallery",
+			"Nephthys_plugin",
+			"IcedReaper",
+			"IcedReaper/Nephthys_plugins",
+			"IcedReaper/Nephthys",
+			"IcedReaper/Nephthys/",
+			"IcedReaper.Nephthys_plugin",
+			"IcedReaper.Nephthys_plugins",
+			"IcedReaper.Nephthys",
+			"options.maxPageCount",
+			"[galleryIndex]",
+			"galleries",
+			".gallery",
+			"required string parameter, ",
+			"\"API.com.IcedReaper.Nephthys.interfaces.connector\"",
+			"default()",
+			"/ajax/ajax",
+			"folderName",
+			"moduleName",
+			"/ajax/user",
+			"/",
+			"com.IcedReaper.Nephthys.moduleManager",
+			".",
+			"array",
+			"\n    public",
+			"systemSettings",
+			".systemSettings",
+			"systemSettings",
+			"ADMIN/",
+			"/ADMIN",
+			"{\n    \"PersonName\" : {\n        \"rule\" : \"^([\\\\p{L},]+[\\\\s0-9\\\\.]*)*$\",\n        \"description\" : \"A small validation rule for a person name\",\n        \"tip\" : \"\"\n    },\n    \"Email\" : {\n        \"rule\" : \"^([a-zA-Z0-9.-]+)@((?:[\\\\w-]+[^-]\\\\.)+)([a-zA-Z]{2,4})$\",\n        \"description\" : \"\",\n        \"tip\" : \"\"\n    },\n    \"String\" : {\n        \"rule\" : \"^[\\\\w\\\\W]+$\",\n        \"description\" : \"\",\n        \"tip\" : \"\"\n    },\n    \"Number\" : {\n        \"rule\" : \"^\\\\d*$\",\n        \"description\" : \"\",\n        \"tip\" : \"\"\n    },\n    \"ZipCode\" : {\n        \"byCountry\" : {\n            \"DE\" : {\n                \"rule\" : \"^\\\\d{5}$\",\n                \"description\" : \"\",\n                \"tip\" : \"12345\"\n            },\n            \"GB\" : {\n                \"rule\" : \"^[a-zA-Z0-9]{1,4} ?[a-zA-Z0-9]{1,3}$\",\n                \"description\" : \"\",\n                \"tip\" : \"AB1 2CD\"\n            }\n        }\n    }\n}",
+			"'"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": true,
+		"replace_history":
+		[
+			"category",
+			"categoryDetailCtrl",
+			"\"",
+			"categoryListCtrl",
+			"arguments.categories",
+			"p",
+			"m-b",
+			"m-t",
+			"card card-block",
+			"fa",
+			"i",
+			"fa",
+			"i",
+			"<i class=\"fa fa-chevron-left\"></i>",
+			"i",
+			"<i class=\"fa fa-floppy-o\"></i> ",
+			"target",
+			"ADMIN",
+			"",
+			"\"",
+			"themes",
+			"theme",
+			"errorLog",
+			"gallery",
+			"galleryId",
+			"API.com.IcedReaper.gallery.gallery",
+			"galleryId",
+			"",
+			"returnPromiseData",
+			"variables.exception",
+			"variables.",
+			"theme",
+			"",
+			"\\1ncrypt",
+			"\\1ncrptionAlgorithm",
+			"\"",
+			"arguments.visitData",
+			"picture",
+			"Picture",
+			"picture",
+			"FolderName",
+			"folderName",
+			"thumbnailFileName",
+			"imageFileName",
+			"gallery_image",
+			"IcedReaper",
+			"Nephthys/",
+			"Nephthys",
+			"totalGalleryCount",
+			"",
+			"gallery",
+			".galleries",
+			"",
+			"\"WWW.interfaces.connector\"",
+			"\"ADMIN.interfaces.connector\"",
+			"/ajax",
+			"/ajax/ajax/com/IcedReaper/Nephthys/user",
+			"\\/",
+			"com/IcedReaper/Nephthys/moduleManager",
+			"/",
+			"    public",
+			"settings",
+			".settings",
+			"",
+			"\"",
+			"serverSettings",
+			"serverManager",
+			"url.moduleName",
+			"moduleId",
+			"moduleManagerService",
+			"variables",
+			"arguments.moduleName",
+			"pages",
+			"pageId",
+			"module",
+			"\"",
+			"",
+			" ="
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7157,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3654,
+								3654
+							]
+						],
+						"settings":
+						{
+							"auto_name": "Die Geschichten von Emma",
+							"default_dir": "D:\\Eigene Dateien\\SourceCode\\ColdFusion\\IcedReaper\\Nephthys",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "doc/todo.nfo",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3229,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2709,
+								2709
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 26.0
+	},
+	"input":
+	{
+		"height": 31.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.exec":
+	{
+		"height": 276.0
+	},
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "Packages/Java/Ant.sublime-build",
+	"project": "nephthys.sublime-project",
+	"replace":
+	{
+		"height": 62.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 392.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 391.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

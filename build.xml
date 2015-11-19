@@ -1,0 +1,93 @@
+<project name="Dev-Deployment" basedir="." default="buildProject">
+    <target name="buildProject" depends="init,syncWWW,syncAPI"><!--,syncADMIN">-->
+        <echo>Build done</echo>
+    </target>
+    
+    <target name="init">
+        <echo>Init start</echo>
+        
+        <property environment="env"/>
+        
+        <property name="path.sourceCode.root" value="${basedir}\src\main\webapp" />
+        <property name="path.deployment.root" value="\development\localhost\nephthys" />
+        <property name="sass.bin" value="${env.RUBY_HOME}\sass.bat" />
+        <property name="external.frameworks" value="D:\myFiles\SourceCode\Frameworks" />
+        <property name="external.frameworks.bootstrap" value="${external.frameworks}/Bootstrap" />
+        <property name="external.frameworks.fontAwesome" value="${external.frameworks}/Font-Awesome" />
+        
+        <echo>Default path's set</echo>
+    </target>
+    
+    <target name="syncWWW">
+        <antcall target="syncWithSass">
+            <param name="appFolder" value="WWW" />
+        </antcall>
+        
+        <antcall target="syncWithSass">
+            <param name="appFolder" value="ADMIN" />
+        </antcall>
+        
+        <!-- ext admin stuff -->
+        <echo>Deploying additional stuff (Fonts, JS, etc)</echo>
+        <copy todir="${path.deployment.root}\ADMIN\themes\default\fonts">
+            <fileset dir="${external.frameworks.fontAwesome}\fonts" />
+        </copy>
+        
+        <concat destfile="${path.deployment.root}\ADMIN\themes\default\assets\bootstrap\js\bootstrap.min.js" force="no">
+            <path path="${external.frameworks.bootstrap}/js/dist/util.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/alert.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/button.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/carousel.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/collapse.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/dropdown.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/modal.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/scrollspy.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/tab.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/tooltip.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/popover.js" />
+        </concat>
+    </target>
+    
+    <target name="syncWithSass">
+        <echo message="build ${appFolder}" />
+        
+        <property name="www.path.source.root" location="${path.sourceCode.root}\${appFolder}" />
+        <property name="www.path.target.root" location="${path.deployment.root}\${appFolder}" />
+        
+        <property name="www.path.source.sass" location="${www.path.source.root}\themes\default\sass" />
+        <property name="www.path.target.sass" location="${www.path.target.root}\themes\default\css" />
+            
+        <property name="www.path.source.sassFile" location="${www.path.source.sass}\main.scss" />
+        <property name="www.path.target.sassFile" location="${www.path.target.sass}\main.css" />
+        
+        <sync toDir="${www.path.target.root}" includeEmptyDirs="true">
+            <fileset dir="${www.path.source.root}">
+                <exclude name="**\sass\" /> <!-- exclude the sass folder -->
+            </fileset>
+        </sync>
+        
+        <echo>${appFolder} Files synchronised${line.separator}from: ${www.path.source.root}${line.separator}to: ${www.path.target.root}${line.separator}exclude: **\sass\</echo>
+        
+        <exec executable="${sass.bin}" failonerror="true">
+            <arg line="--update" />
+            <arg line="--force" />
+            <arg line="--scss" />
+            <arg line="--style compressed" />
+            <arg line="${www.path.source.sassFile}:${www.path.target.sassFile}" />
+        </exec>
+        <echo>Sass compiled${line.separator}from:${www.path.source.sassFile} ${line.separator}to:${www.path.target.sassFile}</echo>
+    </target>
+    
+    <target name="syncAPI">
+        <echo message="build API" />
+        
+        <property name="api.path.source.root" location="${path.sourceCode.root}\API" />
+        <property name="api.path.target.root" location="${path.deployment.root}\API" />
+        
+        <sync toDir="${api.path.target.root}" includeEmptyDirs="true">
+            <fileset dir="${api.path.source.root}" />
+        </sync>
+        
+        <echo>API Files synchronised${line.separator}from: ${api.path.source.root}${line.separator}to: ${api.path.target.root}</echo>
+    </target>
+</project>

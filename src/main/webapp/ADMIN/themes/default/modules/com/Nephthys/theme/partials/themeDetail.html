@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+            <a href="#/" class="btn btn-primary"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Theme <small>{{theme.name}}</small></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card card-block">
+            <form novalidate>
+                <div class="form-group">
+                    <label for="foldername">Ordnername</label>
+                    <input type="text" class="form-control" id="foldername" ng-disabled="theme.themeId != 0" ng-model="theme.foldername">
+                </div>
+                <div class="form-group">
+                    <label for="name">Themename</label>
+                    <input type="text" class="form-control" id="name" ng-model="theme.name">
+                </div>
+                <div class="form-group">
+                    <label for="active">Aktiv</label>
+                    <select class="form-control" ng-model="theme.active">
+                        <option value="1">Aktiv</option>
+                        <option value="0" ng-show="theme.default == 0">Inaktiv</option>
+                    </select>
+                </div>
+                <div class="form-group" ng-show="theme.default == 0">
+                    <label for="active">Theme als Zip hochladen</label>
+                    <input type="file" ng-model="theme.uploadFile" ngf-select required accept="application/*" />
+                </div>
+                
+                <button type="submit" class="btn btn-success" ng-click="createTheme()" ng-show="theme.default == 0"><i class="fa fa-upload"></i> Erstellen</button>
+                <button type="submit" class="btn btn-success" ng-click="save()" ng-show="theme.default != 0"><i class="fa fa-floppy-o"></i> Speichern</button>
+            </form>
+        </div>
+        
+        <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
+            <h3>{{message.headline}}</h3>
+            <p>{{message.text}}</p>
+            <p>{{message.errorMessage}}</p>
+        </div>
+    </div>
+</div>

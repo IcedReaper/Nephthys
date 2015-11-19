@@ -1,0 +1,96 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+            <a href="#/" class="btn btn-primary"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Seite <small>{{page.link}}</small></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-block">
+            <h3>Seitenoptionen und - details</h3>
+            <form novalidate>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="parentId">Übergeordnete Seite</label>
+                            <input type="text" class="form-control" id="parentId" disabled readonly="readonly" ng-model="page.parentId" title="Not yet implemented">
+                        </div>
+                        <div class="form-group">
+                            <label for="link">Link</label>
+                            <input type="text" class="form-control" id="link" ng-model="page.link">
+                        </div>
+                        <div class="form-group">
+                            <label for="linktext">Text des Links</label>
+                            <input type="text" class="form-control" id="linktext" ng-model="page.linktext">
+                        </div>
+                        <div class="form-group">
+                            <label for="title">Titel der Seite / des Links</label>
+                            <input type="text" class="form-control" id="title" ng-model="page.title">
+                        </div>
+                        <div class="form-group">
+                            <label for="description">Beschreibung der Seite</label>
+                            <input type="text" class="form-control" id="description" ng-model="page.description">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="sortOrder">Sortierung</label>
+                            <input type="text" class="form-control" id="sortOrder" ng-model="page.sortOrder">
+                        </div>
+                        <div class="form-group">
+                            <label for="useDynamicSuffixes">Dynamische Seiten Suffixe verwenden *</label> <!--implement description of the feature-->
+                            <select class="form-control" ng-model="page.useDynamicSuffixes">
+                                <option value="1">Aktiv</option>
+                                <option value="0">Inaktiv</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="region">Region *</label> <!--implement description of the feature-->
+                            <select class="form-control" ng-model="page.region">
+                                <option value="header">Kopfnavigation</option>
+                                <option value="footer">Fußnavigation</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="active">Aktiv</label>
+                            <select class="form-control" ng-model="page.active">
+                                <option value="1">Aktiv</option>
+                                <option value="0">Inaktiv</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+            </form>
+        </div>
+        
+        <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
+            <h3>{{message.headline}}</h3>
+            <p>{{message.text}}</p>
+            <p>{{message.errorMessage}}</p>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <form novalidate>
+            <div class="form-group">
+                <label for="content">Content</label>
+                <textarea class="form-control" rows="10" ng-model="page.content"></textarea>
+            </div>
+        </form>
+    </div>
+</div>
+<!--
+<div class="row">
+    <div class="col-md-12" ng-bind-html="page.preparedContent">
+    </div>
+</div>-->

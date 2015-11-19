@@ -1,0 +1,101 @@
+<div class="row">
+    <div class="col-mg-12">
+        <h1>Servereinstellungen</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card card-block">
+            <form novalidate>
+                <div class="form-group">
+                    <label for="active">Aktiv</label>
+                    <select class="form-control" ng-model="serverSettings.active">
+                        <option value="1">Aktiv</option>
+                        <option value="0">Inaktiv</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="maintenanceMode">Wartungsmodus</label>
+                    <select class="form-control" for="maintenanceMode" ng-model="serverSettings.maintenanceMode">
+                        <option value="0">Inaktiv</option>
+                        <option value="1">Aktiv</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="loginOnWebsite">Login auf der Webseite</label>
+                    <select class="form-control" name="loginOnWebsite" ng-model="serverSettings.loginOnWebsite">
+                        <option value="0">Inaktiv</option>
+                        <option value="1">Aktiv</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="description">Beschreibung der Webseite</label>
+                    <input type="text" class="form-control" id="description" ng-model="serverSettings.description">
+                </div>
+                <div class="form-group"> <!-- todo: get -->
+                    <label for="defaultThemeId">Standard Designvorlage</label>
+                    <select class="form-control" name="defaultThemeId" ng-model="serverSettings.defaultThemeId">
+                        <option value="1">Default</option>
+                    </select>
+                </div>
+                <div class="form-group"> <!-- todo: get -->
+                    <label for="locale">Locale</label>
+                    <select class="form-control" name="locale" ng-model="serverSettings.locale">
+                        <option value="de-DE">de-DE</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="googleAnalyticsId">Google Analytics ID</label>
+                    <input type="text" class="form-control" id="googleAnalyticsId" ng-model="serverSettings.googleAnalyticsId">
+                </div>
+                
+                <div class="form-group">
+                    <button class="btn btn-link" ng-click="showExtended=true" ng-show="!showExtended"><i class="fa fa-plus"></i> Weitere Einstellungen einblenden</button>
+                    <button class="btn btn-link" ng-click="showExtended=false" ng-show="showExtended"><i class="fa fa-minus"></i> Weitere Einstellungen ausblenden</button>
+                </div>
+                
+                <div ng-show="showExtended">
+                    <div class="form-group">
+                        <label for="imageHotlinking">
+                            Externes einbinden von Bildern<br>
+                            <span class="text-danger">Dieses feature erfordert Einstellungen im Webserver</span>
+                        </label>
+                        <select class="form-control" name="imageHotlinking" ng-model="serverSettings.imageHotlinking">
+                            <option value="0">Nicht erlaubt</option>
+                            <option value="1">Erlaubt</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="encryptionMethodId">
+                            Verschlüsselungsmethode<br>
+                            <span class="text-danger">!Während dieses Prozesses werden alle Passwörter neu verschlüsselt!</span>
+                        </label>
+                        <select ng-model="serverSettings.encryptionMethodId" class="form-control">
+                            <option ng-repeat="em in encryptionMethod" value="{{em.encryptionMethodId}}">{{em.algorithm}}</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="showDumpOnError">
+                            Zeige einen Dump im Fehlerfall<br>
+                            <span class="text-danger">Dies sollte nur in Test- und Entwicklungsumgebungen angeschaltet werden!</span>
+                        </label>
+                        <select class="form-control" name="showDumpOnError" ng-model="serverSettings.showDumpOnError">
+                            <option value="0">Inaktiv</option>
+                            <option value="1">Aktiv</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+            </form>
+        </div>
+        
+        <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
+            <h3>{{message.headline}}</h3>
+            <p>{{message.text}}</p>
+            <p>{{message.errorMessage}}</p>
+        </div>
+    </div>
+</div>

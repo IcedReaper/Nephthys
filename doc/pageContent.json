@@ -1,0 +1,43 @@
+[
+    {
+        "type": "com.Nephthys.container",
+        "options": {},
+        "children": [
+            {
+                "type": "com.Nephthys.row",
+                "options": {},
+                "children": [
+                    {
+                        "type": "com.Nephthys.col",
+                        "options": {
+                            "width-md": "66%",
+                            "width-xs": "100%"
+                        },
+                        "children": [
+                            {
+                                "type": "com.Nephthys.text",
+                                "options": {
+                                    "content": "<h1>Eine dolle Überschrift</h1><p>Und ein ganz toller Text...</p>"
+                                },
+                                "children": []
+                            },
+                            {
+                                "type": "com.IcedReaper.gallery",
+                                "options": {},
+                                "children": []
+                            }
+                        ]
+                    },
+                    {
+                        "type": "com.Nephthys.col",
+                        "options": {
+                            "width-md": "33%",
+                            "width-xs": "100%"
+                        },
+                        "children": []
+                    }
+                ]
+            }
+        ]
+    }
+]

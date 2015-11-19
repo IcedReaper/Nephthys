@@ -1,0 +1,60 @@
+body {
+    background: #2c3644 url("../img/pattern_hexagon_dark_2x.png") repeat scroll 0px -1px / 46px 26px;
+    color: #EEEEEE;
+}
+
+.sidebar {
+    position: fixed;
+    top: 54px;
+    bottom: 0px;
+    left: 0px;
+    z-index: 1000;
+    display: block;
+    padding: 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    background-color: #1A1A1A;
+    border-right: 1px solid #EEE;
+    font-weight: bold;
+}
+
+.main {
+    padding: 20px 40px;
+}
+
+.table-striped > tbody > tr:nth-of-type(2n+1) {
+    background-color:#080820;
+}
+
+.container-fluid {
+    & .margin-top {
+        margin-top: 3%;
+    }
+
+    & .margin-bottom {
+        margin-bottom: 3%;
+    }
+}
+
+.container {
+    & .margin-top {
+        margin-top: 15px;
+    }
+
+    & .margin-bottom {
+        margin-bottom: 15px;
+    }
+}
+
+.card {
+    color: #000000;
+}
+
+.icedreaper-gallery-introduction > .ta-root > .ta-editor {
+    max-height: 120px;
+    min-height: 120px;
+}
+
+.clickable {
+    cursor: pointer;
+}

@@ -1,0 +1,744 @@
+    
+        
+                                
+                
+                
+                
+                
+                
+                
+<!-- == dump-begin x5 == format: modern !-->
+<div id="-lucee-dump-x5" class="-lucee-dump modern"><style>
+                .-lucee-dump.modern .nowrap  { white-space: nowrap; }
+                .-lucee-dump.modern .bold    { font-weight: bold; }
+                .-lucee-dump.modern .nobold  { font-weight: normal; }
+                .-lucee-dump.modern .pointer { cursor: pointer; }
+            .-lucee-dump.modern .query-reset {background: url(data:image/gif;base64,R0lGODlhCQAJAIABAAAAAP///yH5BAEAAAEALAAAAAAJAAkAAAIRhI
++hG7bwoJINIktzjizeUwAAOw==) no-repeat; height:18px; background-position:2px 4px; background-color: #969
+;}.-lucee-dump.modern .border {border: 1px solid #000; padding: 0.2em;}.-lucee-dump.modern .table-dump
+ {font-family: Verdana, Geneva, Arial, Helvetica, sans-serif; font-size: 11px; color: #000; border-spacing
+: 1px; border-collapse:separate;}.-lucee-dump.modern .border.rlabel {margin: 1px 1px 0px 1px; vertical-align
+: top; text-align: left;}.-lucee-dump.modern .bgd-query { background-color: #c9c; } .-lucee-dump.modern
+ .bgl-query { background-color: #fcf; } .-lucee-dump.modern .bgd-privatemethods { background-color: 
+#fc3; } .-lucee-dump.modern .bgl-privatemethods { background-color: #f96; } .-lucee-dump.modern .bgd-struct
+ { background-color: #99f; } .-lucee-dump.modern .bgl-struct { background-color: #ccf; } .-lucee-dump
+.modern .bgd-mongo { background-color: #393; } .-lucee-dump.modern .bgl-mongo { background-color: #966
+; } .-lucee-dump.modern .bgd-publicmethods { background-color: #fc9; } .-lucee-dump.modern .bgl-publicmethods
+ { background-color: #ffc; } .-lucee-dump.modern .bgd-subxml { background-color: #996; } .-lucee-dump
+.modern .bgl-subxml { background-color: #cc9; } .-lucee-dump.modern .bgd-javaobject { background-color
+: #c99; } .-lucee-dump.modern .bgl-javaobject { background-color: #fcc; } .-lucee-dump.modern .bgd-object
+ { background-color: #c99; } .-lucee-dump.modern .bgl-object { background-color: #fcc; } .-lucee-dump
+.modern .bgd-xml { background-color: #c99; } .-lucee-dump.modern .bgl-xml { background-color: #fff; 
+} .-lucee-dump.modern .bgd-simple { background-color: #f60; } .-lucee-dump.modern .bgl-simple { background-color
+: #fc9; } .-lucee-dump.modern .bgd-function { background-color: #c6F; } .-lucee-dump.modern .bgl-function
+ { background-color: #fcf; } .-lucee-dump.modern .bgd-white { background-color: #fff; } .-lucee-dump
+.modern .bgl-white { background-color: #ccc; } .-lucee-dump.modern .bgd-array { background-color: #9c3
+; } .-lucee-dump.modern .bgl-array { background-color: #cf3; } .-lucee-dump.modern .bgd-method { background-color
+: #c6f; } .-lucee-dump.modern .bgl-method { background-color: #fcf; } .-lucee-dump.modern .bgd-component
+ { background-color: #9c9; } .-lucee-dump.modern .bgl-component { background-color: #cfc; } </style>
+<script type="text/javascript">var sBase = "var";function dump_toggle(e,t){var n=e;n=n.nextElementSibling
+||n.nextSibling;while(n&&n.nodeType===1&&n!==e){var r=n;s=r.style;if(s.display=="none"){s.display=""
+}else{s.display="none"}n=n.nextElementSibling||n.nextSibling}if(e.style.fontStyle=="italic"){e.style
+.fontStyle="normal"}else{e.style.fontStyle="italic"}if(t){var i=e;var o="";var u="";while(i){o=i.innerHTML
+;if(isNumber(o)){o="["+o+"]"}if(u==""){u=o}else{u=o+(u.substring(0,1)=="["?"":".")+u}i=getNextLevelUp
+(i)}r.innerHTML=sBase+(u.substring(0,1)=="["?"":".")+u;selectText(r)}}function isNumber(e){return!isNaN
+(parseFloat(e))&&isFinite(e)}function getNextLevelUp(e){oCurrent=e;while(e){e=e.parentNode;if(e&&e.className
+&&e.className.toUpperCase()=="TRTABLEDUMP"){if(!e.firstElementChild){var t=e.children[0]}else{var t=e
+.firstElementChild}if(t){if(t!==oCurrent&&t.className.toUpperCase().indexOf("NAME TDCLICK")!=-1){return
+ t}}e=e.parentNode}}return}function selectText(e){if(document.body.createTextRange){var t=document.body
+.createTextRange();t.moveToElementText(e);t.select()}else if(window.getSelection){var n=window.getSelection
+();var t=document.createRange();t.selectNodeContents(e);n.removeAllRanges();n.addRange(t)}}function dump_hideColumn
+(e,t){var n=e.parentNode;while(n&&n.nodeType===1){var r=n.children;if(r[t]&&r[t].tagName=="TD"){r[t]
+.style.display="none"}n=n.nextElementSibling||n.nextSibling}}function dump_resetColumns(e,t){var n=e
+.parentNode;while(n&&n.nodeType===1){var r=n.children;for(var i=0;i<r.length-1;i++){if(i==r.length-1
+){r[i].style.display="none"}else{r[i].style.display=""}}n=n.nextElementSibling||n.nextSibling}}</script
+><table class="table-dump dump-struct" title="/var/lib/tomcat7/webapps/ROOT/ADMIN/Application.cfc:87"
+><tr class="base-header"  onClick="dump_toggle(this, false)"><td class="border bold bgd-struct pointer"
+ colspan="3"><span class="nowrap">Catch</span><span class="nobold"><span class="nowrap"><br>Entries:
+ 15</span></span></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle
+(this, true)">additional</td><td class="border rlabel bgl-struct"><table class="table-dump dump-struct"
+ ><tr class="base-header"  onClick="dump_toggle(this, false)"><td class="border bold bgd-struct pointer"
+ colspan="3"><span class="nowrap">Struct</span><span class="nobold"><span class="nowrap"></span></span
+></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true
+)">SQL</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class="" 
+><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class
+="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select 
+                    INSERT INTO IcedReaper_gallery_category
+                                                                   (
+                                                                       name,
+                                                                       creatorUserId,
+                                                                       lastEditorUserId
+                                                                   )
+                                                            VALUES (
+                                                                       'Test2',
+                                                                       1,
+                                                                       1
+                                                                   );
+                                                      SELECT currval('seq_icedreaper_gallery_category_id'
+ :: regclass) newCategoryId;
+                 characters" onClick="selectText(this);">
+                    INSERT INTO IcedReaper_gallery_category
+                                                                   (
+                                                                       name,
+                                                                       creatorUserId,
+                                                                       lastEditorUserId
+                                                                   )
+                                                            VALUES (
+                                                                       'Test2',
+                                                                       1,
+                                                                       1
+                                                                   );
+                                                      SELECT currval('seq_icedreaper_gallery_category_id'
+ :: regclass) newCategoryId;
+                </td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct
+ pointer" onClick="dump_toggle(this, true)">DatabaseName</td><td class="border rlabel bgl-struct"><table
+ class="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle
+(this, true)">string</td><td class="border rlabel bgl-simple" style="cursor: pointer;" title="Click to
+ select PostgreSQL characters" onClick="selectText(this);">PostgreSQL</td><td class="border rlabel bgl-simple"
+ style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"
+></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true
+)">DatabaseVersion</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr
+ class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td
+><td class="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select 9.4.5 characters"
+ onClick="selectText(this);">9.4.5</td><td class="border rlabel bgl-simple" style="display:none"></td
+></tr></table></td><td class="border rlabel bgl-struct" style="display:none"></td></tr><tr class="" 
+><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true)">DriverName</td><td class
+="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class="" ><td class="border rlabel
+ bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class="border rlabel bgl-simple"
+ style="cursor: pointer;" title="Click to select PostgreSQL Native Driver characters" onClick="selectText
+(this);">PostgreSQL Native Driver</td><td class="border rlabel bgl-simple" style="display:none"></td
+></tr></table></td><td class="border rlabel bgl-struct" style="display:none"></td></tr><tr class="" 
+><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true)">DriverVersion</td><td
+ class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class="" ><td class="border
+ rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class="border rlabel bgl-simple"
+ style="cursor: pointer;" title="Click to select PostgreSQL 8.3 JDBC4 with SSL (build 607) characters"
+ onClick="selectText(this);">PostgreSQL 8.3 JDBC4 with SSL (build 607)</td><td class="border rlabel bgl-simple"
+ style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"
+></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true
+)">Datasource</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class
+="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class
+="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select nephthys_admin characters"
+ onClick="selectText(this);">nephthys_admin</td><td class="border rlabel bgl-simple" style="display:none"
+></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"></td></tr></table>
+</td><td class="border rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border
+ rlabel bgd-struct pointer" onClick="dump_toggle(this, true)">DataSource</td><td class="border rlabel
+ bgl-struct"><table class="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple
+ pointer" onClick="dump_toggle(this, true)">string</td><td class="border rlabel bgl-simple" style="cursor
+: pointer;" title="Click to select nephthys_admin characters" onClick="selectText(this);">nephthys_admin
+</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct
+ pointer" onClick="dump_toggle(this, true)">Detail</td><td class="border rlabel bgl-struct"><table class
+="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle
+(this, true)">string</td><td class="border rlabel bgl-simple" style="cursor: pointer;" title="Click to
+ select ERROR: duplicate key value violates unique constraint &quot;uk_icedreaper_gallery_category_name
+&quot;
+  Detail: Key (lower(name::text))=(test2) already exists. characters" onClick="selectText(this);">ERROR
+: duplicate key value violates unique constraint &quot;uk_icedreaper_gallery_category_name&quot;
+  Detail: Key (lower(name::text))=(test2) already exists.</td><td class="border rlabel bgl-simple" style
+="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"></td
+></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true)">ErrorCode
+</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class="" ><td class
+="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class="border rlabel
+ bgl-simple" style="cursor: pointer;" title="Click to select 0 characters" onClick="selectText(this)
+;">0</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct
+ pointer" onClick="dump_toggle(this, true)">Extended_Info</td><td class="border rlabel bgl-struct"><table
+ class="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle
+(this, true)">string</td><td class="border rlabel bgl-simple"></td><td class="border rlabel bgl-simple"
+ style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"
+></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true
+)">ExtendedInfo</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class
+="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class
+="border rlabel bgl-simple"></td><td class="border rlabel bgl-simple" style="display:none"></td></tr
+></table></td><td class="border rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class
+="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true)">Message</td><td class="border rlabel
+ bgl-struct"><table class="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple
+ pointer" onClick="dump_toggle(this, true)">string</td><td class="border rlabel bgl-simple"></td><td
+ class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border rlabel
+ bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer"
+ onClick="dump_toggle(this, true)">NativeErrorCode</td><td class="border rlabel bgl-struct"><table class
+="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle
+(this, true)">number</td><td class="border rlabel bgl-simple">0</td><td class="border rlabel bgl-simple"
+ style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"
+></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true
+)">queryError</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class
+="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class
+="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select 
+                    INSERT INTO IcedReaper_gallery_category
+                                                                   (
+                                                                       name,
+                                                                       creatorUserId,
+                                                                       lastEditorUserId
+                                                                   )
+                                                            VALUES (
+                                                                       'Test2',
+                                                                       1,
+                                                                       1
+                                                                   );
+                                                      SELECT currval('seq_icedreaper_gallery_category_id'
+ :: regclass) newCategoryId;
+                 characters" onClick="selectText(this);">
+                    INSERT INTO IcedReaper_gallery_category
+                                                                   (
+                                                                       name,
+                                                                       creatorUserId,
+                                                                       lastEditorUserId
+                                                                   )
+                                                            VALUES (
+                                                                       'Test2',
+                                                                       1,
+                                                                       1
+                                                                   );
+                                                      SELECT currval('seq_icedreaper_gallery_category_id'
+ :: regclass) newCategoryId;
+                </td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct
+ pointer" onClick="dump_toggle(this, true)">Sql</td><td class="border rlabel bgl-struct"><table class
+="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle
+(this, true)">string</td><td class="border rlabel bgl-simple" style="cursor: pointer;" title="Click to
+ select 
+                    INSERT INTO IcedReaper_gallery_category
+                                                                   (
+                                                                       name,
+                                                                       creatorUserId,
+                                                                       lastEditorUserId
+                                                                   )
+                                                            VALUES (
+                                                                       'Test2',
+                                                                       1,
+                                                                       1
+                                                                   );
+                                                      SELECT currval('seq_icedreaper_gallery_category_id'
+ :: regclass) newCategoryId;
+                 characters" onClick="selectText(this);">
+                    INSERT INTO IcedReaper_gallery_category
+                                                                   (
+                                                                       name,
+                                                                       creatorUserId,
+                                                                       lastEditorUserId
+                                                                   )
+                                                            VALUES (
+                                                                       'Test2',
+                                                                       1,
+                                                                       1
+                                                                   );
+                                                      SELECT currval('seq_icedreaper_gallery_category_id'
+ :: regclass) newCategoryId;
+                </td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct
+ pointer" onClick="dump_toggle(this, true)">SQLState</td><td class="border rlabel bgl-struct"><table
+ class="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle
+(this, true)">string</td><td class="border rlabel bgl-simple" style="cursor: pointer;" title="Click to
+ select 23505 characters" onClick="selectText(this);">23505</td><td class="border rlabel bgl-simple"
+ style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"
+></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true
+)">StackTrace</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class
+="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class
+="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select 
+    at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:1608):1608
+    at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:1343):1343
+    at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:194):194
+    at org.postgresql.jdbc2.AbstractJdbc2Statement.execute(AbstractJdbc2Statement.java:470):470
+    at org.postgresql.jdbc2.AbstractJdbc2Statement.executeWithFlags(AbstractJdbc2Statement.java:369):369
+
+    at org.postgresql.jdbc2.AbstractJdbc2Statement.execute(AbstractJdbc2Statement.java:362):362
+    at lucee.runtime.db.driver.state.StateUtil.execute(StateUtil.java:145):145
+    at lucee.runtime.db.driver.state.StatePreparedStatement.execute(StatePreparedStatement.java:135):135
+
+    at lucee.runtime.type.util.QueryUtil.execute(QueryUtil.java:240):240
+    at lucee.runtime.type.QueryImpl.&lt;init&gt;(QueryImpl.java:251):251
+    at lucee.runtime.tag.Query.executeDatasoure(Query.java:733):733
+    at lucee.runtime.tag.Query.doEndTag(Query.java:559):559
+    at org.lucee.cfml.base_cfc$cf.udfCall1(/var/lib/tomcat7/webapps/ROOT/WEB-INF/lucee/components/org/lucee
+/cfml/Base.cfc:163):163
+    at org.lucee.cfml.base_cfc$cf.udfCall(/var/lib/tomcat7/webapps/ROOT/WEB-INF/lucee/components/org/lucee
+/cfml/Base.cfc):-1
+    at lucee.runtime.type.UDFImpl.implementation(UDFImpl.java:111):111
+    at lucee.runtime.type.UDFImpl._call(UDFImpl.java:328):328
+    at lucee.runtime.type.UDFImpl.call(UDFImpl.java:229):229
+    at lucee.runtime.type.scope.UndefinedImpl.call(UndefinedImpl.java:766):766
+    at lucee.runtime.util.VariableUtilImpl.callFunctionWithoutNamedValues(VariableUtilImpl.java:742):742
+
+    at lucee.runtime.PageContextImpl.getFunction(PageContextImpl.java:1589):1589
+    at org.lucee.cfml.query_cfc$cf.udfCall(/var/lib/tomcat7/webapps/ROOT/WEB-INF/lucee/components/org/lucee
+/cfml/Query.cfc:53):53
+    at lucee.runtime.type.UDFImpl.implementation(UDFImpl.java:111):111
+    at lucee.runtime.type.UDFImpl._call(UDFImpl.java:328):328
+    at lucee.runtime.type.UDFImpl.call(UDFImpl.java:229):229
+    at lucee.runtime.ComponentImpl._call(ComponentImpl.java:641):641
+    at lucee.runtime.ComponentImpl._call(ComponentImpl.java:524):524
+    at lucee.runtime.ComponentImpl.call(ComponentImpl.java:1760):1760
+    at lucee.runtime.util.VariableUtilImpl.callFunctionWithoutNamedValues(VariableUtilImpl.java:742):742
+
+    at lucee.runtime.PageContextImpl.getFunction(PageContextImpl.java:1589):1589
+    at api.com.icedreaper.gallery.category_cfc$cf.udfCall1(/var/lib/tomcat7/webapps/ROOT/API/com/IcedReaper
+/gallery/category.cfc:60):60
+    at api.com.icedreaper.gallery.category_cfc$cf.udfCall(/var/lib/tomcat7/webapps/ROOT/API/com/IcedReaper
+/gallery/category.cfc):-1
+    at lucee.runtime.type.UDFImpl.implementation(UDFImpl.java:111):111
+    at lucee.runtime.type.UDFImpl._call(UDFImpl.java:328):328
+    at lucee.runtime.type.UDFImpl.call(UDFImpl.java:229):229
+    at lucee.runtime.ComponentImpl._call(ComponentImpl.java:641):641
+    at lucee.runtime.ComponentImpl._call(ComponentImpl.java:524):524
+    at lucee.runtime.ComponentImpl.call(ComponentImpl.java:1760):1760
+    at lucee.runtime.util.VariableUtilImpl.callFunctionWithoutNamedValues(VariableUtilImpl.java:742):742
+
+    at lucee.runtime.PageContextImpl.getFunction(PageContextImpl.java:1589):1589
+    at admin.modules.com.icedreaper.gallery.ajaxconnector_cfc$cf.udfCall2(/var/lib/tomcat7/webapps/ROOT
+/ADMIN/modules/com/IcedReaper/gallery/ajaxConnector.cfc:211):211
+    at admin.modules.com.icedreaper.gallery.ajaxconnector_cfc$cf.udfCall(/var/lib/tomcat7/webapps/ROOT/ADMIN
+/modules/com/IcedReaper/gallery/ajaxConnector.cfc):-1
+    at lucee.runtime.type.UDFImpl.implementation(UDFImpl.java:111):111
+    at lucee.runtime.type.UDFImpl._call(UDFImpl.java:328):328
+    at lucee.runtime.type.UDFImpl.callWithNamedValues(UDFImpl.java:216):216
+    at lucee.runtime.ComponentImpl._call(ComponentImpl.java:642):642
+    at lucee.runtime.ComponentImpl._call(ComponentImpl.java:532):532
+    at lucee.runtime.ComponentImpl.callWithNamedValues(ComponentImpl.java:1785):1785
+    at lucee.runtime.ComponentSpecificAccess.callWithNamedValues(ComponentSpecificAccess.java:153):153
+    at lucee.runtime.ComponentPage.callWDDX(ComponentPage.java:636):636
+    at lucee.runtime.ComponentPage.call(ComponentPage.java:185):185
+    at lucee.runtime.PageContextImpl.doInclude(PageContextImpl.java:950):950
+    at lucee.runtime.PageContextImpl.doInclude(PageContextImpl.java:902):902
+    at lucee.runtime.listener.ModernAppListener._onRequest(ModernAppListener.java:223):223
+    at lucee.runtime.listener.ModernAppListener.onRequest(ModernAppListener.java:101):101
+    at lucee.runtime.PageContextImpl.execute(PageContextImpl.java:2257):2257
+    at lucee.runtime.PageContextImpl.execute(PageContextImpl.java:2224):2224
+    at lucee.runtime.engine.CFMLEngineImpl.serviceCFML(CFMLEngineImpl.java:456):456
+    at lucee.loader.servlet.CFMLServlet.service(CFMLServlet.java:47):47
+    at javax.servlet.http.HttpServlet.service(HttpServlet.java:727):727
+    at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:303
+):303
+    at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208):208
+    at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:220):220
+    at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:122):122
+    at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:170):170
+    at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:103):103
+    at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:950):950
+    at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:116):116
+    at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:421):421
+    at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1070):1070
+
+    at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:611):611
+
+    at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:314):314
+    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142):1142
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617):617
+    at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61):61
+    at java.lang.Thread.run(Thread.java:745):745
+ characters" onClick="selectText(this);">
+    at org.postgresql.core.v3.QueryExecutorImpl.receiveErrorResponse(QueryExecutorImpl.java:1608):1608
+    at org.postgresql.core.v3.QueryExecutorImpl.processResults(QueryExecutorImpl.java:1343):1343
+    at org.postgresql.core.v3.QueryExecutorImpl.execute(QueryExecutorImpl.java:194):194
+    at org.postgresql.jdbc2.AbstractJdbc2Statement.execute(AbstractJdbc2Statement.java:470):470
+    at org.postgresql.jdbc2.AbstractJdbc2Statement.executeWithFlags(AbstractJdbc2Statement.java:369):369
+
+    at org.postgresql.jdbc2.AbstractJdbc2Statement.execute(AbstractJdbc2Statement.java:362):362
+    at lucee.runtime.db.driver.state.StateUtil.execute(StateUtil.java:145):145
+    at lucee.runtime.db.driver.state.StatePreparedStatement.execute(StatePreparedStatement.java:135):135
+
+    at lucee.runtime.type.util.QueryUtil.execute(QueryUtil.java:240):240
+    at lucee.runtime.type.QueryImpl.&lt;init&gt;(QueryImpl.java:251):251
+    at lucee.runtime.tag.Query.executeDatasoure(Query.java:733):733
+    at lucee.runtime.tag.Query.doEndTag(Query.java:559):559
+    at org.lucee.cfml.base_cfc$cf.udfCall1(/var/lib/tomcat7/webapps/ROOT/WEB-INF/lucee/components/org/lucee
+/cfml/Base.cfc:163):163
+    at org.lucee.cfml.base_cfc$cf.udfCall(/var/lib/tomcat7/webapps/ROOT/WEB-INF/lucee/components/org/lucee
+/cfml/Base.cfc):-1
+    at lucee.runtime.type.UDFImpl.implementation(UDFImpl.java:111):111
+    at lucee.runtime.type.UDFImpl._call(UDFImpl.java:328):328
+    at lucee.runtime.type.UDFImpl.call(UDFImpl.java:229):229
+    at lucee.runtime.type.scope.UndefinedImpl.call(UndefinedImpl.java:766):766
+    at lucee.runtime.util.VariableUtilImpl.callFunctionWithoutNamedValues(VariableUtilImpl.java:742):742
+
+    at lucee.runtime.PageContextImpl.getFunction(PageContextImpl.java:1589):1589
+    at org.lucee.cfml.query_cfc$cf.udfCall(/var/lib/tomcat7/webapps/ROOT/WEB-INF/lucee/components/org/lucee
+/cfml/Query.cfc:53):53
+    at lucee.runtime.type.UDFImpl.implementation(UDFImpl.java:111):111
+    at lucee.runtime.type.UDFImpl._call(UDFImpl.java:328):328
+    at lucee.runtime.type.UDFImpl.call(UDFImpl.java:229):229
+    at lucee.runtime.ComponentImpl._call(ComponentImpl.java:641):641
+    at lucee.runtime.ComponentImpl._call(ComponentImpl.java:524):524
+    at lucee.runtime.ComponentImpl.call(ComponentImpl.java:1760):1760
+    at lucee.runtime.util.VariableUtilImpl.callFunctionWithoutNamedValues(VariableUtilImpl.java:742):742
+
+    at lucee.runtime.PageContextImpl.getFunction(PageContextImpl.java:1589):1589
+    at api.com.icedreaper.gallery.category_cfc$cf.udfCall1(/var/lib/tomcat7/webapps/ROOT/API/com/IcedReaper
+/gallery/category.cfc:60):60
+    at api.com.icedreaper.gallery.category_cfc$cf.udfCall(/var/lib/tomcat7/webapps/ROOT/API/com/IcedReaper
+/gallery/category.cfc):-1
+    at lucee.runtime.type.UDFImpl.implementation(UDFImpl.java:111):111
+    at lucee.runtime.type.UDFImpl._call(UDFImpl.java:328):328
+    at lucee.runtime.type.UDFImpl.call(UDFImpl.java:229):229
+    at lucee.runtime.ComponentImpl._call(ComponentImpl.java:641):641
+    at lucee.runtime.ComponentImpl._call(ComponentImpl.java:524):524
+    at lucee.runtime.ComponentImpl.call(ComponentImpl.java:1760):1760
+    at lucee.runtime.util.VariableUtilImpl.callFunctionWithoutNamedValues(VariableUtilImpl.java:742):742
+
+    at lucee.runtime.PageContextImpl.getFunction(PageContextImpl.java:1589):1589
+    at admin.modules.com.icedreaper.gallery.ajaxconnector_cfc$cf.udfCall2(/var/lib/tomcat7/webapps/ROOT
+/ADMIN/modules/com/IcedReaper/gallery/ajaxConnector.cfc:211):211
+    at admin.modules.com.icedreaper.gallery.ajaxconnector_cfc$cf.udfCall(/var/lib/tomcat7/webapps/ROOT/ADMIN
+/modules/com/IcedReaper/gallery/ajaxConnector.cfc):-1
+    at lucee.runtime.type.UDFImpl.implementation(UDFImpl.java:111):111
+    at lucee.runtime.type.UDFImpl._call(UDFImpl.java:328):328
+    at lucee.runtime.type.UDFImpl.callWithNamedValues(UDFImpl.java:216):216
+    at lucee.runtime.ComponentImpl._call(ComponentImpl.java:642):642
+    at lucee.runtime.ComponentImpl._call(ComponentImpl.java:532):532
+    at lucee.runtime.ComponentImpl.callWithNamedValues(ComponentImpl.java:1785):1785
+    at lucee.runtime.ComponentSpecificAccess.callWithNamedValues(ComponentSpecificAccess.java:153):153
+    at lucee.runtime.ComponentPage.callWDDX(ComponentPage.java:636):636
+    at lucee.runtime.ComponentPage.call(ComponentPage.java:185):185
+    at lucee.runtime.PageContextImpl.doInclude(PageContextImpl.java:950):950
+    at lucee.runtime.PageContextImpl.doInclude(PageContextImpl.java:902):902
+    at lucee.runtime.listener.ModernAppListener._onRequest(ModernAppListener.java:223):223
+    at lucee.runtime.listener.ModernAppListener.onRequest(ModernAppListener.java:101):101
+    at lucee.runtime.PageContextImpl.execute(PageContextImpl.java:2257):2257
+    at lucee.runtime.PageContextImpl.execute(PageContextImpl.java:2224):2224
+    at lucee.runtime.engine.CFMLEngineImpl.serviceCFML(CFMLEngineImpl.java:456):456
+    at lucee.loader.servlet.CFMLServlet.service(CFMLServlet.java:47):47
+    at javax.servlet.http.HttpServlet.service(HttpServlet.java:727):727
+    at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:303
+):303
+    at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:208):208
+    at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:220):220
+    at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:122):122
+    at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:170):170
+    at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:103):103
+    at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:950):950
+    at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:116):116
+    at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:421):421
+    at org.apache.coyote.http11.AbstractHttp11Processor.process(AbstractHttp11Processor.java:1070):1070
+
+    at org.apache.coyote.AbstractProtocol$AbstractConnectionHandler.process(AbstractProtocol.java:611):611
+
+    at org.apache.tomcat.util.net.JIoEndpoint$SocketProcessor.run(JIoEndpoint.java:314):314
+    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142):1142
+    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617):617
+    at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61):61
+    at java.lang.Thread.run(Thread.java:745):745
+</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct
+ pointer" onClick="dump_toggle(this, true)">TagContext</td><td class="border rlabel bgl-struct"><table
+ class="table-dump dump-array" ><tr class="base-header"  onClick="dump_toggle(this, false)"><td class
+="border bold bgd-array pointer" colspan="3"><span class="nowrap">Array</span><span class="nobold"><span
+ class="nowrap"></span></span></td></tr><tr class="" ><td class="border rlabel bgd-array pointer" onClick
+="dump_toggle(this, true)">1</td><td class="border rlabel bgl-array"><table class="table-dump dump-struct"
+ ><tr class="base-header"  onClick="dump_toggle(this, false)"><td class="border bold bgd-struct pointer"
+ colspan="3"><span class="nowrap">Struct</span><span class="nobold"><span class="nowrap"></span></span
+></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true
+)">codePrintHTML</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr
+ class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td
+><td class="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select 161:                          !---
+&amp;gt;&amp;lt;cfqueryparam attributecollection=&amp;quot;#item#&amp;quot;&amp;gt;&amp;lt;!---&lt;br
+&gt;
+162:                        !---&amp;gt;&amp;lt;/cfif&amp;gt;&amp;lt;/cfloop&amp;gt;&lt;br&gt;
+&lt;b&gt;163:               &amp;lt;/cfquery&amp;gt;&lt;/b&gt;&lt;br&gt;
+164:                &lt;br&gt;
+165:                &amp;lt;cfset result.setResult(q)&amp;gt;           &lt;br&gt;
+ characters" onClick="selectText(this);">161:                           !---&amp;gt;&amp;lt;cfqueryparam attributecollection
+=&amp;quot;#item#&amp;quot;&amp;gt;&amp;lt;!---&lt;br&gt;
+162:                        !---&amp;gt;&amp;lt;/cfif&amp;gt;&amp;lt;/cfloop&amp;gt;&lt;br&gt;
+&lt;b&gt;163:               &amp;lt;/cfquery&amp;gt;&lt;/b&gt;&lt;br&gt;
+164:                &lt;br&gt;
+165:                &amp;lt;cfset result.setResult(q)&amp;gt;           &lt;br&gt;
+</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct
+ pointer" onClick="dump_toggle(this, true)">codePrintPlain</td><td class="border rlabel bgl-struct">
+<table class="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick
+="dump_toggle(this, true)">string</td><td class="border rlabel bgl-simple" style="cursor: pointer;" title
+="Click to select 161:                          !---&gt;&lt;cfqueryparam attributecollection=&quot;#item#&quot;&gt;&lt
+;!---
+162:                        !---&gt;&lt;/cfif&gt;&lt;/cfloop&gt;
+163:                &lt;/cfquery&gt;
+164:                
+165:                &lt;cfset result.setResult(q)&gt;           
+ characters" onClick="selectText(this);">161:                           !---&gt;&lt;cfqueryparam attributecollection=&quot
+;#item#&quot;&gt;&lt;!---
+162:                        !---&gt;&lt;/cfif&gt;&lt;/cfloop&gt;
+163:                &lt;/cfquery&gt;
+164:                
+165:                &lt;cfset result.setResult(q)&gt;           
+</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct
+ pointer" onClick="dump_toggle(this, true)">column</td><td class="border rlabel bgl-struct"><table class
+="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle
+(this, true)">number</td><td class="border rlabel bgl-simple">0</td><td class="border rlabel bgl-simple"
+ style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"
+></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true
+)">id</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class="" >
+<td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class="border
+ rlabel bgl-simple" style="cursor: pointer;" title="Click to select ?? characters" onClick="selectText
+(this);">??</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td
+ class="border rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel
+ bgd-struct pointer" onClick="dump_toggle(this, true)">line</td><td class="border rlabel bgl-struct"
+><table class="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick
+="dump_toggle(this, true)">number</td><td class="border rlabel bgl-simple">163</td><td class="border
+ rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct"
+ style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle
+(this, true)">Raw_Trace</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple"
+ ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string
+</td><td class="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select org.lucee.cfml
+.base_cfc$cf.udfCall1(/var/lib/tomcat7/webapps/ROOT/WEB-INF/lucee/components/org/lucee/cfml/Base.cfc
+:163) characters" onClick="selectText(this);">org.lucee.cfml.base_cfc$cf.udfCall1(/var/lib/tomcat7/webapps
+/ROOT/WEB-INF/lucee/components/org/lucee/cfml/Base.cfc:163)</td><td class="border rlabel bgl-simple"
+ style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"
+></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true
+)">template</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class
+="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class
+="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select /var/lib/tomcat7/webapps
+/ROOT/WEB-INF/lucee/components/org/lucee/cfml/Base.cfc characters" onClick="selectText(this);">/var/lib
+/tomcat7/webapps/ROOT/WEB-INF/lucee/components/org/lucee/cfml/Base.cfc</td><td class="border rlabel bgl-simple"
+ style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"
+></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true
+)">type</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class=""
+ ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class
+="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select cfml characters" onClick
+="selectText(this);">cfml</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table
+></td><td class="border rlabel bgl-struct" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-array" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-array pointer"
+ onClick="dump_toggle(this, true)">2</td><td class="border rlabel bgl-array"><table class="table-dump
+ dump-struct" ><tr class="base-header"  onClick="dump_toggle(this, false)"><td class="border bold bgd-struct
+ pointer" colspan="3"><span class="nowrap">Struct</span><span class="nobold"><span class="nowrap"></span
+></span></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this
+, true)">codePrintHTML</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple"
+ ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string
+</td><td class="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select 51: &lt;br
+&gt;
+52:         // invoke the query and return the result&lt;br&gt;
+&lt;b&gt;53:        return invokeTag();&lt;/b&gt;&lt;br&gt;
+54:     }&lt;br&gt;
+55: &lt;br&gt;
+ characters" onClick="selectText(this);">51: &lt;br&gt;
+52:         // invoke the query and return the result&lt;br&gt;
+&lt;b&gt;53:        return invokeTag();&lt;/b&gt;&lt;br&gt;
+54:     }&lt;br&gt;
+55: &lt;br&gt;
+</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct
+ pointer" onClick="dump_toggle(this, true)">codePrintPlain</td><td class="border rlabel bgl-struct">
+<table class="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick
+="dump_toggle(this, true)">string</td><td class="border rlabel bgl-simple" style="cursor: pointer;" title
+="Click to select 51: 
+52:         // invoke the query and return the result
+53:         return invokeTag();
+54:     }
+55: 
+ characters" onClick="selectText(this);">51: 
+52:         // invoke the query and return the result
+53:         return invokeTag();
+54:     }
+55: 
+</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct
+ pointer" onClick="dump_toggle(this, true)">column</td><td class="border rlabel bgl-struct"><table class
+="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle
+(this, true)">number</td><td class="border rlabel bgl-simple">0</td><td class="border rlabel bgl-simple"
+ style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"
+></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true
+)">id</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class="" >
+<td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class="border
+ rlabel bgl-simple" style="cursor: pointer;" title="Click to select ?? characters" onClick="selectText
+(this);">??</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td
+ class="border rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel
+ bgd-struct pointer" onClick="dump_toggle(this, true)">line</td><td class="border rlabel bgl-struct"
+><table class="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick
+="dump_toggle(this, true)">number</td><td class="border rlabel bgl-simple">53</td><td class="border rlabel
+ bgl-simple" style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display
+:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this
+, true)">Raw_Trace</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr
+ class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td
+><td class="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select org.lucee.cfml
+.query_cfc$cf.udfCall(/var/lib/tomcat7/webapps/ROOT/WEB-INF/lucee/components/org/lucee/cfml/Query.cfc
+:53) characters" onClick="selectText(this);">org.lucee.cfml.query_cfc$cf.udfCall(/var/lib/tomcat7/webapps
+/ROOT/WEB-INF/lucee/components/org/lucee/cfml/Query.cfc:53)</td><td class="border rlabel bgl-simple"
+ style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"
+></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true
+)">template</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class
+="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class
+="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select /var/lib/tomcat7/webapps
+/ROOT/WEB-INF/lucee/components/org/lucee/cfml/Query.cfc characters" onClick="selectText(this);">/var
+/lib/tomcat7/webapps/ROOT/WEB-INF/lucee/components/org/lucee/cfml/Query.cfc</td><td class="border rlabel
+ bgl-simple" style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display
+:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this
+, true)">type</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class
+="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class
+="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select cfml characters" onClick
+="selectText(this);">cfml</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table
+></td><td class="border rlabel bgl-struct" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-array" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-array pointer"
+ onClick="dump_toggle(this, true)">3</td><td class="border rlabel bgl-array"><table class="table-dump
+ dump-struct" ><tr class="base-header"  onClick="dump_toggle(this, false)"><td class="border bold bgd-struct
+ pointer" colspan="3"><span class="nowrap">Struct</span><span class="nobold"><span class="nowrap"></span
+></span></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this
+, true)">codePrintHTML</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple"
+ ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string
+</td><td class="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select 58:       
+                                        .addParam(name = &amp;quot;name&amp;quot;,             value
+ = variables.name,           cfsqltype = &amp;quot;cf_sql_varchar&amp;quot;)&lt;br&gt;
+59:                                               .addParam(name = &amp;quot;creatorUserId&amp;quot;
+,    value = request.user.getUserId(), cfsqltype = &amp;quot;cf_sql_numeric&amp;quot;)&lt;br&gt;
+&lt;b&gt;60:                                               .addParam(name = &amp;quot;lastEditorUserId
+&amp;quot;, value = request.user.getUserId(), cfsqltype = &amp;quot;cf_sql_numeric&amp;quot;)&lt;/b&gt
+;&lt;br&gt;
+61:                                               .execute()&lt;br&gt;
+62:                                               .getResult()&lt;br&gt;
+ characters" onClick="selectText(this);">58:                                               .addParam
+(name = &amp;quot;name&amp;quot;,             value = variables.name,           cfsqltype = &amp;quot
+;cf_sql_varchar&amp;quot;)&lt;br&gt;
+59:                                               .addParam(name = &amp;quot;creatorUserId&amp;quot;
+,    value = request.user.getUserId(), cfsqltype = &amp;quot;cf_sql_numeric&amp;quot;)&lt;br&gt;
+&lt;b&gt;60:                                               .addParam(name = &amp;quot;lastEditorUserId
+&amp;quot;, value = request.user.getUserId(), cfsqltype = &amp;quot;cf_sql_numeric&amp;quot;)&lt;/b&gt
+;&lt;br&gt;
+61:                                               .execute()&lt;br&gt;
+62:                                               .getResult()&lt;br&gt;
+</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct
+ pointer" onClick="dump_toggle(this, true)">codePrintPlain</td><td class="border rlabel bgl-struct">
+<table class="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick
+="dump_toggle(this, true)">string</td><td class="border rlabel bgl-simple" style="cursor: pointer;" title
+="Click to select 58:                                               .addParam(name = &quot;name&quot
+;,             value = variables.name,           cfsqltype = &quot;cf_sql_varchar&quot;)
+59:                                               .addParam(name = &quot;creatorUserId&quot;,    value
+ = request.user.getUserId(), cfsqltype = &quot;cf_sql_numeric&quot;)
+60:                                               .addParam(name = &quot;lastEditorUserId&quot;, value
+ = request.user.getUserId(), cfsqltype = &quot;cf_sql_numeric&quot;)
+61:                                               .execute()
+62:                                               .getResult()
+ characters" onClick="selectText(this);">58:                                               .addParam
+(name = &quot;name&quot;,             value = variables.name,           cfsqltype = &quot;cf_sql_varchar
+&quot;)
+59:                                               .addParam(name = &quot;creatorUserId&quot;,    value
+ = request.user.getUserId(), cfsqltype = &quot;cf_sql_numeric&quot;)
+60:                                               .addParam(name = &quot;lastEditorUserId&quot;, value
+ = request.user.getUserId(), cfsqltype = &quot;cf_sql_numeric&quot;)
+61:                                               .execute()
+62:                                               .getResult()
+</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct
+ pointer" onClick="dump_toggle(this, true)">column</td><td class="border rlabel bgl-struct"><table class
+="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle
+(this, true)">number</td><td class="border rlabel bgl-simple">0</td><td class="border rlabel bgl-simple"
+ style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"
+></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true
+)">id</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class="" >
+<td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class="border
+ rlabel bgl-simple" style="cursor: pointer;" title="Click to select ?? characters" onClick="selectText
+(this);">??</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td
+ class="border rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel
+ bgd-struct pointer" onClick="dump_toggle(this, true)">line</td><td class="border rlabel bgl-struct"
+><table class="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick
+="dump_toggle(this, true)">number</td><td class="border rlabel bgl-simple">60</td><td class="border rlabel
+ bgl-simple" style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display
+:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this
+, true)">Raw_Trace</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr
+ class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td
+><td class="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select api.com.icedreaper
+.gallery.category_cfc$cf.udfCall1(/var/lib/tomcat7/webapps/ROOT/API/com/IcedReaper/gallery/category.cfc
+:60) characters" onClick="selectText(this);">api.com.icedreaper.gallery.category_cfc$cf.udfCall1(/var
+/lib/tomcat7/webapps/ROOT/API/com/IcedReaper/gallery/category.cfc:60)</td><td class="border rlabel bgl-simple"
+ style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"
+></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true
+)">template</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class
+="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class
+="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select /var/lib/tomcat7/webapps
+/ROOT/API/com/IcedReaper/gallery/category.cfc characters" onClick="selectText(this);">/var/lib/tomcat7
+/webapps/ROOT/API/com/IcedReaper/gallery/category.cfc</td><td class="border rlabel bgl-simple" style
+="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"></td
+></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true)">type
+</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class="" ><td class
+="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class="border rlabel
+ bgl-simple" style="cursor: pointer;" title="Click to select cfml characters" onClick="selectText(this
+);">cfml</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class
+="border rlabel bgl-struct" style="display:none"></td></tr></table></td><td class="border rlabel bgl-array"
+ style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-array pointer" onClick="dump_toggle
+(this, true)">4</td><td class="border rlabel bgl-array"><table class="table-dump dump-struct" ><tr class
+="base-header"  onClick="dump_toggle(this, false)"><td class="border bold bgd-struct pointer" colspan
+="3"><span class="nowrap">Struct</span><span class="nobold"><span class="nowrap"></span></span></td>
+</tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true)">codePrintHTML
+</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class="" ><td class
+="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class="border rlabel
+ bgl-simple" style="cursor: pointer;" title="Click to select 209:                                   
+      required string  name) {&lt;br&gt;
+210:         var category = createObject(&amp;quot;component&amp;quot;, &amp;quot;API.com.IcedReaper
+.gallery.category&amp;quot;).init(arguments.categoryId);&lt;br&gt;
+&lt;b&gt;211:         category.setName(arguments.name)&lt;/b&gt;&lt;br&gt;
+212:                 .save();&lt;br&gt;
+213:         &lt;br&gt;
+ characters" onClick="selectText(this);">209:                                         required string
+  name) {&lt;br&gt;
+210:         var category = createObject(&amp;quot;component&amp;quot;, &amp;quot;API.com.IcedReaper
+.gallery.category&amp;quot;).init(arguments.categoryId);&lt;br&gt;
+&lt;b&gt;211:         category.setName(arguments.name)&lt;/b&gt;&lt;br&gt;
+212:                 .save();&lt;br&gt;
+213:         &lt;br&gt;
+</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct
+ pointer" onClick="dump_toggle(this, true)">codePrintPlain</td><td class="border rlabel bgl-struct">
+<table class="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick
+="dump_toggle(this, true)">string</td><td class="border rlabel bgl-simple" style="cursor: pointer;" title
+="Click to select 209:                                         required string  name) {
+210:         var category = createObject(&quot;component&quot;, &quot;API.com.IcedReaper.gallery.category
+&quot;).init(arguments.categoryId);
+211:         category.setName(arguments.name)
+212:                 .save();
+213:         
+ characters" onClick="selectText(this);">209:                                         required string
+  name) {
+210:         var category = createObject(&quot;component&quot;, &quot;API.com.IcedReaper.gallery.category
+&quot;).init(arguments.categoryId);
+211:         category.setName(arguments.name)
+212:                 .save();
+213:         
+</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct
+ pointer" onClick="dump_toggle(this, true)">column</td><td class="border rlabel bgl-struct"><table class
+="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle
+(this, true)">number</td><td class="border rlabel bgl-simple">0</td><td class="border rlabel bgl-simple"
+ style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"
+></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true
+)">id</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class="" >
+<td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class="border
+ rlabel bgl-simple" style="cursor: pointer;" title="Click to select ?? characters" onClick="selectText
+(this);">??</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td
+ class="border rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel
+ bgd-struct pointer" onClick="dump_toggle(this, true)">line</td><td class="border rlabel bgl-struct"
+><table class="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick
+="dump_toggle(this, true)">number</td><td class="border rlabel bgl-simple">211</td><td class="border
+ rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct"
+ style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle
+(this, true)">Raw_Trace</td><td class="border rlabel bgl-struct"><table class="table-dump dump-simple"
+ ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string
+</td><td class="border rlabel bgl-simple" style="cursor: pointer;" title="Click to select admin.modules
+.com.icedreaper.gallery.ajaxconnector_cfc$cf.udfCall2(/var/lib/tomcat7/webapps/ROOT/ADMIN/modules/com
+/IcedReaper/gallery/ajaxConnector.cfc:211) characters" onClick="selectText(this);">admin.modules.com
+.icedreaper.gallery.ajaxconnector_cfc$cf.udfCall2(/var/lib/tomcat7/webapps/ROOT/ADMIN/modules/com/IcedReaper
+/gallery/ajaxConnector.cfc:211)</td><td class="border rlabel bgl-simple" style="display:none"></td><
+/tr></table></td><td class="border rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td
+ class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true)">template</td><td class="border
+ rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple
+ pointer" onClick="dump_toggle(this, true)">string</td><td class="border rlabel bgl-simple" style="cursor
+: pointer;" title="Click to select /var/lib/tomcat7/webapps/ROOT/ADMIN/modules/com/IcedReaper/gallery
+/ajaxConnector.cfc characters" onClick="selectText(this);">/var/lib/tomcat7/webapps/ROOT/ADMIN/modules
+/com/IcedReaper/gallery/ajaxConnector.cfc</td><td class="border rlabel bgl-simple" style="display:none"
+></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"></td></tr><tr class
+="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true)">type</td><td class
+="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class="" ><td class="border rlabel
+ bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class="border rlabel bgl-simple"
+ style="cursor: pointer;" title="Click to select cfml characters" onClick="selectText(this);">cfml</td
+><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border rlabel
+ bgl-struct" style="display:none"></td></tr></table></td><td class="border rlabel bgl-array" style="display
+:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"></td></tr><tr
+ class="" ><td class="border rlabel bgd-struct pointer" onClick="dump_toggle(this, true)">type</td><td
+ class="border rlabel bgl-struct"><table class="table-dump dump-simple" ><tr class="" ><td class="border
+ rlabel bgd-simple pointer" onClick="dump_toggle(this, true)">string</td><td class="border rlabel bgl-simple"
+ style="cursor: pointer;" title="Click to select database characters" onClick="selectText(this);">database
+</td><td class="border rlabel bgl-simple" style="display:none"></td></tr></table></td><td class="border
+ rlabel bgl-struct" style="display:none"></td></tr><tr class="" ><td class="border rlabel bgd-struct
+ pointer" onClick="dump_toggle(this, true)">where</td><td class="border rlabel bgl-struct"><table class
+="table-dump dump-simple" ><tr class="" ><td class="border rlabel bgd-simple pointer" onClick="dump_toggle
+(this, true)">string</td><td class="border rlabel bgl-simple"></td><td class="border rlabel bgl-simple"
+ style="display:none"></td></tr></table></td><td class="border rlabel bgl-struct" style="display:none"
+></td></tr></table></div>
+<!-- == dump-end x5 == !-->

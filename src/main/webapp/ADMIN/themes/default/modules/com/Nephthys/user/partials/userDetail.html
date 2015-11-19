@@ -1,0 +1,73 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+            <a href="#/" class="btn btn-primary"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>User <small>{{user.username}}</small></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card card-block">
+            <h3>Details</h3>
+            <form novalidate>
+                <div class="form-group" ng-show="user.userId == 0">
+                    <label for="username">Benutzername</label>
+                    <input type="text" class="form-control" id="username" ng-disabled="user.userId != 0" placeholder="Username" ng-model="user.username">
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Adresse</label>
+                    <input type="email" class="form-control" id="email" placeholder="Email" ng-model="user.email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" id="password" placeholder="Password" ng-model="user.password">
+                </div>
+                <div class="form-group">
+                    <label for="active">Aktiv</label>
+                    <select class="form-control" ng-model="user.active">
+                        <option value="1">Aktiv</option>
+                        <option value="0">Inaktiv</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+            </form>
+        </div>
+        
+        <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
+            <h3>{{message.headline}}</h3>
+            <p>{{message.text}}</p>
+            <p>{{message.errorMessage}}</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card card-block">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Aktuelles Avatar</h3>
+                    <img alt="user avatar" class="img-fluid" ng-src="{{user.avatar}}">
+                </div>
+                <div class="col-md-6" ng-show="user.actualUser">
+                    <h3>Neues Avatar</h3>
+                    <form novalidate> <!--- todo: only show when actual user -->
+                        <div ng-show="user.newAvatar != undefined && user.newAvatar != ''">
+                            <img alt="neues user avatar" class="img-fluid" ngf-src="user.newAvatar">
+                        </div>
+                        
+                        <div class="form-group">
+                            <input type="file" ngf-select required accept="image/*" ng-model="user.newAvatar" ngf-fix-orientation="false">
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success" ng-click="uploadAvatar()"><i class="fa fa-upload"></i> Hochladen</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
