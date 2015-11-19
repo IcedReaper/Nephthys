@@ -57,4 +57,34 @@ body {
 
 .clickable {
     cursor: pointer;
+<<<<<<< Updated upstream
+=======
+}
+
+.nav-tabs .nav-link {
+    color: #FFFFFF;
+}
+
+.tab-content .tab-pane {
+    .card {
+        border-top: 0;
+    }
+    &.active:first-child .card {
+        border-top-left-radius: 0;
+    }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.loadingWheel {
+    animation-name: spin; 
+    animation-duration: 3s; /* 3 seconds */
+    animation-iteration-count: infinite; 
+    animation-timing-function: linear;
+    
+    width: 50px;
+>>>>>>> Stashed changes
 }
