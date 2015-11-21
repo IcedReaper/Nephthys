@@ -29,11 +29,11 @@
         };
         
         $scope.tabClasses = function (page) {
-            return "nav-link clickable " + (activePage === page ? "active" : "");
+            return (activePage === page ? "active" : "");
         };
         
         $scope.pageClasses = function (page) {
-            return "tab-pane " + (activePage === page ? "active" : "");
+            return (activePage === page ? "active" : "");
         };
         
         // init

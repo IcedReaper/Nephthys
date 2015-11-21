@@ -63,17 +63,10 @@ Adminbereich
 Module ( in eigenen Repos/Projekten )
     1. Gallery
         1. Move plugin into own project
-        2. Admin
-            Statistics
-            Images
-                Upload erstmal ohne Vorschau
-            Mehr Übersicht schaffen
-                Tabs in Angular Realisieren?
-        3. Weitere Möglichkeiten
+        2. Weitere Möglichkeiten
             Search
             Comments ? (Login nötig - Berechtigungen nötig)
             Release Date
-        4. Routen checken
     2. Blog
     3. Reviewsystem
 

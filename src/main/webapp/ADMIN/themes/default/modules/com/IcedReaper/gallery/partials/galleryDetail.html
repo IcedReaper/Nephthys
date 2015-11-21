@@ -14,14 +14,17 @@
 
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a ng-click="showPage('details')" ng-class="tabClasses('details')">Details</a>
+        <a ng-click="showPage('details')" ng-class="tabClasses('details')" class="nav-link clickable">Details</a>
     </li>
     <li class="nav-item">
-        <a ng-click="showPage('pictures')" ng-class="tabClasses('pictures')" ng-disabled="gallery.galleryId == 0">Bilder</a>
+        <a ng-click="showPage('pictures')" ng-class="tabClasses('pictures')" class="nav-link clickable" ng-disabled="gallery.galleryId == 0">Bilder</a>
+    </li>
+    <li class="nav-item">
+        <a ng-click="showPage('statistics')" ng-class="tabClasses('statistics')" class="nav-link clickable" ng-disabled="gallery.galleryId == 0">Statistiken</a>
     </li>
 </ul>
 <div class="tab-content">
-    <div ng-class="pageClasses('details')">
+    <div ng-class="pageClasses('details')" class="tab-pane">
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-block">
@@ -67,7 +70,10 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <h4>Geschichte zur Gallerie</h4>
-                                <div text-angular ng-model="gallery.story"></div>
+                                <div text-angular ng-model="gallery.story" ta-toolbar="[
+                                    ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
+                                    ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
+                                    ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent']]"></div>
                             </div>
                         </div>
                         
@@ -102,7 +108,7 @@
         </div>
     </div>
     
-    <div ng-class="pageClasses('pictures')">
+    <div ng-class="pageClasses('pictures')" class="tab-pane">
         <div ng-controller="galleryPictureCtrl" ng-show="galleryId != 0">
             <div class="row">
                 <div class="col-md-12">
@@ -155,6 +161,32 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div ng-class="pageClasses('statistics')" class="tab-pane">
+        <div ng-controller="galleryStatisticsCtrl" ng-show="galleryId != 0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-block">
+                        <button ng-click="load()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> Aktualisieren</button>
+                        
+                        <h3>Statistiken</h3>
+                        
+                        <h4>Aufrufe der letzten {{dayCount}} Tage</h4>
+                        <form novalidate>
+                            <div class="form-group row">
+                                <label for="dayCount" class="col-sm-5 col-md-3 form-control-label">Anzahl Tage</label>
+                                <div class="col-sm-7 col-md-9">
+                                    <input type="text" class="form-control" id="dayCount" placeholder="dayCount" ng-model="dayCount">
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <canvas chart-options="visitChart.options" chart-series="visitChart.series" chart-labels="visitChart.labels" chart-data="visitChart.data" class="chart chart-bar"></canvas>
                     </div>
                 </div>
             </div>
