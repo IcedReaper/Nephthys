@@ -233,7 +233,7 @@ component {
         
         var statisticsCtrl = createObject("component", "API.com.IcedReaper.gallery.statistics").init();
         
-        var statisticsData = statisticsCtrl.load(arguments.galleryId, dateAdd("d", dayCount * -1, now()), now());
+        var statisticsData = statisticsCtrl.load(arguments.galleryId, dateAdd("d", (dayCount - 1) * -1, now()), now());
         
         var labels = [];
         var data = [];
