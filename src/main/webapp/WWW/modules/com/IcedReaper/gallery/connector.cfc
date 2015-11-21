@@ -15,77 +15,83 @@ component implements="WWW.interfaces.connector" {
         themeIndividualizer.invokeResources();
         
         var splitParameter = listToArray(request.page.getParameter(), "/");
-        var gallerySearcher = createObject("component", "API.com.IcedReaper.gallery.search").init();
+        var gallerySearchCtrl = createObject("component", "API.com.IcedReaper.gallery.search").init();
         
         if(! structKeyExists(arguments.options, "maxEntries")) {
             arguments.options.maxEntries = 5;
         }
         
         if(splitParameter.len() == 0) {
-            gallerySearcher.setPublished(1)
+            gallerySearchCtrl.setPublished(1)
                            .setCount(arguments.options.maxEntries);
             
             return renderOverview(arguments.options,
-                                  gallerySearcher,
+                                  gallerySearchCtrl,
                                   1);
         }
         else {
             if(splitParameter[1] == "Seite" && splitParameter.len() == 2) { // todo: Seite multilingual
-                gallerySearcher.setPublished(1)
+                gallerySearchCtrl.setPublished(1)
                                .setCount(arguments.options.maxEntries)
                                .setOffset((splitParameter[2]-1) * arguments.options.maxEntries);
                 
                 return renderOverview(arguments.options,
-                                      gallerySearcher,
+                                      gallerySearchCtrl,
                                       splitParameter[2]);
             }
             else if(splitParameter[1] == "Kategorie") { // todo: Kategorie multilingual
                 if(splitParameter.len() == 2) {
-                    gallerySearcher.setPublished(1)
+                    gallerySearchCtrl.setPublished(1)
                                    .setCategory(splitParameter[2])
                                    .setCount(arguments.options.maxEntries);
                     
                     return renderOverview(arguments.options,
-                                          gallerySearcher,
+                                          gallerySearchCtrl,
                                           1);
                 }
                 else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") { // todo: Seite multilingual
-                    gallerySearcher.setPublished(1)
+                    gallerySearchCtrl.setPublished(1)
                                    .setCategory(splitParameter[2])
                                    .setCount(arguments.options.maxEntries)
                                    .setOffset((splitParameter[4]-1) * arguments.options.maxEntries);
                     
                     return renderOverview(arguments.options,
-                                          gallerySearcher,
+                                          gallerySearchCtrl,
                                           splitParameter[2]);
                 }
             }
             else {
-                var gallery = gallerySearcher.execute()[1];
+                var galleries = gallerySearchCtrl.setPublished(1)
+                                                 .setLink(request.page.getParameter())
+                                                 .execute();
                 
-                request.page.setDescription(gallery.getDescription())
-                            .setTitle(gallery.getHeadline());
+                if(galleries.len() == 1) {
+                    var gallery = galleries[1];
+                    
+                    request.page.setDescription(gallery.getDescription())
+                                .setTitle(gallery.getHeadline());
                 
-                gallerySearcher.setPublished(1)
-                               .setLink(request.page.getParameter());
-            
-                return renderDetails(arguments.options,
-                                     gallery);
+                    return renderDetails(arguments.options,
+                                         gallery);
+                }
+                else {
+                    throw(type = "icedreaper.gallery.notFound", message = "Could not find the gallery " & request.page.getParameter(), detail = request.page.getParameter());
+                }
             }
         }
     }
     
     private string function renderOverview(required struct  options,
-                                           required search  gallerySearcher,
+                                           required search  gallerySearchCtrl,
                                            required numeric actualPage) {
         var renderedContent = "";
         
         saveContent variable="renderedContent" {
             module template          = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/gallery/templates/overview.cfm"
                    options           = arguments.options
-                   galleries         = gallerySearcher.execute()
-                   totalGalleryCount = gallerySearcher.getTotalGalleryCount()
-                   totalPageCount    = ceiling(gallerySearcher.getTotalGalleryCount() / arguments.options.maxEntries)
+                   galleries         = gallerySearchCtrl.execute()
+                   totalGalleryCount = gallerySearchCtrl.getTotalGalleryCount()
+                   totalPageCount    = ceiling(gallerySearchCtrl.getTotalGalleryCount() / arguments.options.maxEntries)
                    actualPage        = arguments.actualPage;
         }
         
