@@ -141,3 +141,31 @@ ALTER TABLE icedreaper_gallery_galleryCategory OWNER TO nephthys_admin;
 
 GRANT ALL    ON TABLE icedreaper_gallery_galleryCategory TO nephthys_admin;
 GRANT SELECT ON TABLE icedreaper_gallery_galleryCategory TO nephthys_user;
+
+CREATE SEQUENCE seq_icedreaper_gallery_statistics_id
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER SEQUENCE seq_icedreaper_gallery_statistics_id OWNER TO nephthys_admin;
+
+CREATE TABLE public.icedreaper_gallery_statistics
+(
+  statisticsId integer NOT NULL DEFAULT nextval('seq_icedreaper_gallery_statistics_id'::regclass),
+  galleryId    integer NOT NULL,
+  openDate     timestamp with time zone NOT NULL DEFAULT now(),
+  
+  CONSTRAINT PK_icedreaper_gallery_statistics_id PRIMARY KEY (statisticsId),
+  CONSTRAINT FK_icedreaper_gallery_statistics_galleryId FOREIGN KEY (galleryId) REFERENCES icedreaper_gallery_gallery (galleryId) ON UPDATE NO ACTION ON DELETE CASCADE
+)
+WITH (
+  OIDS = FALSE
+);
+
+CREATE INDEX FKI_icedreaper_gallery_statistics_galleryId  ON icedreaper_gallery_statistics(galleryId);
+
+ALTER TABLE icedreaper_gallery_statistics OWNER TO nephthys_admin;
+
+GRANT ALL    ON TABLE icedreaper_gallery_statistics TO nephthys_admin;
+GRANT SELECT, INSERT ON TABLE icedreaper_gallery_statistics TO nephthys_user;
