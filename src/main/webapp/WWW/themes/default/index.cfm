@@ -21,7 +21,7 @@
     
     #request.page.renderResources("css")#
     
-    <link rel="stylesheet" href="/themes/default/css/default.css">
+    <link rel="stylesheet" href="/themes/default/css/main.css">
     
     <script src="/themes/default/assets/jQuery/jquery-2.1.4.min.js"></script>
     <script src="/themes/default/assets/bootstrap/js/bootstrap.min.js"></script>
