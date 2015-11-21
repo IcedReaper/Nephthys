@@ -13,10 +13,6 @@
                         templateUrl: "/themes/default/modules/com/Nephthys/user/partials/userDetail.html",
                         controller:  "userDetailCtrl"
                     })
-                    .when("/:userId/permissions", {
-                        templateUrl: "/themes/default/modules/com/Nephthys/user/partials/userPermissions.html",
-                        controller:  "userPermissionCtrl"
-                    })
                     .otherwise({
                         redirectTo: "/"
                     });

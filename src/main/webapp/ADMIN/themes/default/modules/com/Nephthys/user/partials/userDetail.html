@@ -71,3 +71,22 @@
         </div>
     </div>
 </div>
+<div class="row" ng-controller="userPermissionCtrl" ng-show="user.userId != 0">
+    <div class="col-md-6">
+        <div class="card card-block">
+            <h3>Berechtigungen</h3>
+            
+            <form novalidate>
+                <fieldset class="form-group" ng-repeat="permission in permissions">
+                    <label for="permission_{{permission.moduleId}}">{{permission.moduleName}}</label>
+                    <select name="{{permission.moduleId}}" id="permission_{{permission.moduleId}}" ng-model="permission.roleId" class="form-control">
+                        <option value="0">Nicht gesetzt</option>
+                        <option ng-repeat="role in roles" value="{{role.roleId}}">{{role.name}}</option>
+                    </select>
+                </fieldset>
+                
+                <button ng-click="save()" class="btn btn-success"><i class="fa fa-floppy-o"></i> Speichern</button>
+            </form>
+        </div>
+    </div>
+</div>

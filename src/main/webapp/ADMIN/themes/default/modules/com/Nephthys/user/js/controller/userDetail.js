@@ -1,11 +1,13 @@
 (function(angular) {
     var userDetailCtrl = angular.module('userDetailCtrl', ["userAdminService"]);
     
-    userDetailCtrl.controller('userDetailCtrl', function ($scope, $routeParams, userService) {
+    userDetailCtrl.controller('userDetailCtrl', function ($scope, $rootScope, $routeParams, userService) {
         userService
             .getDetails($routeParams.userId)
             .then(function (userDetails) {
                 $scope.user = userDetails.data;
+                
+                $rootScope.$emit('user-loaded', {userId: userDetails.data.userId});
             });
         
         $scope.save = function () {
