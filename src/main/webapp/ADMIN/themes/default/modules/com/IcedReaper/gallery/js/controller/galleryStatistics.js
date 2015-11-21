@@ -4,19 +4,26 @@
     galleryStatisticsCtrl.controller('galleryStatisticsCtrl', function ($scope, $rootScope, $routeParams, galleryService, $q) {
         var galleryId = null;
         $scope.load = function () {
-            galleryService
-                .getLastVisitChart(galleryId, 20)
-                .then(function (visitData) {
-                    $scope.visitChart = {
-                        labels: visitData.labels,
-                        data:   [visitData.data]
-                    };
-                });
+            if(galleryId !== null && ! isNaN(parseInt($scope.dayCount, 10))) {
+                galleryService
+                    .getLastVisitChart(galleryId, $scope.dayCount)
+                    .then(function (visitData) {
+                        $scope.visitChart = {
+                            labels: visitData.labels,
+                            data:   [visitData.data]
+                        };
+                    });
+            }
         };
+        
+        $scope.$watch('dayCount', $scope.load);
+        
         $scope.visitChart = {
             labels: [],
             data:   []
         };
+        
+        $scope.dayCount = 20;
         
         $rootScope.$on('gallery-loaded', function(event, galleryData) {
             galleryId = galleryData.galleryId;
