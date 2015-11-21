@@ -102,14 +102,14 @@ component {
                                                                     :userAgent
                                                                 );
                                                     SELECT currval('seq_nephthys_error_id' :: regclass) newErrorId")
-                                           .addParam(name = "errorCode",      value = variables.errorCode,            cfsqltype = "cf_sql_varchar")
-                                           .addParam(name = "link",           value = variables.link,                 cfsqltype = "cf_sql_varchar")
-                                           .addParam(name = "message",        value = variables.message,              cfsqltype = "cf_sql_varchar")
-                                           .addParam(name = "details",        value = variables.details,              cfsqltype = "cf_sql_varchar", null = (variables.details        == "" || variables.details        == null))
-                                           .addParam(name = "stacktrace",     value = variables.stacktrace,           cfsqltype = "cf_sql_varchar")
-                                           .addParam(name = "userId",         value = variables.userId,               cfsqltype = "cf_sql_numeric", null = (variables.userId         == 0  || variables.userId         == null))
-                                           .addParam(name = "referrer",       value = variables.referrer,             cfsqltype = "cf_sql_varchar", null = (variables.referrer       == "" || variables.referrer       == null))
-                                           .addParam(name = "userAgent",      value = left(variables.userAgent, 255), cfsqltype = "cf_sql_varchar", null = (variables.userAgent      == "" || variables.userAgent      == null))
+                                           .addParam(name = "errorCode",      value = left(variables.errorCode, 75),    cfsqltype = "cf_sql_varchar")
+                                           .addParam(name = "link",           value = left(variables.link, 255),        cfsqltype = "cf_sql_varchar")
+                                           .addParam(name = "message",        value = left(variables.message, 300),     cfsqltype = "cf_sql_varchar")
+                                           .addParam(name = "details",        value = left(variables.details, 200),     cfsqltype = "cf_sql_varchar", null = (variables.details        == "" || variables.details        == null))
+                                           .addParam(name = "stacktrace",     value = left(variables.stacktrace, 4000), cfsqltype = "cf_sql_varchar")
+                                           .addParam(name = "userId",         value = variables.userId,                 cfsqltype = "cf_sql_numeric", null = (variables.userId         == 0  || variables.userId         == null))
+                                           .addParam(name = "referrer",       value = left(variables.referrer, 255),    cfsqltype = "cf_sql_varchar", null = (variables.referrer       == "" || variables.referrer       == null))
+                                           .addParam(name = "userAgent",      value = left(variables.userAgent, 75),    cfsqltype = "cf_sql_varchar", null = (variables.userAgent      == "" || variables.userAgent      == null))
                                            .execute()
                                            .getResult()
                                            .newErrorId[1];
