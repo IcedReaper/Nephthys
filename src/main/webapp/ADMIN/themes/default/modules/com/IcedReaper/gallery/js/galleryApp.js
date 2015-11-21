@@ -7,6 +7,7 @@
                                                        "galleryDetailCtrl",
                                                        "galleryCategoryCtrl",
                                                        "galleryPictureCtrl",
+                                                       "galleryStatisticsCtrl",
                                                        "categoryListCtrl",
                                                        "categoryDetailCtrl"]);
     

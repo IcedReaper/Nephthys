@@ -226,6 +226,29 @@ component {
         };
     }
     
+    remote struct function getLastVisitChart(required numeric galleryId, required numeric dayCount) {
+        if(arguments.dayCount == 0) {
+            arguments.dayCount = 20;
+        }
+        
+        var statisticsCtrl = createObject("component", "API.com.IcedReaper.gallery.statistics").init();
+        
+        var statisticsData = statisticsCtrl.load(arguments.galleryId, dateAdd("d", dayCount * -1, now()), now());
+        
+        var labels = [];
+        var data = [];
+        for(var i = 1; i <= statisticsData.len(); i++) {
+            labels.append(application.tools.formatter.formatDate(statisticsData[i].date, false));
+            data.append(statisticsData[i].count);
+        }
+        
+        return {
+            "success" = true,
+            "labels"  = labels,
+            "data"    = data
+        };
+    }
+    
     
     // private
     private struct function prepareDetailStruct(required gallery gallery) {

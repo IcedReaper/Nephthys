@@ -14,14 +14,17 @@
 
 <ul class="nav nav-tabs">
     <li class="nav-item">
-        <a ng-click="showPage('details')" ng-class="tabClasses('details')">Details</a>
+        <a ng-click="showPage('details')" ng-class="tabClasses('details')" class="nav-link clickable">Details</a>
     </li>
     <li class="nav-item">
-        <a ng-click="showPage('pictures')" ng-class="tabClasses('pictures')" ng-disabled="gallery.galleryId == 0">Bilder</a>
+        <a ng-click="showPage('pictures')" ng-class="tabClasses('pictures')" class="nav-link clickable" ng-disabled="gallery.galleryId == 0">Bilder</a>
+    </li>
+    <li class="nav-item">
+        <a ng-click="showPage('statistics')" ng-class="tabClasses('statistics')" class="nav-link clickable" ng-disabled="gallery.galleryId == 0">Statistiken</a>
     </li>
 </ul>
 <div class="tab-content">
-    <div ng-class="pageClasses('details')">
+    <div ng-class="pageClasses('details')" class="tab-pane">
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-block">
@@ -102,7 +105,7 @@
         </div>
     </div>
     
-    <div ng-class="pageClasses('pictures')">
+    <div ng-class="pageClasses('pictures')" class="tab-pane">
         <div ng-controller="galleryPictureCtrl" ng-show="galleryId != 0">
             <div class="row">
                 <div class="col-md-12">
@@ -155,6 +158,23 @@
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div ng-class="pageClasses('statistics')" class="tab-pane">
+        <div ng-controller="galleryStatisticsCtrl" ng-show="galleryId != 0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-block">
+                        <button ng-click="load()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> Aktualisieren</button>
+                        
+                        <h3>Statistiken</h3>
+                        
+                        <h4>Aufrufe der letzten 20 Tage</h4>
+                        <canvas chart-options="visitChart.options" chart-series="visitChart.series" chart-labels="visitChart.labels" chart-data="visitChart.data" class="chart chart-bar"></canvas>
                     </div>
                 </div>
             </div>
