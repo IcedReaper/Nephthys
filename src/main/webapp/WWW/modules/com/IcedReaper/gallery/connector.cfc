@@ -94,6 +94,9 @@ component implements="WWW.interfaces.connector" {
     
     private string function renderDetails(required struct options, required gallery gallery) {
         var renderedContent = "";
+        var statisticsCtrl = createObject("component", "API.com.IcedReaper.gallery.statistics").init();
+        
+        statisticsCtrl.add(arguments.gallery.getGalleryId());
         
         saveContent variable="renderedContent" {
             module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/gallery/templates/galleryDetail.cfm"
