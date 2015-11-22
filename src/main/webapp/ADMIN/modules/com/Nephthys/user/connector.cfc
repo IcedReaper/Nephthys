@@ -7,6 +7,10 @@ component interface="ADMIN.interfaces.connector" {
         return 'com.Nephthys.user';
     }
     
+    public boolean function checkPermission(required user user) {
+        return arguments.user.hasPermission(moduleName = getName(), roleName = 'user');
+    }
+    
     public void function render() {
         include "/ADMIN/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/user/templates/index.cfm";
     }

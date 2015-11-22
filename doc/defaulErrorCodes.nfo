@@ -13,6 +13,7 @@ nephthys.application.notAllowed
 nephthys.application.invalidFormat
 nephthys.application.invalidContent
 nephthys.application.duplicateEntry
+nephthys.application.insufficientPermissions
 nephthys.notFound.page
 nephthys.notFound.module
 nephthys.notFound.user

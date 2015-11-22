@@ -7,6 +7,10 @@ component interface="ADMIN.interfaces.connector" {
         return 'com.Nephthys.dashboard';
     }
     
+    public boolean function checkPermission(required user user) {
+        return true;
+    }
+    
     public void function render() {
         var qHeapMemory = getMemoryUsage('heap');
         var totalHeapMemory = 0;
