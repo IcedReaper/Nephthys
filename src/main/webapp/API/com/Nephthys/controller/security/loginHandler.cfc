@@ -35,7 +35,7 @@ component {
                    .addParam(name = "successful", value = successful,        cfsqltype = "cf_sql_bit")
                    .execute();
         
-        return successful;
+        return userId;
     }
     
     public boolean function checkForUser(numeric userId = 0, string username = "") {
