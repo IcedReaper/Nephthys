@@ -28,15 +28,27 @@ component {
         return permissions;
     }
     
-    public array function loadForModuleId(required numeric moduleId) {
-        var qGetModuleUser = new Query().setSQL("    SELECT p.permissionId, p.userId, r.roleId, r.name roleName, r.value roleValue
-                                                       FROM nephthys_permission p
-                                                 INNER JOIN nephthys_role r ON p.roleId = r.roleId
-                                                      WHERE p.moduleId = :moduleId
-                                                   ORDER BY r.value ASC")
-                                            .addParam(name = "moduleId", value = arguments.moduleId, cfsqltype = "cf_sql_numeric")
-                                            .execute()
-                                            .getResult();
+    public array function loadForModuleId(required numeric moduleId, required numeric roleId = 0, required numeric roleValue = 0) {
+        var qryGetModuleUser = new Query();
+        var sql = "    SELECT p.permissionId, p.userId, r.roleId, r.name roleName, r.value roleValue
+                         FROM nephthys_permission p
+                   INNER JOIN nephthys_role r ON p.roleId = r.roleId
+                        WHERE p.moduleId = :moduleId ";
+        
+        if(arguments.roleId != 0) {
+            sql &= " AND p.roleId = :roleId ";
+            qryGetModuleUser.addParam(name = "roleId", value = arguments.roleId, cfsqltype = "cf_sql_numeric");
+        }
+        if(arguments.roleValue != 0) {
+            sql &= " AND r.value = :roleValue ";
+            qryGetModuleUser.addParam(name = "roleValue", value = arguments.roleValue, cfsqltype = "cf_sql_numeric");
+        }
+        
+        sql &= "ORDER BY r.value ASC";
+        qryGetModuleUser.setSQL(sql)
+                        .addParam(name = "moduleId", value = arguments.moduleId, cfsqltype = "cf_sql_numeric");
+        var qGetModuleUser = qryGetModuleUser.execute()
+                                             .getResult();
         
         var userArray = [];
         for(var i = 1; i <= qGetModuleUser.getRecordCount(); i++) {
@@ -50,6 +62,46 @@ component {
         }
         
         return userArray;
+    }
+    
+    public struct function loadRole(required numeric roleId) {
+        var qRole = new Query().setSQL("SELECT *
+                                          FROM nephthys_role
+                                         WHERE roleId = :roleId")
+                               .addParam(name = "roleId", value = arguments.roleId, cfsqltype = "cf_sql_numeric")
+                               .execute()
+                               .getResult();
+        
+        if(qRole.getRecordCount() == 1) {
+            return {
+                "roleId" = qRole.roleId[1],
+                "name"   = qRole.name[1],
+                "value"  = qRole.value[1]
+            };
+        }
+        else {
+            throw(type = "nephthys.notFound.role", message = "Could not find a role with the ID " & arguments.roleId, detail = arguments.roleId);
+        }
+    }
+    
+    public struct function loadRoleByName(required string roleName) {
+        var qRole = new Query().setSQL("SELECT *
+                                          FROM nephthys_role
+                                         WHERE name = :roleName")
+                               .addParam(name = "roleName", value = arguments.roleName, cfsqltype = "cf_sql_varchar")
+                               .execute()
+                               .getResult();
+        
+        if(qRole.getRecordCount() == 1) {
+            return {
+                "roleId" = qRole.roleId[1],
+                "name"   = qRole.name[1],
+                "value"  = qRole.value[1]
+            };
+        }
+        else {
+            throw(type = "nephthys.notFound.role", message = "Could not find a role with Name " & arguments.roleName, detail = arguments.roleName);
+        }
     }
     
     public array function loadRoles() {
