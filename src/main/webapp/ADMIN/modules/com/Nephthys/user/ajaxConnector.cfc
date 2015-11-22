@@ -110,25 +110,12 @@ component {
     }
     
     remote struct function getPermissions(required numeric userId) {
-        var qGetUserPermissions = new Query().setSQL("         SELECT m.moduleId, m.moduleName, m.description, p.permissionId, p.roleId
-                                                                 FROM nephthys_module m
-                                                      LEFT OUTER JOIN (SELECT *
-                                                                         FROM nephthys_permission perm
-                                                                        WHERE perm.userId = :userId) p ON m.moduleId = p.moduleId
-                                                             ORDER BY m.sortOrder ASC")
-                                            .addParam(name = "userId", value = arguments.userId, cfsqltype = "cf_sql_numeric")
-                                            .execute()
-                                            .getResult();
+        var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
+        var permissions = permissionHandlerCtrl.loadForUserId(arguments.userId);
         
-        var permissions = [];
-        for(var i = 1; i <= qGetUserPermissions.getRecordCount(); i++) {
-            permissions.append({
-                "moduleId"     = qGetUserPermissions.moduleId[i],
-                "moduleName"   = qGetUserPermissions.moduleName[i],
-                "description"  = qGetUserPermissions.description[i],
-                "permissionId" = toString(qGetUserPermissions.permissionId[i] != null ? qGetUserPermissions.permissionId[i] : 0),
-                "roleId"       = toString(qGetUserPermissions.roleId[i] != null ? qGetUserPermissions.roleId[i] : 0)
-            });
+        for(var i = 1; i <= permissions.len(); i++) {
+            permissions[i].permissionId = toString(permissions[i].permissionId != null ? permissions[i].permissionId : 0);
+            permissions[i].roleId       = toString(permissions[i].roleId != null ? permissions[i].roleId : 0);
         }
         
         
@@ -139,69 +126,38 @@ component {
     }
     
     remote struct function getRoles() {
-        var qRoles = new Query().setSQL("  SELECT roleId, name, value
-                                             FROM nephthys_role
-                                         ORDER BY value")
-                                .execute()
-                                .getResult();
-        
-        var roles = [];
-        for(var i = 1; i <= qRoles.getRecordCount(); i++) {
-            roles.append({
-                "roleId" = qRoles.roleId[i],
-                "name"   = qRoles.name[i],
-                "value"  = qRoles.value[i]
-            });
-        }
+        var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
         
         return {
             "success" = true,
-            "roles"   = roles
+            "roles"   = permissionHandlerCtrl.loadRoles()
         };
     }
     
     remote struct function savePermissions(required numeric userId, required array permissions) {
+        var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
+        
         transaction {
             for(var i = 1; i <= arguments.permissions.len(); i++) {
-                if(arguments.permissions[i].roleId == 0) continue;
-                
-                if(arguments.permissions[i].permissionId == 0) {
-                    new Query().setSQL("INSERT INTO nephthys_permission
-                                                    (
-                                                        userId,
-                                                        roleId,
-                                                        moduleId,
-                                                        creatorUserId,
-                                                        lastEditorUserId
-                                                    )
-                                             VALUES (
-                                                        :userId,
-                                                        :roleId,
-                                                        :moduleId,
-                                                        :creatorUserId,
-                                                        :lastEditorUserId
-                                                    )")
-                               .addParam(name = "userId",           value = arguments.userId,                  cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "roleId",           value = arguments.permissions[i].roleId,   cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "moduleId",         value = arguments.permissions[i].moduleId, cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "creatorUserId",    value = request.user.getUserId(),          cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "lastEditorUserId", value = request.user.getUserId(),          cfsqltype = "cf_sql_numeric")
-                               .execute();
+                if(arguments.permissions[i].roleId != 0) {
+                    permissionHandlerCtrl.setPermission(arguments.permissions[i].permissionId,
+                                                        arguments.userId,
+                                                        arguments.permissions[i].roleId,
+                                                        arguments.permissions[i].moduleId);
                 }
                 else {
-                    new Query().setSQL("UPDATE nephthys_permission
-                                           SET roleId           = :roleId,
-                                               lastEditorUserId = :lastEditorUserId
-                                         WHERE permissionId = :permissionId")
-                               .addParam(name = "roleId",           value = arguments.permissions[i].roleId,       cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "lastEditorUserId", value = request.user.getUserId(),              cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "permissionId",     value = arguments.permissions[i].permissionId, cfsqltype = "cf_sql_numeric")
-                               .execute();
+                    if(arguments.permissions[i].permissionId != 0) {
+                        permissionHandlerCtrl.removePermission(arguments.permissions[i].permissionId);
+                    }
+                    else {
+                        continue;
+                    }
                 }
             }
             
             transactionCommit();
         }
+        
         return {
             "success" = true
         };
