@@ -65,8 +65,8 @@ CREATE TABLE nephthys_user
   active boolean DEFAULT true,
   avatarFilename character varying(35) NOT NULL DEFAULT 'anonymous.png',
   
-  CONSTRAINT PK_nephthys_user_userId   PRIMARY KEY (userid),
-  CONSTRAINT FK_nephthys_user_themeId  FOREIGN KEY (themeid) REFERENCES nephthys_theme (themeid) ON UPDATE NO ACTION ON DELETE NO ACTION
+  CONSTRAINT PK_nephthys_user_userId PRIMARY KEY (userid),
+  CONSTRAINT FK_nephthys_user_themeId FOREIGN KEY (themeid) REFERENCES nephthys_theme (themeid) ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
@@ -118,7 +118,8 @@ CREATE TABLE nephthys_encryptionMethod
   algorithm character varying(20) NOT NULL,
   active boolean DEFAULT true,
   
-  CONSTRAINT PK_nephthys_encryptionMethod_id PRIMARY KEY (encryptMethodId)
+  CONSTRAINT PK_nephthys_encryptionMethod_id PRIMARY KEY (encryptMethodId),
+  CONSTRAINT UK_nephthys_encryptionMethod_algorithm UNIQUE (algorithm)
 )
 WITH (
   OIDS=FALSE

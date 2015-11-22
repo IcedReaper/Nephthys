@@ -38,27 +38,26 @@ Adminbereich
         1. Fileupload von einer zip/rar-Datei (siehe theme installation)
             Entpacken dieser in die 4 nötigen Ordner Frontend/Backend Admin/Website
         2. Installation per git-repository
-    2. Berechtigungssystem
-    3. Seitenmanagement
+    2. Seitenmanagement
         1. Contentbearbeitung
         2. Seitenversionierung
         3. Mehrsprachigkeit des Contents
         4. Seitenhierarchie
         5. Möglichkeit für unterschiedlichen Content bei Übersicht / Detailansicht ?
-    4. Thememanagement
+    3. Thememanagement
         1. Themeinstallation per git repository
             1. Check ob alle Module in dem Theme vorhanden sind. Sonst Warnung
-    5. Modul-Theme-Management
+    4. Modul-Theme-Management
         Was tun, wenn das Modul in einem Theme nicht vorhanden ist.
-    6. Workflow
-    7. DB Dump anbieten
-    8. Vorschau
+    5. Workflow
+    6. DB Dump anbieten
+    7. Vorschau
         => Template in ADMIN, welches ein Template in WWW inkludiert, wo dann die richtigen Sachen angezeigt werden; dann halt nur auch schon nicht veröffentlichte Sachen.
-    9. Errorlog - WORK ON HOLD
-    10. Implement "loading screen" into http interceptor
-    12. Sidebar auf Icons reduzieren
-    13. Dashboard untermodule in andere Dateien verschieben ggf mehr übersicht schaffen
-    14. Assets weiter optimieren
+    8. Errorlog - WORK ON HOLD
+    9. Implement "loading screen" into http interceptor
+    10. Sidebar auf Icons reduzieren
+    11. Dashboard untermodule in andere Dateien verschieben ggf mehr übersicht schaffen
+    12. Assets weiter optimieren
 
 Module ( in eigenen Repos/Projekten )
     1. Gallery
