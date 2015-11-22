@@ -47,6 +47,10 @@ component {
                 
                 request.moduleController = getTargetModule(url.moduleName);
                 
+                if(! request.moduleController.checkPermission(request.user)) {
+                    throw(type = "nephthys.application.insufficientPermissions", message = "You do not have sufficient permissions to use this module", detail = request.moduleController.getName());
+                }
+                
                 break;
             }
             case 'cfc': {

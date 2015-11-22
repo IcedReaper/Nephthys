@@ -6,6 +6,11 @@ component interface="ADMIN.interfaces.connector" {
     public string function getName() {
         return "com.Nephthys.pages";
     }
+    
+    public boolean function checkPermission(required user user) {
+        return arguments.user.hasPermission(moduleName = getName(), roleName = 'user');
+    }
+    
     public void function render() {
         include "/ADMIN/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/pages/templates/index.cfm";
     }

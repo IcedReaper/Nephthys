@@ -15,18 +15,6 @@
                     });
                 },
                 
-                getPermissions: function (userId) {
-                    return $http.get('/ajax/com/Nephthys/user/getPermissions', {
-                        params: {
-                            userId: userId
-                        }
-                    });
-                },
-                
-                getPermissionList: function () {
-                    return $http.get('/ajax/com/Nephthys/user/getPermissionList');
-                },
-                
                 save: function (user) {
                     return $http.post('/ajax/com/Nephthys/user/save', user);
                 },
@@ -56,6 +44,25 @@
                             avatar: avatar,
                             userId: userId
                         },
+                    });
+                },
+                
+                getPermissions: function (userId) {
+                    return $http.get('/ajax/com/Nephthys/user/getPermissions', {
+                        params: {
+                            userId: userId
+                        }
+                    });
+                },
+                
+                getRoles: function () {
+                    return $http.get('/ajax/com/Nephthys/user/getRoles');
+                },
+                
+                savePermissions: function (userId, permissions) {
+                    return $http.post('/ajax/com/Nephthys/user/savePermissions', {
+                        userId:      userId,
+                        permissions: permissions
                     });
                 }
             };

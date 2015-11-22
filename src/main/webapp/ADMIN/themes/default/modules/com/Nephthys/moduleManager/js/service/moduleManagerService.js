@@ -39,6 +39,25 @@
                     return $http.post('/ajax/com/Nephthys/moduleManager/deactivate', {
                         moduleId: moduleId
                     });
+                },
+                
+                getRoles: function () {
+                    return $http.get('/ajax/com/Nephthys/moduleManager/getRoles');
+                },
+                
+                getUser: function (moduleId) {
+                    return $http.get('/ajax/com/Nephthys/moduleManager/getUser', {
+                        params: {
+                            moduleId: moduleId
+                        }
+                    });
+                },
+                
+                savePermissions: function  (moduleId, permissions) {
+                    return $http.post('/ajax/com/Nephthys/moduleManager/savePermissions', {
+                        moduleId:    moduleId,
+                        permissions: permissions
+                    });
                 }
             };
         });

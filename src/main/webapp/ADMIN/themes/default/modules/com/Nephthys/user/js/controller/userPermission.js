@@ -1,25 +1,33 @@
 (function(angular) {
     var userPermissionCtrl = angular.module('userPermissionCtrl', ["userAdminService"]);
     
-    userPermissionCtrl.controller('userPermissionCtrl', function ($scope, $routeParams, userService, $q) {
-        // making multiple parallel ajax calls
-        $q.all([
-                userService.getDetails($routeParams.userId),
-                userService.getPermissions($routeParams.userId),
-                userService.getPermissionList()
-            ])
-            // and merging them
-            .then($q.spread(function (userDetails, permissionsOfUser, permissionList) {
-                    $scope.username = userDetails.data.username;
-                    
-                    console.log('permissionsOfUser', permissionsOfUser);
-                    console.log('permissionList', permissionList);
-                }));
+    userPermissionCtrl.controller('userPermissionCtrl', function ($scope, $rootScope, $routeParams, userService, $q) {
+        var userId = null;
         
-        $scope.save = function(user) {
-            console.log('save permissions...');
+        $scope.load = function () {
+            if(userId !== null) {
+                $q.all([
+                    userService.getPermissions($routeParams.userId),
+                    userService.getRoles()
+                ])
+                // and merging them
+                .then($q.spread(function (permissionsOfUser, roles) {
+                    $scope.permissions = permissionsOfUser.permissions;
+                    $scope.roles       = roles.roles;
+                }));
+            }
         };
         
-        $scope.username = '';
+        $scope.save = function () {
+            userService
+                .savePermissions(userId, $scope.permissions)
+                .then($scope.load);
+        };
+        
+        $rootScope.$on('user-loaded', function(event, userData) {
+            userId = userData.userId;
+            
+            $scope.load();
+        });
     });
 }(window.angular));

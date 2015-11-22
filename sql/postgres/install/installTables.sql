@@ -65,8 +65,8 @@ CREATE TABLE nephthys_user
   active boolean DEFAULT true,
   avatarFilename character varying(35) NOT NULL DEFAULT 'anonymous.png',
   
-  CONSTRAINT PK_nephthys_user_userId   PRIMARY KEY (userid),
-  CONSTRAINT FK_nephthys_user_themeId  FOREIGN KEY (themeid) REFERENCES nephthys_theme (themeid) ON UPDATE NO ACTION ON DELETE NO ACTION
+  CONSTRAINT PK_nephthys_user_userId PRIMARY KEY (userid),
+  CONSTRAINT FK_nephthys_user_themeId FOREIGN KEY (themeid) REFERENCES nephthys_theme (themeid) ON UPDATE NO ACTION ON DELETE NO ACTION
 )
 WITH (
   OIDS=FALSE
@@ -118,7 +118,8 @@ CREATE TABLE nephthys_encryptionMethod
   algorithm character varying(20) NOT NULL,
   active boolean DEFAULT true,
   
-  CONSTRAINT PK_nephthys_encryptionMethod_id PRIMARY KEY (encryptMethodId)
+  CONSTRAINT PK_nephthys_encryptionMethod_id PRIMARY KEY (encryptMethodId),
+  CONSTRAINT UK_nephthys_encryptionMethod_algorithm UNIQUE (algorithm)
 )
 WITH (
   OIDS=FALSE
@@ -416,3 +417,101 @@ ALTER TABLE nephthys_error OWNER TO nephthys_admin;
 
 GRANT ALL            ON TABLE nephthys_error TO nephthys_admin;
 GRANT SELECT, INSERT ON TABLE nephthys_error TO nephthys_user;
+
+
+/* ~~~~~~~~~~~~~~~~~~ P E R M I S S I O N S ~~~~~~~~~~~~~~~~~~ */
+
+CREATE SEQUENCE seq_nephthys_role_id
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 65535
+  START 1
+  CACHE 1;
+ALTER SEQUENCE seq_nephthys_role_id OWNER TO nephthys_admin;
+
+CREATE TABLE public.nephthys_role
+(
+  roleId integer NOT NULL DEFAULT nextval('seq_nephthys_role_id'::regclass),
+  name character varying(50) NOT NULL,
+  value integer NOT NULL,
+  
+  CONSTRAINT PK_nephthys_role_id PRIMARY KEY (roleId),
+  CONSTRAINT UK_nephthys_role_name UNIQUE (name),
+  CONSTRAINT UK_nephthys_role_value UNIQUE (value)
+)
+WITH (
+  OIDS = FALSE
+);
+
+CREATE INDEX IDX_nephthys_role_nameValue ON nephthys_role(name, value);
+
+ALTER TABLE nephthys_role OWNER TO nephthys_admin;
+
+GRANT ALL    ON TABLE nephthys_role TO nephthys_admin;
+GRANT SELECT ON TABLE nephthys_role TO nephthys_user;
+
+CREATE SEQUENCE seq_nephthys_permission_id
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER SEQUENCE seq_nephthys_permission_id OWNER TO nephthys_admin;
+
+CREATE TABLE public.nephthys_permission
+(
+  permissionId integer NOT NULL DEFAULT nextval('seq_nephthys_permission_id'::regclass),
+  userId integer NOT NULL,
+  roleId integer NOT NULL,
+  moduleId integer NOT NULL,
+  creatorUserId integer NOT NULL,
+  creationDate timestamp with time zone NOT NULL DEFAULT now(),
+  lastEditorUserId integer NOT NULL,
+  lastEditDate timestamp with time zone NOT NULL DEFAULT now(),
+  
+  CONSTRAINT PK_nephthys_permission_id PRIMARY KEY (permissionId),
+  CONSTRAINT FK_nephthys_permission_roleId           FOREIGN KEY (roleId)           REFERENCES nephthys_role   (roleId)   ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT FK_nephthys_permission_moduleId         FOREIGN KEY (moduleId)         REFERENCES nephthys_module (moduleId) ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT FK_nephthys_permission_userId           FOREIGN KEY (userId)           REFERENCES nephthys_user   (userId)   ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT FK_nephthys_permission_creatorUserId    FOREIGN KEY (creatorUserId)    REFERENCES nephthys_user   (userId)   ON UPDATE NO ACTION ON DELETE SET NULL,
+  CONSTRAINT FK_nephthys_permission_lastEditorUserId FOREIGN KEY (lastEditorUserId) REFERENCES nephthys_user   (userId)   ON UPDATE NO ACTION ON DELETE SET NULL
+)
+WITH (
+  OIDS = FALSE
+);
+
+CREATE        INDEX IDX_nephthys_permission_roleUserModule ON nephthys_permission(roleId, userId, moduleId);
+CREATE UNIQUE INDEX UK_nephthys_permission_userIdModuleId  ON nephthys_permission(userId, moduleId);
+
+ALTER TABLE nephthys_permission OWNER TO nephthys_admin;
+
+GRANT ALL    ON TABLE nephthys_permission TO nephthys_admin;
+GRANT SELECT ON TABLE nephthys_permission TO nephthys_user;
+
+INSERT INTO nephthys_role
+            (
+                name,
+                value
+            )
+     VALUES (
+                'user',
+                10
+            );
+INSERT INTO nephthys_role
+            (
+                name,
+                value
+            )
+     VALUES (
+                'editor',
+                30
+            );
+INSERT INTO nephthys_role
+            (
+                name,
+                value
+            )
+     VALUES (
+                'admin',
+                100
+            );

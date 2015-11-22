@@ -73,6 +73,29 @@ component {
         return variables.avatarFilename;
     }
     
+    public boolean function hasPermission(required string moduleName, numeric roleId = 0, numeric roleValue = 0, string roleName = "") {
+        if(arguments.roleValue == 0) {
+            var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
+            
+            if(arguments.roleId != 0) {
+                arguments.roleValue = permissionHandlerCtrl.loadRole(arguments.roleId).value;
+            }
+            else if(arguments.roleName != "") {
+                arguments.roleValue = permissionHandlerCtrl.loadRoleByName(arguments.roleName).value;
+            }
+            else {
+                throw(type = "nephthys.application.notAllowed", message = "Please define a role to be checked. Either by roleId, roleValue or roleName");
+            }
+        }
+        
+        if(structKeyExists(variables.permissions, arguments.moduleName)) {
+            return (variables.permissions[arguments.moduleName] >= arguments.roleValue);
+        }
+        else {
+            throw(type = "nephthys.notFound.module", message = "The module could not be found");
+        }
+    }
+    
     // C R U D
     public user function save() {
         if(variables.userId == 0) { // create a new user
@@ -172,5 +195,22 @@ component {
         
         variables.extendedProperties = createObject("component", "extendedProperties").init(variables.userId);
         variables.theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(variables.themeId);
+        
+        loadPermissions();
+    }
+    
+    private void function loadPermissions() {
+        var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
+        var perms = permissionHandlerCtrl.loadForUserId(variables.userId);
+        
+        variables.permissions = {};
+        for(var i = 1; i <= perms.len(); i++) {
+            if(perms[i].roleId != null) {
+                variables.permissions[ perms[i].moduleName ] = permissionHandlerCtrl.loadRole(perms[i].roleId).value;
+            }
+            else {
+                variables.permissions[ perms[i].moduleName ] = 0;
+            }
+        }
     }
 }

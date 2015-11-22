@@ -8,20 +8,20 @@ component {
         
         for(var i = 1; i <= userArray.len(); i++) {
             data.append({
-                    'userId'   = userArray[i].getUserId(),
-                    'username' = userArray[i].getUserName(),
-                    'email'    = userArray[i].getEmail(),
-                    'active'   = userArray[i].getActiveStatus()/*,
-                    'actions' = [
-                        'activeStatus' = true,
-                        'permissions'  = false
+                    "userId"   = userArray[i].getUserId(),
+                    "username" = userArray[i].getUserName(),
+                    "email"    = userArray[i].getEmail(),
+                    "active"   = userArray[i].getActiveStatus()/*,
+                    "actions" = [
+                        "activeStatus" = true,
+                        "permissions"  = false
                     ]*/
                 });
         }
         
         return {
-            'success' = true,
-            'data'    = data
+            "success" = true,
+            "data"    = data
         };
     }
     
@@ -29,8 +29,8 @@ component {
         var user = createObject("component", "API.com.Nephthys.classes.user.user").init(arguments.userId);
         
         return {
-            'success' = true,
-            'data' = prepareDetailStruct(user)
+            "success" = true,
+            "data" = prepareDetailStruct(user)
         };
     }
     
@@ -57,8 +57,8 @@ component {
         user.save();
         
         return {
-            'success' = true,
-            'data'    = prepareDetailStruct(createObject("component", "API.com.Nephthys.classes.user.user").init(arguments.userId))
+            "success" = true,
+            "data"    = prepareDetailStruct(createObject("component", "API.com.Nephthys.classes.user.user").init(arguments.userId))
         };
     }
     
@@ -68,7 +68,7 @@ component {
         user.delete();
         
         return {
-            'success' = true
+            "success" = true
         };
     }
     
@@ -78,7 +78,7 @@ component {
             .save();
         
         return {
-            'success' = true
+            "success" = true
         };
     }
     
@@ -88,63 +88,7 @@ component {
             .save();
         
         return {
-            'success' = true
-        };
-    }
-    
-    remote struct function getPermissions(required numeric userId) {
-        return {
-            'success' = true
-        };
-    }
-    
-    remote struct function getPermissionList() {
-        return {
-            'success' = true,
-            'permissions' = [
-                {
-                    'id'   = 1,
-                    'name' = 'userEdit',
-                    'roles' = [
-                        {
-                            'id' = 1,
-                            'name' = 'Reader'
-                        },
-                        {
-                            'id' = 2,
-                            'name' = 'Editor'
-                        }
-                    ]
-                },
-                {
-                    'id'   = 2,
-                    'name' = 'permissionEdit',
-                    'roles' = [
-                        {
-                            'id' = 1,
-                            'name' = 'Reader'
-                        },
-                        {
-                            'id' = 2,
-                            'name' = 'Editor'
-                        }
-                    ]
-                },
-                {
-                    'id'   = 3,
-                    'name' = 'moduleEdit',
-                    'roles' = [
-                        {
-                            'id' = 1,
-                            'name' = 'Reader'
-                        },
-                        {
-                            'id' = 2,
-                            'name' = 'Editor'
-                        }
-                    ]
-                }
-            ]
+            "success" = true
         };
     }
     
@@ -156,25 +100,80 @@ component {
                 .save();
             
             return {
-                'success' = true,
-                'avatar'  = "/upload/com.Nephthys.user/avatar/" & user.getAvatarFilename()
+                "success" = true,
+                "avatar"  = "/upload/com.Nephthys.user/avatar/" & user.getAvatarFilename()
             };
         }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "It is only allowed to upload an avatar for yourself");
+        }
+    }
+    
+    remote struct function getPermissions(required numeric userId) {
+        var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
+        var permissions = permissionHandlerCtrl.loadForUserId(arguments.userId);
         
-        throw(type = "nephthys.permission.notAuthorized", message = "It's only allowed to upload an avatar for yourself");
+        for(var i = 1; i <= permissions.len(); i++) {
+            permissions[i].permissionId = toString(permissions[i].permissionId != null ? permissions[i].permissionId : 0);
+            permissions[i].roleId       = toString(permissions[i].roleId != null ? permissions[i].roleId : 0);
+        }
+        
+        
+        return {
+            "success"     = true,
+            "permissions" = permissions
+        };
+    }
+    
+    remote struct function getRoles() {
+        var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
+        
+        return {
+            "success" = true,
+            "roles"   = permissionHandlerCtrl.loadRoles()
+        };
+    }
+    
+    remote struct function savePermissions(required numeric userId, required array permissions) {
+        var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
+        
+        transaction {
+            for(var i = 1; i <= arguments.permissions.len(); i++) {
+                if(arguments.permissions[i].roleId != 0) {
+                    permissionHandlerCtrl.setPermission(arguments.permissions[i].permissionId,
+                                                        arguments.userId,
+                                                        arguments.permissions[i].roleId,
+                                                        arguments.permissions[i].moduleId);
+                }
+                else {
+                    if(arguments.permissions[i].permissionId != 0) {
+                        permissionHandlerCtrl.removePermission(arguments.permissions[i].permissionId);
+                    }
+                    else {
+                        continue;
+                    }
+                }
+            }
+            
+            transactionCommit();
+        }
+        
+        return {
+            "success" = true
+        };
     }
     
     // P R I V A T E   M E T H O D S
     
     private struct function prepareDetailStruct(required user userObject) {
         return {
-            'userId'     = arguments.userObject.getUserId(),
-            'username'   = arguments.userObject.getUserName(),
-            'email'      = arguments.userObject.getEmail(),
-            'active'     = toString(arguments.userObject.getActiveStatus()),
-            'password'   = '      ',
-            'avatar'     = "/upload/com.Nephthys.user/avatar/" & arguments.userObject.getAvatarFilename(),
-            'actualUser' = arguments.userObject.getUserId() == request.user.getUserId()
+            "userId"     = arguments.userObject.getUserId(),
+            "username"   = arguments.userObject.getUserName(),
+            "email"      = arguments.userObject.getEmail(),
+            "active"     = toString(arguments.userObject.getActiveStatus()),
+            "password"   = "      ",
+            "avatar"     = "/upload/com.Nephthys.user/avatar/" & arguments.userObject.getAvatarFilename(),
+            "actualUser" = arguments.userObject.getUserId() == request.user.getUserId()
         };
     }
 }
