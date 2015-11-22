@@ -53,15 +53,39 @@ component {
         var userArray = [];
         for(var i = 1; i <= qGetModuleUser.getRecordCount(); i++) {
             userArray.append({
-                "permissionId" = qGetUserPermissions.permissionId[i],
-                "user"         = createComponent("component", "API.com.Nephthys.classes.user.user").init(qGetUserPermissions.userId[i]),
-                "roleId"       = qGetUserPermissions.roleId[i],
-                "roleName"     = qGetUserPermissions.roleName[i],
-                "roleValue"    = qGetUserPermissions.roleValue[i]
+                "permissionId" = qGetModuleUser.permissionId[i],
+                "user"         = createObject("component", "API.com.Nephthys.classes.user.user").init(qGetModuleUser.userId[i]),
+                "roleId"       = qGetModuleUser.roleId[i],
+                "roleName"     = qGetModuleUser.roleName[i],
+                "roleValue"    = qGetModuleUser.roleValue[i]
             });
         }
         
         return userArray;
+    }
+    
+    public array function loadUserForModule(required numeric moduleId) {
+        var qGetUser = new Query().setSQL("         SELECT u.userId, p.roleId, p.permissionId
+                                                      FROM nephthys_user u
+                                           LEFT OUTER JOIN (SELECT perm.*
+                                                              FROM nephthys_permission perm
+                                                             WHERE perm.moduleId = :moduleId) p ON u.userId = p.userId
+                                                  ORDER BY u.userId")
+                                  .addParam(name = "moduleId", value = arguments.moduleId, cfsqltype = "cf_sql_numeric")
+                                  .execute()
+                                  .getResult();
+        
+        var userArray = [];
+        for(var i = 1; i <= qGetUser.getRecordCount(); i++) {
+            userArray.append({
+                "permissionId" = qGetUser.permissionId[i],
+                "user"         = createObject("component", "API.com.Nephthys.classes.user.user").init(qGetUser.userId[i]),
+                "roleId"       = qGetUser.roleId[i]
+            });
+        }
+        
+        return userArray;
+        
     }
     
     public struct function loadRole(required numeric roleId) {
@@ -127,7 +151,7 @@ component {
                                        required numeric userId,
                                        required numeric roleId,
                                        required numeric moduleId) {
-        if(arguments.permissionId == 0) {
+        if(arguments.permissionId == 0 || arguments.permissionId == null) {
             new Query().setSQL("INSERT INTO nephthys_permission
                                             (
                                                 userId,

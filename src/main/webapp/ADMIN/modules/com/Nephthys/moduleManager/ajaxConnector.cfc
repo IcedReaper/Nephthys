@@ -87,4 +87,62 @@ component {
             'success' = true
         };
     }
+    
+    remote struct function getRoles() {
+        var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
+        
+        return {
+            "success" = true,
+            "roles"   = permissionHandlerCtrl.loadRoles()
+        };
+    }
+    
+    remote struct function getUser(required numeric moduleId) {
+        var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
+        
+        var users = permissionHandlerCtrl.loadUserForModule(arguments.moduleId);
+        var userArray = [];
+        for(var i = 1; i <= users.len(); i++) {
+            userArray.append({
+                "permissionId" = users[i].permissionId,
+                "userId"       = users[i].user.getUserId(),
+                "userName"     = users[i].user.getUserName(),
+                "roleId"       = toString(users[i].roleId != null ? users[i].roleId : 0)
+            });
+        }
+        
+        return {
+            "success" = true,
+            "users"   = userArray
+        };
+    }
+    
+    remote struct function savePermissions(required numeric moduleId, required array permissions) {
+        var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
+        
+        transaction {
+            for(var i = 1; i <= arguments.permissions.len(); i++) {
+                if(arguments.permissions[i].roleId != 0) {
+                    permissionHandlerCtrl.setPermission(arguments.permissions[i].permissionId,
+                                                        arguments.permissions[i].userId,
+                                                        arguments.permissions[i].roleId,
+                                                        arguments.moduleId);
+                }
+                else {
+                    if(arguments.permissions[i].permissionId != 0 && arguments.permissions[i].permissionId != null) {
+                        permissionHandlerCtrl.removePermission(arguments.permissions[i].permissionId);
+                    }
+                    else {
+                        continue;
+                    }
+                }
+            }
+            
+            transactionCommit();
+        }
+        
+        return {
+            "success" = true
+        };
+    }
 }
