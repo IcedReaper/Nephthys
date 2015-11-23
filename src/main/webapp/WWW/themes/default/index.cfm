@@ -16,9 +16,6 @@
     
     <meta name="description" content="#request.page.getDescription()#">
     
-    <link rel="stylesheet" href="/themes/default/assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/themes/default/assets/bootstrap/css/bootstrap-theme.min.css">
-    
     #request.page.renderResources("css")#
     
     <link rel="stylesheet" href="/themes/default/css/main.css">
@@ -29,11 +26,9 @@
     #request.page.renderResources("js")#
 </head>
 <body>
-    <div class="container">
-        <header>
-            #createObject("component", "WWW.modules.com.Nephthys.navigation.connector").init().header()#
-        </header>
-    </div>
+    <header>
+        #createObject("component", "WWW.modules.com.Nephthys.navigation.connector").init().header()#
+    </header>
     <main>
         #request.content#
     </main>

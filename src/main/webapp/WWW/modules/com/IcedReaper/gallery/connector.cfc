@@ -18,7 +18,7 @@ component implements="WWW.interfaces.connector" {
         var gallerySearchCtrl = createObject("component", "API.com.IcedReaper.gallery.search").init();
         
         if(! structKeyExists(arguments.options, "maxEntries")) {
-            arguments.options.maxEntries = 5;
+            arguments.options.maxEntries = 1;
         }
         
         if(splitParameter.len() == 0) {
