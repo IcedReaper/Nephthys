@@ -8,7 +8,7 @@
                 <input class="form-control" name="username">
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Suchen</button>
+                <button type="submit" class="btn btn-primary"><span class="fa fa-search"></span> Suchen</button>
             </div>
         </form>
     </div>
