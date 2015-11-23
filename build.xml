@@ -26,26 +26,6 @@
         <antcall target="syncWithSass">
             <param name="appFolder" value="ADMIN" />
         </antcall>
-        
-        <!-- ext admin stuff -->
-        <echo>Deploying additional stuff (Fonts, JS, etc)</echo>
-        <copy todir="${path.deployment.root}\ADMIN\themes\default\fonts">
-            <fileset dir="${external.frameworks.fontAwesome}\fonts" />
-        </copy>
-        
-        <concat destfile="${path.deployment.root}\ADMIN\themes\default\assets\bootstrap\js\bootstrap.min.js" force="no">
-            <path path="${external.frameworks.bootstrap}/js/dist/util.js" />
-            <path path="${external.frameworks.bootstrap}/js/dist/alert.js" />
-            <path path="${external.frameworks.bootstrap}/js/dist/button.js" />
-            <path path="${external.frameworks.bootstrap}/js/dist/carousel.js" />
-            <path path="${external.frameworks.bootstrap}/js/dist/collapse.js" />
-            <path path="${external.frameworks.bootstrap}/js/dist/dropdown.js" />
-            <path path="${external.frameworks.bootstrap}/js/dist/modal.js" />
-            <path path="${external.frameworks.bootstrap}/js/dist/scrollspy.js" />
-            <path path="${external.frameworks.bootstrap}/js/dist/tab.js" />
-            <path path="${external.frameworks.bootstrap}/js/dist/tooltip.js" />
-            <path path="${external.frameworks.bootstrap}/js/dist/popover.js" />
-        </concat>
     </target>
     
     <target name="syncWithSass">
@@ -76,6 +56,26 @@
             <arg line="${www.path.source.sassFile}:${www.path.target.sassFile}" />
         </exec>
         <echo>Sass compiled${line.separator}from:${www.path.source.sassFile} ${line.separator}to:${www.path.target.sassFile}</echo>
+        
+        <!-- ext admin stuff -->
+        <echo>Deploying additional stuff (Fonts, JS, etc)</echo>
+        <copy todir="${www.path.target.root}\themes\default\fonts">
+            <fileset dir="${external.frameworks.fontAwesome}\fonts" />
+        </copy>
+        
+        <concat destfile="${www.path.target.root}\themes\default\assets\bootstrap\js\bootstrap.min.js" force="no">
+            <path path="${external.frameworks.bootstrap}/js/dist/util.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/alert.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/button.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/carousel.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/collapse.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/dropdown.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/modal.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/scrollspy.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/tab.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/tooltip.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/popover.js" />
+        </concat>
     </target>
     
     <target name="syncAPI">
