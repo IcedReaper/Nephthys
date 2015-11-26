@@ -1,0 +1,111 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+            <a href="#/categories" class="btn btn-secondary"><i class="fa fa-tags"></i> Kategorieübersicht</a>
+            <a href="#/0" class="btn btn-primary">Neuen Blogpost anlegen</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Blogübersicht</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3>Filtern</h3>
+        <form class="form-horizontal">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="filterActiveStatus" class="col-sm-3 control-label">Aktiv</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" name="filterActiveStatus" ng-model="search.active">
+                                <option value="">Alle</option>
+                                <option value="1">Aktiv</option>
+                                <option value="0">Inaktiv</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="filterCategory" class="col-sm-3 control-label">Kategorie</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" name="filterCategory"><!-- ng-model="search.category">-->
+                                
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row m-t">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label for="filterCreatorUserId" class="col-sm-3 control-label">Erstellt von</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" name="filterCreatorUserId"><!-- ng-model="search.cratorUserId">-->
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped m-t">
+            <thead>
+                <th>ID</th>
+                <th>Überschrift</th>
+                <th>Interner Link</th>
+                <!--<th>Veröffentlichungsdatum</th>-->
+                <th>Bilderanzahl</th>
+                <th>Kategorien</th>
+                <th>Aktionen</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="blogpost in blogposts"> <!-- change indicator to published --><!-- | filter:search -->
+                    <td>{{blogpost.blogpostId}}</td>
+                    <td>
+                        <a href="#/{{blogpost.blogpostId}}">{{blogpost.headline}}</a>
+                    </td>
+                    <td>{{blogpost.link}}</td>
+                    <!--<td>{{blogpost.releaseDate}}</td>-->
+                    <td>{{blogpost.pictureCount}}</td>
+                    <td>{{blogpost.categories.join(', ')}}</td>
+                    <td>
+                        <a href="#/{{blogpost.blogpostId}}"
+                           class="btn btn-primary"
+                           title="Galleriedetails">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                        
+                        <button class="btn btn-success"
+                                ng-click="activate(blogpost.blogpostId)"
+                                ng-show="blogpost.active == 0"
+                                title="Gallerie aktivieren">
+                            <i class="fa fa-toggle-on"></i>
+                        </button>
+                        <button class="btn btn-warning"
+                                ng-click="deactivate(blogpost.blogpostId)"
+                                ng-show="blogpost.active == 1"
+                                title="Gallerie deaktivieren">
+                            <i class="fa fa-toggle-off"></i>
+                        </button>
+                        
+                        <button class="btn btn-danger"
+                                ng-click="delete(blogpost.blogpostId)"
+                                title="Gallerie löschen">
+                            <i class="fa fa-trash-o"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
