@@ -216,7 +216,6 @@ component {
         if(variables.galleryId == 0) {
             variables.galleryId = new Query().setSQL("INSERT INTO IcedReaper_gallery_gallery
                                                                   (
-                                                                      galleryId,
                                                                       headline,
                                                                       description,
                                                                       link,
@@ -229,7 +228,6 @@ component {
                                                                       lastEditDate
                                                                   )
                                                            VALUES (
-                                                                      :galleryId,
                                                                       :headline,
                                                                       :description,
                                                                       :link,
@@ -242,11 +240,12 @@ component {
                                                                       now()
                                                                   );
                                                       SELECT currval('seq_icedreaper_gallery_gallery_id' :: regclass) newGalleryId;")
-                                             .addParam(name = "galleryId",        value = variables.imageId,        cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "headline",         value = variables.headline,       cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "description",      value = variables.description,    cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "link",             value = variables.link,           cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "folderName",       value = variables.folderName,     cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "introduction",     value = variables.introduction,   cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "story",            value = variables.story,          cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "activeStatus",     value = variables.activeStatus,   cfsqltype = "cf_sql_bit")
                                              .addParam(name = "creatorUserId",    value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
