@@ -10,78 +10,59 @@ component {
     }
     
     // S E T T E R
-    public comment function setGalleryId(required numeric blogpostId) {
+    public comment function setBlogpostId(required numeric blogpostId) {
         if(variables.commentId == 0 || variables.blogpostId == arguments.blogpostId) {
             variables.blogpostId = arguments.blogpostId;
         }
         
         return this;
     }
+    public comment function setParentCommentId(required numeric parentCommentId) {
+        variables.parentCommentId = arguments.parentCommentId;
+        variables.attributesChanged = true;
+        
+        return this;
+    }
+    public comment function setComment(required string comment) {
+        variables.comment = arguments.comment;
+        variables.attributesChanged = true;
+        
+        return this;
+    }
+    public comment function setPublished(required boolean published) {
+        variables.published = arguments.published;
+        variables.attributesChanged = true;
+        
+        return this;
+    }
     
-    public comment function setTitle(required string title) {
-        variables.title = arguments.title;
-        variables.attributesChanged = true;
-        
-        return this;
-    }
-    public comment function setAlt(required string alt) {
-        variables.alt = arguments.alt;
-        variables.attributesChanged = true;
-        
-        return this;
-    }
-    public comment function setCaption(required string caption) {
-        variables.caption = arguments.caption;
-        variables.attributesChanged = true;
-        
-        return this;
-    }
-    
-    public comment function upload() {
-        if(variables.picureId != 0) {
-            deleteFiles();
-        }
-        
-        var blogpost = createObject("component", "API.com.IcedReaper.blogpost.blogpost").init(variables.blogpostId);
-        
-        var uploaded = fileUpload(blogpost.getAbsolutePath(), "comment", "image/*", "MakeUnique");
-        var newFilename = uploaded.serverFile;
-        
-        if(uploaded.fileExisted) {
-            var newFilename = createUUID() & "." & uploaded.serverFileExt;
-            fileMove(uploaded.serverDirectory & "/" & uploaded.serverFile, uploaded.serverDirectory & "/" & newFilename);
-        }
-        
-        var imageFunctionCtrl = createObject("component", "API.com.Nephthys.controller.tools.imageFunctions");
-        imageFunctionCtrl.resize(blogpost.getAbsolutePath() & "/" & newFilename, 575, blogpost.getAbsolutePath() & "/tn_" & newFilename);
-        
-        variables.commentFilename   = newFilename;
-        variables.thumbnailFilename = "tn_" & newFilename;
-        
-        save();
+    public comment function publish() {
+        variables.published = true;
+        variables.publishedUserId = request.user.getUserId();
+        variables.publishedDate = now();
     }
     
     // G E T T E R
-    public numeric function getPictureId() {
+    public numeric function getCommentId() {
         return variables.commentId;
     }
-    public numeric function getGalleryId() {
+    public numeric function getBlogpostId() {
         return variables.blogpostId;
     }
-    public string function getPictureFileName() {
-        return variables.commentFileName;
+    public numeric function getParentCommentId() {
+        return variables.parentCommentId;
     }
-    public string function getThumbnailFileName() {
-        return variables.thumbnailFileName;
+    public string function getComment() {
+        return variables.comment;
     }
-    public string function getTitle() {
-        return variables.title;
+    public boolean function getPublished() {
+        return variables.published;
     }
-    public string function getAlt() {
-        return variables.alt;
+    public user function getPublishedUser() {
+        return variables.publishedUser;
     }
-    public string function getCaption() {
-        return variables.caption;
+    public date function getPublishedDate() {
+        return variables.publishedDate;
     }
     
     // C R U D
@@ -90,12 +71,12 @@ component {
             variables.commentId = new Query().setSQL("INSERT INTO IcedReaper_blog_comment
                                                                   (
                                                                       blogpostId,
-                                                                      commentFileName,
-                                                                      thumbnailFileName,
-                                                                      title,
-                                                                      alt,
-                                                                      caption,
-                                                                      sortId
+                                                                      parentCommentId,
+                                                                      comment,
+                                                                      creatorUserId,
+                                                                      published,
+                                                                      publishedUserId,
+                                                                      publishedDate
                                                                   )
                                                            VALUES (
                                                                       :blogpostId,

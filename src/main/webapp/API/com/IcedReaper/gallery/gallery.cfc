@@ -308,7 +308,7 @@ component {
                                .execute();
                 }
                 catch(any e) {
-                    // check for ecception types of duplicate unique keys
+                    // check for exception types of duplicate unique keys
                 }
             }
         }
