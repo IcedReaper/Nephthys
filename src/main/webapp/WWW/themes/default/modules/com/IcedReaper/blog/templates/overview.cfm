@@ -23,7 +23,7 @@
         </cfif>
         
         <cfloop from="1" to="#attributes.blogposts.len()#" index="blogpostIndex">
-            <div class="row">
+            <div class="row <cfif blogpostIndex GT 1>m-t</cfif>">
                 <div class="col-md-12">
                     <h2><a href="#request.page.getLink()##attributes.blogposts[blogpostIndex].getLink()#">#attributes.blogposts[blogpostIndex].getHeadline()#</a></h2>
                     
