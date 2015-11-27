@@ -29,9 +29,7 @@
         
         $scope.galleries = [];
         $scope.search = {
-            active: "", 
-            filterCategory: "",
-            creatorUserId: ""
+            active: ""
         };
         $scope.refresh();
     });

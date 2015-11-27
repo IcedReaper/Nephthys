@@ -27,10 +27,6 @@
                         templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/categoryDetail.html",
                         controller:  "categoryDetailCtrl"
                     })
-                    /*.when("/:galleryId/statistics", {
-                        templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/galleryStatistics.html",
-                        controller:  "galleryStatisticsCtrl"
-                    })*/
                     .when("/:galleryId", {
                         templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/galleryDetail.html",
                         controller:  "galleryDetailCtrl"

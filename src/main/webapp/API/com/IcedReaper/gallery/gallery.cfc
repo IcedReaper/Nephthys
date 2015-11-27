@@ -367,7 +367,7 @@ component {
             }
         }
         else {
-            varibales.headline         = "";
+            variables.headline         = "";
             variables.description      = "";
             variables.link             = "";
             variables.folderName       = createUUID();

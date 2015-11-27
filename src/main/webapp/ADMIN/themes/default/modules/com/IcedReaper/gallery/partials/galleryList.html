@@ -30,27 +30,6 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="filterCategory" class="col-sm-3 control-label">Kategorie</label>
-                        <div class="col-sm-6">
-                            <select class="form-control" name="filterCategory"><!-- ng-model="search.category">-->
-                                
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row m-t">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="filterCreatorUserId" class="col-sm-3 control-label">Erstellt von</label>
-                        <div class="col-sm-6">
-                            <select class="form-control" name="filterCreatorUserId"><!-- ng-model="search.cratorUserId">-->
-                            </select>
-                        </div>
-                    </div>
-                </div>
             </div>
         </form>
     </div>
@@ -69,7 +48,7 @@
                 <th>Aktionen</th>
             </thead>
             <tbody>
-                <tr ng-repeat="gallery in galleries"> <!-- change indicator to published --><!-- | filter:search -->
+                <tr ng-repeat="gallery in galleries | filter:search"> <!-- change indicator to published -->
                     <td>{{gallery.galleryId}}</td>
                     <td>
                         <a href="#/{{gallery.galleryId}}">{{gallery.headline}}</a>
