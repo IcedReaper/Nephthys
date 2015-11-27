@@ -63,7 +63,6 @@ CREATE TABLE public.icedreaper_gallery_picture
   sortId integer NOT NULL,
   
   CONSTRAINT PK_icedreaper_gallery_picture_id PRIMARY KEY (pictureId),
-  /*CONSTRAINT UK_icedreaper_gallery_picture_gallerySortOrder UNIQUE (galleryId, sortId),*/
   CONSTRAINT FK_icedreaper_gallery_picture_galleryId FOREIGN KEY (galleryId) REFERENCES icedreaper_gallery_gallery (galleryId) ON UPDATE NO ACTION ON DELETE CASCADE
 ) 
 WITH (
@@ -149,6 +148,7 @@ CREATE SEQUENCE seq_icedreaper_gallery_statistics_id
   START 1
   CACHE 1;
 ALTER SEQUENCE seq_icedreaper_gallery_statistics_id OWNER TO nephthys_admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE seq_icedreaper_gallery_statistics_id TO nephthys_user;
 
 CREATE TABLE public.icedreaper_gallery_statistics
 (
