@@ -1,4 +1,5 @@
 component {
+    // todo: adaptions
     public comment function init(required numeric commentId) {
         variables.commentId = arguments.commentId;
         
@@ -85,7 +86,7 @@ component {
                                                                       :title,
                                                                       :alt,
                                                                       :caption,
-                                                                      (SELECT max(sortId)+1 newSortId FROM IcedReaper_blogpost_comment WHERE blogpostId = :blogpostId)
+                                                                      (SELECT max(sortId)+1 newSortId FROM IcedReaper_blog_comment WHERE blogpostId = :blogpostId)
                                                                   );
                                                       SELECT currval('seq_icedreaper_blogpost_comment_id' :: regclass) newPictureId;")
                                              .addParam(name = "blogpostId",         value = variables.blogpostId,         cfsqltype = "cf_sql_numeric")
@@ -163,11 +164,5 @@ component {
             variables.alt               = "";
             variables.caption           = "";
         }
-    }
-    
-    private void function deleteFiles() {
-        var blogpost = createObject("component", "API.com.IcedReaper.blogpost.blogpost").init(variables.blogpostId);
-        fileDelete(blogpost.getAbsolutePath() & "/" & variables.commentFilename);
-        fileDelete(blogpost.getAbsolutePath() & "/" & variables.thumbnailFilename);
     }
 }

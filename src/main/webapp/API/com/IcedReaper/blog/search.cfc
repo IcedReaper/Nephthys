@@ -153,7 +153,7 @@ component {
             where &= ((where != "") ? " AND " : " WHERE ") & "blogpostId IN (SELECT blogpostId
                                                                               FROM icedreaper_blog_blogpostCategory
                                                                              WHERE categoryId = (SELECT categoryId
-                                                                                                   FROM icedreaper_blogpost_category
+                                                                                                   FROM icedreaper_blog_category
                                                                                                   WHERE name = :categoryName))";
             qSearch.addParam(name = "categoryName", value = variables.categoryName, cfsqltype="cf_sql_varchar");
         }

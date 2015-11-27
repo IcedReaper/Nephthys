@@ -232,7 +232,7 @@ component {
         };
     }
     
-    private array function prepareCategoryDetails(required array categories, required boolean getGalleries = false) {
+    private array function prepareCategoryDetails(required array categories, required boolean getBlogposts = false) {
         var gCategories = [];
         var blogpostSearcher = createObject("component", "API.com.IcedReaper.blog.search").init();
         
@@ -242,16 +242,16 @@ component {
                 "name"       = arguments.categories[c].getName()
             });
             
-            if(arguments.getGalleries) {
-                var galleries = blogpostSearcher.setCategory(arguments.categories[c].getName())
-                                               .execute();
+            if(arguments.getBlogposts) {
+                var blogposts = blogpostSearcher.setCategory(arguments.categories[c].getName())
+                                                .execute();
                 
-                var preparedGalleries = [];
-                for(var g = 1; g <= galleries.len(); g++) {
-                    preparedGalleries.append(galleries[g].getHeadline());
+                var preparedBlogposts = [];
+                for(var g = 1; g <= blogposts.len(); g++) {
+                    preparedBlogposts.append(blogposts[g].getHeadline());
                 }
                 
-                gCategories[gCategories.len()].galleries = preparedGalleries;
+                gCategories[gCategories.len()].blogposts = preparedBlogposts;
             }
         }
         
