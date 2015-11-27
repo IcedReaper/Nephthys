@@ -193,19 +193,19 @@ component {
         
         var statisticsCtrl = createObject("component", "API.com.IcedReaper.blog.statistics").init();
         
-        /*var statisticsData = statisticsCtrl.load(arguments.blogpostId, dateAdd("d", (dayCount - 1) * -1, now()), now());
+        var statisticsData = statisticsCtrl.load(arguments.blogpostId, dateAdd("d", (dayCount - 1) * -1, now()), now());
         
         var labels = [];
         var data = [];
         for(var i = 1; i <= statisticsData.len(); i++) {
             labels.append(application.tools.formatter.formatDate(statisticsData[i].date, false));
             data.append(statisticsData[i].count);
-        }*/
+        }
         
         return {
             "success" = true,
-            "labels"  = [],//labels,
-            "data"    = []//data
+            "labels"  = labels,
+            "data"    = data
         };
     }
     

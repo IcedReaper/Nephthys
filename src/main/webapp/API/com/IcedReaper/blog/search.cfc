@@ -1,11 +1,11 @@
 component {
     public search function init() {
         variables.userId            = 0; // 0 => all | other => specific userId
-        variables.published         = -1; // -1 => all | 0 | 1
+        variables.released          = -1; // -1 => all | 0 | 1
         variables.sortBy            = "creationDate";
         variables.sortDirection     = "DESC";
         variables.link              = "";
-        variables.blogpostId         = 0;
+        variables.blogpostId        = 0;
         variables.offset            = 0;
         variables.count             = 0;
         variables.totalGalleryCount = 0;
@@ -24,7 +24,7 @@ component {
         return this;
     }
     
-    public search function setGalleryId(required numeric blogpostId) {
+    public search function setBlogpostId(required numeric blogpostId) {
         variables.blogpostId = arguments.blogpostId;
         
         // todo: validation
@@ -33,12 +33,12 @@ component {
         return this;
     }
     
-    public search function setPublished(required numeric published) {
-        switch(arguments.published) {
+    public search function setReleased(required numeric released) {
+        switch(arguments.released) {
             case -1:
             case 0:
             case 1: {
-                variables.published = arguments.published;
+                variables.released = arguments.released;
                 
                 break;
             }
@@ -118,15 +118,15 @@ component {
         var where = "";
         var orderBy = " ORDER BY " & variables.sortBy & " " & variables.sortDirection;
         
-        if(variables.published != -1) {
+        if(variables.released != -1) {
             /*if(variables.published == 0) {
                 where &= ((where != "") ? " AND " : " WHERE ") & " releaseDate IS NOT NULL AND releaseDate > now()";
             }
             else {
                 where &= ((where != "") ? " AND " : " WHERE ") & " (releaseDate IS NULL OR releaseDate <= now()) ";
             }*/
-            where &= ((where != "") ? " AND " : " WHERE ") & " activeStatus = :activeStatus";
-            qSearch.addParam(name = "activeStatus", value = variables.published, cfsqltype = "cf_sql_bit");
+            where &= ((where != "") ? " AND " : " WHERE ") & " released = :released";
+            qSearch.addParam(name = "released", value = variables.released, cfsqltype = "cf_sql_bit");
         }
         
         /*if(variables.releaseDate != null) {
@@ -181,5 +181,5 @@ component {
 }
 
 /* more possible search parameter:
- * - adding tags/categories to galleries and search by them
+ * - adding tags to galleries and search by them
  */

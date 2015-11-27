@@ -29,7 +29,7 @@ component {
     }
     
     public void function add(required numeric blogpostId) {
-        new Query().setSQL("INSERT INTO IcedReaper_blogpost_statistics
+        new Query().setSQL("INSERT INTO IcedReaper_blog_statistics
                                         (
                                             blogpostId
                                         )

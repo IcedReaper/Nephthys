@@ -121,8 +121,8 @@ CREATE TABLE public.icedreaper_blog_category
   lastEditDate timestamp with time zone NOT NULL DEFAULT now(),
   
   CONSTRAINT PK_icedreaper_blog_category_id PRIMARY KEY (categoryId),
-  CONSTRAINT FK_icedreaper_gallery_category_creatorUserId    FOREIGN KEY (creatorUserId)    REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL,
-  CONSTRAINT FK_icedreaper_gallery_category_lastEditorUserId FOREIGN KEY (lastEditorUserId) REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL
+  CONSTRAINT FK_icedreaper_blog_category_creatorUserId    FOREIGN KEY (creatorUserId)    REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL,
+  CONSTRAINT FK_icedreaper_blog_category_lastEditorUserId FOREIGN KEY (lastEditorUserId) REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL
 )
 WITH (
   OIDS = FALSE
@@ -172,3 +172,32 @@ ALTER TABLE icedreaper_blog_blogpostCategory OWNER TO nephthys_admin;
 
 GRANT ALL    ON TABLE icedreaper_blog_blogpostCategory TO nephthys_admin;
 GRANT SELECT ON TABLE icedreaper_blog_blogpostCategory TO nephthys_user;
+
+CREATE SEQUENCE seq_icedreaper_blog_statistics_id
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER SEQUENCE seq_icedreaper_blog_statistics_id OWNER TO nephthys_admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE seq_icedreaper_blog_statistics_id TO nephthys_user;
+
+CREATE TABLE public.icedreaper_blog_statistics
+(
+  statisticsId integer NOT NULL DEFAULT nextval('seq_icedreaper_blog_statistics_id'::regclass),
+  blogpostId   integer NOT NULL,
+  openDate     timestamp with time zone NOT NULL DEFAULT now(),
+  
+  CONSTRAINT PK_icedreaper_blog_statistics_id PRIMARY KEY (statisticsId),
+  CONSTRAINT FK_icedreaper_blog_statistics_blogpostId FOREIGN KEY (blogpostId) REFERENCES icedreaper_blog_blogpost (blogpostId) ON UPDATE NO ACTION ON DELETE CASCADE
+)
+WITH (
+  OIDS = FALSE
+);
+
+CREATE INDEX FKI_icedreaper_blog_statistics_blogpostId  ON icedreaper_blog_statistics(blogpostId);
+
+ALTER TABLE icedreaper_blog_statistics OWNER TO nephthys_admin;
+
+GRANT ALL    ON TABLE icedreaper_blog_statistics TO nephthys_admin;
+GRANT SELECT, INSERT ON TABLE icedreaper_blog_statistics TO nephthys_user;
