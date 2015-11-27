@@ -2,20 +2,20 @@
     var blogListCtrl = angular.module('blogListCtrl', ["blogAdminService"]);
     
     blogListCtrl.controller('blogListCtrl', function ($scope, blogService) {
-        $scope.activate = function (blogId) {
+        $scope.activate = function (blogpostId) {
             blogService
-                .activate(blogId)
+                .activate(blogpostId)
                 .then($scope.refresh);
         };
-        $scope.deactivate = function (blogId) {
+        $scope.deactivate = function (blogpostId) {
             blogService
-                .deactivate(blogId)
+                .deactivate(blogpostId)
                 .then($scope.refresh);
         };
         
-        $scope.delete = function (blogId) {
+        $scope.delete = function (blogpostId) {
             blogService
-                .delete(blogId)
+                .delete(blogpostId)
                 .then($scope.refresh);
         }
         
@@ -29,8 +29,7 @@
         
         $scope.blogposts = [];
         $scope.search = {
-            active: "", 
-            filterCategory: "",
+            released: "",
             creatorUserId: ""
         };
         $scope.refresh();

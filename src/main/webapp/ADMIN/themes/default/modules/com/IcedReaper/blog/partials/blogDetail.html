@@ -37,11 +37,18 @@
                                     <input type="text" class="form-control" id="headline" placeholder="headline" ng-model="blogpost.headline">
                                 </div>
                                 <div class="form-group">
-                                    <label for="active">Aktiv</label>
-                                    <select class="form-control" ng-model="blogpost.active">
-                                        <option value="1">Aktiv</option>
-                                        <option value="0">Inaktiv</option>
+                                    <label for="active">Veröffentlicht</label>
+                                    <select class="form-control" ng-model="blogpost.released">
+                                        <option value="1">Ja</option>
+                                        <option value="0">Nein</option>
                                     </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="active">
+                                        Veröffentlichungsdatum<br>
+                                        <span class="text text-warning">Sollte Ihr Browser hier keinen Datepicker anzeigen ist das Format 2015-11-27 00:00</span>
+                                    </label>
+                                    <input class="form-control" ng-model="blogpost.releaseDate" type="text"> <!--- Datetime-local does not work in firefox :/ -->
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -52,14 +59,18 @@
                                     </label>
                                     <input type="text" class="form-control" id="link" placeholder="Verlinkung" ng-model="blogpost.link">
                                 </div>
+                                <div class="form-group">
+                                    <label for="active">Kommentare erlaubt?</label>
+                                    <select class="form-control" ng-model="blogpost.commentsActivated">
+                                        <option value="1">Ja</option>
+                                        <option value="0">Nein</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <div text-angular ng-model="blogpost.story" ta-toolbar="[
-                                    ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
-                                    ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
-                                    ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent']]"></div>
+                                <div text-angular ng-model="blogpost.story"></div>
                             </div>
                         </div>
                         
@@ -79,7 +90,7 @@
             </div>
         </div>
 
-        <div ng-controller="blogpostCategoryCtrl" ng-show="blogpostId != 0">
+        <div ng-controller="blogCategoryCtrl" ng-show="blogpostId != 0">
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-block">
@@ -95,16 +106,16 @@
     </div>
     
     <div ng-class="pageClasses('comments')" class="tab-pane">
-        <div ng-controller="blogpostCommentsCtrl" ng-show="blogpostId != 0">
+        <!--<div ng-controller="blogCommentsCtrl" ng-show="blogpostId != 0">
             <div class="row">
                 <div class="col-md-12">
                 </div>
             </div>
-        </div>
+        </div>-->
     </div>
     
     <div ng-class="pageClasses('statistics')" class="tab-pane">
-        <div ng-controller="blogpostStatisticsCtrl" ng-show="blogpostId != 0">
+        <div ng-controller="blogStatisticsCtrl" ng-show="blogpostId != 0">
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-block">

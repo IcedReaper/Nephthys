@@ -7,10 +7,10 @@
                     return $http.get('/ajax/com/IcedReaper/blog/getList');
                 },
                 
-                getDetails: function (blogId) {
+                getDetails: function (blogpostId) {
                     return $http.get('/ajax/com/IcedReaper/blog/getDetails', {
                         params: {
-                            blogId: blogId
+                            blogpostId: blogpostId
                         }
                     });
                 },
@@ -19,54 +19,54 @@
                     return $http.post('/ajax/com/IcedReaper/blog/save', blog);
                 },
                 
-                delete: function (blogId) {
+                delete: function (blogpostId) {
                     return $http.delete('/ajax/com/IcedReaper/blog/delete', {
                         params: {
-                            blogId: blogId
+                            blogpostId: blogpostId
                         }
                     });
                 },
                 
-                activate: function (blogId) {
+                activate: function (blogpostId) {
                     return $http.post('/ajax/com/IcedReaper/blog/activate', {
-                        blogId: blogId
+                        blogpostId: blogpostId
                     });
                 },
                 
-                deactivate: function (blogId) {
+                deactivate: function (blogpostId) {
                     return $http.post('/ajax/com/IcedReaper/blog/deactivate', {
-                        blogId: blogId
+                        blogpostId: blogpostId
                     });
                 },
                 
-                loadPictures: function (blogId) {
+                loadPictures: function (blogpostId) {
                     return $http.get('/ajax/com/IcedReaper/blog/loadPictures', {
                         params: {
-                            blogId: blogId
+                            blogpostId: blogpostId
                         }
                     });
                 },
                 
-                loadCategories: function (blogId) {
+                loadCategories: function (blogpostId) {
                     return $http.get('/ajax/com/IcedReaper/blog/loadCategories', {
                         params: {
-                            blogId: blogId
+                            blogpostId: blogpostId
                         }
                     });
                 },
                 
-                addCategory: function (blogId, categoryId, name) {
+                addCategory: function (blogpostId, categoryId, name) {
                     return $http.post('/ajax/com/IcedReaper/blog/addCategory', {
-                        blogId:    blogId,
+                        blogpostId:    blogpostId,
                         categoryId:   categoryId,
                         categoryName: name
                     });
                 },
                 
-                removeCategory: function (blogId, categoryId) {
+                removeCategory: function (blogpostId, categoryId) {
                     return $http.delete('/ajax/com/IcedReaper/blog/removeCategory', {
                         params: {
-                            blogId: blogId,
+                            blogpostId: blogpostId,
                             categoryId: categoryId
                         }
                     });
@@ -80,10 +80,10 @@
                     });
                 },
                 
-                getLastVisitChart: function(blogId, dayCount) {
+                getLastVisitChart: function(blogpostId, dayCount) {
                     return $http.get('/ajax/com/IcedReaper/blog/getLastVisitChart', {
                         params: {
-                            blogId: blogId,
+                            blogpostId: blogpostId,
                             dayCount:  dayCount
                         }
                     });

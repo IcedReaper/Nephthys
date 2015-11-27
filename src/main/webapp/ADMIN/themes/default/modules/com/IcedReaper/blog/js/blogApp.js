@@ -1,15 +1,14 @@
 (function (angular) {
     var userAdminApp = angular.module("blogAdmin", ["ngRoute",
-                                                       "ngTagsInput",
-                                                       "ngFileUpload",
-                                                       "textAngular",
-                                                       "blogListCtrl",
-                                                       "blogDetailCtrl",
-                                                       "blogCategoryCtrl",
-                                                       "blogPictureCtrl",
-                                                       "blogStatisticsCtrl",
-                                                       "categoryListCtrl",
-                                                       "categoryDetailCtrl"]);
+                                                    "ngTagsInput",
+                                                    "ngFileUpload",
+                                                    "textAngular",
+                                                    "blogListCtrl",
+                                                    "blogDetailCtrl",
+                                                    "blogCategoryCtrl",
+                                                    "blogStatisticsCtrl",
+                                                    "categoryListCtrl",
+                                                    "categoryDetailCtrl"]);
     
     userAdminApp
         .config(["$routeProvider",
@@ -27,11 +26,7 @@
                         templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/categoryDetail.html",
                         controller:  "categoryDetailCtrl"
                     })
-                    /*.when("/:blogId/statistics", {
-                        templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/blogStatistics.html",
-                        controller:  "blogStatisticsCtrl"
-                    })*/
-                    .when("/:blogId", {
+                    .when("/:blogpostId", {
                         templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/blogDetail.html",
                         controller:  "blogDetailCtrl"
                     })

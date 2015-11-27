@@ -20,33 +20,12 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label for="filterActiveStatus" class="col-sm-3 control-label">Aktiv</label>
+                        <label for="filterActiveStatus" class="col-sm-3 control-label">Veröffentlicht</label>
                         <div class="col-sm-6">
-                            <select class="form-control" name="filterActiveStatus" ng-model="search.active">
+                            <select class="form-control" name="filterActiveStatus" ng-model="search.released">
                                 <option value="">Alle</option>
-                                <option value="1">Aktiv</option>
-                                <option value="0">Inaktiv</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="filterCategory" class="col-sm-3 control-label">Kategorie</label>
-                        <div class="col-sm-6">
-                            <select class="form-control" name="filterCategory"><!-- ng-model="search.category">-->
-                                
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row m-t">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="filterCreatorUserId" class="col-sm-3 control-label">Erstellt von</label>
-                        <div class="col-sm-6">
-                            <select class="form-control" name="filterCreatorUserId"><!-- ng-model="search.cratorUserId">-->
+                                <option value="1">Ja</option>
+                                <option value="0">Nein</option>
                             </select>
                         </div>
                     </div>
@@ -63,20 +42,18 @@
                 <th>ID</th>
                 <th>Überschrift</th>
                 <th>Interner Link</th>
-                <!--<th>Veröffentlichungsdatum</th>-->
-                <th>Bilderanzahl</th>
+                <th>Veröffentlichungsdatum</th>
                 <th>Kategorien</th>
                 <th>Aktionen</th>
             </thead>
             <tbody>
-                <tr ng-repeat="blogpost in blogposts"> <!-- change indicator to published --><!-- | filter:search -->
+                <tr ng-repeat="blogpost in blogposts | filter:search"> <!-- change indicator to published -->
                     <td>{{blogpost.blogpostId}}</td>
                     <td>
                         <a href="#/{{blogpost.blogpostId}}">{{blogpost.headline}}</a>
                     </td>
                     <td>{{blogpost.link}}</td>
-                    <!--<td>{{blogpost.releaseDate}}</td>-->
-                    <td>{{blogpost.pictureCount}}</td>
+                    <td>{{blogpost.releaseDate}}</td>
                     <td>{{blogpost.categories.join(', ')}}</td>
                     <td>
                         <a href="#/{{blogpost.blogpostId}}"

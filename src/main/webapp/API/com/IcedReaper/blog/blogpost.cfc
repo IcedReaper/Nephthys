@@ -17,12 +17,6 @@ component {
         
         return this;
     }
-    public blogpost function setDescription(required string description) {
-        variables.description = arguments.description;
-        variables.attributesChanged = true;
-        
-        return this;
-    }
     public blogpost function setLink(required string link) {
         variables.link = arguments.link;
         variables.attributesChanged = true;
@@ -37,6 +31,12 @@ component {
     }
     public blogpost function setReleased(required numeric released) {
         variables.released = arguments.released;
+        variables.attributesChanged = true;
+        
+        return this;
+    }
+    public blogpost function clearReleaseDate() {
+        variables.releaseDate = null;
         variables.attributesChanged = true;
         
         return this;
@@ -93,9 +93,6 @@ component {
     public string function getHeadline() {
         return variables.headline;
     }
-    public string function getDescription() {
-        return variables.description;
-    }
     public string function getLink() {
         return variables.link;
     }
@@ -105,11 +102,14 @@ component {
     public boolean function getReleased() {
         return variables.released;
     }
-    public date function getReleaseDate() {
+    public any function getReleaseDate() { // any is required as a null date isn't of type date :/
         return variables.releaseDate;
     }
     public boolean function getCommentsActivated() {
         return variables.commentsActivated;
+    }
+    public numeric function getCreatorUserId() {
+        return variables.creatorUserId;
     }
     public user function getCreator() {
         return variables.creator;
@@ -151,7 +151,6 @@ component {
             variables.blogpostId = new Query().setSQL("INSERT INTO IcedReaper_blog_blogpost
                                                                    (
                                                                        headline,
-                                                                       description,
                                                                        link,
                                                                        story,
                                                                        released,
@@ -163,7 +162,6 @@ component {
                                                                    )
                                                             VALUES (
                                                                        :headline,
-                                                                       :description,
                                                                        :link,
                                                                        :story,
                                                                        :released,
@@ -175,22 +173,21 @@ component {
                                                                    );
                                                        SELECT currval('seq_icedreaper_blog_blogpost_id' :: regclass) newBlogpostId;")
                                               .addParam(name = "headline",          value = variables.headline,          cfsqltype = "cf_sql_varchar")
-                                              .addParam(name = "description",       value = variables.description,       cfsqltype = "cf_sql_varchar")
                                               .addParam(name = "link",              value = variables.link,              cfsqltype = "cf_sql_varchar")
                                               .addParam(name = "story",             value = variables.story,             cfsqltype = "cf_sql_varchar")
                                               .addParam(name = "released",          value = variables.released,          cfsqltype = "cf_sql_bit")
-                                              .addParam(name = "releaseDate",       value = variables.releaseDate,       cfsqltype = "cf_sql_date")
+                                              .addParam(name = "releaseDate",       value = variables.releaseDate,       cfsqltype = "cf_sql_timestamp", null=variables.releaseDate == null)
                                               .addParam(name = "commentsActivated", value = variables.commentsActivated, cfsqltype = "cf_sql_bit")
                                               .addParam(name = "creatorUserId",     value = request.user.getUserId(),    cfsqltype = "cf_sql_numeric")
                                               .addParam(name = "lastEditorUserId",  value = request.user.getUserId(),    cfsqltype = "cf_sql_numeric")
                                               .execute()
+                                              .getResult()
                                               .newBlogpostId[1];
         }
         else {
             if(variables.attributesChanged) {
                 new Query().setSQL("UPDATE IcedReaper_blog_blogpost
                                        SET headline          = :headline,
-                                           description       = :description,
                                            link              = :link,
                                            story             = :story,
                                            released          = :released,
@@ -201,21 +198,14 @@ component {
                                      WHERE blogpostId = :blogpostId")
                            .addParam(name = "blogpostId",        value = variables.blogpostId,        cfsqltype = "cf_sql_numeric")
                            .addParam(name = "headline",          value = variables.headline,          cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "description",       value = variables.description,       cfsqltype = "cf_sql_varchar")
                            .addParam(name = "link",              value = variables.link,              cfsqltype = "cf_sql_varchar")
                            .addParam(name = "story",             value = variables.story,             cfsqltype = "cf_sql_varchar")
                            .addParam(name = "released",          value = variables.released,          cfsqltype = "cf_sql_bit")
-                           .addParam(name = "releaseDate",       value = variables.releaseDate,       cfsqltype = "cf_sql_date")
+                           .addParam(name = "releaseDate",       value = variables.releaseDate,       cfsqltype = "cf_sql_timestamp", null=variables.releaseDate == null)
                            .addParam(name = "commentsActivated", value = variables.commentsActivated, cfsqltype = "cf_sql_bit")
                            .addParam(name = "creatorUserId",     value = request.user.getUserId(),    cfsqltype = "cf_sql_numeric")
                            .addParam(name = "lastEditorUserId",  value = request.user.getUserId(),    cfsqltype = "cf_sql_numeric")
                            .execute();
-            }
-            
-            if(variables.picturesChanged) {
-                for(var p = 1; p <= variables.pictures.len(); p++) {
-                    variables.pictures[p].save();
-                }
             }
         }
         
@@ -280,7 +270,6 @@ component {
             
             if(qGallery.getRecordCount() == 1) {
                 variables.headline          = qGallery.headline[1];
-                variables.description       = qGallery.description[1];
                 variables.link              = qGallery.link[1];
                 variables.story             = qGallery.story[1];
                 variables.released          = qGallery.released[1];
@@ -301,8 +290,7 @@ component {
             }
         }
         else {
-            varibales.headline          = "";
-            variables.description       = "";
+            variables.headline          = "";
             variables.link              = "";
             variables.story             = "";
             variables.released          = false;
@@ -333,7 +321,7 @@ component {
     
     private void function loadCategories() {
         var qCategoryIds = new Query().setSQL("  SELECT categoryId
-                                                   FROM IcedReaper_blogpost_blogpostCategory
+                                                   FROM IcedReaper_blog_blogpostCategory
                                                   WHERE blogpostId = :blogpostId
                                                ORDER BY creationDate ASC")
                                       .addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric")
@@ -356,11 +344,8 @@ component {
                                      .execute()
                                      .getResult();
         
-        var comments = [];
         for(var i = 1; i <= qCommentIds.getRecordCount(); i++) {
-            comments.append(new comment(qCommentIds.commentId[i]));
+            variables.comments.append(new comment(qCommentIds.commentId[i]));
         }
-        
-        return comments;
     }
 }

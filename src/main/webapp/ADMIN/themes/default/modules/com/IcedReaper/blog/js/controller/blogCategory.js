@@ -2,11 +2,11 @@
     var blogCategoryCtrl = angular.module('blogCategoryCtrl', ["blogAdminService"]);
     
     blogCategoryCtrl.controller('blogCategoryCtrl', function ($scope, $rootScope, $routeParams, blogService, $q) {
-        var blogId = null;
+        var blogpostId = null;
         
         $scope.load = function () {
             return blogService
-                    .loadCategories(blogId)
+                    .loadCategories(blogpostId)
                     .then(function (result) {
                         $scope.categories = [];
                         for(var c = 0; c < result.categories.length; c++) {
@@ -19,11 +19,11 @@
         };
         
         $scope.add = function (category) {
-            blogService.addCategory(blogId, category.id, category.text);
+            blogService.addCategory(blogpostId, category.id, category.text);
         };
         
         $scope.delete = function (category) {
-            blogService.removeCategory(blogId, category.id);
+            blogService.removeCategory(blogpostId, category.id);
         };
         
         $scope.loadAutoCompleteCategories = function (queryString) {
@@ -42,7 +42,7 @@
         };
         
         $rootScope.$on('blog-loaded', function(event, blogData) {
-            blogId = blogData.blogId;
+            blogpostId = blogData.blogpostId;
             
             $scope.load();
         });

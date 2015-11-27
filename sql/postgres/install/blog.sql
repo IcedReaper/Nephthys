@@ -1,3 +1,9 @@
+DROP TABLE icedreaper_blog_settings;
+DROP TABLE icedreaper_blog_comment;
+DROP TABLE icedreaper_blog_blogpostCategory;
+DROP TABLE icedreaper_blog_blogpost;
+DROP TABLE icedreaper_blog_category;
+
 CREATE TABLE public.icedreaper_blog_settings
 (
   commentingActivated boolean NOT NULL DEFAULT FALSE,
@@ -22,7 +28,6 @@ CREATE TABLE public.icedreaper_blog_blogpost
 (
   blogpostId integer NOT NULL DEFAULT nextval('seq_icedreaper_blog_blogpost_id'::regclass),
   headline character varying(100),
-  description character varying(500),
   link character varying(150),
   story text,
   released boolean DEFAULT false,
@@ -43,7 +48,7 @@ WITH (
 
 CREATE        INDEX FKI_icedreaper_blog_blogpost_creatorUserId    ON icedreaper_blog_blogpost(creatorUserId);
 CREATE        INDEX FKI_icedreaper_blog_blogpost_lastEditorUserId ON icedreaper_blog_blogpost(lastEditorUserId);
-CREATE        INDEX IDX_icedreaper_blog_blogpost_published        ON icedreaper_blog_blogpost(published, publishingDate);
+CREATE        INDEX IDX_icedreaper_blog_blogpost_released         ON icedreaper_blog_blogpost(released, releaseDate);
 CREATE        INDEX IDX_icedreaper_blog_blogpost_link             ON icedreaper_blog_blogpost(link);
 CREATE UNIQUE INDEX UK_icedreaper_blog_blogpost_headline          ON icedreaper_blog_blogpost(lower(headline));
 CREATE UNIQUE INDEX UK_icedreaper_blog_blogpost_link              ON icedreaper_blog_blogpost(lower(link));
@@ -110,8 +115,14 @@ CREATE TABLE public.icedreaper_blog_category
 (
   categoryId integer NOT NULL DEFAULT nextval('seq_icedreaper_blog_category_id'::regclass),
   name character varying(25),
+  creatorUserId integer NOT NULL,
+  creationDate timestamp with time zone NOT NULL DEFAULT now(),
+  lastEditorUserId integer NOT NULL,
+  lastEditDate timestamp with time zone NOT NULL DEFAULT now(),
   
-  CONSTRAINT PK_icedreaper_blog_category_id PRIMARY KEY (categoryId)
+  CONSTRAINT PK_icedreaper_blog_category_id PRIMARY KEY (categoryId),
+  CONSTRAINT FK_icedreaper_gallery_category_creatorUserId    FOREIGN KEY (creatorUserId)    REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL,
+  CONSTRAINT FK_icedreaper_gallery_category_lastEditorUserId FOREIGN KEY (lastEditorUserId) REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL
 )
 WITH (
   OIDS = FALSE
@@ -140,14 +151,14 @@ CREATE TABLE public.icedreaper_blog_blogpostCategory
   postCategoryId integer NOT NULL DEFAULT nextval('seq_icedreaper_blog_category_id'::regclass),
   blogpostId integer NOT NULL,
   categoryId integer NOT NULL,
-  setByUserId integer NOT NULL,
-  setDate timestamp with time zone NOT NULL DEFAULT now(),
+  creatorUserId integer NOT NULL,
+  creationDate timestamp with time zone NOT NULL DEFAULT now(),
   
   CONSTRAINT PK_icedreaper_blog_blogpostCategory_id PRIMARY KEY (postCategoryId),
   CONSTRAINT UK_icedreaper_blog_blogpostCategory_bpCatId UNIQUE (blogpostId, categoryId),
-  CONSTRAINT FK_icedreaper_blog_blogpostCategory_blogpostId  FOREIGN KEY (blogpostId)  REFERENCES icedreaper_blog_blogpost (blogpostId) ON UPDATE NO ACTION ON DELETE CASCADE,
-  CONSTRAINT FK_icedreaper_blog_blogpostCategory_categoryId  FOREIGN KEY (categoryId)  REFERENCES icedreaper_blog_category (categoryId) ON UPDATE NO ACTION ON DELETE CASCADE,
-  CONSTRAINT FK_icedreaper_blog_blogpostCategory_setByUserId FOREIGN KEY (setByUserId) REFERENCES nephthys_user            (userId)     ON UPDATE NO ACTION ON DELETE SET NULL
+  CONSTRAINT FK_icedreaper_blog_blogpostCategory_blogpostId  FOREIGN KEY (blogpostId)    REFERENCES icedreaper_blog_blogpost (blogpostId) ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT FK_icedreaper_blog_blogpostCategory_categoryId  FOREIGN KEY (categoryId)    REFERENCES icedreaper_blog_category (categoryId) ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT FK_icedreaper_blog_blogpostCategory_setByUserId FOREIGN KEY (creatorUserId) REFERENCES nephthys_user            (userId)     ON UPDATE NO ACTION ON DELETE SET NULL
 )
 WITH (
   OIDS = FALSE

@@ -18,6 +18,7 @@ component {
     
     remote struct function getDetails(required numeric blogpostId) {
         var blogpost = createObject("component", "API.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
+        
         return {
             "success" = true,
             "data"    = prepareDetailStruct(blogpost)
@@ -54,23 +55,32 @@ component {
     
     remote struct function save(required numeric blogpostId,
                                 required string  headline,
-                                required string  description,
                                 required string  link,
-                                required string  introduction,
+                                required numeric released,
+                                required string  releaseDate,
                                 required string  story,
-                                required numeric active) {
+                                required numeric commentsActivated) {
         var blogpost = createObject("component", "API.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
-        
-        if(arguments.blogpostId == 0) {
-            blogpost.setFoldername(attributes.foldername);
+        if(arguments.releaseDate != "") {
+            // format: 2015-11-27T00:00
+            var y  = arguments.releaseDate.left(4);
+            var m  = arguments.releaseDate.mid(6, 2);
+            var d  = arguments.releaseDate.mid(9, 2);
+            var h  = arguments.releaseDate.mid(12, 2);
+            var mi = arguments.releaseDate.mid(15, 2);
+            var _releaseDate = createDateTime(y, m, d, h, mi, 0);
+            
+            blogpost.setReleaseDate(_releaseDate);
+        }
+        else {
+            blogpost.clearReleaseDate();
         }
         
         blogpost.setHeadline(arguments.headline)
-                .setDescription(arguments.description)
                 .setLink(arguments.link)
-                .setIntroduction(arguments.introduction)
+                .setReleased(arguments.released)
                 .setStory(arguments.story)
-                .setActiveStatus(arguments.active)
+                .setCommentsActivated(arguments.commentsActivated)
                 .save();
         
         return {
@@ -101,7 +111,7 @@ component {
     remote struct function deactivate(required numeric blogpostId) {
         var blogpost = createObject("component", "API.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
         blogpost.setActiveStatus(0)
-               .save();
+                .save();
         
         return {
             "success" = true
@@ -183,19 +193,19 @@ component {
         
         var statisticsCtrl = createObject("component", "API.com.IcedReaper.blog.statistics").init();
         
-        var statisticsData = statisticsCtrl.load(arguments.blogpostId, dateAdd("d", (dayCount - 1) * -1, now()), now());
+        /*var statisticsData = statisticsCtrl.load(arguments.blogpostId, dateAdd("d", (dayCount - 1) * -1, now()), now());
         
         var labels = [];
         var data = [];
         for(var i = 1; i <= statisticsData.len(); i++) {
             labels.append(application.tools.formatter.formatDate(statisticsData[i].date, false));
             data.append(statisticsData[i].count);
-        }
+        }*/
         
         return {
             "success" = true,
-            "labels"  = labels,
-            "data"    = data
+            "labels"  = [],//labels,
+            "data"    = []//data
         };
     }
     
@@ -209,17 +219,16 @@ component {
         }
         
         return {
-            "blogpostId"    = arguments.blogpost.getGalleryId(),
-            "headline"     = arguments.blogpost.getHeadline(),
-            "description"  = arguments.blogpost.getDescription(),
-            "link"         = arguments.blogpost.getLink(),
-            "story"        = arguments.blogpost.getStory(),
-            //"releaseDate"  = application.tools.formatter.formatDate(arguments.blogpost.getReleaseDate(), false),
-            "creator"      = arguments.blogpost.getCreator().getUsername(), // todo: check if required or has to get changed
-            "lastEditor"   = arguments.blogpost.getLastEditor().getUsername(),
-            "active"       = toString(arguments.blogpost.getActiveStatus()),
-            "pictureCount" = arguments.blogpost.getPictureCount(),
-            "categories"   = categories
+            "blogpostId"        = arguments.blogpost.getBlogpostId(),
+            "headline"          = arguments.blogpost.getHeadline(),
+            "link"              = arguments.blogpost.getLink(),
+            "story"             = arguments.blogpost.getStory(),
+            "released"          = toString(arguments.blogpost.getReleased()),
+            "releaseDate"       = application.tools.formatter.formatDate(date = arguments.blogpost.getReleaseDate() != null ? arguments.blogpost.getReleaseDate() : 0,
+                                                                         dateFormat = "yyyy-mm-dd", timeFormat = "HH:MM"),
+            "commentsActivated" = toString(arguments.blogpost.getCommentsActivated()),
+            "creatorUserId"     = arguments.blogpost.getCreatorUserId(),
+            "categories"        = categories
         };
     }
     

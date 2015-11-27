@@ -2,11 +2,11 @@
     var blogStatisticsCtrl = angular.module('blogStatisticsCtrl', ["chart.js", "blogAdminService"]);
     
     blogStatisticsCtrl.controller('blogStatisticsCtrl', function ($scope, $rootScope, $routeParams, blogService, $q) {
-        var blogId = null;
+        var blogpostId = null;
         $scope.load = function () {
-            if(blogId !== null && ! isNaN(parseInt($scope.dayCount, 10))) {
+            if(blogpostId !== null && ! isNaN(parseInt($scope.dayCount, 10))) {
                 blogService
-                    .getLastVisitChart(blogId, $scope.dayCount)
+                    .getLastVisitChart(blogpostId, $scope.dayCount)
                     .then(function (visitData) {
                         $scope.visitChart = {
                             labels: visitData.labels,
@@ -26,7 +26,7 @@
         $scope.dayCount = 20;
         
         $rootScope.$on('blog-loaded', function(event, blogData) {
-            blogId = blogData.blogId;
+            blogpostId = blogData.blogpostId;
             
             $scope.load();
         });

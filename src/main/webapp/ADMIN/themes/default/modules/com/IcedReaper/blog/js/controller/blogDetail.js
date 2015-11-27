@@ -6,21 +6,20 @@
         // load
         $scope.load = function() {
             return blogService
-                       .getDetails($routeParams.blogId)
+                       .getDetails($routeParams.blogpostId)
                        .then(function (blogDetails) {
                            $scope.blogpost = blogDetails.data;
                            
-                           $rootScope.$emit('blog-loaded', {blogId: blogDetails.data.blogId});
+                           $rootScope.$emit('blog-loaded', {blogpostId: blogDetails.data.blogpostId});
                        });
         };
         
         $scope.save = function () {
             blogService
-                .save($scope.blog)
+                .save($scope.blogpost)
                 .then(function (result) {
-                    $scope.blog = result.data;
-                })
-                .then($scope.loadPictures);
+                    $scope.blogpost = result.data;
+                });
         };
         
         // tabs and paging
@@ -41,7 +40,7 @@
             .load()
             .then($scope.showPage('details'));
         
-        $rootScope.blogpostId = $routeParams.blogId;
+        $rootScope.blogpostId = $routeParams.blogpostId;
         $scope.initialized = false;
     });
 }(window.angular));
