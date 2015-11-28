@@ -1,17 +1,17 @@
 (function (angular) {
-    var userAdminApp = angular.module("galleryAdmin", ["ngRoute",
-                                                       "ngTagsInput",
-                                                       "ngFileUpload",
-                                                       "textAngular",
-                                                       "galleryListCtrl",
-                                                       "galleryDetailCtrl",
-                                                       "galleryCategoryCtrl",
-                                                       "galleryPictureCtrl",
-                                                       "galleryStatisticsCtrl",
-                                                       "categoryListCtrl",
-                                                       "categoryDetailCtrl"]);
+    var galleryApp = angular.module("galleryAdmin", ["ngRoute",
+                                                     "ngTagsInput",
+                                                     "ngFileUpload",
+                                                     "textAngular",
+                                                     "galleryListCtrl",
+                                                     "galleryDetailCtrl",
+                                                     "galleryCategoryCtrl",
+                                                     "galleryPictureCtrl",
+                                                     "galleryStatisticsCtrl",
+                                                     "categoryListCtrl",
+                                                     "categoryDetailCtrl"]);
     
-    userAdminApp
+    galleryApp
         .config(["$routeProvider",
             function ($routeProvider) {
                 $routeProvider
