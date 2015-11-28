@@ -47,6 +47,19 @@ component {
         
         return this;
     }
+    public blogpost function setFolderName(required string folderName) {
+        variables.oldFolderName = variables.folderName;
+        variables.folderName    = arguments.folderName;
+        variables.attributesChanged = true;
+        
+        if(variables.oldFolderName != variables.folderName) {
+            if(directoryExists(getAbsolutePath())) {
+                throw(type = "Application", message = "Directory is already existing");
+            }
+        }
+        
+        return this;
+    }
     public blogpost function setReleaseDate(required date releaseDate) {
         variables.releaseDate = arguments.releaseDate;
         variables.attributesChanged = true;
@@ -111,6 +124,9 @@ component {
     public any function getReleaseDate() { // any is required as a null date isn't of type date :/
         return variables.releaseDate;
     }
+    public string function getFolderName() {
+        return variables.folderName;
+    }
     public boolean function getCommentsActivated() {
         return variables.commentsActivated;
     }
@@ -130,7 +146,7 @@ component {
         return variables.lastEditDate;
     }
     public string function getRelativePath() {
-        return "/upload/com.IcedReaper.blog/" & variables.blogpostId;
+        return "/upload/com.IcedReaper.blog/" & variables.folderName;
     }
     public array function getCategories() {
         return variables.categories;
@@ -153,6 +169,10 @@ component {
     
     // C R U D
     public blogpost function save() {
+        if(variables.folderName == "") {
+            variables.folderName = createUUID();
+        }
+        
         if(variables.blogpostId == 0) {
             variables.blogpostId = new Query().setSQL("INSERT INTO IcedReaper_blog_blogpost
                                                                    (
@@ -161,6 +181,7 @@ component {
                                                                        story,
                                                                        released,
                                                                        releaseDate,
+                                                                       folderName,
                                                                        commentsActivated,
                                                                        creatorUserId,
                                                                        lastEditorUserId,
@@ -183,12 +204,15 @@ component {
                                               .addParam(name = "story",             value = variables.story,             cfsqltype = "cf_sql_varchar")
                                               .addParam(name = "released",          value = variables.released,          cfsqltype = "cf_sql_bit")
                                               .addParam(name = "releaseDate",       value = variables.releaseDate,       cfsqltype = "cf_sql_timestamp", null=variables.releaseDate == null)
+                                              .addParam(name = "folderName",        value = variables.folderName,        cfsqltype = "cf_sql_varchar")
                                               .addParam(name = "commentsActivated", value = variables.commentsActivated, cfsqltype = "cf_sql_bit")
                                               .addParam(name = "creatorUserId",     value = request.user.getUserId(),    cfsqltype = "cf_sql_numeric")
                                               .addParam(name = "lastEditorUserId",  value = request.user.getUserId(),    cfsqltype = "cf_sql_numeric")
                                               .execute()
                                               .getResult()
                                               .newBlogpostId[1];
+            
+            directoryCreate(getAbsolutePath(), true, true);
         }
         else {
             if(variables.attributesChanged) {
@@ -198,6 +222,7 @@ component {
                                            story             = :story,
                                            released          = :released,
                                            releaseDate       = :releaseDate,
+                                           folderName        = :folderName,
                                            commentsActivated = :commentsActivated,
                                            lastEditorUserId  = :lastEditorUserId,
                                            lastEditDate      = now()
@@ -208,10 +233,15 @@ component {
                            .addParam(name = "story",             value = variables.story,             cfsqltype = "cf_sql_varchar")
                            .addParam(name = "released",          value = variables.released,          cfsqltype = "cf_sql_bit")
                            .addParam(name = "releaseDate",       value = variables.releaseDate,       cfsqltype = "cf_sql_timestamp", null=variables.releaseDate == null)
+                           .addParam(name = "folderName",        value = variables.folderName,        cfsqltype = "cf_sql_varchar")
                            .addParam(name = "commentsActivated", value = variables.commentsActivated, cfsqltype = "cf_sql_bit")
                            .addParam(name = "creatorUserId",     value = request.user.getUserId(),    cfsqltype = "cf_sql_numeric")
                            .addParam(name = "lastEditorUserId",  value = request.user.getUserId(),    cfsqltype = "cf_sql_numeric")
                            .execute();
+            }
+            
+            if(structKeyExists(variables, "oldFolderName") && variables.oldFolderName != variables.folderName) {
+                directoryRename(expandPath("/upload/com.IcedReaper.blog/" & variables.oldFolderName), getAbsolutePath());
             }
         }
         
@@ -247,7 +277,6 @@ component {
         variables.attributesChanged = false;
         variables.categoriesChanged = false;
         
-        directoryCreate(getAbsolutePath(), true, true); // todo: add folder name to class/DB
         
         // delete all unused files
         var usedFiles = directoryList(getAbsolutePath(), false, "name");
@@ -279,24 +308,25 @@ component {
     
     private void function loadDetails() {
         if(variables.blogpostId != 0 && variables.blogpostId != null) {
-            var qGallery = new Query().setSQL("SELECT * 
-                                                 FROM IcedReaper_blog_blogpost
-                                                WHERE blogpostId = :blogpostId")
-                                      .addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric")
-                                      .execute()
-                                      .getResult();
+            var qBlogpost = new Query().setSQL("SELECT * 
+                                                  FROM IcedReaper_blog_blogpost
+                                                 WHERE blogpostId = :blogpostId")
+                                       .addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric")
+                                       .execute()
+                                       .getResult();
             
-            if(qGallery.getRecordCount() == 1) {
-                variables.headline          = qGallery.headline[1];
-                variables.link              = qGallery.link[1];
-                variables.story             = qGallery.story[1];
-                variables.released          = qGallery.released[1];
-                variables.releaseDate       = qGallery.releaseDate[1];
-                variables.commentsActivated = qGallery.commentsActivated[1];
-                variables.creatorUserId     = qGallery.creatorUserId[1];
-                variables.creationDate      = qGallery.creationDate[1];
-                variables.lastEditorUserId  = qGallery.lastEditorUserId[1];
-                variables.lastEditDate      = qGallery.lastEditDate[1];
+            if(qBlogpost.getRecordCount() == 1) {
+                variables.headline          = qBlogpost.headline[1];
+                variables.link              = qBlogpost.link[1];
+                variables.story             = qBlogpost.story[1];
+                variables.released          = qBlogpost.released[1];
+                variables.releaseDate       = qBlogpost.releaseDate[1];
+                variables.commentsActivated = qBlogpost.commentsActivated[1];
+                variables.creatorUserId     = qBlogpost.creatorUserId[1];
+                variables.creationDate      = qBlogpost.creationDate[1];
+                variables.lastEditorUserId  = qBlogpost.lastEditorUserId[1];
+                variables.lastEditDate      = qBlogpost.lastEditDate[1];
+                variables.folderName        = qBlogpost.folderName[1];
                 variables.comments          = [];
                 variables.categories        = [];
                 
@@ -320,6 +350,7 @@ component {
             variables.lastEditDate      = null;
             variables.categories        = [];
             variables.comments          = [];
+            variables.folderName        = createUUID();
         }
         
         if(variables.creatorUserId != null) {

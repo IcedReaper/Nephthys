@@ -58,6 +58,7 @@ component {
                                 required string  link,
                                 required numeric released,
                                 required string  releaseDate,
+                                required string  folderName,
                                 required string  story,
                                 required numeric commentsActivated,
                                 required string  fileNames) {
@@ -80,6 +81,7 @@ component {
         blogpost.setHeadline(arguments.headline)
                 .setLink(arguments.link)
                 .setReleased(arguments.released)
+                .setFolderName(arguments.folderName)
                 .setStory(arguments.story, deserializeJSON(arguments.fileNames))
                 .setCommentsActivated(arguments.commentsActivated)
                 .save();
@@ -248,6 +250,7 @@ component {
             "link"              = arguments.blogpost.getLink(),
             "story"             = arguments.blogpost.getStory(),
             "released"          = toString(arguments.blogpost.getReleased()),
+            "folderName"        = arguments.blogpost.getFolderName(),
             "releaseDate"       = application.tools.formatter.formatDate(date = arguments.blogpost.getReleaseDate() != null ? arguments.blogpost.getReleaseDate() : 0,
                                                                          dateFormat = "yyyy-mm-dd", timeFormat = "HH:MM"),
             "commentsActivated" = toString(arguments.blogpost.getCommentsActivated()),

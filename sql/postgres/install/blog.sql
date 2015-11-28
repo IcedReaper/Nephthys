@@ -30,6 +30,7 @@ CREATE TABLE public.icedreaper_blog_blogpost
   headline character varying(100),
   link character varying(150),
   story text,
+  folderName character varying(150),
   released boolean DEFAULT false,
   releaseDate date DEFAULT NULL,
   commentsActivated boolean NOT NULL DEFAULT FALSE,
@@ -52,6 +53,7 @@ CREATE        INDEX IDX_icedreaper_blog_blogpost_released         ON icedreaper_
 CREATE        INDEX IDX_icedreaper_blog_blogpost_link             ON icedreaper_blog_blogpost(link);
 CREATE UNIQUE INDEX UK_icedreaper_blog_blogpost_headline          ON icedreaper_blog_blogpost(lower(headline));
 CREATE UNIQUE INDEX UK_icedreaper_blog_blogpost_link              ON icedreaper_blog_blogpost(lower(link));
+CREATE UNIQUE INDEX UK_icedreaper_blog_blogpost_folderName        ON icedreaper_blog_blogpost(lower(folderName));
 
 ALTER TABLE icedreaper_blog_blogpost OWNER TO nephthys_admin;
 

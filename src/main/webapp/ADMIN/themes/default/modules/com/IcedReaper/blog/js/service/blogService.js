@@ -24,6 +24,7 @@
                         releaseDate:       blogpost.releaseDate,
                         story:             blogpost.convertedStory,
                         commentsActivated: blogpost.commentsActivated,
+                        folderName:        blogpost.folderName,
                         fileNames:         JSON.stringify(fileNames)
                     });
                 },

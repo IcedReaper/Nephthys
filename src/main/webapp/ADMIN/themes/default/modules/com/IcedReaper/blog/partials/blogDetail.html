@@ -60,6 +60,13 @@
                                     <input type="text" class="form-control" id="link" placeholder="Verlinkung" ng-model="blogpost.link">
                                 </div>
                                 <div class="form-group">
+                                    <label for="folderName">
+                                        Ordner<br>
+                                        <span class="text text-warning">Dieser Ordner darf noch nicht vorhanden sein. Sollten Sie sich unsicher sein, lassen sie dieses Feld leer, dann wird ein generierter Wert gewählt</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="folderName" placeholder="folderName" ng-model="blogpost.folderName">
+                                </div>
+                                <div class="form-group">
                                     <label for="active">Kommentare erlaubt?</label>
                                     <select class="form-control" ng-model="blogpost.commentsActivated">
                                         <option value="1">Ja</option>
