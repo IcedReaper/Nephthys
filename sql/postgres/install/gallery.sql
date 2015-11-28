@@ -22,8 +22,6 @@ CREATE TABLE public.icedreaper_gallery_gallery
   lastEditDate timestamp with time zone NOT NULL DEFAULT now(),
   
   CONSTRAINT PK_icedreaper_gallery_gallery_id PRIMARY KEY (galleryId),
-  CONSTRAINT UK_icedreaper_gallery_gallery_headline   UNIQUE (lower(headline)),
-  CONSTRAINT UK_icedreaper_gallery_gallery_folderName UNIQUE (lower(folderName)),
   CONSTRAINT FK_icedreaper_gallery_gallery_creatorUserId    FOREIGN KEY (creatorUserId)    REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT FK_icedreaper_gallery_gallery_lastEditorUserId FOREIGN KEY (lastEditorUserId) REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL
 ) 
