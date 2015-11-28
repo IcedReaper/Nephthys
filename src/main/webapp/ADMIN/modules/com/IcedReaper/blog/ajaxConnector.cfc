@@ -59,7 +59,8 @@ component {
                                 required numeric released,
                                 required string  releaseDate,
                                 required string  story,
-                                required numeric commentsActivated) {
+                                required numeric commentsActivated,
+                                required string  fileNames) {
         var blogpost = createObject("component", "API.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
         if(arguments.releaseDate != "") {
             // format: 2015-11-27T00:00
@@ -79,13 +80,36 @@ component {
         blogpost.setHeadline(arguments.headline)
                 .setLink(arguments.link)
                 .setReleased(arguments.released)
-                .setStory(arguments.story)
+                .setStory(arguments.story, deserializeJSON(arguments.fileNames))
                 .setCommentsActivated(arguments.commentsActivated)
                 .save();
         
         return {
             "success" = true,
             "data"    = prepareDetailStruct(blogpost)
+        };
+    }
+    
+    remote struct function uploadImages(required string blogpostId,
+                                        required string imageSizes) { // jsonString
+        var blogpost = createObject("component", "API.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
+        var _is = deserializeJSON(arguments.imageSizes);
+        var imageFunctionCtrl = createObject("component", "API.com.Nephthys.controller.tools.imageFunctions");
+        
+        var files = fileUploadAll(blogpost.getAbsolutePath(), "*", "Overwrite");
+        
+        for(var i = 1; i <= files.len(); i++) {
+            if(structKeyExists(_is, "is" & i)) {
+                imageFunctionCtrl.resize(source = blogpost.getAbsolutePath() & "/" & files[i].serverFile,
+                                         width  = _is["is" & i].width,
+                                         height = _is["is" & i].height);
+            }
+        }
+        
+        return {
+            "success" = true,
+            "files" = files,
+            "imageSizes" = _is
         };
     }
     

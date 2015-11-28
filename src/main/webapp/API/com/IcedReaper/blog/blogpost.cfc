@@ -23,8 +23,14 @@ component {
         
         return this;
     }
-    public blogpost function setStory(required string story) {
-        variables.story = arguments.story;
+    public blogpost function setStory(required string story, required array fileNames = []) {
+        var _story = arguments.story;
+        
+        for(var i = 1; i <= arguments.fileNames.len(); i++) {
+            _story = replace(_story, "{{{~newImageUpload" & i & "}}}", "<img src=""" & getRelativePath() & "/" & arguments.fileNames[i] & """>");
+        }
+        
+        variables.story = _story;
         variables.attributesChanged = true;
         
         return this;
@@ -124,7 +130,7 @@ component {
         return variables.lastEditDate;
     }
     public string function getRelativePath() {
-        return "/upload/com.IcedReaper.blog/";
+        return "/upload/com.IcedReaper.blog/" & variables.blogpostId;
     }
     public array function getCategories() {
         return variables.categories;
@@ -241,6 +247,16 @@ component {
         variables.attributesChanged = false;
         variables.categoriesChanged = false;
         
+        directoryCreate(getAbsolutePath(), true, true); // todo: add folder name to class/DB
+        
+        // delete all unused files
+        var usedFiles = directoryList(getAbsolutePath(), false, "name");
+        for(var i = 1; i <= usedFiles.len(); i++) {
+            if(! find(usedFiles[i], variables.story)) {
+                fileDelete(getAbsolutePath() & "/" & usedFiles[i]);
+            }
+        }
+        
         return this;
     }
     
@@ -255,6 +271,8 @@ component {
                    .execute();
         
         variables.blogpostId = 0;
+        
+        directoryDelete(getAbsolutePath(), true);
     }
     
     // I N T E R N A L

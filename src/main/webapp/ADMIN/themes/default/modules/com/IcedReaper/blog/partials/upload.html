@@ -1,0 +1,21 @@
+<form data-ng-submit="insert()">
+    <div class="modal-header">
+        <div class="col-md-10">
+            <h4 class="modal-title"><span class="fa fa-image"></span> Bild hochladen und einfügen</h4>
+        </div>
+        <div class="col-md-2 right">
+            <a class="close" href data-ng-click="$dismiss()"><span class="fa fa-times"></span></a>
+        </div>
+    </div>
+    
+    <div class="modal-body">
+        <img ngf-thumbnail="image" style="max-width:100%">
+        <!--<progressbar data-ng-show="progress > 0 && progress < 100" class="progress-striped active" value="progress"></progressbar>-->
+    </div>
+    
+    <div class="modal-footer center clearfix">
+        <button data-ng-click="$dismiss()" type="button" class="btn btn-secondary pull-left">abbrechen</button>
+        <button type="submit"  data-ng-disabled="image == null || image == ''" class="btn btn-primary pull-right">Bild einfügen</button><!-- data-ng-disabled="image == null || image == '' || image == '/themes/default/img/loadingWheel.png'" -->
+        <button type="button" data-ngf-select data-ng-model="image" data-ngf-multiple="false" class="btn btn-primary pull-right" ngf-fix-orientation="false"><span class="fa fa-picture mR5"></span>Bild auswählen</button>
+    </div>
+</form>

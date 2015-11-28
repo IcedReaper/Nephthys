@@ -1,7 +1,7 @@
 (function(angular) {
     angular.module("blogAdminService", [])
         .config(window.$QDecorator)
-        .service("blogService", function($http, Upload, $timeout) {
+        .service("blogService", function($http, Upload, $timeout, $q) {
             return {
                 getList: function () {
                     return $http.get('/ajax/com/IcedReaper/blog/getList');
@@ -15,8 +15,33 @@
                     });
                 },
                 
-                save: function (blog) {
-                    return $http.post('/ajax/com/IcedReaper/blog/save', blog);
+                save: function (blogpost, fileNames) {
+                    return $http.post('/ajax/com/IcedReaper/blog/save', {
+                        blogpostId:        blogpost.blogpostId,
+                        headline:          blogpost.headline,
+                        link:              blogpost.link,
+                        released:          blogpost.released,
+                        releaseDate:       blogpost.releaseDate,
+                        story:             blogpost.convertedStory,
+                        commentsActivated: blogpost.commentsActivated,
+                        fileNames:         JSON.stringify(fileNames)
+                    });
+                },
+                
+                uploadImages: function (blogpostId, images, imageSizes) {
+                    if(images.length > 0) {
+                        return Upload.upload({
+                            url: '/ajax/com/IcedReaper/blog/uploadImages',
+                            data: {
+                                images:     images,
+                                imageSizes: JSON.stringify(imageSizes),
+                                blogpostId: blogpostId
+                            }
+                        });
+                    }
+                    else {
+                        return $q.resolve();
+                    }
                 },
                 
                 delete: function (blogpostId) {
