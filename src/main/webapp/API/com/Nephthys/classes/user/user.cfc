@@ -178,6 +178,8 @@ component {
                 variables.registrationDate = qUser.registrationDate[1];
                 variables.avatarFilename   = qUser.avatarFilename[1];
                 variables.themeId          = qUser.themeId[1];
+                
+                variables.theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(variables.themeId);
             }
             else {
                 throw(type = "nephthys.notFound.user", message = "Could not find user by ID ", detail = variables.userId);
@@ -189,12 +191,15 @@ component {
             variables.password         = "";
             variables.active           = 0;
             variables.registrationDate = now();
-            variables.avatarFilename   = "anonymous.png";
             variables.themeId          = application.system.settings.getDefaultThemeId();
+            variables.avatarFilename   = "";
+            
+            variables.theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(variables.themeId);
+            
+            variables.avatarFilename   = "/themes/" & variables.theme.getFolderName() & "/img/anonymous.jpg";
         }
         
         variables.extendedProperties = createObject("component", "extendedProperties").init(variables.userId);
-        variables.theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(variables.themeId);
         
         loadPermissions();
     }

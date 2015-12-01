@@ -58,18 +58,59 @@ component implements="WWW.interfaces.connector" {
                                           splitParameter[2]);
                 }
             }
-            else {
-                var galleries = blogpostSearchCtrl.setReleased(1)
+            else { // Detail view
+                var blogposts = blogpostSearchCtrl.setReleased(1)
                                                   .setLink(request.page.getParameter())
                                                   .execute();
                 
-                if(galleries.len() == 1) {
-                    var gallery = galleries[1];
+                if(blogposts.len() == 1) {
+                    var blogpost = blogposts[1];
                     
-                    request.page.setTitle(gallery.getHeadline());
+                    // new comment?
+                    if(! structIsEmpty(form)) {
+                        if(blogpost.getCommentsActivated()) {
+                            if(len(form.comment) > 0 && len(form.comment) <= 500) {
+                                // todo: check if username isn't used by a registered user | check if email is valid | check if ip/user/what ever commented > X times the last Y seconds / Spam-Protection
+                                if(request.user.getUserId() != 0 || (blogpost.anonymousCommentAllowed() && form.anonymousUsername != "" && form.anonymousEmail != "")) {
+                                    writeOutput("4");
+                                    var newComment = createObject("component", "API.com.IcedReaper.blog.comment").init(0);
+                                    
+                                    newComment.setBlogpostId(blogpost.getBlogpostId())
+                                              .setComment(form.comment);
+                                    
+                                    if(request.user.getUserId() != 0) {
+                                        newComment.setCreatorUserId(request.user.getUserId());
+                                    }
+                                    else {
+                                        newComment.setAnonymousUsername(form.anonymousUsername)
+                                                  .setAnonymousEmail(form.anonymousEmail);
+                                    }
+                                    
+                                    if(! blogpost.commentsNeedToGetPublished()) {
+                                        newComment.setPublished(true);
+                                    }
+                                    
+                                    newComment.save();
+                                    
+                                    blogpost.addComment(newComment);
+                                }
+                                else {
+                                    throw(type = "nephthys.application.notAllowed", message = "Either you are not logged, but have to be, or your typed in username or email is empty or invalid");
+                                }
+                            }
+                            else {
+                                throw(type = "nephthys.application.invalidContent", message = "The comment is either empty or longer then 500 characters");
+                            }
+                        }
+                        else {
+                            throw(type = "nephthys.application.notAllowed", message = "It is not allowed to post comments to this blog post");
+                        }
+                    }
+                    
+                    request.page.setTitle(blogpost.getHeadline());
                 
                     return renderDetails(arguments.options,
-                                         gallery);
+                                         blogpost);
                 }
                 else {
                     throw(type = "icedreaper.blog.notFound", message = "Could not find the blogpost " & request.page.getParameter(), detail = request.page.getParameter());

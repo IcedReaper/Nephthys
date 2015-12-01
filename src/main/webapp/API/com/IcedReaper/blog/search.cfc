@@ -158,25 +158,28 @@ component {
             qSearch.addParam(name = "categoryName", value = variables.categoryName, cfsqltype="cf_sql_varchar");
         }
         
-        var qGalleryIds = qSearch.setSQL(sql & where & orderBy)
-                                 .execute()
-                                 .getResult();
+        var qBlogpostIds = qSearch.setSQL(sql & where & orderBy)
+                                  .execute()
+                                  .getResult();
         
-        variables.totalGalleryCount = qGalleryIds.getRecordCount();
+        variables.totalGalleryCount = qBlogpostIds.getRecordCount();
         
-        var galleries = [];
+        var blogposts = [];
         
         var i = variables.offset + 1;
         var to = variables.offset + variables.count;
-        if(to == 0 || to > qGalleryIds.getRecordCount()) {
-            to = qGalleryIds.getRecordCount();
+        if(to == 0 || to > qBlogpostIds.getRecordCount()) {
+            to = qBlogpostIds.getRecordCount();
         }
         
         for(; i <= to; i++) {
-            galleries.append(new blogpost(qGalleryIds.blogpostId[i]));
+            var bp = new blogpost(qBlogpostIds.blogpostId[i]);
+            if(bp.isPublished()) {
+                blogposts.append(bp);
+            }
         }
         
-        return galleries;
+        return blogposts;
     }
 }
 

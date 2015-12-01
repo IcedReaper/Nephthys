@@ -67,9 +67,11 @@ Module ( in eigenen Repos/Projekten )
         Bugs:
             File resizing after upload is only applied by width and height attributes
         Comments
+            Nested comments
     3. Reviewsystem
 
 Optimierungen
     1. Angularcode auf gleiche Basis bringen
     2. Angularcode optimieren
     3. CreatorUserId und LastEditUserId übergeben anstatt in der Klasse direkt verwenden?
+    4. SQL Berechtigungen prüfen

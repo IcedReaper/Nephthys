@@ -103,6 +103,16 @@ component {
         
         return this;
     }
+    public blogpost function addComment(required comment comment) {
+        if(arguments.comment.isSaved()) {
+            variables.comments.append(arguments.comment);
+        }
+        else {
+            throw(type = "nephthys.application.notAllowed", message = "Cannot add a non saved comment");
+        }
+        
+        return this;
+    }
     
     // G E T T E R
     
@@ -128,7 +138,7 @@ component {
         return variables.folderName;
     }
     public boolean function getCommentsActivated() {
-        return variables.commentsActivated;
+        return true;// variables.commentsActivated; // todo
     }
     public numeric function getCreatorUserId() {
         return variables.creatorUserId;
@@ -152,7 +162,7 @@ component {
         return variables.categories;
     }
     public array function getComments() {
-        if(variables.commentsActivated) {
+        if(getCommentsActivated()) {
             return variables.comments;
         }
         else {
@@ -165,6 +175,12 @@ component {
     }
     public boolean function isPublished() {
         return (variables.releaseDate == null || variables.releaseDate < now()) && variables.released;
+    }
+    public boolean function anonymousCommentAllowed() {
+        return true; // todo
+    }
+    public boolean function commentsNeedToGetPublished() {
+        return true; // todo
     }
     
     // C R U D
@@ -387,7 +403,6 @@ component {
         var qCommentIds = new Query().setSQL("  SELECT commentId
                                                   FROM icedReaper_blog_comment
                                                  WHERE blogpostId = :blogpostId
-                                                   AND parentCommentId IS NULL 
                                               ORDER BY creationDate DESC ")
                                      .addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric")
                                      .execute()

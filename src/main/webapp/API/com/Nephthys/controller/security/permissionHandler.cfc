@@ -10,7 +10,7 @@ component {
                                                                          FROM nephthys_permission perm
                                                                         WHERE perm.userId = :userId) p ON m.moduleId = p.moduleId
                                                              ORDER BY m.sortOrder ASC")
-                                            .addParam(name = "userId", value = arguments.userId, cfsqltype = "cf_sql_numeric")
+                                            .addParam(name = "userId", value = arguments.userId, cfsqltype = "cf_sql_numeric", null = ! isNumeric(arguments.userId))
                                             .execute()
                                             .getResult();
         
@@ -151,6 +151,12 @@ component {
                                        required numeric userId,
                                        required numeric roleId,
                                        required numeric moduleId) {
+        if(arguments.userId == 0 || arguments.userId == null) {
+            throw(type = "nephthys.application.notAllowed", message = "It is not allowed to set permissions for a user with ID 0");
+        }
+        // check if the user exists. If not the component will throw an error.
+        var user = createObject("component", "API.com.Nephthys.classes.user.user").init(arguments.userId);
+        
         if(arguments.permissionId == 0 || arguments.permissionId == null) {
             new Query().setSQL("INSERT INTO nephthys_permission
                                             (

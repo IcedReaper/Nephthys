@@ -61,7 +61,6 @@ GRANT ALL    ON TABLE icedreaper_blog_blogpost TO nephthys_admin;
 GRANT SELECT ON TABLE icedreaper_blog_blogpost TO nephthys_user;
 
 
-
 CREATE SEQUENCE seq_icedreaper_blog_comment_id
   INCREMENT 1
   MINVALUE 1
@@ -69,22 +68,25 @@ CREATE SEQUENCE seq_icedreaper_blog_comment_id
   START 1
   CACHE 1;
 ALTER SEQUENCE seq_icedreaper_blog_comment_id OWNER TO nephthys_admin;
+GRANT SELECT, UPDATE ON SEQUENCE seq_icedreaper_blog_comment_id TO public;
 
 CREATE TABLE public.icedreaper_blog_comment
 (
   commentId integer NOT NULL DEFAULT nextval('seq_icedreaper_blog_comment_id'::regclass),
   blogpostId integer NOT NULL,
-  parentCommentId integer DEFAULT NULL,
+  /*parentCommentId integer DEFAULT NULL,*/
   comment character varying(500) NOT NULL,
   creatorUserId integer,
   creationDate timestamp with time zone NOT NULL DEFAULT now(),
+  anonymousUsername character varying(50) DEFAULT NULL,
+  anonymousEmail character varying(50) DEFAULT NULL,
   published boolean NOT NULL DEFAULT FALSE,
   publishedUserId integer,
   publishedDate timestamp with time zone,
   
   CONSTRAINT PK_icedreaper_blog_comment_id PRIMARY KEY (commentId),
   CONSTRAINT FK_icedreaper_blog_comment_blogpostId      FOREIGN KEY (blogpostId)      REFERENCES icedreaper_blog_blogpost (blogpostId) ON UPDATE NO ACTION ON DELETE CASCADE,
-  CONSTRAINT FK_icedreaper_blog_comment_parentCommentId FOREIGN KEY (parentCommentId) REFERENCES icedreaper_blog_comment  (commentId)  ON UPDATE NO ACTION ON DELETE CASCADE,
+  /*CONSTRAINT FK_icedreaper_blog_comment_parentCommentId FOREIGN KEY (parentCommentId) REFERENCES icedreaper_blog_comment  (commentId)  ON UPDATE NO ACTION ON DELETE CASCADE,*/
   CONSTRAINT FK_icedreaper_blog_comment_creatorUserId   FOREIGN KEY (creatorUserId)   REFERENCES nephthys_user            (userid)     ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT FK_icedreaper_blog_comment_publishedUserId FOREIGN KEY (publishedUserId) REFERENCES nephthys_user            (userid)     ON UPDATE NO ACTION ON DELETE SET NULL
 )
@@ -93,15 +95,15 @@ WITH (
 );
 
 CREATE INDEX FKI_icedreaper_blog_comment_blogpostId      ON icedreaper_blog_comment(blogpostId);
-CREATE INDEX FKI_icedreaper_blog_comment_parentCommentId ON icedreaper_blog_comment(parentCommentId);
+/*CREATE INDEX FKI_icedreaper_blog_comment_parentCommentId ON icedreaper_blog_comment(parentCommentId);*/
 CREATE INDEX FKI_icedreaper_blog_comment_creatorUserId   ON icedreaper_blog_comment(creatorUserId);
 CREATE INDEX FKI_icedreaper_blog_comment_publishedUserId ON icedreaper_blog_comment(publishedUserId);
 CREATE INDEX IDX_icedreaper_blog_comment_published       ON icedreaper_blog_comment(published, publishedDate);
 
 ALTER TABLE icedreaper_blog_comment OWNER TO nephthys_admin;
 
-GRANT ALL    ON TABLE icedreaper_blog_comment TO nephthys_admin;
-GRANT SELECT ON TABLE icedreaper_blog_comment TO nephthys_user;
+GRANT ALL            ON TABLE icedreaper_blog_comment TO nephthys_admin;
+GRANT SELECT, INSERT ON TABLE icedreaper_blog_comment TO nephthys_user;
 
 
 

@@ -34,6 +34,8 @@
                     <cfloop from="1" to="#categories.len()#" index="categoryIndex">
                         <a class="label label-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
                     </cfloop>
+                    
+                    <p>Dieser Blogeintrag hat #attributes.blogposts[blogpostIndex].getComments.len()# Kommentare</p>
                 </div>
             </div>
         </cfloop>
