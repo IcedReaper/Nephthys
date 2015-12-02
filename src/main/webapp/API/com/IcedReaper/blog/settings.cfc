@@ -7,9 +7,9 @@ component {
         return this;
     }
     
-    public settings function setValueOfKey(required string key, required string value) {
+    public settings function setValueOfKey(required string key, required any value) {
         if(structKeyExists(variables.options, arguments.key)) {
-            variables.options[arguments.key].value = arguments.value;
+            variables.options[arguments.key].value = checkAndValidateValue(arguments.value, variables.options[arguments.key].type);
         }
         else {
             throw(type = "nephthys.notFound.general", message = "Could not find a blog setting with the name " & arguments.key);
@@ -36,12 +36,27 @@ component {
         }
     }
     
+    public struct function getAllSettings() {
+        return variables.options;
+    }
+    
     public settings function save() {
-        for(var option in variables.options) {
-            new Query().setSQL("UPDATE IcedReaper_blog_settings SET value = :value WHERE key = :key")
-                       .addParam(name = "value", value = option.value, cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "key",   value = option.key,   cfsqltype = "cf_sql_varchar")
-                       .execute();
+        transaction {
+            try {
+                for(var option in variables.options) {
+                    new Query().setSQL("UPDATE IcedReaper_blog_settings SET value = :value WHERE key = :key")
+                               .addParam(name = "value", value = variables.options[option].value, cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "key",   value = option,                          cfsqltype = "cf_sql_varchar")
+                               .execute();
+                }
+                
+                transactionCommit();
+            }
+            catch(any e) {
+                transactionRollback();
+                
+                throw(object=e);
+            }
         }
         
         return this;
@@ -54,53 +69,41 @@ component {
                                      .getResult();
         
         for(var i = 1; i <= qGetOptions.getRecordCount(); i++) {
-            switch(lCase(qGetOptions.type[i])) {
-                case "bit": {
-                    if(qGetOptions.value[i] == 1 || qGetOptions.value[i] == 0 || qGetOptions.value[i] == null) {
-                        variables.options[ qGetOptions.key[i] ] = {
-                            value = qGetOptions.value[i],
-                            type  = "bit"
-                        };
-                    }
-                    else {
-                        throw(type = "nephthys.application.invalidFormat", message = "The value for key " & qGetOptions.key[i] & " does not math it's type");
-                    }
-                    
-                    break;
+            variables.options[ qGetOptions.key[i] ] = {
+                description = qGetOptions.description[i],
+                value       = checkAndValidateValue(qGetOptions.value[i], qGetOptions.type[i]),
+                type        = lCase(qGetOptions.type[i])
+            };
+        }
+    }
+    
+    private any function checkAndValidateValue(required any value, required string type) {
+        switch(lCase(arguments.type)) {
+            case "bit": {
+                if(arguments.value == 1 || arguments.value == 0 || arguments.value == null) {
+                    return arguments.value;
                 }
-                case "number": {
-                    if(isNumeric(qGetOptions.value[i]) || qGetOptions.value[i] == null) {
-                        variables.options[ qGetOptions.key[i] ] = {
-                            value = qGetOptions.value[i],
-                            type  = "number"
-                        };
-                    }
-                    else {
-                        throw(type = "nephthys.application.invalidFormat", message = "The value for key " & qGetOptions.key[i] & " does not math it's type");
-                    }
-                    
-                    break;
+                else {
+                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & arguments.type & " does not math it's type");
                 }
-                case "string": {
-                    variables.options[ qGetOptions.key[i] ] = {
-                        value = toString(qGetOptions.value[i]),
-                        type  = "string"
-                    };
-                    
-                    break;
+            }
+            case "number": {
+                if(isNumeric(arguments.value) || arguments.value == null) {
+                    return lsParseNumber(arguments.value);
                 }
-                case "boolean": {
-                    if(qGetOptions.value[i] == true || qGetOptions.value[i] == false || qGetOptions.value[i] == null) {
-                        variables.options[ qGetOptions.key[i] ] = {
-                            value = qGetOptions.value[i],
-                            type  = "bit"
-                        };
-                    }
-                    else {
-                        throw(type = "nephthys.application.invalidFormat", message = "The value for key " & qGetOptions.key[i] & " does not math it's type");
-                    }
-                    
-                    break;
+                else {
+                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & arguments.type & " does not math it's type");
+                }
+            }
+            case "string": {
+                return toString(arguments.value);
+            }
+            case "boolean": {
+                if(arguments.value == true || arguments.value == false || arguments.value == null) {
+                    return arguments.value;
+                }
+                else {
+                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & arguments.type & " does not math it's type");
                 }
             }
         }

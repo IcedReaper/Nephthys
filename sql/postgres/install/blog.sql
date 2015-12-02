@@ -14,6 +14,7 @@ CREATE TABLE public.icedreaper_blog_settings
   key character varying(50) NOT NULL,
   value character varying(100) NOT NULL,
   type character varying(15) NOT NULL,
+  description character varying(75) NOT NULL,
   
   CONSTRAINT PK_IcedReaper_blog_settings_id PRIMARY KEY (settingId),
   

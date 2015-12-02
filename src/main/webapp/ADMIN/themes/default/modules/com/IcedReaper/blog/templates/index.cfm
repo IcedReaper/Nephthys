@@ -32,6 +32,7 @@
 <!--- services --->
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/service/blogService.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/service/categoryService.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/service/settingsService.js"></script>
 
 <!--- controller --->
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogList.js"></script>
@@ -39,11 +40,12 @@
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogCategory.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogStatistics.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogComments.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/UploadImageModal.js"></script> <!--- Image Add Dialog --->
 
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/categoryList.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/categoryDetail.js"></script>
 
-<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/UploadImageModal.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/settings.js"></script>
 
 <div ng-app="blogAdmin">
     <div ng-view></div>

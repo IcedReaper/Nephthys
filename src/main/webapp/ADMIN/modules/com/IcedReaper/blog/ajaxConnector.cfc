@@ -158,7 +158,7 @@ component {
                        .save();
         }
         blogpost.addCategory(newCategory)
-               .save();
+                .save();
         
         return {
             "success" = true
@@ -281,6 +281,31 @@ component {
         };
     }
     
+    remote struct function getSettings() {
+        var settings = createObject("component", "API.com.IcedReaper.blog.settings").init();
+        
+        return {
+            "success" = true,
+            "data"    = settings.getAllSettings()
+        };
+    }
+    
+    remote struct function saveSettings(required string settings) {
+        var settingsObj = createObject("component", "API.com.IcedReaper.blog.settings").init();
+        var newSettings = deserializeJSON(arguments.settings);
+        
+        for(var setting in newSettings) {
+            if(structKeyExists(newSettings[setting], "value")) {
+                settingsObj.setValueOfKey(setting, newSettings[setting].value);
+            }
+        }
+        
+        settingsObj.save();
+        
+        return {
+            "success" = true
+        };
+    }
     
     // private
     private struct function prepareDetailStruct(required blogpost blogpost) {

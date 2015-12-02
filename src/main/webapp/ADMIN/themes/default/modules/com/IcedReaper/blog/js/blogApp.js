@@ -11,7 +11,8 @@
                                                "blogCommentsCtrl",
                                                "categoryListCtrl",
                                                "categoryDetailCtrl",
-                                               "UploadImageModalCtrl"]);
+                                               "UploadImageModalCtrl",
+                                               "settingsCtrl"]);
     
     blogApp
         .config(["$routeProvider", function ($routeProvider) {
@@ -27,6 +28,10 @@
                 .when("/category/:categoryId", {
                     templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/categoryDetail.html",
                     controller:  "categoryDetailCtrl"
+                })
+                .when("/settings", {
+                    templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/settings.html",
+                    controller: "settingsCtrl"
                 })
                 .when("/:blogpostId", {
                     templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/blogDetail.html",
