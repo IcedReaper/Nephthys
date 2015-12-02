@@ -20,22 +20,22 @@
         <div class="row">
             <div class="col-md-12">
                 <h3>Kommentare</h3>
-                
-                <cfloop from="1" to="#comments.len()#" index="commentIndex">
-                    <div class="media">
-                        <div class="media-left">
-                            <a href="##">
-                                <img class="media-object" src="#comments[commentIndex].getCreator().getAvatarFilename()#" alt="Generic placeholder image">
-                            </a>
+                <ul class="media-list">
+                    <cfloop from="1" to="#comments.len()#" index="commentIndex">
+                        <li class="media">
+                            <div class="media-left">
+                                <a href="##">
+                                    <img class="media-object" src="#comments[commentIndex].getCreator().getAvatarFilename()#" alt="Generic placeholder image">
+                                </a>
+                            </div>
+                            <div class="media-body">
+                                <h5 class="media-heading">#comments[commentIndex].getUsername()#</h5>
+                                <p>#comments[commentIndex].getComment()#</p>
+                                <small>Geschrieben am #dateFormat(comments[commentIndex].getCreationDate(), "dd.mmm yyyy")# um #timeFormat(comments[commentIndex].getCreationDate(), "HH:MM:SS")# Uhr.</small>
+                            </div>
                         </div>
-                        <div class="media-body">
-                            <h5 class="media-heading">#comments[commentIndex].getUsername()#</h5>
-                            <p>#comments[commentIndex].getComment()#</p>
-                            <small>Geschrieben am #dateFormat(comments[commentIndex].getCreationDate(), "dd.mmm yyyy")# um #timeFormat(comments[commentIndex].getCreationDate(), "HH:MM:SS")# Uhr.</small>
-                        </div>
-                    </div>
-                </cfloop>
-                
+                    </cfloop>
+                </ul>
                 <!--- new comment --->
                 <hr>
                 <cfif request.user.getUserId() != 0 || attributes.blogpost.anonymousCommentAllowed()>
