@@ -119,12 +119,6 @@ component {
         var orderBy = " ORDER BY " & variables.sortBy & " " & variables.sortDirection;
         
         if(variables.released != -1) {
-            /*if(variables.published == 0) {
-                where &= ((where != "") ? " AND " : " WHERE ") & " releaseDate IS NOT NULL AND releaseDate > now()";
-            }
-            else {
-                where &= ((where != "") ? " AND " : " WHERE ") & " (releaseDate IS NULL OR releaseDate <= now()) ";
-            }*/
             where &= ((where != "") ? " AND " : " WHERE ") & " released = :released";
             qSearch.addParam(name = "released", value = variables.released, cfsqltype = "cf_sql_bit");
         }
@@ -151,10 +145,10 @@ component {
         
         if(variables.categoryName != "") {
             where &= ((where != "") ? " AND " : " WHERE ") & "blogpostId IN (SELECT blogpostId
-                                                                              FROM icedreaper_blog_blogpostCategory
-                                                                             WHERE categoryId = (SELECT categoryId
-                                                                                                   FROM icedreaper_blog_category
-                                                                                                  WHERE name = :categoryName))";
+                                                                               FROM icedreaper_blog_blogpostCategory
+                                                                              WHERE categoryId = (SELECT categoryId
+                                                                                                    FROM icedreaper_blog_category
+                                                                                                   WHERE name = :categoryName))";
             qSearch.addParam(name = "categoryName", value = variables.categoryName, cfsqltype="cf_sql_varchar");
         }
         
@@ -173,10 +167,7 @@ component {
         }
         
         for(; i <= to; i++) {
-            var bp = new blogpost(qBlogpostIds.blogpostId[i]);
-            if(bp.isPublished()) {
-                blogposts.append(bp);
-            }
+            blogposts.append(new blogpost(qBlogpostIds.blogpostId[i]));
         }
         
         return blogposts;

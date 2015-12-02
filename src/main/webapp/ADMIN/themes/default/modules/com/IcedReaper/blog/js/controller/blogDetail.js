@@ -6,8 +6,11 @@
     var blogDetailCtrl = angular.module('blogDetailCtrl', ["blogAdminService"]);
     
     blogDetailCtrl
-        .controller('blogDetailCtrl', function ($scope, $rootScope, $routeParams, $q, blogService) {
+        .controller('blogDetailCtrl', function ($scope, $rootScope, $route, $routeParams, $q, blogService) {
+            $rootScope.$$listeners['blog-loaded'] = null; // as the different js-files will be invoken again and again the event listeners get applied multiple times, so we reset them here
+            
             var activePage = "detail";
+            $scope.linkSet = false;
             // load
             $scope.load = function() {
                 return blogService
@@ -15,7 +18,14 @@
                            .then(function (blogDetails) {
                                $scope.blogpost = blogDetails.data;
                                
-                               $rootScope.$emit('blog-loaded', {blogpostId: blogDetails.data.blogpostId});
+                               if($scope.blogpost.blogpostId != 0) {
+                                   $scope.linkSet = true;
+                                   
+                                   $rootScope.$emit('blog-loaded', {blogpostId: $scope.blogpost.blogpostId});
+                               }
+                               else {
+                                   $scope.linkSet = false;
+                               }
                            });
             };
             
@@ -48,9 +58,16 @@
                 blogService
                     .save($scope.blogpost, fileNames)
                     .then(function (result) {
-                        blogService.uploadImages($scope.blogpost.blogpostId, images, imageSizes)
+                        blogService.uploadImages(result.data.blogpostId, images, imageSizes)
                             .then(function(uploadResult) {
+                                var oldBlogpostId = $scope.blogpost.blogpostId;
                                 $scope.blogpost = result.data;
+                                
+                                if(oldBlogpostId == 0) {
+                                    $route.updateParams({
+                                        blogpostId: result.data.blogpostId
+                                    });
+                                }
                                 
                                 // reset image variables
                                 images = [];
@@ -58,6 +75,12 @@
                                 fileNames = [];
                             });
                     });
+            };
+            
+            $scope.updateLink = function() {
+                if(! $scope.linkSet) {
+                    $scope.blogpost.link = "/" + $scope.blogpost.headline;
+                }
             };
             
             // tabs and paging

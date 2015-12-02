@@ -3,11 +3,11 @@ component {
     remote struct function getList() {
         var blogpostSearchCtrl = createObject("component", "API.com.IcedReaper.blog.search").init();
         
-        var galleries = blogpostSearchCtrl.execute();
+        var blogposts = blogpostSearchCtrl.execute();
         var data = [];
         
-        for(var i = 1; i <= galleries.len(); i++) {
-            data.append(prepareDetailStruct(galleries[i]));
+        for(var i = 1; i <= blogposts.len(); i++) {
+            data.append(prepareDetailStruct(blogposts[i]));
         }
         
         return {

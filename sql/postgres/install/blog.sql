@@ -1,19 +1,32 @@
 DROP TABLE icedreaper_blog_settings;
-DROP TABLE icedreaper_blog_comment;
-DROP TABLE icedreaper_blog_blogpostCategory;
-DROP TABLE icedreaper_blog_blogpost;
-DROP TABLE icedreaper_blog_category;
+
+CREATE SEQUENCE seq_icedreaper_blog_setting_id
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 65535
+  START 1
+  CACHE 1;
+ALTER SEQUENCE seq_icedreaper_blog_setting_id OWNER TO nephthys_admin;
 
 CREATE TABLE public.icedreaper_blog_settings
 (
-  commentingActivated boolean NOT NULL DEFAULT FALSE,
-  anonymousCommenting boolean NOT NULL DEFAULT FALSE,
-  commentsNeedPublished boolean NOT NULL DEFAULT TRUE
+  settingId integer NOT NULL DEFAULT nextval('seq_icedreaper_blog_setting_id'::regclass),
+  key character varying(50),
+  value character varying(100),
+  
+  CONSTRAINT PK_IcedReaper_blog_settings_id PRIMARY KEY (settingId),
+  
 )
 WITH (
   OIDS=FALSE
 );
 
+CREATE UNIQUE INDEX UK_IcedReaper_blog_settings_key ON icedreaper_blog_settings(lower(key));
+
+ALTER TABLE icedreaper_blog_settings OWNER TO nephthys_admin;
+
+GRANT ALL    ON TABLE icedreaper_blog_settings TO nephthys_admin;
+GRANT SELECT ON TABLE icedreaper_blog_settings TO nephthys_user;
 
 
 CREATE SEQUENCE seq_icedreaper_blog_blogpost_id

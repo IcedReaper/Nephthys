@@ -218,6 +218,7 @@ component {
                                                                        :story,
                                                                        :released,
                                                                        :releaseDate,
+                                                                       :folderName,
                                                                        :commentsActivated,
                                                                        :anonymousCommentAllowed,
                                                                        :commentsNeedToGetPublished,
@@ -310,7 +311,6 @@ component {
         variables.attributesChanged = false;
         variables.categoriesChanged = false;
         
-        
         // delete all unused files
         var usedFiles = directoryList(getAbsolutePath(), false, "name");
         for(var i = 1; i <= usedFiles.len(); i++) {
@@ -332,8 +332,6 @@ component {
                    .execute();
         
         variables.blogpostId = 0;
-        
-        directoryDelete(getAbsolutePath(), true);
     }
     
     // I N T E R N A L
@@ -371,14 +369,16 @@ component {
             }
         }
         else {
+            var defaultSettings = new settings();
+            
             variables.headline                   = "";
             variables.link                       = "";
             variables.story                      = "";
             variables.released                   = false;
             variables.releaseDate                = null;
-            variables.commentsActivated          = false; // todo: set to default values of IcedReaper_blog_settings table
-            variables.anonymousCommentAllowed    = false; // todo: set to default values of IcedReaper_blog_settings table
-            variables.commentsNeedToGetPublished = true; // todo: set to default values of IcedReaper_blog_settings table
+            variables.commentsActivated          = defaultSettings.getKey("commentsActivated");
+            variables.anonymousCommentAllowed    = defaultSettings.getKey("anonymousCommentAllowed");
+            variables.commentsNeedToGetPublished = defaultSettings.getKey("commentsNeedToGetPublished");
             variables.creatorUserId              = null;
             variables.creationDate               = null;
             variables.lastEditorUserId           = null;
