@@ -23,9 +23,9 @@
         };
         
         $scope.delete = function (comment, index) {
-            blogService
-                .deleteComment(comment.commentId)
-                .then($scope.load);
+            $scope.comments.splice(index, 1);
+            
+            blogService.deleteComment(comment.commentId);
         };
         
         $rootScope.$on('blog-loaded', function(event, blogData) {

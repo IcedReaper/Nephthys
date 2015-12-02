@@ -66,6 +66,7 @@ Module ( in eigenen Repos/Projekten )
         Globale Blog Optionen
         Bugs:
             File resizing after upload is only applied by width and height attributes
+            F5-Raiding beim Abschicken des Kommentars möglich
         Comments
             Nested comments
     3. Reviewsystem
