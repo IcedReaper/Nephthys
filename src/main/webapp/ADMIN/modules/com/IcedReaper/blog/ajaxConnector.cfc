@@ -61,6 +61,8 @@ component {
                                 required string  folderName,
                                 required string  story,
                                 required numeric commentsActivated,
+                                required numeric anonymousCommentAllowed,
+                                required numeric commentsNeedToGetPublished,
                                 required string  fileNames) {
         var blogpost = createObject("component", "API.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
         if(arguments.releaseDate != "") {
@@ -84,6 +86,8 @@ component {
                 .setFolderName(arguments.folderName)
                 .setStory(arguments.story, deserializeJSON(arguments.fileNames))
                 .setCommentsActivated(arguments.commentsActivated)
+                .setAnonymousCommentAllowed(arguments.anonymousCommentAllowed)
+                .setCommentsNeedToGetPublished(arguments.commentsNeedToGetPublished)
                 .save();
         
         return {
@@ -287,17 +291,19 @@ component {
         }
         
         return {
-            "blogpostId"        = arguments.blogpost.getBlogpostId(),
-            "headline"          = arguments.blogpost.getHeadline(),
-            "link"              = arguments.blogpost.getLink(),
-            "story"             = arguments.blogpost.getStory(),
-            "released"          = toString(arguments.blogpost.getReleased()),
-            "folderName"        = arguments.blogpost.getFolderName(),
-            "releaseDate"       = application.tools.formatter.formatDate(date = arguments.blogpost.getReleaseDate() != null ? arguments.blogpost.getReleaseDate() : 0,
-                                                                         dateFormat = "yyyy-mm-dd", timeFormat = "HH:MM"),
-            "commentsActivated" = toString(arguments.blogpost.getCommentsActivated()),
-            "creatorUserId"     = arguments.blogpost.getCreatorUserId(),
-            "categories"        = categories
+            "blogpostId"                 = arguments.blogpost.getBlogpostId(),
+            "headline"                   = arguments.blogpost.getHeadline(),
+            "link"                       = arguments.blogpost.getLink(),
+            "story"                      = arguments.blogpost.getStory(),
+            "released"                   = toString(arguments.blogpost.getReleased()),
+            "folderName"                 = arguments.blogpost.getFolderName(),
+            "releaseDate"                = application.tools.formatter.formatDate(date = arguments.blogpost.getReleaseDate() != null ? arguments.blogpost.getReleaseDate() : 0,
+                                                                                  dateFormat = "yyyy-mm-dd", timeFormat = "HH:MM"),
+            "commentsActivated"          = toString(arguments.blogpost.getCommentsActivated()),
+            "anonymousCommentAllowed"    = toString(arguments.blogpost.getAnonymousCommentAllowed()),
+            "commentsNeedToGetPublished" = toString(arguments.blogpost.getCommentsNeedToGetPublished()),
+            "creatorUserId"              = arguments.blogpost.getCreatorUserId(),
+            "categories"                 = categories
         };
     }
     

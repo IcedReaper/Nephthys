@@ -72,6 +72,18 @@ component {
         
         return this;
     }
+    public blogpost function setAnonymousCommentAllowed(required boolean anonymousCommentAllowed) {
+        variables.anonymousCommentAllowed = arguments.anonymousCommentAllowed;
+        variables.attributesChanged = true;
+        
+        return this;
+    }
+    public blogpost function setCommentsNeedToGetPublished(required boolean commentsNeedToGetPublished) {
+        variables.commentsNeedToGetPublished = arguments.commentsNeedToGetPublished;
+        variables.attributesChanged = true;
+        
+        return this;
+    }
     
     public blogpost function addCategory(required category _category) {
         variables.categories.append(duplicate(arguments._category));
@@ -138,7 +150,7 @@ component {
         return variables.folderName;
     }
     public boolean function getCommentsActivated() {
-        return true;// variables.commentsActivated; // todo
+        return variables.commentsActivated;
     }
     public numeric function getCreatorUserId() {
         return variables.creatorUserId;
@@ -162,12 +174,13 @@ component {
         return variables.categories;
     }
     public array function getComments() {
-        if(getCommentsActivated()) {
-            return variables.comments;
-        }
-        else {
-            return [];
-        }
+        return variables.comments;
+    }
+    public boolean function getAnonymousCommentAllowed() {
+        return variables.anonymousCommentAllowed;
+    }
+    public boolean function getCommentsNeedToGetPublished() {
+        return variables.commentsNeedToGetPublished;
     }
     
     public string function getAbsolutePath() {
@@ -175,12 +188,6 @@ component {
     }
     public boolean function isPublished() {
         return (variables.releaseDate == null || variables.releaseDate < now()) && variables.released;
-    }
-    public boolean function anonymousCommentAllowed() {
-        return true; // todo
-    }
-    public boolean function commentsNeedToGetPublished() {
-        return true; // todo
     }
     
     // C R U D
@@ -199,6 +206,8 @@ component {
                                                                        releaseDate,
                                                                        folderName,
                                                                        commentsActivated,
+                                                                       anonymousCommentAllowed,
+                                                                       commentsNeedToGetPublished,
                                                                        creatorUserId,
                                                                        lastEditorUserId,
                                                                        lastEditDate
@@ -210,20 +219,24 @@ component {
                                                                        :released,
                                                                        :releaseDate,
                                                                        :commentsActivated,
+                                                                       :anonymousCommentAllowed,
+                                                                       :commentsNeedToGetPublished,
                                                                        :creatorUserId,
                                                                        :lastEditorUserId,
                                                                        now()
                                                                    );
                                                        SELECT currval('seq_icedreaper_blog_blogpost_id' :: regclass) newBlogpostId;")
-                                              .addParam(name = "headline",          value = variables.headline,          cfsqltype = "cf_sql_varchar")
-                                              .addParam(name = "link",              value = variables.link,              cfsqltype = "cf_sql_varchar")
-                                              .addParam(name = "story",             value = variables.story,             cfsqltype = "cf_sql_varchar")
-                                              .addParam(name = "released",          value = variables.released,          cfsqltype = "cf_sql_bit")
-                                              .addParam(name = "releaseDate",       value = variables.releaseDate,       cfsqltype = "cf_sql_timestamp", null=variables.releaseDate == null)
-                                              .addParam(name = "folderName",        value = variables.folderName,        cfsqltype = "cf_sql_varchar")
-                                              .addParam(name = "commentsActivated", value = variables.commentsActivated, cfsqltype = "cf_sql_bit")
-                                              .addParam(name = "creatorUserId",     value = request.user.getUserId(),    cfsqltype = "cf_sql_numeric")
-                                              .addParam(name = "lastEditorUserId",  value = request.user.getUserId(),    cfsqltype = "cf_sql_numeric")
+                                              .addParam(name = "headline",                   value = variables.headline,                   cfsqltype = "cf_sql_varchar")
+                                              .addParam(name = "link",                       value = variables.link,                       cfsqltype = "cf_sql_varchar")
+                                              .addParam(name = "story",                      value = variables.story,                      cfsqltype = "cf_sql_varchar")
+                                              .addParam(name = "released",                   value = variables.released,                   cfsqltype = "cf_sql_bit")
+                                              .addParam(name = "releaseDate",                value = variables.releaseDate,                cfsqltype = "cf_sql_timestamp", null = variables.releaseDate == null)
+                                              .addParam(name = "folderName",                 value = variables.folderName,                 cfsqltype = "cf_sql_varchar")
+                                              .addParam(name = "commentsActivated",          value = variables.commentsActivated,          cfsqltype = "cf_sql_bit")
+                                              .addParam(name = "anonymousCommentAllowed",    value = variables.anonymousCommentAllowed,    cfsqltype = "cf_sql_bit")
+                                              .addParam(name = "commentsNeedToGetPublished", value = variables.commentsNeedToGetPublished, cfsqltype = "cf_sql_bit")
+                                              .addParam(name = "creatorUserId",              value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
+                                              .addParam(name = "lastEditorUserId",           value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
                                               .execute()
                                               .getResult()
                                               .newBlogpostId[1];
@@ -233,26 +246,30 @@ component {
         else {
             if(variables.attributesChanged) {
                 new Query().setSQL("UPDATE IcedReaper_blog_blogpost
-                                       SET headline          = :headline,
-                                           link              = :link,
-                                           story             = :story,
-                                           released          = :released,
-                                           releaseDate       = :releaseDate,
-                                           folderName        = :folderName,
-                                           commentsActivated = :commentsActivated,
-                                           lastEditorUserId  = :lastEditorUserId,
-                                           lastEditDate      = now()
+                                       SET headline                   = :headline,
+                                           link                       = :link,
+                                           story                      = :story,
+                                           released                   = :released,
+                                           releaseDate                = :releaseDate,
+                                           folderName                 = :folderName,
+                                           commentsActivated          = :commentsActivated,
+                                           anonymousCommentAllowed    = :anonymousCommentAllowed,
+                                           commentsNeedToGetPublished = :commentsNeedToGetPublished,
+                                           lastEditorUserId           = :lastEditorUserId,
+                                           lastEditDate               = now()
                                      WHERE blogpostId = :blogpostId")
-                           .addParam(name = "blogpostId",        value = variables.blogpostId,        cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "headline",          value = variables.headline,          cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "link",              value = variables.link,              cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "story",             value = variables.story,             cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "released",          value = variables.released,          cfsqltype = "cf_sql_bit")
-                           .addParam(name = "releaseDate",       value = variables.releaseDate,       cfsqltype = "cf_sql_timestamp", null=variables.releaseDate == null)
-                           .addParam(name = "folderName",        value = variables.folderName,        cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "commentsActivated", value = variables.commentsActivated, cfsqltype = "cf_sql_bit")
-                           .addParam(name = "creatorUserId",     value = request.user.getUserId(),    cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "lastEditorUserId",  value = request.user.getUserId(),    cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "blogpostId",                 value = variables.blogpostId,                 cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "headline",                   value = variables.headline,                   cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "link",                       value = variables.link,                       cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "story",                      value = variables.story,                      cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "released",                   value = variables.released,                   cfsqltype = "cf_sql_bit")
+                           .addParam(name = "releaseDate",                value = variables.releaseDate,                cfsqltype = "cf_sql_timestamp", null = variables.releaseDate == null)
+                           .addParam(name = "folderName",                 value = variables.folderName,                 cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "commentsActivated",          value = variables.commentsActivated,          cfsqltype = "cf_sql_bit")
+                           .addParam(name = "anonymousCommentAllowed",    value = variables.anonymousCommentAllowed,    cfsqltype = "cf_sql_bit")
+                           .addParam(name = "commentsNeedToGetPublished", value = variables.commentsNeedToGetPublished, cfsqltype = "cf_sql_bit")
+                           .addParam(name = "creatorUserId",              value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "lastEditorUserId",           value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
                            .execute();
             }
             
@@ -306,8 +323,7 @@ component {
     }
     
     public void function delete() {
-        //directoryDelete(getAbsolutePath(), true);
-        // todo: delete saved objects like pictures and videos
+        directoryDelete(getAbsolutePath(), true);
         
         new Query().setSQL("DELETE
                               FROM IcedReaper_blog_blogpost
@@ -321,7 +337,6 @@ component {
     }
     
     // I N T E R N A L
-    
     private void function loadDetails() {
         if(variables.blogpostId != 0 && variables.blogpostId != null) {
             var qBlogpost = new Query().setSQL("SELECT * 
@@ -332,19 +347,21 @@ component {
                                        .getResult();
             
             if(qBlogpost.getRecordCount() == 1) {
-                variables.headline          = qBlogpost.headline[1];
-                variables.link              = qBlogpost.link[1];
-                variables.story             = qBlogpost.story[1];
-                variables.released          = qBlogpost.released[1];
-                variables.releaseDate       = qBlogpost.releaseDate[1];
-                variables.commentsActivated = qBlogpost.commentsActivated[1];
-                variables.creatorUserId     = qBlogpost.creatorUserId[1];
-                variables.creationDate      = qBlogpost.creationDate[1];
-                variables.lastEditorUserId  = qBlogpost.lastEditorUserId[1];
-                variables.lastEditDate      = qBlogpost.lastEditDate[1];
-                variables.folderName        = qBlogpost.folderName[1];
-                variables.comments          = [];
-                variables.categories        = [];
+                variables.headline                   = qBlogpost.headline[1];
+                variables.link                       = qBlogpost.link[1];
+                variables.story                      = qBlogpost.story[1];
+                variables.released                   = qBlogpost.released[1];
+                variables.releaseDate                = qBlogpost.releaseDate[1];
+                variables.commentsActivated          = qBlogpost.commentsActivated[1];
+                variables.anonymousCommentAllowed    = qBlogpost.anonymousCommentAllowed[1];
+                variables.commentsNeedToGetPublished = qBlogpost.commentsNeedToGetPublished[1];
+                variables.creatorUserId              = qBlogpost.creatorUserId[1];
+                variables.creationDate               = qBlogpost.creationDate[1];
+                variables.lastEditorUserId           = qBlogpost.lastEditorUserId[1];
+                variables.lastEditDate               = qBlogpost.lastEditDate[1];
+                variables.folderName                 = qBlogpost.folderName[1];
+                variables.comments                   = [];
+                variables.categories                 = [];
                 
                 loadComments();
                 loadCategories();
@@ -354,19 +371,21 @@ component {
             }
         }
         else {
-            variables.headline          = "";
-            variables.link              = "";
-            variables.story             = "";
-            variables.released          = false;
-            variables.releaseDate       = null;
-            variables.commentsActivated = false;
-            variables.creatorUserId     = null;
-            variables.creationDate      = null;
-            variables.lastEditorUserId  = null;
-            variables.lastEditDate      = null;
-            variables.categories        = [];
-            variables.comments          = [];
-            variables.folderName        = createUUID();
+            variables.headline                   = "";
+            variables.link                       = "";
+            variables.story                      = "";
+            variables.released                   = false;
+            variables.releaseDate                = null;
+            variables.commentsActivated          = false; // todo: set to default values of IcedReaper_blog_settings table
+            variables.anonymousCommentAllowed    = false; // todo: set to default values of IcedReaper_blog_settings table
+            variables.commentsNeedToGetPublished = true; // todo: set to default values of IcedReaper_blog_settings table
+            variables.creatorUserId              = null;
+            variables.creationDate               = null;
+            variables.lastEditorUserId           = null;
+            variables.lastEditDate               = null;
+            variables.categories                 = [];
+            variables.comments                   = [];
+            variables.folderName                 = createUUID();
         }
         
         if(variables.creatorUserId != null) {

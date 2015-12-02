@@ -109,7 +109,7 @@ component implements="WWW.interfaces.connector" {
                 if(arguments.blogpost.getCommentsActivated()) {
                     if(len(form.comment) > 0 && len(form.comment) <= 500) {
                         // todo: check if ip/user/what ever commented > X times the last Y seconds (Spam-Protection)
-                        if(request.user.getUserId() != 0 || (arguments.blogpost.anonymousCommentAllowed() && validateUsername(form.anonymousUsername) && validateEmail(form.anonymousEmail))) {
+                        if(request.user.getUserId() != 0 || (arguments.blogpost.getAnonymousCommentAllowed() && validateUsername(form.anonymousUsername) && validateEmail(form.anonymousEmail))) {
                             var newComment = createObject("component", "API.com.IcedReaper.blog.comment").init(0);
                             
                             newComment.setBlogpostId(arguments.blogpost.getBlogpostId())
@@ -123,7 +123,7 @@ component implements="WWW.interfaces.connector" {
                                           .setAnonymousEmail(form.anonymousEmail);
                             }
                             
-                            if(! arguments.blogpost.commentsNeedToGetPublished()) {
+                            if(! arguments.blogpost.getCommentsNeedToGetPublished()) {
                                 newComment.setPublished(true);
                             }
                             

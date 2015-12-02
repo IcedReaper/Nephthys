@@ -41,7 +41,7 @@
                 <!--- new comment --->
                 <hr>
                 <cfif attributes.commentAdded EQ true>
-                    <cfif attributes.blogpost.commentsNeedToGetPublished()>
+                    <cfif attributes.blogpost.getCommentsNeedToGetPublished()>
                         <div class="alert alert-success" role="alert">
                             <i class="fa fa-exclamation-triangle"></i> Ihr Kommentar wurde hinzugefügt, muss aber leider noch geprüft werden.
                         </div>
@@ -51,7 +51,7 @@
                         </div>
                     </cfif>
                 <cfelse>
-                    <cfif request.user.getUserId() != 0 || attributes.blogpost.anonymousCommentAllowed()>
+                    <cfif request.user.getUserId() != 0 || attributes.blogpost.getAnonymousCommentAllowed()>
                         <h5>Kommentieren</h5>
                         <form method="POST" action="?">
                             <div class="row m-t">

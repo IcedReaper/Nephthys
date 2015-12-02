@@ -16,17 +16,9 @@
                 },
                 
                 save: function (blogpost, fileNames) {
-                    return $http.post('/ajax/com/IcedReaper/blog/save', {
-                        blogpostId:        blogpost.blogpostId,
-                        headline:          blogpost.headline,
-                        link:              blogpost.link,
-                        released:          blogpost.released,
-                        releaseDate:       blogpost.releaseDate,
-                        story:             blogpost.convertedStory,
-                        commentsActivated: blogpost.commentsActivated,
-                        folderName:        blogpost.folderName,
-                        fileNames:         JSON.stringify(fileNames)
-                    });
+                    blogpost.fileNames = JSON.stringify(fileNames);
+                    
+                    return $http.post('/ajax/com/IcedReaper/blog/save', blogpost);
                 },
                 
                 uploadImages: function (blogpostId, images, imageSizes) {

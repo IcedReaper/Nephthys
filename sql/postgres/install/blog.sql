@@ -34,6 +34,8 @@ CREATE TABLE public.icedreaper_blog_blogpost
   released boolean DEFAULT false,
   releaseDate date DEFAULT NULL,
   commentsActivated boolean NOT NULL DEFAULT FALSE,
+  anonymousCommentAllowed boolean NOT NULL DEFAULT FALSE,
+  commentsNeedToGetPublished boolean NOT NULL DEFAULT FALSE,
   creatorUserId integer NOT NULL,
   creationDate timestamp with time zone NOT NULL DEFAULT now(),
   lastEditorUserId integer NOT NULL,

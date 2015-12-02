@@ -50,6 +50,27 @@
                                     </label>
                                     <input class="form-control" ng-model="blogpost.releaseDate" type="text"> <!--- Datetime-local does not work in firefox :/ -->
                                 </div>
+                                <div class="form-group">
+                                    <label for="active">Kommentare erlaubt?</label>
+                                    <select class="form-control" ng-model="blogpost.commentsActivated">
+                                        <option value="1">Ja</option>
+                                        <option value="0">Nein</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="active">Anonyme Kommentare erlaubt?</label>
+                                    <select class="form-control" ng-model="blogpost.anonymousCommentAllowed">
+                                        <option value="1">Ja</option>
+                                        <option value="0">Nein</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="active">Kommentare müssen frei gegeben werden?</label>
+                                    <select class="form-control" ng-model="blogpost.commentsNeedToGetPublished">
+                                        <option value="1">Ja</option>
+                                        <option value="0">Nein</option>
+                                    </select>
+                                </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -65,13 +86,6 @@
                                         <span class="text text-warning">Dieser Ordner darf noch nicht vorhanden sein. Sollten Sie sich unsicher sein, lassen sie dieses Feld leer, dann wird ein generierter Wert gewählt</span>
                                     </label>
                                     <input type="text" class="form-control" id="folderName" placeholder="folderName" ng-model="blogpost.folderName">
-                                </div>
-                                <div class="form-group">
-                                    <label for="active">Kommentare erlaubt?</label>
-                                    <select class="form-control" ng-model="blogpost.commentsActivated">
-                                        <option value="1">Ja</option>
-                                        <option value="0">Nein</option>
-                                    </select>
                                 </div>
                             </div>
                         </div>
