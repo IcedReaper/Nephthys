@@ -8,7 +8,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h1>Blogpost <small>{{blogpost.headline}}</small></h1>
+        <h1>Blogpost <small>&bdquo;{{blogpost.headline}}&rdquo;</small></h1>
     </div>
 </div>
 
@@ -17,7 +17,7 @@
         <a ng-click="showPage('details')" ng-class="tabClasses('details')" class="nav-link clickable">Details</a>
     </li>
     <li class="nav-item">
-        <a ng-click="showPage('pictures')" ng-class="tabClasses('comments')" class="nav-link clickable" ng-disabled="blogpost.blogpostId == 0">Kommentare</a>
+        <a ng-click="showPage('comments')" ng-class="tabClasses('comments')" class="nav-link clickable" ng-disabled="blogpost.blogpostId == 0">Kommentare</a>
     </li>
     <li class="nav-item">
         <a ng-click="showPage('statistics')" ng-class="tabClasses('statistics')" class="nav-link clickable" ng-disabled="blogpost.blogpostId == 0">Statistiken</a>
@@ -116,24 +116,32 @@
         <div ng-controller="blogCommentsCtrl" ng-show="blogpostId != 0">
             <div class="row">
                 <div class="col-md-12">
-                    <ul class="media-list">
-                        <li class="media" ng-repeat="comment in comments">
-                            <div class="media-body">
-                                <h5 class="media-heading">{{comment.username}}</h5>
-                                <p>{{comment.comment}}</p>
-                                <small>{{comment.creationDate}}</small>
-                                
-                                <div class="row">
-                                    <div class="col-md-6 text-left">
-                                        <button class="btn btn-success" ng-click="publish(comment, $index)" ng-show="comment.published == false"><i class="fa fa-eye"></i> Veröffentlichen</button>
-                                    </div>
-                                    <div class="col-md-6 text-right">
-                                        <button class="btn btn-danger" ng-click="delete(comment, $index)" ng-show="comment.published == false"><i class="fa fa-trash-o"></i> Löschen</button>
+                    <div class="card card-block">
+                        <div class="row m-b">
+                            <div class="col-md-12 text-right">
+                                <button class="btn btn-primary" ng-click="load()"><i class="fa fa-refresh"></i> Aktualisieren</button>
+                            </div>
+                        </div>
+                        <ul class="media-list">
+                            <li class="media" ng-repeat="comment in comments">
+                                <div class="media-body">
+                                    <small class="pull-right">{{comment.creationDate}}</small>
+                                    <h5 class="media-heading">{{comment.username}}</h5>
+                                    
+                                    <p>{{comment.comment}}</p>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 text-left">
+                                            <button class="btn btn-success btn-sm" ng-click="publish(comment, $index)" ng-show="comment.published == false"><i class="fa fa-eye"></i> Veröffentlichen</button>
+                                        </div>
+                                        <div class="col-md-6 text-right">
+                                            <button class="btn btn-danger btn-sm" ng-click="delete(comment, $index)" ng-show="comment.published == false"><i class="fa fa-trash-o"></i> Löschen</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </li>
-                    </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>

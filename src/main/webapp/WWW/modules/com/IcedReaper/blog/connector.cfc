@@ -153,6 +153,6 @@ component implements="WWW.interfaces.connector" {
     }
     
     private boolean function validateEmail(required string eMail) {
-        return argumetns.eMail != "" && application.tools.validator.validate(data=argumetns.eMail, ruleName="Email");
+        return arguments.eMail != "" && application.tools.validator.validate(data=arguments.eMail, ruleName="Email");
     }
 }

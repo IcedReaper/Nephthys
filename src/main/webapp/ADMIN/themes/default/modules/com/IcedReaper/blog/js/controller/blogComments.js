@@ -5,6 +5,8 @@
         var blogpostId = null;
         
         $scope.load = function () {
+            $scope.comments = [];
+            
             blogService
                 .loadComments(blogpostId)
                 .then(function (result) {

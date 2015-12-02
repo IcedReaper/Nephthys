@@ -238,11 +238,10 @@ component {
     remote struct function loadComments(required numeric blogpostId) {
         var blogpost = createObject("component", "API.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
         
-        var bp_comments = blogposts.getComments();
+        var bp_comments = blogpost.getComments();
         var comments = [];
         for(var i = 1; i <= bp_comments.len(); i++) {
-            // we use prepend to invert the comments and having the newest on top
-            comments.prepend({
+            comments.append({
                 "commentId"    = bp_comments[i].getCommentId(),
                 "username"     = bp_comments[i].getUsername(),
                 "comment"      = bp_comments[i].getComment(),

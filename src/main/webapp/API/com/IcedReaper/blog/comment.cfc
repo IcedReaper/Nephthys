@@ -41,11 +41,25 @@ component {
         
         return this;
     }
+    public comment function setCreatorUserId(required numeric userId) {
+        if(variables.commentId == 0) {
+            variables.creatorUserId = arguments.userId;
+        }
+        else {
+            // throw???
+        }
+        
+        return this;
+    }
     
     public comment function publish() {
-        variables.published = true;
+        variables.published       = true;
         variables.publishedUserId = request.user.getUserId();
-        variables.publishedDate = now();
+        variables.publishedDate   = now();
+        
+        variables.attributesChanged = true;
+        
+        return this;
     }
     
     // G E T T E R
@@ -95,7 +109,7 @@ component {
     }
     
     public boolean function isPublished() {
-        return variables.publishedUserId != null && variables.publishedDate != null;
+        return variables.published;
     }
     public boolean function isSaved() {
         return variables.commentId != 0 && variables.attributesChanged == false;
@@ -129,11 +143,11 @@ component {
                                                       SELECT currval('seq_icedreaper_blog_comment_id' :: regclass) newPictureId;")
                                              .addParam(name = "blogpostId",        value = variables.blogpostId,        cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "comment",           value = variables.comment,           cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "creatorUserId",     value = variables.creatorUserId,     cfsqltype = "cf_sql_numeric", null = request.user.getUserId() == 0)
-                                             .addParam(name = "anonymousUsername", value = variables.anonymousUsername, cfsqltype = "cf_sql_varchar", null = request.user.getUserId() != 0)
-                                             .addParam(name = "anonymousEmail",    value = variables.anonymousEmail,    cfsqltype = "cf_sql_varchar", null = request.user.getUserId() != 0)
+                                             .addParam(name = "creatorUserId",     value = variables.creatorUserId,     cfsqltype = "cf_sql_numeric", null = variables.creatorUserId == 0 || variables.creatorUserId == null)
+                                             .addParam(name = "anonymousUsername", value = variables.anonymousUsername, cfsqltype = "cf_sql_varchar", null = variables.anonymousUsername == null)
+                                             .addParam(name = "anonymousEmail",    value = variables.anonymousEmail,    cfsqltype = "cf_sql_varchar", null = variables.anonymousEmail == null)
                                              .addParam(name = "published",         value = variables.published,         cfsqltype = "cf_sql_bit")
-                                             .addParam(name = "publishedUserId",   value = variables.publishedUserId,   cfsqltype = "cf_sql_numeric", null = variables.publishedUserId == 0)
+                                             .addParam(name = "publishedUserId",   value = variables.publishedUserId,   cfsqltype = "cf_sql_numeric", null = variables.publishedUserId == 0 || variables.publishedUserId == null)
                                              .addParam(name = "publishedDate",     value = variables.publishedDate,     cfsqltype = "cf_sql_date",    null = variables.publishedDate == null)
                                              .execute()
                                              .getResult()
@@ -154,11 +168,11 @@ component {
                            .addParam(name = "commentId",         value = variables.commentId,         cfsqltype = "cf_sql_numeric")
                            .addParam(name = "blogpostId",        value = variables.blogpostId,        cfsqltype = "cf_sql_numeric")
                            .addParam(name = "comment",           value = variables.comment,           cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "creatorUserId",     value = variables.creatorUserId,     cfsqltype = "cf_sql_numeric", null = request.user.getUserId() == 0)
-                           .addParam(name = "anonymousUsername", value = variables.anonymousUsername, cfsqltype = "cf_sql_varchar", null = request.user.getUserId() != 0)
-                           .addParam(name = "anonymousEmail",    value = variables.anonymousEmail,    cfsqltype = "cf_sql_varchar", null = request.user.getUserId() != 0)
+                           .addParam(name = "creatorUserId",     value = variables.creatorUserId,     cfsqltype = "cf_sql_numeric", null = variables.creatorUserId == 0 || variables.creatorUserId == null)
+                           .addParam(name = "anonymousUsername", value = variables.anonymousUsername, cfsqltype = "cf_sql_varchar", null = variables.anonymousUsername == null)
+                           .addParam(name = "anonymousEmail",    value = variables.anonymousEmail,    cfsqltype = "cf_sql_varchar", null = variables.anonymousEmail == null)
                            .addParam(name = "published",         value = variables.published,         cfsqltype = "cf_sql_bit")
-                           .addParam(name = "publishedUserId",   value = variables.publishedUserId,   cfsqltype = "cf_sql_numeric", null = variables.publishedUserId == 0)
+                           .addParam(name = "publishedUserId",   value = variables.publishedUserId,   cfsqltype = "cf_sql_numeric", null = variables.publishedUserId == 0 || variables.publishedUserId == null)
                            .addParam(name = "publishedDate",     value = variables.publishedDate,     cfsqltype = "cf_sql_date",    null = variables.publishedDate == null)
                            .execute();
             }
@@ -170,8 +184,6 @@ component {
     }
     
     public void function delete() {
-        deleteFiles();
-        
         new Query().setSQL("DELETE FROM IcedReaper_blog_comment
                                   WHERE commentId = :commentId")
                    .addParam(name = "commentId", value = variables.commentId, cfsqltype = "cf_sql_numeric")
