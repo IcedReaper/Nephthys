@@ -59,9 +59,9 @@ component implements="WWW.interfaces.connector" {
                     var blogpost = blogposts[1];
                     request.page.setTitle(blogpost.getHeadline());
                     
-                    checkAndAddComment(blogpost);
+                    var commentAdded = checkAndAddComment(blogpost);
                     
-                    return renderDetails(arguments.options, blogpost);
+                    return renderDetails(arguments.options, blogpost, commentAdded);
                 }
                 else {
                     throw(type = "icedreaper.blog.notFound", message = "Could not find the blogpost " & request.page.getParameter(), detail = request.page.getParameter());
@@ -87,22 +87,23 @@ component implements="WWW.interfaces.connector" {
         return renderedContent;
     }
     
-    private string function renderDetails(required struct options, required blogpost blogpost) {
+    private string function renderDetails(required struct options, required blogpost blogpost, required boolean commentAdded) {
         var renderedContent = "";
         var statisticsCtrl = createObject("component", "API.com.IcedReaper.blog.statistics").init();
         
         statisticsCtrl.add(arguments.blogpost.getBlogpostId());
         
         saveContent variable="renderedContent" {
-            module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/blogpostDetail.cfm"
-                   options  = arguments.options
-                   blogpost = arguments.blogpost;
+            module template     = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/blogpostDetail.cfm"
+                   options      = arguments.options
+                   blogpost     = arguments.blogpost
+                   commentAdded = commentAdded;
         }
         
         return renderedContent;
     }
     
-    private void function checkAndAddComment(required blogpost blogpost) {
+    private boolean function checkAndAddComment(required blogpost blogpost) {
         if(! structIsEmpty(form)) {
             if(true) { // check referrer
                 if(arguments.blogpost.getCommentsActivated()) {
@@ -129,6 +130,8 @@ component implements="WWW.interfaces.connector" {
                             newComment.save();
                             
                             arguments.blogpost.addComment(newComment);
+                            
+                            return true;
                         }
                         else {
                             throw(type = "nephthys.application.notAllowed", message = "Either you are not logged, but have to be, or your typed in username or email is empty or invalid");
@@ -146,6 +149,8 @@ component implements="WWW.interfaces.connector" {
                 throw(type = "nephthys.application.notAllowed", message = "This action is not allowed");
             }
         }
+        
+        return false;
     }
     
     private boolean function validateUsername(required string username) {
