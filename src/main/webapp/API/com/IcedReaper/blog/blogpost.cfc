@@ -376,9 +376,9 @@ component {
             variables.story                      = "";
             variables.released                   = false;
             variables.releaseDate                = null;
-            variables.commentsActivated          = defaultSettings.getKey("commentsActivated");
-            variables.anonymousCommentAllowed    = defaultSettings.getKey("anonymousCommentAllowed");
-            variables.commentsNeedToGetPublished = defaultSettings.getKey("commentsNeedToGetPublished");
+            variables.commentsActivated          = defaultSettings.getValueOfKey("commentsActivated");
+            variables.anonymousCommentAllowed    = defaultSettings.getValueOfKey("anonymousCommentAllowed");
+            variables.commentsNeedToGetPublished = defaultSettings.getValueOfKey("commentsNeedToGetPublished");
             variables.creatorUserId              = null;
             variables.creationDate               = null;
             variables.lastEditorUserId           = null;

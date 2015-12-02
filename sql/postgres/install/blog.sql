@@ -11,8 +11,9 @@ ALTER SEQUENCE seq_icedreaper_blog_setting_id OWNER TO nephthys_admin;
 CREATE TABLE public.icedreaper_blog_settings
 (
   settingId integer NOT NULL DEFAULT nextval('seq_icedreaper_blog_setting_id'::regclass),
-  key character varying(50),
-  value character varying(100),
+  key character varying(50) NOT NULL,
+  value character varying(100) NOT NULL,
+  type character varying(15) NOT NULL,
   
   CONSTRAINT PK_IcedReaper_blog_settings_id PRIMARY KEY (settingId),
   
