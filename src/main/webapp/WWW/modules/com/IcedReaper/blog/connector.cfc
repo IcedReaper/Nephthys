@@ -70,9 +70,10 @@ component implements="WWW.interfaces.connector" {
                     if(! structIsEmpty(form)) {
                         if(blogpost.getCommentsActivated()) {
                             if(len(form.comment) > 0 && len(form.comment) <= 500) {
-                                // todo: check if username isn't used by a registered user | check if email is valid | check if ip/user/what ever commented > X times the last Y seconds / Spam-Protection
-                                if(request.user.getUserId() != 0 || (blogpost.anonymousCommentAllowed() && form.anonymousUsername != "" && form.anonymousEmail != "")) {
-                                    writeOutput("4");
+                                // todo: check if ip/user/what ever commented > X times the last Y seconds / Spam-Protection
+                                if(request.user.getUserId() != 0 || (blogpost.anonymousCommentAllowed() && 
+                                                                     form.anonymousUsername != "" && application.security.loginHandler.checkForUser(username=form.anonymousUsername) == false && 
+                                                                     form.anonymousEmail    != "" && application.tools.validator.validate(data=form.anonymousEmail, ruleName="Email"))) {
                                     var newComment = createObject("component", "API.com.IcedReaper.blog.comment").init(0);
                                     
                                     newComment.setBlogpostId(blogpost.getBlogpostId())
