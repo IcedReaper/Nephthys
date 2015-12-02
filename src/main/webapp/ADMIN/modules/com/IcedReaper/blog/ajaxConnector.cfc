@@ -126,8 +126,8 @@ component {
     
     remote struct function activate(required numeric blogpostId) {
         var blogpost = createObject("component", "API.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
-        blogpost.setActiveStatus(1)
-               .save();
+        blogpost.setReleased(1)
+                .save();
         
         return {
             "success" = true
@@ -136,7 +136,7 @@ component {
     
     remote struct function deactivate(required numeric blogpostId) {
         var blogpost = createObject("component", "API.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
-        blogpost.setActiveStatus(0)
+        blogpost.setReleased(0)
                 .save();
         
         return {
@@ -232,6 +232,49 @@ component {
             "success" = true,
             "labels"  = labels,
             "data"    = data
+        };
+    }
+    
+    remote struct function loadComments(required numeric blogpostId) {
+        var blogpost = createObject("component", "API.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
+        
+        var bp_comments = blogposts.getComments();
+        var comments = [];
+        for(var i = 1; i <= bp_comments.len(); i++) {
+            // we use prepend to invert the comments and having the newest on top
+            comments.prepend({
+                "commentId"    = bp_comments[i].getCommentId(),
+                "username"     = bp_comments[i].getUsername(),
+                "comment"      = bp_comments[i].getComment(),
+                "creationDate" = application.tools.formatter.formatDate(bp_comments[i].getCreationDate()),
+                "published"    = bp_comments[i].isPublished()
+            });
+        }
+        
+        return {
+            "success"  = true,
+            "comments" = comments
+        };
+    }
+    
+    remote struct function publishComment(required numeric commentId) {
+        var comment = createObject("component", "API.com.IcedReaper.blog.comment").init(arguments.commentId);
+        
+        comment.publish()
+               .save();
+        
+        return {
+            "success" = true
+        };
+    }
+    
+    remote struct function deleteComment(required numeric commentId) {
+        var comment = createObject("component", "API.com.IcedReaper.blog.comment").init(arguments.commentId);
+        
+        comment.delete();
+        
+        return {
+            "success" = true
         };
     }
     

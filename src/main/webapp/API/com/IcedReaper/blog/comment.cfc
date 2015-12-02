@@ -94,6 +94,9 @@ component {
         return variables.anonymousEmail;
     }
     
+    public boolean function isPublished() {
+        return variables.publishedUserId != null && variables.publishedDate != null;
+    }
     public boolean function isSaved() {
         return variables.commentId != 0 && variables.attributesChanged == false;
     }

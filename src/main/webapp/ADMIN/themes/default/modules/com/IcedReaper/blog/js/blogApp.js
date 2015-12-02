@@ -8,6 +8,7 @@
                                                "blogDetailCtrl",
                                                "blogCategoryCtrl",
                                                "blogStatisticsCtrl",
+                                               "blogCommentsCtrl",
                                                "categoryListCtrl",
                                                "categoryDetailCtrl",
                                                "UploadImageModalCtrl"]);

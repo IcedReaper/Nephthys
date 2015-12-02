@@ -41,6 +41,7 @@
                         });
                     }
                     else {
+                        // return an empty promise
                         return $q.resolve();
                     }
                 },
@@ -65,14 +66,6 @@
                     });
                 },
                 
-                loadPictures: function (blogpostId) {
-                    return $http.get('/ajax/com/IcedReaper/blog/loadPictures', {
-                        params: {
-                            blogpostId: blogpostId
-                        }
-                    });
-                },
-                
                 loadCategories: function (blogpostId) {
                     return $http.get('/ajax/com/IcedReaper/blog/loadCategories', {
                         params: {
@@ -83,7 +76,7 @@
                 
                 addCategory: function (blogpostId, categoryId, name) {
                     return $http.post('/ajax/com/IcedReaper/blog/addCategory', {
-                        blogpostId:    blogpostId,
+                        blogpostId:   blogpostId,
                         categoryId:   categoryId,
                         categoryName: name
                     });
@@ -106,11 +99,33 @@
                     });
                 },
                 
+                loadComments: function (blogpostId) {
+                    return $http.get('/ajax/com/IcedReaper/blog/loadComments', {
+                        params: {
+                            blogpostId: blogpostId
+                        }
+                    });
+                },
+                
+                deleteComment: function (commentId) {
+                    return $http.delete('/ajax/com/IcedReaper/blog/deleteComment', {
+                        params: {
+                            commentId: commentId
+                        }
+                    });
+                },
+                
+                publishComment: function (commentId) {
+                    return $http.post('/ajax/com/IcedReaper/blog/publishComment', {
+                        commentId: commentId
+                    });
+                },
+                
                 getLastVisitChart: function(blogpostId, dayCount) {
                     return $http.get('/ajax/com/IcedReaper/blog/getLastVisitChart', {
                         params: {
                             blogpostId: blogpostId,
-                            dayCount:  dayCount
+                            dayCount:   dayCount
                         }
                     });
                 }

@@ -38,6 +38,7 @@
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogDetail.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogCategory.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogStatistics.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogComments.js"></script>
 
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/categoryList.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/categoryDetail.js"></script>

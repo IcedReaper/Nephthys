@@ -113,12 +113,30 @@
     </div>
     
     <div ng-class="pageClasses('comments')" class="tab-pane">
-        <!--<div ng-controller="blogCommentsCtrl" ng-show="blogpostId != 0">
+        <div ng-controller="blogCommentsCtrl" ng-show="blogpostId != 0">
             <div class="row">
                 <div class="col-md-12">
+                    <ul class="media-list">
+                        <li class="media" ng-repeat="comment in comments">
+                            <div class="media-body">
+                                <h5 class="media-heading">{{comment.username}}</h5>
+                                <p>{{comment.comment}}</p>
+                                <small>{{comment.creationDate}}</small>
+                                
+                                <div class="row">
+                                    <div class="col-md-6 text-left">
+                                        <button class="btn btn-success" ng-click="publish(comment, $index)" ng-show="comment.published == false"><i class="fa fa-eye"></i> Veröffentlichen</button>
+                                    </div>
+                                    <div class="col-md-6 text-right">
+                                        <button class="btn btn-danger" ng-click="delete(comment, $index)" ng-show="comment.published == false"><i class="fa fa-trash-o"></i> Löschen</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
-        </div>-->
+        </div>
     </div>
     
     <div ng-class="pageClasses('statistics')" class="tab-pane">
