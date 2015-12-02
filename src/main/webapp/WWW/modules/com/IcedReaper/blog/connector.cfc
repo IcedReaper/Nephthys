@@ -23,29 +23,23 @@ component implements="WWW.interfaces.connector" {
             blogpostSearchCtrl.setReleased(1)
                               .setCount(arguments.options.maxEntries);
             
-            return renderOverview(arguments.options,
-                                  blogpostSearchCtrl,
-                                  1);
+            return renderOverview(arguments.options, blogpostSearchCtrl, 1);
         }
         else {
             if(splitParameter[1] == "Seite" && splitParameter.len() == 2) { // todo: Seite multilingual
                 blogpostSearchCtrl.setReleased(1)
-                               .setCount(arguments.options.maxEntries)
-                               .setOffset((splitParameter[2]-1) * arguments.options.maxEntries);
+                                  .setCount(arguments.options.maxEntries)
+                                  .setOffset((splitParameter[2]-1) * arguments.options.maxEntries);
                 
-                return renderOverview(arguments.options,
-                                      blogpostSearchCtrl,
-                                      splitParameter[2]);
+                return renderOverview(arguments.options, blogpostSearchCtrl, splitParameter[2]);
             }
             else if(splitParameter[1] == "Kategorie") { // todo: Kategorie multilingual
                 if(splitParameter.len() == 2) {
                     blogpostSearchCtrl.setReleased(1)
-                                   .setCategory(splitParameter[2])
-                                   .setCount(arguments.options.maxEntries);
+                                      .setCategory(splitParameter[2])
+                                      .setCount(arguments.options.maxEntries);
                     
-                    return renderOverview(arguments.options,
-                                          blogpostSearchCtrl,
-                                          1);
+                    return renderOverview(arguments.options, blogpostSearchCtrl, 1);
                 }
                 else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") { // todo: Seite multilingual
                     blogpostSearchCtrl.setReleased(1)
@@ -53,9 +47,7 @@ component implements="WWW.interfaces.connector" {
                                       .setCount(arguments.options.maxEntries)
                                       .setOffset((splitParameter[4]-1) * arguments.options.maxEntries);
                     
-                    return renderOverview(arguments.options,
-                                          blogpostSearchCtrl,
-                                          splitParameter[2]);
+                    return renderOverview(arguments.options, blogpostSearchCtrl, splitParameter[2]);
                 }
             }
             else { // Detail view
@@ -65,53 +57,11 @@ component implements="WWW.interfaces.connector" {
                 
                 if(blogposts.len() == 1) {
                     var blogpost = blogposts[1];
-                    
-                    // new comment?
-                    if(! structIsEmpty(form)) {
-                        if(blogpost.getCommentsActivated()) {
-                            if(len(form.comment) > 0 && len(form.comment) <= 500) {
-                                // todo: check if ip/user/what ever commented > X times the last Y seconds / Spam-Protection
-                                if(request.user.getUserId() != 0 || (blogpost.anonymousCommentAllowed() && 
-                                                                     form.anonymousUsername != "" && application.security.loginHandler.checkForUser(username=form.anonymousUsername) == false && 
-                                                                     form.anonymousEmail    != "" && application.tools.validator.validate(data=form.anonymousEmail, ruleName="Email"))) {
-                                    var newComment = createObject("component", "API.com.IcedReaper.blog.comment").init(0);
-                                    
-                                    newComment.setBlogpostId(blogpost.getBlogpostId())
-                                              .setComment(form.comment);
-                                    
-                                    if(request.user.getUserId() != 0) {
-                                        newComment.setCreatorUserId(request.user.getUserId());
-                                    }
-                                    else {
-                                        newComment.setAnonymousUsername(form.anonymousUsername)
-                                                  .setAnonymousEmail(form.anonymousEmail);
-                                    }
-                                    
-                                    if(! blogpost.commentsNeedToGetPublished()) {
-                                        newComment.setPublished(true);
-                                    }
-                                    
-                                    newComment.save();
-                                    
-                                    blogpost.addComment(newComment);
-                                }
-                                else {
-                                    throw(type = "nephthys.application.notAllowed", message = "Either you are not logged, but have to be, or your typed in username or email is empty or invalid");
-                                }
-                            }
-                            else {
-                                throw(type = "nephthys.application.invalidContent", message = "The comment is either empty or longer then 500 characters");
-                            }
-                        }
-                        else {
-                            throw(type = "nephthys.application.notAllowed", message = "It is not allowed to post comments to this blog post");
-                        }
-                    }
-                    
                     request.page.setTitle(blogpost.getHeadline());
-                
-                    return renderDetails(arguments.options,
-                                         blogpost);
+                    
+                    checkAndAddComment(blogpost);
+                    
+                    return renderDetails(arguments.options, blogpost);
                 }
                 else {
                     throw(type = "icedreaper.blog.notFound", message = "Could not find the blogpost " & request.page.getParameter(), detail = request.page.getParameter());
@@ -150,5 +100,59 @@ component implements="WWW.interfaces.connector" {
         }
         
         return renderedContent;
+    }
+    
+    private void function checkAndAddComment(required blogpost blogpost) {
+        if(! structIsEmpty(form)) {
+            if(true) { // check referrer
+                if(arguments.blogpost.getCommentsActivated()) {
+                    if(len(form.comment) > 0 && len(form.comment) <= 500) {
+                        // todo: check if ip/user/what ever commented > X times the last Y seconds (Spam-Protection)
+                        if(request.user.getUserId() != 0 || (arguments.blogpost.anonymousCommentAllowed() && validateUsername(form.anonymousUsername) && validateEmail(form.anonymousEmail))) {
+                            var newComment = createObject("component", "API.com.IcedReaper.blog.comment").init(0);
+                            
+                            newComment.setBlogpostId(arguments.blogpost.getBlogpostId())
+                                      .setComment(form.comment);
+                            
+                            if(request.user.getUserId() != 0) {
+                                newComment.setCreatorUserId(request.user.getUserId());
+                            }
+                            else {
+                                newComment.setAnonymousUsername(form.anonymousUsername)
+                                          .setAnonymousEmail(form.anonymousEmail);
+                            }
+                            
+                            if(! arguments.blogpost.commentsNeedToGetPublished()) {
+                                newComment.setPublished(true);
+                            }
+                            
+                            newComment.save();
+                            
+                            arguments.blogpost.addComment(newComment);
+                        }
+                        else {
+                            throw(type = "nephthys.application.notAllowed", message = "Either you are not logged, but have to be, or your typed in username or email is empty or invalid");
+                        }
+                    }
+                    else {
+                        throw(type = "nephthys.application.invalidContent", message = "The comment is either empty or longer then 500 characters");
+                    }
+                }
+                else {
+                    throw(type = "nephthys.application.notAllowed", message = "It is not allowed to post comments to this blog post");
+                }
+            }
+            else {
+                throw(type = "nephthys.application.notAllowed", message = "This action is not allowed");
+            }
+        }
+    }
+    
+    private boolean function validateUsername(required string username) {
+        return arguments.username != "" && application.security.loginHandler.checkForUser(username=arguments.username) == false;
+    }
+    
+    private boolean function validateEmail(required string eMail) {
+        return argumetns.eMail != "" && application.tools.validator.validate(data=argumetns.eMail, ruleName="Email");
     }
 }

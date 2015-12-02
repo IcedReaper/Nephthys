@@ -3,23 +3,22 @@ TODO List
 Allgemein
     1. Validierungen
         1. Mehr Validierungsregeln implementieren
-    2. Tableprefix variabel gestalten ?
+    2. Tableprefix variabel gestalten
     3. Styling des Errortemplates
     4. System Settings reihenbasiert nicht spaltenbasiert ausrichten für mehr Flexibilität
-    5. Throw-Types weiter vereinheitlichen
-    6. loginHandler checken ob Name und location passt. => controller.user.userList
-    7. Formbuilder
-    8. getUserInformation zentral ablegen | Aktuell mehrfach identisch vorhanden ?
+    5. loginHandler checken ob Name und location passt. => controller.user.userList
+    6. Formbuilder
+    7. getUserInformation zentral ablegen | Aktuell mehrfach identisch vorhanden ?
         => user informationen für den ajax JSON Rückweg vorbereiten
-    9. Installationssystem
+    8. Installationssystem
         Datasources bei der Installation in einer JSON Datei ablegen und in den Applications auslesen
-    10. Updatesystem
-    11. repair modus ?
-    12. Pfade in DB speichern / Controller what else | aktuell hard-coded an mehreren Stellen
+    9. Updatesystem
+    10. repair modus ?
+    11. Pfade in DB speichern / Controller what else | aktuell hard-coded an mehreren Stellen
         1. Avatar
-    13. Check if some upload logics need to be in API instead of ADMIN components
-    14. Lizenzen überprüfen
-    15. Mehrsprachigkeit
+    12. Check if some upload logics need to be in API instead of ADMIN components
+    13. Lizenzen von Assets und Plugins überprüfen
+    14. Mehrsprachigkeit/Internationalisierung
         1. i18n
         2. i10n
 
