@@ -89,9 +89,9 @@ component implements="WWW.interfaces.connector" {
         saveContent variable="renderedContent" {
             module template          = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/gallery/templates/overview.cfm"
                    options           = arguments.options
-                   galleries         = gallerySearchCtrl.execute()
-                   totalGalleryCount = gallerySearchCtrl.getTotalGalleryCount()
-                   totalPageCount    = ceiling(gallerySearchCtrl.getTotalGalleryCount() / arguments.options.maxEntries)
+                   galleries         = arguments.gallerySearchCtrl.execute()
+                   totalGalleryCount = arguments.gallerySearchCtrl.getTotalGalleryCount()
+                   totalPageCount    = ceiling(arguments.gallerySearchCtrl.getTotalGalleryCount() / arguments.options.maxEntries)
                    actualPage        = arguments.actualPage;
         }
         
