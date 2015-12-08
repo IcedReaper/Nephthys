@@ -39,7 +39,7 @@ component implements="WWW.interfaces.connector" {
                                       .setCategory(splitParameter[2])
                                       .setCount(arguments.options.maxEntries);
                     
-                    return renderOverview(arguments.options, blogpostSearchCtrl, 1);
+                    return renderOverview(arguments.options, blogpostSearchCtrl, 1, splitParameter[2]);
                 }
                 else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") { // todo: Seite multilingual
                     blogpostSearchCtrl.setReleased(1)
@@ -72,8 +72,10 @@ component implements="WWW.interfaces.connector" {
     
     private string function renderOverview(required struct  options,
                                            required search  blogpostSearchCtrl,
-                                           required numeric actualPage) {
+                                           required numeric actualPage,
+                                                    string  activeCategory = "") {
         var renderedContent = "";
+        var categoryLoader = createObject("component", "API.com.IcedReaper.blog.categoryLoader").init();
         
         saveContent variable="renderedContent" {
             module template          = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/overview.cfm"
@@ -81,7 +83,9 @@ component implements="WWW.interfaces.connector" {
                    blogposts         = arguments.blogpostSearchCtrl.execute()
                    totalGalleryCount = arguments.blogpostSearchCtrl.getTotalGalleryCount()
                    totalPageCount    = ceiling(arguments.blogpostSearchCtrl.getTotalGalleryCount() / arguments.options.maxEntries)
-                   actualPage        = arguments.actualPage;
+                   actualPage        = arguments.actualPage
+                   categories        = categoryLoader.load()
+                   activeCategory    = arguments.activeCategory;
         }
         
         return renderedContent;

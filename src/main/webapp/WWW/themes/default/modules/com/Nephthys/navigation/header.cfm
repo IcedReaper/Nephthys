@@ -14,7 +14,7 @@
         </ul>
             
         <form action="/search" method="POST" class="form-inline navbar-form pull-right">
-            <input type="text"class="form-control" placeholder="Suchbegriff" name="searchStatement">
+            <input type="text" class="form-control" placeholder="Suchbegriff" name="searchStatement">
             <button type="submit" class="btn btn-success-outline"><span class="fa fa-search"></span> Suchen</button>
         </form>
     </div>
