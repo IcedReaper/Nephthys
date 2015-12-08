@@ -8,7 +8,7 @@ component {
     }
     
     public settings function setValueOfKey(required string key, required any value) {
-        if(structKeyExists(variables.options, arguments.key)) {
+        if(variables.options.keyExists(arguments.key)) {
             variables.options[arguments.key].value = checkAndValidateValue(arguments.value, variables.options[arguments.key].type);
         }
         else {
@@ -19,7 +19,7 @@ component {
     }
     
     public any function getValueOfKey(required string key) {
-        if(structKeyExists(variables.options, arguments.key)) {
+        if(variables.options.keyExists(arguments.key)) {
             return variables.options[arguments.key].value;
         }
         else {
@@ -28,7 +28,7 @@ component {
     }
     
     public struct function getKey(required string key) {
-        if(structKeyExists(variables.options, arguments.key)) {
+        if(variables.options.keyExists(arguments.key)) {
             return variables.options[arguments.key];
         }
         else {

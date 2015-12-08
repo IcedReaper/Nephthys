@@ -29,7 +29,7 @@ component {
         
         switch(right(arguments.targetPage, 3)) {
             case 'cfm': {
-                if(structKeyExists(url, "restart")) {
+                if(url.keyExists("restart")) {
                     onApplicationStart();
                 }
                 request.requestType = "cfm";
@@ -107,11 +107,11 @@ component {
                 default: {
                     // get theme
                     var themeFoldername = "";
-                    if(structKeyExists(request, "user")) {
+                    if(request.keyExists("user")) {
                         themeFoldername = request.user.getTheme().getFolderName();
                     }
                     else {
-                        if(structKeyExists(application, "system") && structKeyExists(application.system, "settings")) {
+                        if(application.keyExists("system") && application.system.keyExists("settings")) {
                             themeFoldername = application.system.settings.getTheme().getFolderName();
                         }
                         else {
@@ -146,7 +146,7 @@ component {
             return false;
         }
         else {
-            if(structKeyExists(url, "logout") || ! application.security.loginHandler.checkForUser(session.userId)) {
+            if(url.keyExists("logout") || ! application.security.loginHandler.checkForUser(session.userId)) {
                 session.userId = 0;
                 return false;
             }

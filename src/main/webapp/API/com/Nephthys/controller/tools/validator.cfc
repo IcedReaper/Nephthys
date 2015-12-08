@@ -29,15 +29,15 @@ component {
             }
         }
         
-        if(structKeyExists(variables.rules, arguments.ruleName)) {
+        if(variables.rules.keyExists(arguments.ruleName)) {
             if(arguments.country != "" && arguments.language != "") {
                 arguments.locale = arguments.language & "-" & arguments.country;
             }
             
             
             if(arguments.locale != "") {
-                if(structKeyExists(variables.rules[arguments.ruleName], "byLocale")) {
-                    if(structKeyExists(variables.rules[arguments.ruleName].byLocale, arguments.locale)) {
+                if(variables.rules[arguments.ruleName].keyExists("byLocale")) {
+                    if(variables.rules[arguments.ruleName].byLocale.keyExists(arguments.locale)) {
                         return doValidation(arguments.data, variables.rules[arguments.ruleName].byLocale[arguments.locale].rule);
                     }
                     else {
@@ -49,8 +49,8 @@ component {
                 }
             }
             else if(arguments.country != "") {
-                if(structKeyExists(variables.rules[arguments.ruleName], "byCountry")) {
-                    if(structKeyExists(variables.rules[arguments.ruleName].byCountry, arguments.country)) {
+                if(variables.rules[arguments.ruleName].keyExists("byCountry")) {
+                    if(variables.rules[arguments.ruleName].byCountry.keyExists(arguments.country)) {
                         return doValidation(arguments.data, variables.rules[arguments.ruleName].byCountry[arguments.country].rule);
                     }
                     else {
@@ -62,8 +62,8 @@ component {
                 }
             }
             else if(arguments.language != "") {
-                if(structKeyExists(variables.rules[arguments.ruleName], "byLanguage")) {
-                    if(structKeyExists(variables.rules[arguments.ruleName].byLanguage, arguments.language)) {
+                if(variables.rules[arguments.ruleName].keyExists("byLanguage")) {
+                    if(variables.rules[arguments.ruleName].byLanguage.keyExists(arguments.language)) {
                         return doValidation(arguments.data, variables.rules[arguments.ruleName].byLanguage[arguments.language].rule);
                     }
                     else {
@@ -75,7 +75,7 @@ component {
                 }
             }
             else {
-                if(structKeyExists(variables.rules[arguments.ruleName], "rule")) {
+                if(variables.rules[arguments.ruleName].keyExists("rule")) {
                     return doValidation(arguments.data, variables.rules[arguments.ruleName].rule);
                 }
                 else {

@@ -61,7 +61,7 @@ component {
         return variables.password; // todo: check for security reasons
     }
     public theme function getTheme() {
-        if(! structKeyExists(variables, "theme")) {
+        if(! variables.keyExists("theme")) {
             variables.theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(variables.themeId);
         }
         return theme;
@@ -138,7 +138,7 @@ component {
                        .addParam(name = "avatarFilename", value = variables.avatarFilename, cfsqltype = "cf_sql_varchar")
                        .execute();
             
-            if(structKeyExists(variables, "oldAvatarFilename") && oldAvatarFilename != "" && fileExists(expandPath("/upload/com.Nephthys.user/avatar/") & oldAvatarFilename)) {
+            if(variables.keyExists("oldAvatarFilename") && oldAvatarFilename != "" && fileExists(expandPath("/upload/com.Nephthys.user/avatar/") & oldAvatarFilename)) {
                 fileDelete(expandPath("/upload/com.Nephthys.user/avatar/") & oldAvatarFilename);
             }
         }

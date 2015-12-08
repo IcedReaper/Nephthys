@@ -131,13 +131,13 @@ component {
         return [];
     }
     public user function getCreator() {
-        if(! structKeyExists(variables, "creator")) {
+        if(! variables.keyExists("creator")) {
             variables.creator = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.creatorUserId);
         }
         return variables.creator;
     }
     public user function getLastEditor() {
-        if(! structKeyExists(variables, "lastEditor")) {
+        if(! variables.keyExists("lastEditor")) {
             variables.lastEditor = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.lastEditorUserId);
         }
         return variables.lastEditor;
