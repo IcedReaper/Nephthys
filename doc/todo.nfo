@@ -76,3 +76,9 @@ Optimierungen
     2. Angularcode optimieren
     3. CreatorUserId und LastEditUserId übergeben anstatt in der Klasse direkt verwenden?
     4. SQL Berechtigungen prüfen
+
+
+Idee:
+Module loader implementieren
+in jenem sind für gewisse Sachen Module hinterlegt, die man austauschen kann. z.B. Search Komponente (Interface erforderlich)
+Dadurch kann man z.B. die normale Suche durch eine Solr Suchkomponente ersetzen, ohne im Code rumfummeln zu müssen.
