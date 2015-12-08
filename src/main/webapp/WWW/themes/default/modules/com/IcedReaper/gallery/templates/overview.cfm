@@ -23,7 +23,7 @@
         </cfif>
         
         <cfloop from="1" to="#attributes.galleries.len()#" index="galleryIndex">
-            <div class="row">
+            <div class="row <cfif galleryIndex GT 1>m-t</cfif>">
                 <div class="col-md-12">
                     <h2><a href="#request.page.getLink()##attributes.galleries[galleryIndex].getLink()#">#attributes.galleries[galleryIndex].getHeadline()#</a></h2>
                     <p><small>Diese Gallerie enthält #attributes.galleries[galleryIndex].getPictureCount()# Bilder</small></p>

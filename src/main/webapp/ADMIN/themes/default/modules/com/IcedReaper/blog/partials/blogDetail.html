@@ -1,0 +1,189 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+            <a href="#/" class="btn btn-primary"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Blogpost <small>&bdquo;{{blogpost.headline}}&rdquo;</small></h1>
+    </div>
+</div>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a ng-click="showPage('details')" ng-class="tabClasses('details')" class="nav-link clickable">Details</a>
+    </li>
+    <li class="nav-item" ng-show="blogpostId != 0">
+        <a ng-click="showPage('comments')" ng-class="tabClasses('comments')" class="nav-link clickable" ng-disabled="blogpost.blogpostId == 0">Kommentare</a>
+    </li>
+    <li class="nav-item" ng-show="blogpostId != 0">
+        <a ng-click="showPage('statistics')" ng-class="tabClasses('statistics')" class="nav-link clickable" ng-disabled="blogpost.blogpostId == 0">Statistiken</a>
+    </li>
+</ul>
+<div class="tab-content">
+    <div ng-class="pageClasses('details')" class="tab-pane">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-block">
+                    <h3>Details</h3>
+                    <form novalidate>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="headline">Überschrift</label>
+                                    <input type="text" class="form-control" id="headline" placeholder="headline" ng-model="blogpost.headline" ng-keyup="updateLink()">
+                                </div>
+                                <div class="form-group">
+                                    <label for="active">Veröffentlicht</label>
+                                    <select class="form-control" ng-model="blogpost.released">
+                                        <option value="1">Ja</option>
+                                        <option value="0">Nein</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="active">
+                                        Veröffentlichungsdatum<br>
+                                        <span class="text text-warning">Sollte Ihr Browser hier keinen Datepicker anzeigen ist das Format 2015-11-27 00:00</span>
+                                    </label>
+                                    <input class="form-control" ng-model="blogpost.releaseDate" type="text"> <!--- Datetime-local does not work in firefox :/ -->
+                                </div>
+                                <div class="form-group">
+                                    <label for="active">Kommentare erlaubt?</label>
+                                    <select class="form-control" ng-model="blogpost.commentsActivated">
+                                        <option value="1">Ja</option>
+                                        <option value="0">Nein</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="active">Anonyme Kommentare erlaubt?</label>
+                                    <select class="form-control" ng-model="blogpost.anonymousCommentAllowed">
+                                        <option value="1">Ja</option>
+                                        <option value="0">Nein</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="active">Kommentare müssen frei gegeben werden?</label>
+                                    <select class="form-control" ng-model="blogpost.commentsNeedToGetPublished">
+                                        <option value="1">Ja</option>
+                                        <option value="0">Nein</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="link">
+                                        Verlinkung<br>
+                                        <span class="text text-danger">Achtung! Alte Links sind nach einem Abändern nicht mehr erreichbar!</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="link" placeholder="Verlinkung" ng-model="blogpost.link" ng-keydown="linkSet = true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="folderName">
+                                        Ordner<br>
+                                        <span class="text text-warning">Dieser Ordner darf noch nicht vorhanden sein. Sollten Sie sich unsicher sein, lassen sie dieses Feld leer, dann wird ein generierter Wert gewählt</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="folderName" placeholder="folderName" ng-model="blogpost.folderName">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div text-angular ng-model="blogpost.story"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12 m-t">
+                                <button class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
+                        <h3>{{message.headline}}</h3>
+                        <p>{{message.text}}</p>
+                        <p>{{message.errorMessage}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-controller="blogCategoryCtrl" ng-show="blogpostId != 0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-block">
+                        <h3>Kategorien</h3>
+                        
+                        <tags-input ng-model="categories" on-tag-removing="delete($tag)" on-tag-added="add($tag)" add-on-blur="false">
+                            <auto-complete source="loadAutoCompleteCategories($query)"></auto-complete>
+                        </tags-input>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div ng-class="pageClasses('comments')" class="tab-pane">
+        <div ng-controller="blogCommentsCtrl" ng-show="blogpostId != 0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-block">
+                        <div class="row m-b">
+                            <div class="col-md-12 text-right">
+                                <button class="btn btn-primary" ng-click="load()"><i class="fa fa-refresh"></i> Aktualisieren</button>
+                            </div>
+                        </div>
+                        <ul class="media-list">
+                            <li class="media" ng-repeat="comment in comments">
+                                <div class="media-body">
+                                    <small class="pull-right">{{comment.creationDate}}</small>
+                                    <h5 class="media-heading">{{comment.username}}</h5>
+                                    
+                                    <p>{{comment.comment}}</p>
+                                    
+                                    <div class="row">
+                                        <div class="col-md-6 text-left">
+                                            <button class="btn btn-success btn-sm" ng-click="publish(comment, $index)" ng-show="comment.published == false"><i class="fa fa-eye"></i> Veröffentlichen</button>
+                                        </div>
+                                        <div class="col-md-6 text-right">
+                                            <button class="btn btn-danger btn-sm" ng-click="delete(comment, $index)" ng-show="comment.published == false"><i class="fa fa-trash-o"></i> Löschen</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div ng-class="pageClasses('statistics')" class="tab-pane">
+        <div ng-controller="blogStatisticsCtrl" ng-show="blogpostId != 0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-block">
+                        <button ng-click="load()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> Aktualisieren</button>
+                        
+                        <h3>Statistiken</h3>
+                        
+                        <h4>Aufrufe der letzten {{dayCount}} Tage</h4>
+                        <form novalidate>
+                            <div class="form-group row">
+                                <label for="dayCount" class="col-sm-5 col-md-3 form-control-label">Anzahl Tage</label>
+                                <div class="col-sm-7 col-md-9">
+                                    <input type="text" class="form-control" id="dayCount" placeholder="dayCount" ng-model="dayCount">
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <canvas chart-options="visitChart.options" chart-series="visitChart.series" chart-labels="visitChart.labels" chart-data="visitChart.data" class="chart chart-bar"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

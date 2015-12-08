@@ -86,7 +86,7 @@
                         data: {
                             picture:   picture,
                             galleryId: galleryId
-                        },
+                        }
                     });
                 },
                 

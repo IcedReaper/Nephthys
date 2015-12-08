@@ -22,8 +22,6 @@ CREATE TABLE public.icedreaper_gallery_gallery
   lastEditDate timestamp with time zone NOT NULL DEFAULT now(),
   
   CONSTRAINT PK_icedreaper_gallery_gallery_id PRIMARY KEY (galleryId),
-  CONSTRAINT UK_icedreaper_gallery_gallery_headline   UNIQUE (lower(headline)),
-  CONSTRAINT UK_icedreaper_gallery_gallery_folderName UNIQUE (lower(folderName)),
   CONSTRAINT FK_icedreaper_gallery_gallery_creatorUserId    FOREIGN KEY (creatorUserId)    REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT FK_icedreaper_gallery_gallery_lastEditorUserId FOREIGN KEY (lastEditorUserId) REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL
 ) 
@@ -63,7 +61,6 @@ CREATE TABLE public.icedreaper_gallery_picture
   sortId integer NOT NULL,
   
   CONSTRAINT PK_icedreaper_gallery_picture_id PRIMARY KEY (pictureId),
-  /*CONSTRAINT UK_icedreaper_gallery_picture_gallerySortOrder UNIQUE (galleryId, sortId),*/
   CONSTRAINT FK_icedreaper_gallery_picture_galleryId FOREIGN KEY (galleryId) REFERENCES icedreaper_gallery_gallery (galleryId) ON UPDATE NO ACTION ON DELETE CASCADE
 ) 
 WITH (
@@ -149,6 +146,7 @@ CREATE SEQUENCE seq_icedreaper_gallery_statistics_id
   START 1
   CACHE 1;
 ALTER SEQUENCE seq_icedreaper_gallery_statistics_id OWNER TO nephthys_admin;
+GRANT USAGE, SELECT, UPDATE ON SEQUENCE seq_icedreaper_gallery_statistics_id TO nephthys_user;
 
 CREATE TABLE public.icedreaper_gallery_statistics
 (

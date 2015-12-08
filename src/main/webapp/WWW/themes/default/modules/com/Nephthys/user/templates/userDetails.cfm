@@ -5,7 +5,7 @@
     <h4>#attributes.user.getUsername()#</h4>
     <div class="row">
         <div class="col-md-3">
-            <img class="avatar img-rounded" alt="#attributes.user.getUsername()# Avatar" src="/upload/com.Nephthys.user/avatar/#attributes.user.getAvatarFilename()#">
+            <img class="avatar img-rounded" alt="#attributes.user.getUsername()# Avatar" src="#attributes.user.getAvatarPath()#">
         </div>
         <div class="col-md-9">
             <div class="row">

@@ -183,12 +183,18 @@ component {
         return variables.pictures;
     }
     public user function getCreator() {
+        if(! structKeyExists(variables, "creator")) {
+            variables.creator = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.creatorUserId);
+        }
         return variables.creator;
     }
     public date function getCreationDate() {
         return variables.creationDate;
     }
     public user function getLastEditor() {
+        if(! structKeyExists(variables, "lastEditor")) {
+            variables.lastEditor = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.lastEditorUserId);
+        }
         return variables.lastEditor;
     }
     public date function getLastEditDate() {
@@ -216,7 +222,6 @@ component {
         if(variables.galleryId == 0) {
             variables.galleryId = new Query().setSQL("INSERT INTO IcedReaper_gallery_gallery
                                                                   (
-                                                                      galleryId,
                                                                       headline,
                                                                       description,
                                                                       link,
@@ -229,7 +234,6 @@ component {
                                                                       lastEditDate
                                                                   )
                                                            VALUES (
-                                                                      :galleryId,
                                                                       :headline,
                                                                       :description,
                                                                       :link,
@@ -242,11 +246,12 @@ component {
                                                                       now()
                                                                   );
                                                       SELECT currval('seq_icedreaper_gallery_gallery_id' :: regclass) newGalleryId;")
-                                             .addParam(name = "galleryId",        value = variables.imageId,        cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "headline",         value = variables.headline,       cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "description",      value = variables.description,    cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "link",             value = variables.link,           cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "folderName",       value = variables.folderName,     cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "introduction",     value = variables.introduction,   cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "story",            value = variables.story,          cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "activeStatus",     value = variables.activeStatus,   cfsqltype = "cf_sql_bit")
                                              .addParam(name = "creatorUserId",    value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
@@ -309,7 +314,7 @@ component {
                                .execute();
                 }
                 catch(any e) {
-                    // check for ecception types of duplicate unique keys
+                    // check for exception types of duplicate unique keys
                 }
             }
         }
@@ -368,7 +373,7 @@ component {
             }
         }
         else {
-            varibales.headline         = "";
+            variables.headline         = "";
             variables.description      = "";
             variables.link             = "";
             variables.folderName       = createUUID();
@@ -382,20 +387,6 @@ component {
             variables.lastEditDate     = null;
             variables.pictures         = [];
             variables.categories       = [];
-        }
-        
-        if(variables.creatorUserId != null) {
-            variables.creator = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.creatorUserId);
-        }
-        else {
-            variables.creator = null;
-        }
-        
-        if(variables.lastEditorUserId != null) {
-            variables.lastEditor = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.lastEditorUserId);
-        }
-        else {
-            variables.lastEditor = null;
         }
     }
     

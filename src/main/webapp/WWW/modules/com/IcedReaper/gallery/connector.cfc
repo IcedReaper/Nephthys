@@ -4,7 +4,7 @@ component implements="WWW.interfaces.connector" {
     }
     
     public string function getName() {
-        return "gallery";
+        return "com.IcedReaper.gallery";
     }
     
     public string function render(required struct options, required string childContent) {
@@ -18,7 +18,7 @@ component implements="WWW.interfaces.connector" {
         var gallerySearchCtrl = createObject("component", "API.com.IcedReaper.gallery.search").init();
         
         if(! structKeyExists(arguments.options, "maxEntries")) {
-            arguments.options.maxEntries = 1;
+            arguments.options.maxEntries = 5;
         }
         
         if(splitParameter.len() == 0) {
@@ -89,9 +89,9 @@ component implements="WWW.interfaces.connector" {
         saveContent variable="renderedContent" {
             module template          = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/gallery/templates/overview.cfm"
                    options           = arguments.options
-                   galleries         = gallerySearchCtrl.execute()
-                   totalGalleryCount = gallerySearchCtrl.getTotalGalleryCount()
-                   totalPageCount    = ceiling(gallerySearchCtrl.getTotalGalleryCount() / arguments.options.maxEntries)
+                   galleries         = arguments.gallerySearchCtrl.execute()
+                   totalGalleryCount = arguments.gallerySearchCtrl.getTotalGalleryCount()
+                   totalPageCount    = ceiling(arguments.gallerySearchCtrl.getTotalGalleryCount() / arguments.options.maxEntries)
                    actualPage        = arguments.actualPage;
         }
         

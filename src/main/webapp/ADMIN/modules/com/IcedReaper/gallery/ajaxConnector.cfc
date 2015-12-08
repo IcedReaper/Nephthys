@@ -267,8 +267,6 @@ component {
             "introduction" = arguments.gallery.getIntroduction(),
             "story"        = arguments.gallery.getStory(),
             //"releaseDate"  = application.tools.formatter.formatDate(arguments.gallery.getReleaseDate(), false),
-            "creator"      = arguments.gallery.getCreator().getUsername(), // todo: check if required or has to get changed
-            "lastEditor"   = arguments.gallery.getLastEditor().getUsername(),
             "active"       = toString(arguments.gallery.getActiveStatus()),
             "pictureCount" = arguments.gallery.getPictureCount(),
             "categories"   = categories

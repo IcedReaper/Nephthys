@@ -3,9 +3,9 @@ component {
         return this;
     }
     
-    public string function formatDate(required date _date, required boolean formatTime = true) {
-        if(arguments._date != 0) {
-            return dateFormat(arguments._date, "DD.MMM YYYY") & ((arguments.formatTime) ? (" " & timeFormat(arguments._date, "HH:MM:SS")) : "");
+    public string function formatDate(required date date, required boolean formatTime = true, required string dateFormat = "DD.MMM YYYY", required string timeFormat = "HH:MM:SS") {
+        if(arguments.date != 0) {
+            return dateFormat(arguments.date, arguments.dateFormat) & ((arguments.formatTime) ? (" " & timeFormat(arguments.date, arguments.timeFormat)) : "");
         }
         else {
             return "";

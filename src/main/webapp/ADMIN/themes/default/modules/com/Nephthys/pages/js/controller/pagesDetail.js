@@ -74,21 +74,23 @@
                 return htmlContent;
             };
         */
+        $scope.load = function () {
+            pagesService
+                .getDetails($routeParams.pageId)
+                .then(function (pageDetails) {
+                    $scope.page = pageDetails.page;
+                });
+        };
+        
         $scope.save = function () {
             /*prepareContentForDB();
             console.log($scope.page);
             return ; // remove*/
             pagesService
                 .save($scope.page)
-                .then(function (result) {
-                    $scope.page = result.data;
-                });
+                .then($scope.load);
         };
         
-        pagesService
-            .getDetails($routeParams.pageId)
-            .then(function (pageDetails) {
-                $scope.page = pageDetails.page;
-            });
+        $scope.load();
     });
 }(window.angular));

@@ -1,0 +1,49 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+            <a href="#/" class="btn btn-secondary"><i class="fa fa-chevron-left"></i> Zurück zur Blogpostübersicht</a>
+            <a href="#/category/0" class="btn btn-primary"><i class="fa fa-tag"></i> Neue Kategorie anlegen</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Kategorieübersicht</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-striped m-t">
+            <thead>
+                <th>ID</th>
+                <th>Kategorie</th>
+                <th>Verwendet von</th>
+                <th>Aktionen</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="category in categories">
+                    <td>{{category.categoryId}}</td>
+                    <td>
+                        <a href="#/category/{{category.categoryId}}">{{category.name}}</a>
+                    </td>
+                    <td>{{category.blogposts.join(', ')}}</td>
+                    <td>
+                        <a href="#/category/{{category.categoryId}}"
+                           class="btn btn-primary"
+                           title="Benutzerdetails">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                        
+                        <button class="btn btn-danger"
+                                ng-click="delete(category.categoryId)"
+                                title="Kategorie löschen">
+                            <i class="fa fa-trash-o"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
