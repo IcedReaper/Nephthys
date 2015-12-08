@@ -46,7 +46,7 @@ component {
             variables.creatorUserId = arguments.userId;
         }
         else {
-            // throw???
+            // todo: throw???
         }
         
         return this;
@@ -79,12 +79,18 @@ component {
         return variables.creatorUserId;
     }
     public user function getCreator() {
+        if(! structKeyExists(variables, "creator")) {
+            variables.creator = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.creatorUserId);
+        }
         return variables.creator;
     }
     public date function getCreationDate() {
         return variables.creationDate;
     }
-    public user function getPublishedUser() {
+    public user function getPublishedUser() { // todo: rename to getPublisher
+        if(! structKeyExists(variables, "creator")) {
+            variables.publishedUser = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.publishedUserId);
+        }
         return variables.publishedUser;
     }
     public user function getPublishedUserId() {
@@ -100,6 +106,9 @@ component {
         else {
             return variables.anonymousUsername;
         }
+    }
+    public boolean function fromRegistrated() {
+        return variables.creatorUserId != 0 && variables.creatorUserId != null;
     }
     public string function getAnonymousUsername() {
         return variables.anonymousUsername;
@@ -228,8 +237,5 @@ component {
             variables.publishedUserId   = 0;
             variables.publishedDate     = null;
         }
-        
-        variables.creator       = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.creatorUserId);
-        variables.publishedUser = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.publishedUserId);
     }
 }

@@ -127,7 +127,6 @@ component {
     }
     
     // G E T T E R
-    
     public numeric function getBlogpostId() {
         return variables.blogpostId;
     }
@@ -156,12 +155,18 @@ component {
         return variables.creatorUserId;
     }
     public user function getCreator() {
+        if(! structKeyExists(variables, "creator")) {
+            variables.creator = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.creatorUserId);
+        }
         return variables.creator;
     }
     public date function getCreationDate() {
         return variables.creationDate;
     }
     public user function getLastEditor() {
+        if(! structKeyExists(variables, "lastEditor")) {
+            variables.lastEditor = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.lastEditorUserId);
+        }
         return variables.lastEditor;
     }
     public date function getLastEditDate() {
@@ -386,20 +391,6 @@ component {
             variables.categories                 = [];
             variables.comments                   = [];
             variables.folderName                 = createUUID();
-        }
-        
-        if(variables.creatorUserId != null) {
-            variables.creator = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.creatorUserId);
-        }
-        else {
-            variables.creator = null;
-        }
-        
-        if(variables.lastEditorUserId != null) {
-            variables.lastEditor = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.lastEditorUserId);
-        }
-        else {
-            variables.lastEditor = null;
         }
     }
     

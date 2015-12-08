@@ -61,7 +61,10 @@ component {
         return variables.password; // todo: check for security reasons
     }
     public theme function getTheme() {
-        return variables.theme; 
+        if(! strustKeyExists(variables, "theme")) {
+            variables.theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(variables.themeId);
+        }
+        return return theme;
     }
     public numeric function getActiveStatus() {
         return variables.active;
@@ -72,28 +75,20 @@ component {
     public string function getAvatarFilename() {
         return variables.avatarFilename;
     }
-    
-    public boolean function hasPermission(required string moduleName, numeric roleId = 0, numeric roleValue = 0, string roleName = "") {
-        if(arguments.roleValue == 0) {
-            var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
-            
-            if(arguments.roleId != 0) {
-                arguments.roleValue = permissionHandlerCtrl.loadRole(arguments.roleId).value;
-            }
-            else if(arguments.roleName != "") {
-                arguments.roleValue = permissionHandlerCtrl.loadRoleByName(arguments.roleName).value;
-            }
-            else {
-                throw(type = "nephthys.application.notAllowed", message = "Please define a role to be checked. Either by roleId, roleValue or roleName");
-            }
-        }
-        
-        if(structKeyExists(variables.permissions, arguments.moduleName)) {
-            return (variables.permissions[arguments.moduleName] >= arguments.roleValue);
+    public string function getAvatarPath() {
+        if(variables.userId != 0 && variables.userId != null) {
+            return "/upload/com.Nephthys.user/avatar/" & variables.avatarFilename;
         }
         else {
-            throw(type = "nephthys.notFound.module", message = "The module could not be found");
+            return "/upload/com.Nephthys.user/avatar/anonymous.jpg";
         }
+    }
+    
+    public boolean function hasPermission(required string moduleName, numeric roleId = 0, numeric roleValue = 0, string roleName = "") {
+        if(variables.userId == 0 || variables.userID == null)
+            return false;
+        
+        
     }
     
     // C R U D
@@ -178,8 +173,6 @@ component {
                 variables.registrationDate = qUser.registrationDate[1];
                 variables.avatarFilename   = qUser.avatarFilename[1];
                 variables.themeId          = qUser.themeId[1];
-                
-                variables.theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(variables.themeId);
             }
             else {
                 throw(type = "nephthys.notFound.user", message = "Could not find user by ID ", detail = variables.userId);
@@ -192,30 +185,9 @@ component {
             variables.active           = 0;
             variables.registrationDate = now();
             variables.themeId          = application.system.settings.getDefaultThemeId();
-            variables.avatarFilename   = "";
-            
-            variables.theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(variables.themeId);
-            
-            variables.avatarFilename   = "/themes/" & variables.theme.getFolderName() & "/img/anonymous.jpg";
+            variables.avatarFilename   = "anonymous.jpg"; // todo
         }
         
         variables.extendedProperties = createObject("component", "extendedProperties").init(variables.userId);
-        
-        loadPermissions();
-    }
-    
-    private void function loadPermissions() {
-        var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
-        var perms = permissionHandlerCtrl.loadForUserId(variables.userId);
-        
-        variables.permissions = {};
-        for(var i = 1; i <= perms.len(); i++) {
-            if(perms[i].roleId != null) {
-                variables.permissions[ perms[i].moduleName ] = permissionHandlerCtrl.loadRole(perms[i].roleId).value;
-            }
-            else {
-                variables.permissions[ perms[i].moduleName ] = 0;
-            }
-        }
     }
 }

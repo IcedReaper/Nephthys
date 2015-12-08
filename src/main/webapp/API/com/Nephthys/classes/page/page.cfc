@@ -131,9 +131,15 @@ component {
         return [];
     }
     public user function getCreator() {
+        if(! structKeyExists(variables, "creator")) {
+            variables.creator = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.creatorUserId);
+        }
         return variables.creator;
     }
     public user function getLastEditor() {
+        if(! structKeyExists(variables, "lastEditor")) {
+            variables.lastEditor = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.lastEditorUserId);
+        }
         return variables.lastEditor;
     }
     public string function getRegion() {
@@ -278,20 +284,6 @@ component {
         }
         else {
             throw(type = "nephthys.notFound.page", message = "The Page could not be found", details = variables.pageId);
-        }
-        
-        if(variables.creatorUserId != null) {
-            variables.creator = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.creatorUserId);
-        }
-        else {
-            variables.creator = null;
-        }
-        
-        if(variables.lastEditorUserId != null) {
-            variables.lastEditor = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.lastEditorUserId);
-        }
-        else {
-            variables.lastEditor = null;
         }
     }
 }

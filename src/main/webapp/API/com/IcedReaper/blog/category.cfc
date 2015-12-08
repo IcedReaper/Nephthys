@@ -28,12 +28,18 @@ component {
         return variables.creatorUserId;
     }
     public user function getCreator() {
+        if(! structKeyExists(variables, "creator")) {
+            variables.creator = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.creatorUserId);
+        }
         return variables.creator;
     }
     public date function getCreationDate() {
         return variables.creationDate != null ? variables.creationDate : 0;
     }
     public user function getLastEditor() {
+        if(! structKeyExists(variables, "lastEditor")) {
+            variables.lastEditor = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.lastEditorUserId);
+        }
         return variables.lastEditor;
     }
     public date function getLastEditDate() {
@@ -119,8 +125,5 @@ component {
             variables.lastEditorUserId = 0;
             variables.lastEditDate     = null;
         }
-        
-        variables.creator    = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.creatorUserId);
-        variables.lastEditor = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.lastEditorUserId);
     }
 }
