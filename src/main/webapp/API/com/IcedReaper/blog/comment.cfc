@@ -88,7 +88,7 @@ component {
         return variables.creationDate;
     }
     public user function getPublishedUser() { // todo: rename to getPublisher
-        if(! structKeyExists(variables, "creator")) {
+        if(! structKeyExists(variables, "publishedUser")) {
             variables.publishedUser = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.publishedUserId);
         }
         return variables.publishedUser;
@@ -101,7 +101,7 @@ component {
     }
     public string function getUsername() {
         if(variables.creatorUserId != 0 && variables.creatorUserId != null) {
-            return variables.creator.getUsername();
+            return getCreator().getUsername();
         }
         else {
             return variables.anonymousUsername;
