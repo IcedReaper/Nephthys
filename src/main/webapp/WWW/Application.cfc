@@ -22,8 +22,8 @@ component {
         request.requestType = "";
         
         var callInformation = getHttpRequestData();
-        if(structKeyExists(url, "restart")) {
-            if(structKeyExists(callInformation.headers, "x-restart") && 
+        if(url.keyExists("restart")) {
+            if(callInformation.headers.keyExists("x-restart") && 
                callInformation.headers["x-restart"] == "systemSettings") {
                 reloadSystemSettings();
                 
@@ -43,7 +43,7 @@ component {
                     request.requestType = "cfm";
                     
                     // check for ses path
-                    if(! structKeyExists(url, "pageLink")) {
+                    if(! url.keyExists("pageLink")) {
                         url.pageLink = "/"; // todo: get First link
                     }
                     
@@ -61,7 +61,7 @@ component {
             case "cfc": {
                 // implement a check if the 
                 var callInformation = getHttpRequestData();
-                if(structKeyExists(callInformation.headers, "x-framework") && callInformation.headers["x-framework"] == "angularJs") {
+                if(callInformation.headers.keyExists("x-framework") && callInformation.headers["x-framework"] == "angularJs") {
                     // angular $http calls doesn't work as jQuery post calls. The Parameter are in a JSON format and will neither appear in the arguments nor in the form scope. So we have to move them there.
                     var requestBody = toString(callInformation.content);
                     if(isJSON(requestBody)) {
@@ -100,11 +100,11 @@ component {
                 default: {
                     // get theme
                     var themeFoldername = "";
-                    if(structKeyExists(request, "user")) {
+                    if(request.keyExists("user")) {
                         themeFoldername = request.user.getTheme().getFolderName();
                     }
                     else {
-                        if(structKeyExists(application, "system") && structKeyExists(application.system, "settings")) {
+                        if(application.keyExists("system") && application.system.keyExists("settings")) {
                             themeFoldername = application.system.settings.getTheme().getFolderName();
                         }
                         else {

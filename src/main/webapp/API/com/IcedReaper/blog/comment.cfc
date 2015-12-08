@@ -79,7 +79,7 @@ component {
         return variables.creatorUserId;
     }
     public user function getCreator() {
-        if(! structKeyExists(variables, "creator")) {
+        if(! variables.keyExists("creator")) {
             variables.creator = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.creatorUserId);
         }
         return variables.creator;
@@ -88,7 +88,7 @@ component {
         return variables.creationDate;
     }
     public user function getPublishedUser() { // todo: rename to getPublisher
-        if(! structKeyExists(variables, "publishedUser")) {
+        if(! variables.keyExists("publishedUser")) {
             variables.publishedUser = createObject("component", "API.com.Nephthys.classes.user.user").init(variables.publishedUserId);
         }
         return variables.publishedUser;

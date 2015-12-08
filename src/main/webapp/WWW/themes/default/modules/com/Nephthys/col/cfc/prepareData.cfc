@@ -1,11 +1,11 @@
 component {
     public struct function prepareOptions(required struct options) {
         var classes = "";
-        if(structKeyExists(arguments.options, "width-md")) {
+        if(arguments.options.keyExists("width-md")) {
             classes &= "col-md-" & getClassWidthSuffix(arguments.options["width-md"]) & " ";
         }
         
-        if(structKeyExists(arguments.options, "width-xs")) {
+        if(arguments.options.keyExists("width-xs")) {
             classes &= "col-xs-" & getClassWidthSuffix(arguments.options["width-xs"]) & " ";
         }
         

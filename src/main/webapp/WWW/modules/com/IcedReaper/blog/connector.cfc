@@ -15,7 +15,7 @@ component implements="WWW.interfaces.connector" {
         var splitParameter = listToArray(request.page.getParameter(), "/");
         var blogpostSearchCtrl = createObject("component", "API.com.IcedReaper.blog.search").init();
         
-        if(! structKeyExists(arguments.options, "maxEntries")) {
+        if(! arguments.options.keyExists("maxEntries")) {
             arguments.options.maxEntries = 5;
         }
         

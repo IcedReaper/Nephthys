@@ -28,10 +28,10 @@ component {
                 var error = createObject("component", "API.com.Nephthys.classes.error.error").init();
                 
                 var link = "";
-                if(structKeyExists(request, "page")) {
+                if(request.keyExists("page")) {
                     link = request.page.getLink();
                 }
-                else if(structKeyExists(request, "moduleController")) {
+                else if(request.keyExists("moduleController")) {
                     link = request.moduleController.getName(); // possible todo...
                 }
                 else {
@@ -46,7 +46,7 @@ component {
                      .setReferrer(cgi.HTTP_REFERER)
                      .setUserAgent(cgi.HTTP_USER_AGENT);
                 
-                if(structKeyExists(variables.exception, "detail")) {
+                if(variables.exception.keyExists("detail")) {
                     error.setDetails(variables.exception.detail);
                 }
                 

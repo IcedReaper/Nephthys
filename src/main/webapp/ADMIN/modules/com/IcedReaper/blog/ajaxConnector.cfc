@@ -105,7 +105,7 @@ component {
         var files = fileUploadAll(blogpost.getAbsolutePath(), "*", "Overwrite");
         
         for(var i = 1; i <= files.len(); i++) {
-            if(structKeyExists(_is, "is" & i)) {
+            if(_is.keyExists("is" & i)) {
                 imageFunctionCtrl.resize(source = blogpost.getAbsolutePath() & "/" & files[i].serverFile,
                                          width  = _is["is" & i].width,
                                          height = _is["is" & i].height);
@@ -295,7 +295,7 @@ component {
         var newSettings = deserializeJSON(arguments.settings);
         
         for(var setting in newSettings) {
-            if(structKeyExists(newSettings[setting], "value")) {
+            if(newSettings[setting].keyExists("value")) {
                 settingsObj.setValueOfKey(setting, newSettings[setting].value);
             }
         }
