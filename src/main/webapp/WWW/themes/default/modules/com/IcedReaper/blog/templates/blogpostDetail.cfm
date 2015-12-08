@@ -26,11 +26,17 @@
                             <li class="media">
                                 <div class="media-left">
                                     <a href="##">
-                                        <img class="media-object" src="#comments[commentIndex].getCreator().getAvatarFilename()#" alt="Generic placeholder image">
+                                        <img class="media-object" src="#comments[commentIndex].getCreator().getAvatarPath()#">
                                     </a>
                                 </div>
                                 <div class="media-body">
-                                    <h5 class="media-heading">#comments[commentIndex].getUsername()#</h5>
+                                    <h5 class="media-heading">
+                                        <cfif comments[commentIndex].fromRegistrated()>
+                                            <a href="/user/#comments[commentIndex].getUsername()#">#comments[commentIndex].getUsername()#</a>
+                                        <cfelse>
+                                            #comments[commentIndex].getUsername()#
+                                        </cfif>
+                                    </h5>
                                     <p>#comments[commentIndex].getComment()#</p>
                                     <small>Geschrieben am #dateFormat(comments[commentIndex].getCreationDate(), "dd.mmm yyyy")# um #timeFormat(comments[commentIndex].getCreationDate(), "HH:MM:SS")# Uhr.</small>
                                 </div>
