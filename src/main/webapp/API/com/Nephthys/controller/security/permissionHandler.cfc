@@ -197,4 +197,25 @@ component {
                    .addParam(name = "permissionId", value = arguments.permissionId, cfsqltype = "cf_sql_numeric")
                    .execute();
     }
+    
+    public boolean function hasPermission(required numeric userId, required string moduleName, required string roleName) {
+        if(arguments.userId     == 0  || arguments.userId     == null ||
+           arguments.moduleName == "" || arguments.moduleName == null ||
+           arguments.roleName   == "" || arguments.roleName   == null)
+            return false;
+        
+        return new Query().setSQL("    SELECT p.permissionId
+                                         FROM nephthys_permission p
+                                   INNER JOIN nephthys_module m ON p.moduleId = m.moduleId AND m.moduleName = :moduleName
+                                   INNER JOIN nephthys_role r ON p.roleId = r.roleId AND r.value > (SELECT r2.value
+                                                                                                      FROM nephthys_role r2
+                                                                                                     WHERE r2.name = :roleName)
+                                        WHERE p.userId = :userId")
+                          .addParam(name = "userId",     value = arguments.userId,     cfsqltype = "cf_sql_numeric")
+                          .addParam(name = "moduleName", value = arguments.moduleName, cfsqltype = "cf_sql_varchar")
+                          .addParam(name = "roleName",   value = arguments.roleName,   cfsqltype = "cf_sql_varchar")
+                          .execute()
+                          .getResult()
+                          .getRecordCount() > 0;
+    }
 }

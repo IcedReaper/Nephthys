@@ -61,10 +61,10 @@ component {
         return variables.password; // todo: check for security reasons
     }
     public theme function getTheme() {
-        if(! strustKeyExists(variables, "theme")) {
+        if(! structKeyExists(variables, "theme")) {
             variables.theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(variables.themeId);
         }
-        return return theme;
+        return theme;
     }
     public numeric function getActiveStatus() {
         return variables.active;
@@ -84,11 +84,13 @@ component {
         }
     }
     
-    public boolean function hasPermission(required string moduleName, numeric roleId = 0, numeric roleValue = 0, string roleName = "") {
-        if(variables.userId == 0 || variables.userID == null)
+    public boolean function hasPermission(required string moduleName, string roleName = "") {
+        if(variables.userId == 0 || variables.userId == null)
             return false;
         
+        var permissionHandler = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
         
+        return permissionHandler.hasPermission(variables.userId, arguments.moduleName, arguments.roleName);
     }
     
     // C R U D
