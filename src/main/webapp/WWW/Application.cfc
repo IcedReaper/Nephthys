@@ -21,6 +21,8 @@ component {
     public boolean function onRequestStart(required string targetPage) {
         request.requestType = "";
         
+        request.user = createObject("component", "API.com.Nephthys.classes.user.user").init(0);
+        
         var callInformation = getHttpRequestData();
         if(url.keyExists("restart")) {
             if(callInformation.headers.keyExists("x-restart") && 
@@ -34,8 +36,6 @@ component {
                 onApplicationStart();
             }
         }
-        
-        request.user = createObject("component", "API.com.Nephthys.classes.user.user").init(0);
         
         switch(lcase(right(arguments.targetPage, 3))) {
             case "cfm": {

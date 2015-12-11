@@ -7,7 +7,7 @@ component extends="API.com.Nephthys.abstractClasses.settings" {
             }
             
             if(! variables.settings[arguments.key].readonly || (variables.settings[arguments.key].readonly && arguments.force)) {
-                variables.settings[arguments.key].value = checkAndValidateValue(arguments.value, variables.settings[arguments.key].type);
+                variables.settings[arguments.key].value = convertBeforeSave(arguments.value, variables.settings[arguments.key].type);
             }
         }
         else {
@@ -38,14 +38,14 @@ component extends="API.com.Nephthys.abstractClasses.settings" {
     public settings function save() {
         transaction {
             try {
-                for(var option in variables.settings) {
+                for(var key in variables.settings) {
                     // update only non readonly or forced settings
-                    if(! variables.settings[option].readonly || (variables.settings[option].readonly && variables.settings[option].keyExists("forced"))) {
+                    if(! variables.settings[key].readonly || (variables.settings[key].readonly && variables.settings[key].keyExists("forced"))) {
                         new Query().setSQL("UPDATE nephthys_serverSetting
                                                SET value = :value
                                              WHERE key = :key")
-                                   .addParam(name = "value", value = variables.settings[option].value, cfsqltype = "cf_sql_varchar")
-                                   .addParam(name = "key",   value = option,                           cfsqltype = "cf_sql_varchar")
+                                   .addParam(name = "value", value = convertToSaveFormat(key), cfsqltype = "cf_sql_varchar")
+                                   .addParam(name = "key",   value = key,                      cfsqltype = "cf_sql_varchar")
                                    .execute();
                     }
                 }
@@ -72,7 +72,7 @@ component extends="API.com.Nephthys.abstractClasses.settings" {
             variables.settings[ qGetSettings.key[i] ] = {
                 id          = qGetSettings.serverSettingId[i],
                 description = qGetSettings.description[i],
-                value       = checkAndValidateValue(qGetSettings.value[i], qGetSettings.type[i]),
+                value       = convertAfterLoad(qGetSettings.value[i], qGetSettings.type[i]),
                 type        = lCase(qGetSettings.type[i]),
                 systemKey   = qGetSettings.systemKey[i],
                 readonly    = qGetSettings.readonly[i]

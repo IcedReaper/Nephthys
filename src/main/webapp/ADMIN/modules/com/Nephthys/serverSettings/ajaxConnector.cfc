@@ -1,10 +1,21 @@
 component {
     remote struct function getSettings() {
-        var settings = createObject("component", "API.com.Nephthys.classes.system.settings").init();
+        var serverSettings = createObject("component", "API.com.Nephthys.classes.system.settings").init();
+        
+        var settings = duplicate(serverSettings.getAllSettings());
+        
+        for(var key in settings) {
+            if(lcase(settings[key].type) == "datetime") {
+                settings[key].value = settings[key].value != null ? application.tools.formatter.formatDate(settings[key].value, true, "DD.MM.YYYY") : "";
+            }
+            if(lcase(settings[key].type) == "date") {
+                settings[key].value = settings[key].value != null ? application.tools.formatter.formatDate(settings[key].value, false, "DD.MM.YYYY") : "";
+            }
+        }
         
         return {
             "success" = true,
-            "data"    = settings.getAllSettings()
+            "data"    = settings
         };
     }
     

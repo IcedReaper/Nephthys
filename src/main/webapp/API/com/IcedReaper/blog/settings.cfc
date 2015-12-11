@@ -30,7 +30,7 @@ component extends="API.com.Nephthys.abstractClasses.settings" {
         for(var i = 1; i <= qGetOptions.getRecordCount(); i++) {
             variables.settings[ qGetOptions.key[i] ] = {
                 description = qGetOptions.description[i],
-                value       = checkAndValidateValue(qGetOptions.value[i], qGetOptions.type[i]),
+                value       = convertAfterLoad(qGetOptions.value[i], qGetOptions.type[i]),
                 type        = lCase(qGetOptions.type[i])
             };
         }
