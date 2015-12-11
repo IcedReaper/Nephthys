@@ -75,7 +75,9 @@ component extends="API.com.Nephthys.abstractClasses.settings" {
                 value       = convertAfterLoad(qGetSettings.value[i], qGetSettings.type[i]),
                 type        = lCase(qGetSettings.type[i]),
                 systemKey   = qGetSettings.systemKey[i],
-                readonly    = qGetSettings.readonly[i]
+                readonly    = qGetSettings.readonly[i],
+                enumOptions = qGetSettings.enumOptions[i],
+                hidden      = qGetSettings.hidden[i]
             };
         }
     }

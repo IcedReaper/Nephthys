@@ -195,6 +195,8 @@ CREATE TABLE nephthys_serverSetting
   description character varying(75) NOT NULL,
   systemKey boolean NOT NULL DEFAULT FALSE,
   readonly boolean NOT NULL DEFAULT FALSE,
+  enumOptions character varying(500),
+  hidden boolean NOT NULL DEFAULT FALSE,
   createdUserId integer NOT NULL,
   createdDate timestamp with time zone NOT NULL DEFAULT now(),
   lastEditorUserId integer NOT NULL,

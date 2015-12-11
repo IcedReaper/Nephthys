@@ -11,6 +11,9 @@ component {
             if(lcase(settings[key].type) == "date") {
                 settings[key].value = settings[key].value != null ? application.tools.formatter.formatDate(settings[key].value, false, "DD.MM.YYYY") : "";
             }
+            if(settings[key].enumOptions != "" && settings[key].enumOptions != null) {
+                settings[key].enumOptions = deserializeJSON(settings[key].enumOptions);
+            }
         }
         
         return {
