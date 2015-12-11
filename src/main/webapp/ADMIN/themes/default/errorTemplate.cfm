@@ -14,7 +14,7 @@
         </cfcase>
     </cfswitch>
     
-    <cfif application.system.settings.getShowDumpOnError()>
+    <cfif application.system.settings.getValueOfKey('showDumpOnError')>
         <cfdump var="#attributes.error#">
     </cfif>
 </body>

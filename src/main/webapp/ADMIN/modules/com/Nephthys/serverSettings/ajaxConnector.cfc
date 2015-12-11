@@ -1,66 +1,44 @@
 component {
-    remote struct function getDetails() {
-        var serverSettings = createObject("component", "API.com.Nephthys.classes.system.settings").init();
+    remote struct function getSettings() {
+        var settings = createObject("component", "API.com.Nephthys.classes.system.settings").init();
         
         return {
-            'success' = true,
-            'data' = {
-                'description'        = serverSettings.getDescription(),
-                'active'             = toString(serverSettings.getActiveStatus()),
-                'maintenanceMode'    = toString(serverSettings.getMaintenanceModeStatus()),
-                'loginOnWebsite'     = toString(serverSettings.getLoginOnWebsite()),
-                'imageHotlinking'    = toString(serverSettings.getImageHotlinking()),
-                'defaultThemeId'     = toString(serverSettings.getDefaultThemeId()),
-                'locale'             = serverSettings.getLocale(),
-                'googleAnalyticsId'  = serverSettings.getGoogleAnalyticsId(),
-                'setupDate'          = application.tools.formatter.formatDate(serverSettings.getSetupDate()),
-                'lastEditDate'       = application.tools.formatter.formatDate(serverSettings.getLastEditDate()),
-                'lastEditor'         = getUserInformation(serverSettings.getLastEditor()),
-                'encryptionMethodId' = toString(serverSettings.getEncryptionMethodId()),
-                'showDumpOnError'    = toString(serverSettings.getShowDumpOnError())
-            }
+            "success" = true,
+            "data"    = settings.getAllSettings()
         };
     }
     
-    remote struct function save(required string  description,
-                                required numeric active,
-                                required numeric maintenanceMode,
-                                required numeric loginOnWebsite,
-                                required numeric imageHotlinking,
-                                required numeric defaultThemeId,
-                                required string  locale,
-                                required string  googleAnalyticsId,
-                                required numeric encryptionMethodId,
-                                required numeric showDumpOnError) {
+    remote struct function saveSettings(required string settings) {
         var serverSettings = createObject("component", "API.com.Nephthys.classes.system.settings").init();
+        var newSettings = deserializeJSON(arguments.settings);
+        var resetAllPasswords = false;
         
-        serverSettings.setDescription(arguments.description)
-                      .setActiveStatus(arguments.active)
-                      .setMaintenanceModeStatus(arguments.maintenanceMode)
-                      .setLoginOnWebsite(arguments.loginOnWebsite)
-                      .setImageHotlinking(arguments.imageHotlinking)
-                      .setDefaultThemeId(arguments.defaultThemeId)
-                      .setLocale(arguments.locale)
-                      .setGoogleAnalyticsId(arguments.googleAnalyticsId)
-                      .setLastEditorUserId(request.user.getUserId())
-                      .setShowDumpOnError(arguments.showDumpOnError)
-                      .save();
+        for(var key in newSettings) {
+            if(key != "encryptionMethodId" || key != "encryptionKey") {
+                if(newSettings[key].keyExists("value")) {
+                    if(! serverSettings.isKeyReadonly(key)) {
+                        serverSettings.setValueOfKey(key, newSettings[key].value);
+                    }
+                }
+            }
+        }
+        serverSettings.save();
         
-        if(arguments.encryptionMethodId != serverSettings.getEncryptionMethodId()) {
+        if(newSettings["encryptionMethodId"].value != serverSettings.getValueOfKey("encryptionMethodId")) {
             var encryptionMethodLoader = createObject("component", "API.com.Nephthys.controller.security.encryptionMethodLoader").init();
             
             transaction {
                 try {
-                    var newAlgorithm = encryptionMethodLoader.getAlgorithm(arguments.encryptionMethodId);
+                    var newAlgorithm = encryptionMethodLoader.getAlgorithm(newSettings["encryptionMethodId"].value);
                     var newSecretKey = generateSecretKey(newAlgorithm);
                     
                     resetPasswordOfAllUsers(newSecretKey,
                                             newAlgorithm,
-                                            serverSettings.getEncryptionKey(),
-                                            serverSettings.getEncryptionAlgorithm());
+                                            serverSettings.getValueOfKey("encryptionKey"),
+                                            encryptionMethodLoader.getAlgorithm(serverSettings.getValueOfKey("encryptionMethodId")));
                     
-                    serverSettings.setEncryptionMethodId(arguments.encryptionMethodId)
-                                  .setEncryptionKey(newSecretKey)
+                    serverSettings.setValueOfKey("encryptionMethodId", newSettings["encryptionMethodId"].value)
+                                  .setValueOfKey("encryptionKey", newSecretKey)
                                   .save();
                     
                     transactionCommit();
@@ -70,23 +48,20 @@ component {
                     throw(object=e);
                 }
             }
-            
-            // reload
-            application.system.settings.loadDetails();
         }
         
-        
         reloadServerSettings();
+        reloadWebsite();
         
         return {
-            'success' = reloadWebsite()
+            "success" = true
         };
     }
     
     remote struct function activate() {
         var serverSettings = createObject("component", "API.com.Nephthys.classes.system.settings").init();
         
-        serverSettings.setActiveStatus(1)
+        serverSettings.setValueOfKey("active", true)
                       .save();
         
         return {
@@ -97,7 +72,7 @@ component {
     remote struct function deactivate() {
         var serverSettings = createObject("component", "API.com.Nephthys.classes.system.settings").init();
         
-        serverSettings.setActiveStatus(0)
+        serverSettings.setValueOfKey("active", false)
                       .save();
         
         return {
@@ -108,7 +83,7 @@ component {
     remote struct function activateMaintenanceMode() {
         var serverSettings = createObject("component", "API.com.Nephthys.classes.system.settings").init();
         
-        serverSettings.setMaintenanceModeStatus(1)
+        serverSettings.setValueOfKey("maintenanceMode", true)
                       .save();
         
         return {
@@ -119,7 +94,7 @@ component {
     remote struct function deactivateMaintenanceMode() {
         var serverSettings = createObject("component", "API.com.Nephthys.classes.system.settings").init();
         
-        serverSettings.setMaintenanceModeStatus(0)
+        serverSettings.setValueOfKey("maintenanceMode", false)
                       .save();
         
         return {

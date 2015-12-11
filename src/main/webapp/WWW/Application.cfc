@@ -39,7 +39,12 @@ component {
         
         switch(lcase(right(arguments.targetPage, 3))) {
             case "cfm": {
-                if(! application.system.settings.getMaintenanceModeStatus()) {
+                // todo: seite nicht aktiv fehler zeigen
+                if(! application.system.settings.getValueOfKey("active")) {
+                    abort;
+                }
+                
+                if(! application.system.settings.getValueOfKey("maintenanceMode")) {
                     request.requestType = "cfm";
                     
                     // check for ses path
@@ -105,7 +110,7 @@ component {
                     }
                     else {
                         if(application.keyExists("system") && application.system.keyExists("settings")) {
-                            themeFoldername = application.system.settings.getTheme().getFolderName();
+                            themeFoldername = createObject("component", "API.com.Nephthys.classes.system.theme").init(application.system.settings.getValueOfKey("defaultThemeId")).getFolderName();
                         }
                         else {
                             throw(type = "nephthys.critical.installation", message = "Neither the user nor the system settings are defined!");

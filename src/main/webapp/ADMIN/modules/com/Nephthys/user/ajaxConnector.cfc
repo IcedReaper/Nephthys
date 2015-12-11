@@ -40,6 +40,7 @@ component {
                                 required numeric active,
                                 required string  password) {
         var user = createObject("component", "API.com.Nephthys.classes.user.user").init(arguments.userId);
+        var encryptionMethodLoader = createObject("component", "API.com.Nephthys.controller.security.encryptionMethodLoader").init();
         
         if(arguments.userId == 0) {
             user.setUsername(arguments.userName);
@@ -50,8 +51,8 @@ component {
         
         if(trim(arguments.password) != "") {
             user.setPassword(encrypt(arguments.password,
-                                     application.system.settings.getEncryptionKey(),
-                                     application.system.settings.getEncryptionAlgorithm()));
+                                     application.system.settings.getValueOfKey("encryption")),
+                                     encryptionMethodLoader.getAlgorithm(application.system.settings.getValueOfKey("encryptionMethodId")));
         }
         
         user.save();
