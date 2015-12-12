@@ -10,7 +10,7 @@ component {
                     "themeId"    = themeList[i].getThemeId(),
                     "name"       = themeList[i].getName(),
                     "foldername" = themeList[i].getFoldername(),
-                    "default"    = themeList[i].getThemeId() == application.system.settings.getDefaultThemeId(),
+                    "default"    = themeList[i].getThemeId() == application.system.settings.getValueOfKey("defaultThemeId"),
                     "active"     = toString(themeList[i].getActiveStatus())
                 });
         }
@@ -30,7 +30,7 @@ component {
                 "themeId"    = theme.getThemeId(),
                 "name"       = theme.getName(),
                 "foldername" = theme.getFoldername(),
-                "default"    = theme.getThemeId() == application.system.settings.getDefaultThemeId(),
+                "default"    = theme.getThemeId() == application.system.settings.getValueOfKey("defaultThemeId"),
                 "active"     = toString(theme.getActiveStatus())
             }
         };
@@ -44,7 +44,7 @@ component {
         theme.setName(arguments.name);
         
         if(arguments.themeId != 0) {
-            if(arguments.active == 1 || (arguments.active == 0 && themeList[i].getThemeId() != application.system.settings.getDefaultThemeId())) {
+            if(arguments.active == 1 || (arguments.active == 0 && themeList[i].getThemeId() != application.system.settings.getValueOfKey("defaultThemeId"))) {
                 theme.setActive(arguments.active);
             }
         }
@@ -60,7 +60,7 @@ component {
                 "themeId"    = theme.getThemeId(),
                 "name"       = theme.getName(),
                 "foldername" = theme.getFoldername(),
-                "default"    = theme.getThemeId() == application.system.settings.getDefaultThemeId(),
+                "default"    = theme.getThemeId() == application.system.settings.getValueOfKey("defaultThemeId"),
                 "active"     = toString(theme.getActiveStatus())
             }
         };
@@ -80,7 +80,7 @@ component {
     remote struct function deactivate(required numeric themeId) {
         var theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(arguments.themeId);
         
-        if(themeList[i].getThemeId() != application.system.settings.getDefaultThemeId()) {
+        if(themeList[i].getThemeId() != application.system.settings.getValueOfKey("defaultThemeId")) {
             theme.setActiveStatus(0)
                  .save();
         }

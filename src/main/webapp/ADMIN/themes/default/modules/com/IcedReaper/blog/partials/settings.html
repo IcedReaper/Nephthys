@@ -16,7 +16,7 @@
         <div class="card card-block">
             <form>
                 <div class="form-group row" ng-repeat="(settingName, settingData) in settings">
-                    <label for="{{settingName}}" class="col-sm-5 form-control-label">{{settingData.description}}</label> <!-- add description to db -->
+                    <label for="{{settingName}}" class="col-sm-5 form-control-label">{{settingData.description}}</label>
                     <div class="col-sm-7">
                         <input type="input" class="form-control" id="{{settingName}}" maxLength="100" ng-model="settingData.value" ng-show="settingData.type.toLowerCase() == 'number' || settingData.type.toLowerCase() == 'string'">
                         <select class="form-control" id="{{settingName}}" ng-model="settingData.value" ng-show="settingData.type.toLowerCase() == 'bit'">

@@ -76,12 +76,7 @@ component {
         return variables.avatarFilename;
     }
     public string function getAvatarPath() {
-        if(variables.userId != 0 && variables.userId != null) {
-            return "/upload/com.Nephthys.user/avatar/" & variables.avatarFilename;
-        }
-        else {
-            return "/upload/com.Nephthys.user/avatar/anonymous.jpg";
-        }
+        return "/upload/com.Nephthys.user/avatar/" & variables.avatarFilename;
     }
     
     public boolean function hasPermission(required string moduleName, string roleName = "") {
@@ -114,12 +109,12 @@ component {
                                                                    :avatarFilename
                                                                );
                                                   SELECT currval('seq_nephthys_user_id' :: regclass) newUserId;") // directly loading the current value of the sequence
-                                          .addParam(name = "userName",       value = variables.userName,                              cfsqltype = "cf_sql_varchar")
-                                          .addParam(name = "eMail",          value = variables.eMail,                                 cfsqltype = "cf_sql_varchar")
-                                          .addParam(name = "password",       value = variables.password,                              cfsqltype = "cf_sql_varchar")
-                                          .addParam(name = "active",         value = variables.active,                                cfsqltype = "cf_sql_bit")
-                                          .addParam(name = "themeId",        value = application.system.settings.getDefaultThemeId(), cfsqltype = "cf_sql_numeric")
-                                          .addParam(name = "avatarFilename", value = variables.avatarFilename,                        cfsqltype = "cf_sql_varchar")
+                                          .addParam(name = "userName",       value = variables.userName,                                          cfsqltype = "cf_sql_varchar")
+                                          .addParam(name = "eMail",          value = variables.eMail,                                             cfsqltype = "cf_sql_varchar")
+                                          .addParam(name = "password",       value = variables.password,                                          cfsqltype = "cf_sql_varchar")
+                                          .addParam(name = "active",         value = variables.active,                                            cfsqltype = "cf_sql_bit")
+                                          .addParam(name = "themeId",        value = application.system.settings.getValueOfKey("defaultThemeId"), cfsqltype = "cf_sql_numeric")
+                                          .addParam(name = "avatarFilename", value = variables.avatarFilename,                                    cfsqltype = "cf_sql_varchar")
                                           .execute()
                                           .getResult()
                                           .newUserId[1];
@@ -186,7 +181,7 @@ component {
             variables.password         = "";
             variables.active           = 0;
             variables.registrationDate = now();
-            variables.themeId          = application.system.settings.getDefaultThemeId();
+            variables.themeId          = application.system.settings.getValueOfKey("defaultThemeId");
             variables.avatarFilename   = "anonymous.jpg"; // todo
         }
         

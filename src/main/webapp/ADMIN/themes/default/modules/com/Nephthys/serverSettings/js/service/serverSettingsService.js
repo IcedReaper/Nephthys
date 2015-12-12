@@ -3,17 +3,20 @@
         .config(window.$QDecorator)
         .service("serverSettingsService", function($http) {
             return {
-                getDetails: function () {
-                    return $http.get('/ajax/com/Nephthys/serverSettings/getDetails');
+                get: function () {
+                    return $http.get('/ajax/com/Nephthys/serverSettings/getSettings');
                 },
                 
-                save: function (serverSettings) {
-                    return $http.post('/ajax/com/Nephthys/serverSettings/save', serverSettings);
-                },
+                save: function (settings) {
+                    return $http.post('/ajax/com/Nephthys/serverSettings/saveSettings', {
+                        settings: JSON.stringify(settings)
+                    });
+                }
+                /*,
                 
                 getEncryptionMethods: function() {
                     return $http.get('/ajax/com/Nephthys/serverSettings/getEncryptionMethods');
-                }
+                }*/
             };
         });
 }(window.angular));

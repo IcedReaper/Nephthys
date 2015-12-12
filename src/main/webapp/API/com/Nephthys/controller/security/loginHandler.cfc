@@ -4,9 +4,10 @@ component {
     }
     
     public numeric function loginUser(required string username, required string password) {
+        var encryptionMethodLoader = createObject("component", "API.com.Nephthys.controller.security.encryptionMethodLoader").init();
         var _password = encrypt(arguments.password,
-                                application.system.settings.getEncryptionKey(),
-                                application.system.settings.getEncryptionAlgorithm());
+                                application.system.settings.getValueOfKey("encryptionKey"),
+                                encryptionMethodLoader.getAlgorithm(application.system.settings.getValueOfKey("encryptionMethodId")));
         
         var userId = new Query().setSQL("SELECT userid
                                            FROM nephthys_user

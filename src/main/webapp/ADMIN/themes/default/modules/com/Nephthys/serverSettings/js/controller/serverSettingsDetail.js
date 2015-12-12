@@ -1,4 +1,4 @@
-(function(angular) {
+/*(function(angular) {
     var serverSettingsDetailCtrl = angular.module('serverSettingsDetailCtrl', ["serverSettingsAdminService"]);
     
     serverSettingsDetailCtrl.controller('serverSettingsDetailCtrl', function ($scope, $q, serverSettingsService) {
@@ -18,5 +18,26 @@
         };
         
         $scope.showExtended = false;
+    });
+}(window.angular));*/
+(function(angular) {
+    var serverSettingsDetailCtrl = angular.module('serverSettingsDetailCtrl', ["serverSettingsAdminService"]);
+    
+    serverSettingsDetailCtrl.controller('serverSettingsDetailCtrl', function ($scope, serverSettingsService) {
+        $scope.load = function () {
+            serverSettingsService
+                .get()
+                .then(function (settings) {
+                    $scope.settings = settings.data;
+                });
+        };
+        
+        $scope.save = function() {
+            serverSettingsService
+                .save($scope.settings);
+        }
+        
+        $scope.settings = {};
+        $scope.load();
     });
 }(window.angular));

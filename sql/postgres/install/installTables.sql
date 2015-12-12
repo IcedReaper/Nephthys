@@ -178,56 +178,6 @@ INSERT INTO nephthys_encryptionMethod
             );
 
 /* ~~~~~~~~~~~~~~~~~~ S E R V E R   S E T T I N G S ~~~~~~~~~~~~~~~~~~ */
-
-/* depricated - to be changed */
-CREATE TABLE public.nephthys_serverSettings
-(
-  description character varying(160) NOT NULL,
-  active boolean NOT NULL DEFAULT true,
-  nephthysVersion character varying(20) NOT NULL DEFAULT 1.0,
-  maintenanceMode boolean NOT NULL DEFAULT false,
-  loginOnWebsite boolean NOT NULL DEFAULT false,
-  imageHotlinking boolean NOT NULL DEFAULT false,
-  defaultThemeId integer NOT NULL DEFAULT 1,
-  locale character varying(8) NOT NULL DEFAULT 'de-DE',
-  googleAnalyticsId character varying(20),
-  encryptMethodId integer NOT NULL DEFAULT 1,
-  encryptionKey character varying(100) NOT NULL,
-  showDumpOnError boolean NOT NULL DEFAULT FALSE,
-  setupDate timestamp with time zone NOT NULL DEFAULT now(),
-  lastEditDate timestamp with time zone NOT NULL DEFAULT now(),
-  lastEditorUserId integer NOT NULL DEFAULT 1,
-  
-  CONSTRAINT FK_nephthys_serverSettings_themeId          FOREIGN KEY (defaultThemeid)   REFERENCES nephthys_theme (themeid)                 ON UPDATE NO ACTION ON DELETE NO ACTION,
-  CONSTRAINT FK_nephthys_serverSettings_lastEditorUserId FOREIGN KEY (lastEditorUserId) REFERENCES nephthys_user (userid)                   ON UPDATE NO ACTION ON DELETE SET NULL,
-  CONSTRAINT FK_nephthys_serverSettings_encryptMethodId  FOREIGN KEY (encryptMethodId)  REFERENCES nephthys_encryptMethod (encryptMethodId) ON UPDATE NO ACTION ON DELETE NO ACTION
-)
-WITH (
-  OIDS=FALSE
-);
-
-CREATE INDEX FKI_nephthys_serverSettings_themeId          ON nephthys_serverSettings(themeId);
-CREATE INDEX FKI_nephthys_serverSettings_lastEditorUserId ON nephthys_serverSettings(lastEditorUserId);
-CREATE INDEX IDX_nephthys_serverSettings_encryptMethodId  ON nephthys_serverSettings(encryptMethodId);
-  
-ALTER TABLE nephthys_serverSettings OWNER TO nephthys_admin;
-
-GRANT ALL    ON TABLE nephthys_serverSettings TO nephthys_admin;
-GRANT SELECT ON TABLE nephthys_serverSettings TO nephthys_user;
-
-INSERT INTO nephthys_serverSettings 
-            (
-                description,
-                nephthysVersion,
-                encryptionKey
-            )
-     VALUES (
-                'Nephthys blank installation description',
-                'V0.3A',
-                generateSecretKey()
-            ); /* CF */
-
-/* new - to be implemented */
 CREATE SEQUENCE seq_nephthys_serverSetting_id
   INCREMENT 1
   MINVALUE 1
@@ -236,25 +186,34 @@ CREATE SEQUENCE seq_nephthys_serverSetting_id
   CACHE 1;
 ALTER SEQUENCE seq_nephthys_serverSetting_id OWNER TO nephthys_admin;
 
+CREATE TYPE settingType AS ENUM ('bit', 'number', 'string', 'boolean', 'date', 'datetime', 'foreignKey', 'enum');
+
 CREATE TABLE nephthys_serverSetting
 (
   serverSettingId integer NOT NULL DEFAULT nextval('seq_nephthys_serverSetting_id'::regclass),
-  name character varying(40),
+  key character varying(40),
   value character varying(160),
-  setUserId integer NOT NULL,
-  setDate timestamp with time zone NOT NULL DEFAULT now(),
+  type settingType NOT NULL,
+  description character varying(75) NOT NULL,
+  systemKey boolean NOT NULL DEFAULT FALSE,
+  readonly boolean NOT NULL DEFAULT FALSE,
+  enumOptions character varying(500),
+  foreignTableOptions character varying(500),
+  hidden boolean NOT NULL DEFAULT FALSE,
+  createdUserId integer NOT NULL,
+  createdDate timestamp with time zone NOT NULL DEFAULT now(),
   lastEditorUserId integer NOT NULL,
   lastEditDate  timestamp with time zone NOT NULL DEFAULT now(),
   
   CONSTRAINT PK_nephthys_serverSetting_id PRIMARY KEY (serverSettingId),
-  CONSTRAINT FK_nephthys_serverSettings_setUserId        FOREIGN KEY (setUserId)        REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL,
+  CONSTRAINT FK_nephthys_serverSettings_setUserId        FOREIGN KEY (createdUserId)    REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT FK_nephthys_serverSettings_lastEditorUserId FOREIGN KEY (lastEditorUserId) REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL
 )
 WITH (
   OIDS = FALSE
 );
 
-CREATE UNIQUE INDEX UK_nephthys_serverSetting_name    ON nephthys_serverSetting(lower(name));
+CREATE UNIQUE INDEX UK_nephthys_serverSetting_name    ON nephthys_serverSetting(lower(key));
   
 ALTER TABLE nephthys_serverSetting OWNER TO nephthys_admin;
 
