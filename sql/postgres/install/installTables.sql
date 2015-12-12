@@ -186,16 +186,19 @@ CREATE SEQUENCE seq_nephthys_serverSetting_id
   CACHE 1;
 ALTER SEQUENCE seq_nephthys_serverSetting_id OWNER TO nephthys_admin;
 
+CREATE TYPE settingType AS ENUM ('bit', 'number', 'string', 'boolean', 'date', 'datetime', 'foreignKey', 'enum');
+
 CREATE TABLE nephthys_serverSetting
 (
   serverSettingId integer NOT NULL DEFAULT nextval('seq_nephthys_serverSetting_id'::regclass),
   key character varying(40),
   value character varying(160),
-  type character varying(15) NOT NULL,
+  type settingType NOT NULL,
   description character varying(75) NOT NULL,
   systemKey boolean NOT NULL DEFAULT FALSE,
   readonly boolean NOT NULL DEFAULT FALSE,
   enumOptions character varying(500),
+  foreignTableOptions character varying(500),
   hidden boolean NOT NULL DEFAULT FALSE,
   createdUserId integer NOT NULL,
   createdDate timestamp with time zone NOT NULL DEFAULT now(),

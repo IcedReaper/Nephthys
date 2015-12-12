@@ -10,7 +10,7 @@ component {
     
     public settings function setValueOfKey(required string key, required any value) {
         if(variables.settings.keyExists(arguments.key)) {
-            variables.settings[arguments.key].value = convertBeforeSave(arguments.value, variables.settings[arguments.key].type);
+            variables.settings[arguments.key].value = convertBeforeSave(arguments.key, arguments.value);
         }
         else {
             throw(type = "nephthys.notFound.general", message = "Could not find a blog setting with the name " & arguments.key);
@@ -48,7 +48,7 @@ component {
                     return arguments.value;
                 }
                 else {
-                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & arguments.type & " does not math it's type");
+                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & arguments.type & " does not match it's type");
                 }
             }
             case "number": {
@@ -56,7 +56,7 @@ component {
                     return lsParseNumber(arguments.value);
                 }
                 else {
-                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & arguments.type & " does not math it's type");
+                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & arguments.type & " does not match it's type");
                 }
             }
             case "string": {
@@ -67,7 +67,7 @@ component {
                     return arguments.value;
                 }
                 else {
-                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & arguments.type & " does not math it's type");
+                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & arguments.type & " does not match it's type");
                 }
             }
             case "date": {
@@ -108,14 +108,14 @@ component {
         }
     }
     
-    private any function convertBeforeSave(required any value, required string type) {
-        switch(lCase(arguments.type)) {
+    private any function convertBeforeSave(required string key, required any value) {
+        switch(lCase(variables.settings[arguments.key].type)) {
             case "bit": {
                 if(arguments.value == 1 || arguments.value == 0 || arguments.value == null) {
                     return arguments.value;
                 }
                 else {
-                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & arguments.type & " does not math it's type");
+                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & variables.settings[arguments.key].type & " does not match it's type");
                 }
             }
             case "number": {
@@ -123,7 +123,7 @@ component {
                     return lsParseNumber(arguments.value);
                 }
                 else {
-                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & arguments.type & " does not math it's type");
+                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & variables.settings[arguments.key].type & " does not match it's type");
                 }
             }
             case "string": {
@@ -134,7 +134,7 @@ component {
                     return arguments.value;
                 }
                 else {
-                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & arguments.type & " does not math it's type");
+                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & variables.settings[arguments.key].type & " does not match it's type");
                 }
             }
             case "date": {
@@ -165,12 +165,20 @@ component {
                 }
             }
             case "foreignKey": {
-                // implement checks if value is ok
-                return arguments.value;
+                if(isStruct(variables.settings[arguments.key].enumOptions) && structKeyExists(variables.settings[arguments.key].enumOptions, arguments.value)) {
+                    return arguments.value;
+                }
+                else {
+                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & variables.settings[arguments.key].type & " is not within it's foreign table values");
+                }
             }
             case "enum": {
-                // implement checks if value is ok
-                return arguments.value;
+                if(isStruct(variables.settings[arguments.key].enumOptions) && structKeyExists(variables.settings[arguments.key].enumOptions, arguments.value)) {
+                    return arguments.value;
+                }
+                else {
+                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & variables.settings[arguments.key].type & " is not within it's enum definitions");
+                }
             }
         }
     }

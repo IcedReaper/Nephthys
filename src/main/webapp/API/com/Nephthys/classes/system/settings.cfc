@@ -7,7 +7,7 @@ component extends="API.com.Nephthys.abstractClasses.settings" {
             }
             
             if(! variables.settings[arguments.key].readonly || (variables.settings[arguments.key].readonly && arguments.force)) {
-                variables.settings[arguments.key].value = convertBeforeSave(arguments.value, variables.settings[arguments.key].type);
+                variables.settings[arguments.key].value = convertBeforeSave(arguments.key, arguments.value);
             }
         }
         else {
@@ -70,15 +70,36 @@ component extends="API.com.Nephthys.abstractClasses.settings" {
         
         for(var i = 1; i <= qGetSettings.getRecordCount(); i++) {
             variables.settings[ qGetSettings.key[i] ] = {
-                id          = qGetSettings.serverSettingId[i],
-                description = qGetSettings.description[i],
-                value       = convertAfterLoad(qGetSettings.value[i], qGetSettings.type[i]),
-                type        = lCase(qGetSettings.type[i]),
-                systemKey   = qGetSettings.systemKey[i],
-                readonly    = qGetSettings.readonly[i],
-                enumOptions = qGetSettings.enumOptions[i],
-                hidden      = qGetSettings.hidden[i]
+                id                  = qGetSettings.serverSettingId[i],
+                description         = qGetSettings.description[i],
+                value               = convertAfterLoad(qGetSettings.value[i], qGetSettings.type[i]),
+                type                = lCase(qGetSettings.type[i]),
+                systemKey           = qGetSettings.systemKey[i],
+                readonly            = qGetSettings.readonly[i],
+                enumOptions         = deserializeJSON(qGetSettings.enumOptions[i]),
+                hidden              = qGetSettings.hidden[i],
+                foreignTableOptions = deserializeJSON(qGetSettings.foreignTableOptions[i])
             };
+            
+            if(isStruct(variables.settings[ qGetSettings.key[i] ].foreignTableOptions)) {
+                loadForeignTableOptions(qGetSettings.key[i]);
+            }
+        }
+    }
+    
+    private void function loadForeignTableOptions(required string key) {
+        var ftOptions = variables.settings[ arguments.key ].foreignTableOptions;
+        
+        var qOptions = new Query().setSQL("SELECT " & ftOptions.idField & " id, " & ftOptions.valueField & " v 
+                                             FROM " & ftOptions.table & " " & 
+                                                  ftOptions.condition & " " & 
+                                                  ftOptions.orderBy)
+                                  .execute()
+                                  .getResult();
+        
+        variables.settings[ arguments.key ].enumOptions = {};
+        for(var i = 1; i <= qOptions.getRecordCount(); i++) {
+            variables.settings[ arguments.key ].enumOptions[qOptions.id[i]] = qOptions.v[i];
         }
     }
 }
