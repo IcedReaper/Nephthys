@@ -187,7 +187,7 @@ component {
             variables.active           = 0;
             variables.registrationDate = now();
             variables.themeId          = application.system.settings.getValueOfKey("defaultThemeId");
-            variables.avatarFilename   = "anonymous.jpg"; // todo
+            variables.avatarFilename   = "anonymous.jpg";
         }
         
         variables.extendedProperties = createObject("component", "extendedProperties").init(variables.userId);
