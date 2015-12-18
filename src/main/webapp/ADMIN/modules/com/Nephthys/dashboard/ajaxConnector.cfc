@@ -5,7 +5,7 @@ component {
         return {
             "success"    = true,
             "pageVisits" = prepareVisitData(createObject("component", "API.com.Nephthys.controller.statistics.pageVisit").init().get(today, today)),
-            "websiteUrl" = "http://dev.nephthys.com" // todo: get from serverSettings?
+            "websiteUrl" = application.system.settings.getValueOfKey("wwwDomain")
         };
     }
     
@@ -15,7 +15,7 @@ component {
         return {
             "success"    = true,
             "pageVisits" = prepareVisitData(createObject("component", "API.com.Nephthys.controller.statistics.pageVisit").init().get(yesterday, yesterday)),
-            "websiteUrl" = "http://dev.nephthys.com" // todo: get from serverSettings?
+            "websiteUrl" = application.system.settings.getValueOfKey("wwwDomain")
         };
     }
     
