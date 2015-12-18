@@ -32,7 +32,7 @@ component {
                     link = request.page.getLink();
                 }
                 else if(request.keyExists("moduleController")) {
-                    link = request.moduleController.getName(); // possible todo...
+                    link = request.moduleController.getName();
                 }
                 else {
                     link = cgi.SCRIPT_NAME & "?" & cgi.QUERY_STRING;

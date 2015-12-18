@@ -1,5 +1,4 @@
 component {
-    // todo: Impelment
     public theme function init(required numeric themeId) {
         variables.themeId = arguments.themeId;
         

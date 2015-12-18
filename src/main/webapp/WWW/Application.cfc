@@ -41,6 +41,7 @@ component {
             case "cfm": {
                 // todo: seite nicht aktiv fehler zeigen
                 if(! application.system.settings.getValueOfKey("active")) {
+                    include template = "themes/" & request.user.getTheme().getFolderName() & "/offline.cfm";
                     abort;
                 }
                 

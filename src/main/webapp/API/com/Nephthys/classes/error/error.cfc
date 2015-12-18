@@ -79,8 +79,7 @@ component {
     // C R U D
     public error function save() {
         if(variables.errorId == 0) {
-            variables.errorId = new Query().setDatasource("nephthys_admin")
-                                           .setSQL("INSERT INTO nephthys_error
+            variables.errorId = new Query().setSQL("INSERT INTO nephthys_error
                                                                 (
                                                                     errorCode,
                                                                     link,

@@ -138,7 +138,7 @@ component {
             if(! structIsEmpty(form) && /* referer == loginForm */ true) {
                 var userId = application.security.loginHandler.loginUser(form.username, form.password);
                 if(userId != 0 && userId != null) {
-                    session.userId = userId; // todo...
+                    session.userId = userId;
                     return true;
                 }
             }

@@ -131,7 +131,7 @@ component {
     }
     
     private boolean function reloadWebsite() {
-        var restart = new http().setUrl("http://dev.nephthys.com/?restart") // todo: move url to serverSettings
+        var restart = new http().setUrl(application.system.settings.getValueOfKey("wwwDomain") & "?restart")
                                 .setMethod("GET")
                                 .setCharset("utf-8")
                                 .addParam(type = "header", name = "x-restart", value = "systemSettings")

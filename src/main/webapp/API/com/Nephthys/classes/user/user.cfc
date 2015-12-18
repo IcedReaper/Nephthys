@@ -143,6 +143,11 @@ component {
     public void function delete() {
         // todo: implement a check if the user has done something yet.
         // todo: if the user has done something yet, change the user to anonymous
+                
+        if(fileExists(expandPath("/upload/com.Nephthys.user/avatar/") & variables.avatarFilename)) {
+            fileDelete(expandPath("/upload/com.Nephthys.user/avatar/") & variables.avatarFilename);
+        }
+        
         new Query().setSQL("DELETE
                               FROM nephthys_user
                              WHERE userId = :userId ")
@@ -182,7 +187,7 @@ component {
             variables.active           = 0;
             variables.registrationDate = now();
             variables.themeId          = application.system.settings.getValueOfKey("defaultThemeId");
-            variables.avatarFilename   = "anonymous.jpg"; // todo
+            variables.avatarFilename   = "anonymous.jpg";
         }
         
         variables.extendedProperties = createObject("component", "extendedProperties").init(variables.userId);

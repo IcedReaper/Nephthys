@@ -137,8 +137,7 @@ component {
     }
     
     public pageRequest function saveToStatistics() {
-        new Query().setDatasource("nephthys_admin") // todo: change to user when user can write to this table
-                   .setSQL("INSERT INTO nephthys_statistics
+        new Query().setSQL("INSERT INTO nephthys_statistics
                                         (
                                             link,
                                             referrer
