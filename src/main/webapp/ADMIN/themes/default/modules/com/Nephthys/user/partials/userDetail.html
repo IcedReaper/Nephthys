@@ -35,6 +35,12 @@
                         <option value="0">Inaktiv</option>
                     </select>
                 </div>
+                <div class="form-group">
+                    <label for="active">Theme</label>
+                    <select class="form-control" ng-model="user.themeId">
+                        <option ng-repeat="theme in themes" value="{{theme.themeId}}">{{theme.name}}</option>
+                    </select>
+                </div>
                 
                 <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
             </form>
@@ -53,9 +59,9 @@
                     <h3>Aktuelles Avatar</h3>
                     <img alt="user avatar" class="img-fluid" ng-src="{{user.avatar}}">
                 </div>
-                <div class="col-md-6" ng-show="user.actualUser">
+                <div class="col-md-6" ng-if="user.actualUser">
                     <h3>Neues Avatar</h3>
-                    <form novalidate> <!--- todo: only show when actual user -->
+                    <form novalidate>
                         <div ng-show="user.newAvatar != undefined && user.newAvatar != ''">
                             <img alt="neues user avatar" class="img-fluid" ngf-src="user.newAvatar">
                         </div>

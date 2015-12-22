@@ -60,6 +60,9 @@ component {
     public string function getPassword() {
         return variables.password; // todo: check for security reasons
     }
+    public numeric function getThemeId() {
+        return variables.themeId;
+    }
     public theme function getTheme() {
         if(! variables.keyExists("theme")) {
             variables.theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(variables.themeId);

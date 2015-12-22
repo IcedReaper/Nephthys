@@ -54,33 +54,6 @@
             </div>
         </div>
         
-        <!---<div class="row">
-            <div class="col-md-3 text-right">
-                <strong>Letzte Änderungen am</strong>
-            </div>
-            <div class="col-md-9">
-                <p>#application.tools.formatter.formatDate(attributes.serverStatus.getLastEditDate())#</p>
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-3 text-right">
-                <strong>Letzte Änderungen von</strong>
-            </div>
-            <div class="col-md-9">
-                <p>#attributes.serverStatus.getLastEditor().getUsername()#</p>
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-3 text-right">
-                <strong>Passwordverschlüsselungsmodus</strong>
-            </div>
-            <div class="col-md-9">
-                <p>#attributes.serverStatus.getEncryptionAlgorithm()#</p>
-            </div>
-        </div>--->
-        
         <div class="row">
             <div class="col-md-3 text-right">
                 <strong>Aktuell installierte Nephthys-Version</strong>
