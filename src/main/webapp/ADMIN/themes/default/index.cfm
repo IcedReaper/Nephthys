@@ -29,7 +29,7 @@
                     <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         #request.user.getUsername()#
                     </button>
-                    <div class="dropdown-menu">
+                    <div class="dropdown-menu p-r p-l p-b">
                         <a href="/com.Nephthys.user##/#request.user.getUserID()#" class="dropdown-item"><i class="fa fa-cog"></i> Einstellungen</a>
                         <div class="dropdown-divider"></div>
                         <a href="?logout" class="dropdown-item"><i class="fa fa-sign-out"></i> Ausloggen</a>

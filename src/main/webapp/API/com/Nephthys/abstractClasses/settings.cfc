@@ -13,7 +13,7 @@ component {
             variables.settings[arguments.key].value = convertBeforeSave(arguments.key, arguments.value);
         }
         else {
-            throw(type = "nephthys.notFound.general", message = "Could not find a blog setting with the name " & arguments.key);
+            throw(type = "nephthys.notFound.general", message = "Could not find a setting with the name " & arguments.key);
         }
         
         return this;
@@ -24,7 +24,7 @@ component {
             return variables.settings[arguments.key].value;
         }
         else {
-            throw(type = "nephthys.notFound.general", message = "Could not find a blog setting with the name " & arguments.key);
+            throw(type = "nephthys.notFound.general", message = "Could not find a setting with the name " & arguments.key);
         }
     }
     
@@ -33,7 +33,7 @@ component {
             return variables.settings[arguments.key];
         }
         else {
-            throw(type = "nephthys.notFound.general", message = "Could not find a blog setting with the name " & arguments.key);
+            throw(type = "nephthys.notFound.general", message = "Could not find a setting with the name " & arguments.key);
         }
     }
     

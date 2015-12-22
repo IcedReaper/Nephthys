@@ -26,7 +26,6 @@ Website
         Backend implementieren
     2. Codeoptimierung
     3. Userverwaltung ?
-    4. Login
 
 Adminbereich
     1. Modulinstallation
@@ -59,7 +58,7 @@ Module ( in eigenen Repos/Projekten )
         1. Move plugin into own project
         2. Weitere Möglichkeiten
             Search
-            Comments ? (Login nötig - Berechtigungen nötig)
+            Comments
             Release Date
     2. Blog
         Mögliche Verbesserungen:
