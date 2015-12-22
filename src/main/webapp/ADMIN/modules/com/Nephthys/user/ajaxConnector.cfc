@@ -164,6 +164,27 @@ component {
         };
     }
     
+    remote struct function getThemes() {
+        var themeLoaderCtrl = createObject("component", "API.com.Nephthys.controller.system.themeLoader").init();
+        
+        var themeList = themeLoaderCtrl.getList();
+        
+        var themeData = [];
+        for(var i = 1; i <= themeList.len(); i++) {
+            themeData.append({
+                    "themeId"    = themeList[i].getThemeId(),
+                    "name"       = themeList[i].getName(),
+                    "default"    = themeList[i].getThemeId() == application.system.settings.getValueOfKey("defaultThemeId"),
+                    "active"     = toString(themeList[i].getActiveStatus())
+                });
+        }
+        
+        return {
+            "success" = true,
+            "data" = themeData
+        };
+    }
+    
     // P R I V A T E   M E T H O D S
     
     private struct function prepareDetailStruct(required user userObject) {
@@ -174,7 +195,8 @@ component {
             "active"     = toString(arguments.userObject.getActiveStatus()),
             "password"   = "      ",
             "avatar"     = "/upload/com.Nephthys.user/avatar/" & arguments.userObject.getAvatarFilename(),
-            "actualUser" = arguments.userObject.getUserId() == request.user.getUserId()
+            "actualUser" = arguments.userObject.getUserId() == request.user.getUserId(),
+            "themeId"    = toString(arguments.userObject.getThemeId())
         };
     }
 }

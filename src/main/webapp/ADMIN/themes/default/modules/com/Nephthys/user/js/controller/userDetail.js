@@ -1,7 +1,21 @@
 (function(angular) {
     var userDetailCtrl = angular.module('userDetailCtrl', ["userAdminService"]);
     
-    userDetailCtrl.controller('userDetailCtrl', function ($scope, $rootScope, $routeParams, userService) {
+    userDetailCtrl.controller('userDetailCtrl', function ($scope, $rootScope, $routeParams, $q, userService) {
+        $scope.load = function() {
+            $q.all([
+                userService.getDetails($routeParams.userId),
+                userService.getThemes()
+            ])
+            // and merging them
+            .then($q.spread(function (userDetails, themes) {
+                $scope.user   = userDetails.data;
+                $scope.themes = themes.data;
+                
+                $rootScope.$emit('user-loaded', {userId: userDetails.data.userId});
+            }));
+        };
+        
         userService
             .getDetails($routeParams.userId)
             .then(function (userDetails) {
@@ -26,5 +40,7 @@
                     $scope.user.newAvatar = "";
                 });
         };
+        
+        $scope.load();
     });
 }(window.angular));

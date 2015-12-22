@@ -45,14 +45,14 @@
                             <input type="text" class="form-control" id="sortOrder" ng-model="page.sortOrder">
                         </div>
                         <div class="form-group">
-                            <label for="useDynamicSuffixes">Dynamische Seiten Suffixe verwenden *</label> <!--implement description of the feature-->
+                            <label for="useDynamicSuffixes" title="Dynamische Seiten Suffixe sind Erweiterungen der Url, über welche sich Datensätze eines Moduls laden lassen">Dynamische Seiten Suffixe verwenden *</label>
                             <select class="form-control" ng-model="page.useDynamicSuffixes">
-                                <option value="1">Aktiv</option>
-                                <option value="0">Inaktiv</option>
+                                <option value="1">Ja</option>
+                                <option value="0">Nein</option>
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="region">Region *</label> <!--implement description of the feature-->
+                            <label for="region" title="Eine Navigationsregion ist zum Beispiel die Kopfnavigation am oberen Rand der Webseite">Region *</label>
                             <select class="form-control" ng-model="page.region">
                                 <option value="header">Kopfnavigation</option>
                                 <option value="footer">Fußnavigation</option>

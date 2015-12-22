@@ -64,6 +64,10 @@
                         userId:      userId,
                         permissions: permissions
                     });
+                },
+                
+                getThemes: function() {
+                    return $http.get("/ajax/com/Nephthys/user/getThemes");
                 }
             };
         });
