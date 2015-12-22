@@ -12,7 +12,39 @@
                 </li>
             </cfloop>
         </ul>
-            
+        
+        <cfif application.system.settings.getValueOfKey("wwwLoginAvailable")>
+            <cfif request.user.getUserId() EQ 0>
+                <div class="btn-group pull-right m-l">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Login
+                    </button>
+                    <div class="dropdown-menu p-r p-l p-b">
+                        <form action="?" method="POST" class="form-inline" auto-complete="off">
+                            <fieldset class="form-group">
+                                <label for="username">Username</label>
+                                <input type="text" name="Username" id="username" class="form-control">
+                            </fieldset>
+                            <fieldset class="form-group">
+                                <label for="password">Passwort</label>
+                                <input type="password" name="Password" id="password" class="form-control">
+                            </fieldset>
+                            <button type="submit" class="btn btn-primary">Einloggen</button>
+                        </form>
+                    </div>
+                </div>
+            <cfelse>
+                <div class="btn-group pull-right m-l">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        #request.user.getUsername()#
+                    </button>
+                    <div class="dropdown-menu p-r p-l p-b">
+                        <a href="?logout" class="dropdown-item"><i class="fa fa-sign-out"></i> Ausloggen</a>
+                    </div>
+                </div>
+            </cfif>
+        </cfif>
+        
         <form action="/search" method="POST" class="form-inline navbar-form pull-right">
             <input type="text" class="form-control" placeholder="Suchbegriff" name="searchStatement">
             <button type="submit" class="btn btn-success-outline"><span class="fa fa-search"></span> Suchen</button>

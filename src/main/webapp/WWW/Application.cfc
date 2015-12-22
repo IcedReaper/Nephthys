@@ -18,10 +18,16 @@ component {
         return true;
     }
     
+    public boolean function onSessionStart() {
+        session.userId = 0;
+        
+        return true;
+    }
+    
     public boolean function onRequestStart(required string targetPage) {
         request.requestType = "";
         
-        request.user = createObject("component", "API.com.Nephthys.classes.user.user").init(0);
+        checkIfLoggedIn();
         
         var callInformation = getHttpRequestData();
         if(url.keyExists("restart")) {
@@ -129,7 +135,47 @@ component {
         }
     }
     
+    private boolean function checkIfLoggedIn() {
+        request.user = createObject("component", "API.com.Nephthys.classes.user.user").init(session.userId);
+        
+        if(session.userId == 0) {
+            if(! structIsEmpty(form) && /* referer == loginForm */ true) {
+                var userId = application.security.loginHandler.loginUser(form.username, form.password);
+                if(userId != 0 && userId != null) {
+                    session.userId = userId;
+                    login();
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        else {
+            if(url.keyExists("logout") || ! application.security.loginHandler.checkForUser(session.userId)) {
+                logout();
+                return false;
+            }
+            else {
+                if(request.user.getActiveStatus() == 0) {
+                    logout();
+                    return false;
+                }
+                
+                return true;
+            }
+        }
+    }
+    
     private void function reloadSystemSettings() {
         application.system.settings.loadDetails();
+    }
+    
+    private void function login() {
+        request.user = createObject("component", "API.com.Nephthys.classes.user.user").init(session.userId);
+    }
+    
+    private void function logout() {
+        session.userId = 0;
+        request.user = createObject("component", "API.com.Nephthys.classes.user.user").init(session.userId);
     }
 }
