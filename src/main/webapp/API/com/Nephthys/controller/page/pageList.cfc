@@ -3,12 +3,15 @@ component {
         return this;
     }
     
-    public array function getList(required numeric parentId = 0, required string region = 'header') {
+    public array function getList(required numeric parentId = 0, required string region = 'header', required boolean onlyOnline = true) {
         var qPageIds = getPages(arguments.parentId, arguments.region);
         
         var pageArray = [];
         for(var i = 1; i <= qPageIds.getRecordCount(); i++) {
-            pageArray.append(createObject("component", "API.com.Nephthys.classes.page.page").init(qPageIds.pageId[i]));
+            var page = createObject("component", "API.com.Nephthys.classes.page.page").init(qPageIds.pageId[i]);
+            if(arguments.onlyOnline && page.isOnline() || ! arguments.onlyOnline) {
+                pageArray.append(page);
+            }
         }
         
         return pageArray;

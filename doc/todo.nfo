@@ -77,6 +77,7 @@ Optimierungen
     4. SQL Berechtigungen prüfen
     5. Settings der unterschiedlichen Module und des Systems verbinden
     6. Nach weiteren DB-Enums Ausschau halten
+    7. add setCreatorPersonId() und setLastEditorPersonId() to classes
 
 
 Idee:

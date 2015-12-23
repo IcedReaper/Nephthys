@@ -60,8 +60,13 @@ component {
                     }
                     
                     request.page = application.page.loader.getPageId(url.pageLink);
-                    request.content = application.page.renderer.renderPageContent(request.page.getContent(), request.page.getParameter());
-                    request.page.saveToStatistics();
+                    if(request.page.isOnline()) {
+                        request.content = application.page.renderer.renderPageContent(request.page.getContent(), request.page.getParameter());
+                        request.page.saveToStatistics();
+                    }
+                    else {
+                        throw(type = "403", message = "The subpage is permanently or temporary disabled.");
+                    }
                 }
                 else {
                     include template = "themes/" & request.user.getTheme().getFolderName() & "/maintenanceMode.cfm";

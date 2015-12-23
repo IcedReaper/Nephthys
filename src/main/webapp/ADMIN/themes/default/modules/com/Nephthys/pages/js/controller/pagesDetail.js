@@ -1,7 +1,7 @@
 (function(angular) {
     var pagesDetailCtrl = angular.module('pagesDetailCtrl', ["chart.js", "ngSanitize", "pagesAdminService"]);
     
-    pagesDetailCtrl.controller('pagesDetailCtrl', function ($scope, $routeParams, pagesService) {
+    pagesDetailCtrl.controller('pagesDetailCtrl', function ($scope, $routeParams, $q, pagesService) {
         /*
         var prepareContentForHtml = function () {
                 var htmlContent = prepareKnotForHtml(JSON.parse($scope.page.content));
@@ -75,11 +75,15 @@
             };
         */
         $scope.load = function () {
-            pagesService
-                .getDetails($routeParams.pageId)
-                .then(function (pageDetails) {
-                    $scope.page = pageDetails.page;
-                });
+            $q.all([
+                pagesService.getDetails($routeParams.pageId),
+                pagesService.getStatus()
+            ])
+            // and merging them
+            .then($q.spread(function (pageDetails, pageStatus) {
+                $scope.page = pageDetails.page;
+                $scope.pageStatus = pageStatus.data;
+            }));
         };
         
         $scope.save = function () {

@@ -135,6 +135,21 @@ component {
     public user function getLastEditor() {
         return variables.page.getLastEditor();
     }
+    public string function getRegion() {
+        return variables.page.getRegion();
+    }
+    public numeric function getPageStatusId() {
+        return variables.page.getPageStatusId();
+    }
+    public boolean function isOnline() {
+        return variables.page.isOnline();
+    }
+    public boolean function isOffline() {
+        return variables.page.isOffline();
+    }
+    public struct function getPageStatus() {
+        return variables.page.getPageStatus();
+    }
     
     public pageRequest function saveToStatistics() {
         new Query().setSQL("INSERT INTO nephthys_statistics

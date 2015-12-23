@@ -45,6 +45,10 @@
                             pageId: pageId
                         }
                     });
+                },
+                
+                getStatus: function() {
+                    return $http.get("/ajax/com/Nephthys/pages/getStatusList");
                 }
             };
         });

@@ -15,10 +15,13 @@
 
 <!--- services --->
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/service/pagesService.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/service/pageStatusService.js"></script>
 
 <!--- controller --->
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/pagesList.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/pagesDetail.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/statusList.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/statusDetail.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/pagesStatistics.js"></script>
 
 <div ng-app="pagesAdmin">

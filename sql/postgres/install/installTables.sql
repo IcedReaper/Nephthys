@@ -256,6 +256,42 @@ GRANT SELECT ON TABLE nephthys_module TO nephthys_user;
 
 /* ~~~~~~~~~~~~~~~~~~ P A G E S ~~~~~~~~~~~~~~~~~~ */
 
+CREATE SEQUENCE seq_nephthys_page_status_id
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 65534
+  START 1
+  CACHE 1;
+ALTER SEQUENCE seq_nephthys_page_status_id OWNER TO nephthys_admin;
+
+CREATE TABLE public.nephthys_pageStatus
+(
+  pageStatusId integer NOT NULL DEFAULT nextval('seq_nephthys_page_status_id'::regclass),
+  name character varying(100),
+  active boolean NOT NULL DEFAULT true,
+  offline boolean NOT NULL DEFAULT false,
+  creatorUserId integer NOT NULL,
+  creationDate timestamp with time zone NOT NULL DEFAULT now(),
+  lastEditorUserId integer NOT NULL,
+  lastEditDate timestamp with time zone NOT NULL DEFAULT now(),
+  
+  CONSTRAINT PK_nephthys_pageStatus_id PRIMARY KEY (pageStatusId),
+  CONSTRAINT FK_nephthys_pageStatus_creatorUserId    FOREIGN KEY (creatorUserId)    REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL,
+  CONSTRAINT FK_nephthys_pageStatus_lastEditorUserId FOREIGN KEY (lastEditorUserId) REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL
+) 
+WITH (
+  OIDS = FALSE
+);
+
+CREATE        INDEX IDX_nephthys_pageStatus_active   ON nephthys_pageStatus(active);
+CREATE        INDEX IDX_nephthys_pageStatus_offlinee ON nephthys_pageStatus(offline);
+CREATE UNIQUE INDEX UK_nephthys_pageStatus_name      ON nephthys_pageStatus(lower(name));
+
+ALTER TABLE nephthys_pageStatus OWNER TO nephthys_admin;
+
+GRANT ALL    ON TABLE nephthys_pageStatus TO nephthys_admin;
+GRANT SELECT ON TABLE nephthys_pageStatus TO nephthys_user;
+
 CREATE SEQUENCE seq_nephthys_page_id
   INCREMENT 1
   MINVALUE 1
@@ -275,17 +311,19 @@ CREATE TABLE public.nephthys_page
   content text,
   sortOrder integer,
   useDynamicSuffixes boolean NOT NULL DEFAULT true,
+  active boolean NOT NULL DEFAULT true,
+  region character varying(20) NOT NULL DEFAULT 'header',
+  pageStatusId integer,
   creatorUserId integer NOT NULL,
   creationDate timestamp with time zone NOT NULL DEFAULT now(),
   lastEditorUserId integer NOT NULL,
   lastEditDate timestamp with time zone NOT NULL DEFAULT now(),
-  active boolean NOT NULL DEFAULT true,
-  region character varying(20) NOT NULL DEFAULT 'header',
   
   CONSTRAINT PK_nephthys_page_id PRIMARY KEY (pageid),
-  CONSTRAINT FK_nephthys_page_parentId         FOREIGN KEY (parentid)         REFERENCES nephthys_page (pageid) ON UPDATE NO ACTION ON DELETE CASCADE,
-  CONSTRAINT FK_nephthys_page_creatorUserId    FOREIGN KEY (creatorUserId)    REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL,
-  CONSTRAINT FK_nephthys_page_lastEditorUserId FOREIGN KEY (lastEditorUserId) REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL
+  CONSTRAINT FK_nephthys_page_parentId         FOREIGN KEY (parentid)         REFERENCES nephthys_page       (pageid)       ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT FK_nephthys_page_pageStatusId     FOREIGN KEY (pageStatusId)     REFERENCES nephthys_pageStatus (pageStatusId) ON UPDATE NO ACTION ON DELETE SET NULL,
+  CONSTRAINT FK_nephthys_page_creatorUserId    FOREIGN KEY (creatorUserId)    REFERENCES nephthys_user       (userid)       ON UPDATE NO ACTION ON DELETE SET NULL,
+  CONSTRAINT FK_nephthys_page_lastEditorUserId FOREIGN KEY (lastEditorUserId) REFERENCES nephthys_user       (userid)       ON UPDATE NO ACTION ON DELETE SET NULL
 ) 
 WITH (
   OIDS = FALSE
