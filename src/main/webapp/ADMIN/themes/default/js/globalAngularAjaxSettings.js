@@ -2,7 +2,7 @@ var globalAngularAjaxSettings = function($httpProvider) {
     var activeAjaxCalls = 0;
     $httpProvider.defaults.headers.post = {"x-framework": "angularJs"};
     
-    $httpProvider.interceptors.push(function ($rootScope, $q) {
+    $httpProvider.interceptors.push(function ($rootScope, $q, $timeout) {
         var isServiceCall = function (config) {
             return ! (config.url.match(/^\/themes/) || config.url.match(/^[^\/]/));
         }
@@ -50,6 +50,10 @@ var globalAngularAjaxSettings = function($httpProvider) {
                                 "headline": action + " war erfolgreich",
                                 "text":     "Das  " + action + " war erfolgreich"
                             };
+                            
+                            $timeout(function() {
+                                $rootScope.message = null;
+                            }, 1000);
                             break;
                         }
                     }
