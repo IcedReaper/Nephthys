@@ -38,7 +38,8 @@ component {
                                 required string  userName,
                                 required string  eMail,
                                 required numeric active,
-                                required string  password) {
+                                required string  password,
+                                required numeric themeId) {
         var user = createObject("component", "API.com.Nephthys.classes.user.user").init(arguments.userId);
         var encryptionMethodLoader = createObject("component", "API.com.Nephthys.controller.security.encryptionMethodLoader").init();
         
@@ -47,7 +48,8 @@ component {
         }
         
         user.setEmail(arguments.eMail)
-            .setActiveStatus(arguments.active);
+            .setActiveStatus(arguments.active)
+            .setThemeId(arguments.themeId);
         
         if(trim(arguments.password) != "") {
             user.setPassword(encrypt(arguments.password,
