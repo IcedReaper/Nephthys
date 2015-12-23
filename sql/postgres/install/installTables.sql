@@ -186,7 +186,7 @@ CREATE SEQUENCE seq_nephthys_serverSetting_id
   CACHE 1;
 ALTER SEQUENCE seq_nephthys_serverSetting_id OWNER TO nephthys_admin;
 
-CREATE TYPE settingType AS ENUM ('bit', 'number', 'string', 'boolean', 'date', 'datetime', 'foreignKey', 'enum');
+CREATE TYPE settingType AS ENUM ('bit', 'number', 'string', 'boolean', 'date', 'datetime', 'foreignKey', 'enum', 'component');
 
 CREATE TABLE nephthys_serverSetting
 (

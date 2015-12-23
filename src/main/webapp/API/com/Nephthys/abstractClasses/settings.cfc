@@ -21,7 +21,12 @@ component {
     
     public any function getValueOfKey(required string key) {
         if(variables.settings.keyExists(arguments.key)) {
-            return variables.settings[arguments.key].value;
+            if(variables.settings[arguments.key].type != "component") {
+                return variables.settings[arguments.key].value;
+            }
+            else {
+                return createObject("component", variables.settings[arguments.key].value).init();
+            }
         }
         else {
             throw(type = "nephthys.notFound.general", message = "Could not find a setting with the name " & arguments.key);
@@ -105,6 +110,9 @@ component {
             case "enum": {
                 return arguments.value;
             }
+            case "component": {
+                return arguments.value;
+            }
         }
     }
     
@@ -178,6 +186,35 @@ component {
                 }
                 else {
                     throw(type = "nephthys.application.invalidFormat", message = "The value for key " & variables.settings[arguments.key].type & " is not within it's enum definitions");
+                }
+            }
+            case "component": {
+                if(arguments.value == "" || arguments.value == null) {
+                    return null;
+                }
+                else {
+                    var tempComponentName = arguments.value;
+                    
+                    if(tempComponentName.right(4) == ".cfc") {
+                        tempComponentName = tempComponentName.left(arguments.value.len() - 4);
+                    }
+                    tempComponentName = tempComponentName.replace(".", "/", "ALL");
+                    tempComponentName &= ".cfc";
+                    if(tempComponentName.left(1) != "/") {
+                        tempComponentName = "/" & tempComponentName;
+                    }
+                    
+                    if(fileExists(expandPath(tempComponentName))) {
+                        if(arguments.value.right(4) == ".cfc") {
+                            arguments.value = arguments.value.left(arguments.value.len() - 4);
+                        }
+                        arguments.value = arguments.value.replace("/", ".", "ALL");
+                        
+                        return arguments.value;
+                    }
+                    else {
+                        throw(type = "nephthys.application.notFound", message = "Could not find the component");
+                    }
                 }
             }
         }
