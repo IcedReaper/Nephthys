@@ -29,7 +29,7 @@
                                 <label for="password">Passwort</label>
                                 <input type="password" name="Password" id="password" class="form-control">
                             </fieldset>
-                            <button type="submit" class="btn btn-primary">Einloggen</button>
+                            <button type="submit" class="btn btn-success m-t"><i class="fa fa-sign-in"></i> Einloggen</button>
                         </form>
                     </div>
                 </div>
