@@ -1,5 +1,7 @@
+@import url(https://fonts.googleapis.com/css?family=Raleway|Architects+Daughter);
+
 // Bootstrap 4
-@import "../../../../../../../../../../Frameworks/Bootstrap/scss/_variables.scss"; // to be changed with own variable settings
+@import "_variables.scss"; // copy of bootstraps _variables.scss with adaptions
 @import "../../../../../../../../../../Frameworks/Bootstrap/scss/_mixins.scss";
 
 // Reset and dependencies

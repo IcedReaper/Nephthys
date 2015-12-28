@@ -1,3 +1,5 @@
+$secondary-color: #004FAA;
+
 /* blueimp gallery */
 .blueimp-gallery > .indicator > li {
     width: 50px;
@@ -29,10 +31,54 @@ footer {
     max-width: 100%;
 }
 
-.navbar-brand > img {
-    margin-top: -17px;
-}
-
 .media-object {
     max-width: 64px;
+}
+
+.navbar {
+    background-color: $secondary-color;
+    
+    .navbar-nav {
+        padding-top: 10px;
+    }
+    
+    .nav-item {
+        $highlight-size: 0.2rem;
+        font-weight: bold;
+        font-size: 1.2rem;
+        padding-bottom: $highlight-size;
+        
+        > .nav-link {
+            color: #FFFFFF;
+        }
+        
+        &:hover,
+        &.active {
+            border-bottom: $highlight-size solid #FFF;
+            padding-bottom: 0rem;
+        }
+    }
+}
+
+.card {
+    border: 0.15rem solid $secondary-color;
+    .card-block {
+        background-color: $body-bg;
+    }
+}
+
+.list-group-item {
+    border: 1px solid $secondary-color;
+    background-color: $body-bg;
+    color: $body-color;
+    font-weight: bold;
+    
+    &:hover {
+        background-color: $secondary-color;
+        color: $body-bg;
+    }
+}
+
+a.list-group-item, button.list-group-item {
+    color: $body-color;
 }

@@ -32,11 +32,9 @@
     <main>
         #request.content#
     </main>
-    <div class="container-fluid">
-        <footer>
-            #createObject("component", "WWW.modules.com.Nephthys.navigation.connector").init().footer()#
-        </footer>
-    </div>
+    <footer>
+        #createObject("component", "WWW.modules.com.Nephthys.navigation.connector").init().footer()#
+    </footer>
 </body>
 </html>
 </cfoutput>

@@ -1,5 +1,5 @@
 <cfoutput>
-<nav class="navbar navbar-dark bg-inverse m-b">
+<nav class="navbar m-b">
     <div class="container">
         <div class="navbar-header">
             <a href="/" class="navbar-brand"><img src="/themes/default/img/brand.gif" title="IcedReaper's Nephthys CMS" alt="IcedReaper's Nephthys CMS"></a>
@@ -47,7 +47,7 @@
         
         <form action="/search" method="POST" class="form-inline navbar-form pull-right">
             <input type="text" class="form-control" placeholder="Suchbegriff" name="searchStatement">
-            <button type="submit" class="btn btn-success-outline"><span class="fa fa-search"></span> Suchen</button>
+            <button type="submit" class="btn btn-success"><span class="fa fa-search"></span> Suchen</button>
         </form>
     </div>
 </nav>
