@@ -5,7 +5,8 @@
             <a href="/" class="navbar-brand"><img src="/themes/default/img/brand.gif" title="IcedReaper's Nephthys CMS" alt="IcedReaper's Nephthys CMS"></a>
         </div>
         <ul class="nav navbar-nav">
-            <cfloop from="2" to="#attributes.sitemap.len()#" index="pageIndex"> <!-- From 2 as we don't want to have the starting page here too, as it's already inserted by the brand --->
+            <!--- From 2 as we don't want to have the starting page here too, as it's already inserted by the brand --->
+            <cfloop from="2" to="#attributes.sitemap.len()#" index="pageIndex">
                 <li class="nav-item <cfif attributes.sitemap[pageIndex].getPageId() EQ request.page.getPageId()>active</cfif>">
                     <a href="#attributes.sitemap[pageIndex].getLink()#" class="nav-link"
                        title="#attributes.sitemap[pageIndex].getTitle()#">#attributes.sitemap[pageIndex].getLinkText()#</a>

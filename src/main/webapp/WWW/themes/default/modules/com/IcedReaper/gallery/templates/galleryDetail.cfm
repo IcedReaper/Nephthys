@@ -1,45 +1,47 @@
 <cfoutput>
-    <div class="com-IcedReaper-gallery">
-        <div class="row">
-            <div class="col-md-12">
-                <h1>#attributes.gallery.getHeadline()#</h1>
-                <cfif attributes.gallery.getIntroduction() NEQ "">
-                    <p>#attributes.gallery.getIntroduction()#</p>
-                </cfif>
-                #attributes.gallery.getStory()#
-            </div>
-        </div>
-        
-        <!--- images --->
-        <cfset pictures = attributes.gallery.getPictures()> <!--- check if there is a better solution --->
-        <cfloop from="1" to="#pictures.len()#" index="pictureIndex">
-            <cfif pictureIndex % 3 EQ 1>
-                <cfif pictureIndex NEQ 1>
-                    </div>
-                </cfif>
-                <div class="row">
+    <article class="com-IcedReaper-gallery">
+        <header>
+            <h1>#attributes.gallery.getHeadline()#</h1>
+            <cfif attributes.gallery.getIntroduction() NEQ "">
+                <p>#attributes.gallery.getIntroduction()#</p>
             </cfif>
-            <div class="col-md-4">
-                <div class="card">
-                    <a href="#attributes.gallery.getRelativePath()#/#pictures[pictureIndex].getPictureFileName()#" class="thumbnail" data-gallery title="#pictures[pictureIndex].getCaption()#">
-                        <img src="#attributes.gallery.getRelativePath()#/#pictures[pictureIndex].getThumbnailFileName()#" title="#pictures[pictureIndex].getTitle()#" class="card-img-top">
-                    </a>
-                    <cfif pictures[pictureIndex].getCaption() NEQ "">
-                        <div class="card-block">
-                            <p class="card-text">#pictures[pictureIndex].getCaption()#</p>
+        </header>
+        <section>
+            #attributes.gallery.getStory()#
+        </section>
+        <section>
+            <!--- images --->
+            <cfset pictures = attributes.gallery.getPictures()> <!--- check if there is a better solution --->
+            <cfloop from="1" to="#pictures.len()#" index="pictureIndex">
+                <cfif pictureIndex % 3 EQ 1>
+                    <cfif pictureIndex NEQ 1>
                         </div>
                     </cfif>
+                    <div class="row">
+                </cfif>
+                <div class="col-md-4">
+                    <div class="card">
+                        <a href="#attributes.gallery.getRelativePath()#/#pictures[pictureIndex].getPictureFileName()#" class="thumbnail" data-gallery title="#pictures[pictureIndex].getCaption()#">
+                            <img src="#attributes.gallery.getRelativePath()#/#pictures[pictureIndex].getThumbnailFileName()#" title="#pictures[pictureIndex].getTitle()#" class="card-img-top">
+                        </a>
+                        <cfif pictures[pictureIndex].getCaption() NEQ "">
+                            <div class="card-block">
+                                <p class="card-text">#pictures[pictureIndex].getCaption()#</p>
+                            </div>
+                        </cfif>
+                    </div>
                 </div>
-            </div>
-        </cfloop>
-        </div> <!--- for row from loop --->
-        
-        <p><small>Diese Gallerie wurde am #application.tools.formatter.formatDate(attributes.gallery.getCreationDate())# von <a href="/User/#attributes.gallery.getCreator().getUsername()#">#attributes.gallery.getCreator().getUsername()#</a> erstellt.</small></p>
-        
-        <cfset categories = attributes.gallery.getCategories()>
-        <cfloop from="1" to="#categories.len()#" index="categoryIndex">
-            <a class="label label-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
-        </cfloop>
+            </cfloop>
+            </div> <!--- for row from loop --->
+        </section>
+        <footer>
+            <p><small>Diese Gallerie wurde am #application.tools.formatter.formatDate(attributes.gallery.getCreationDate())# von <a href="/User/#attributes.gallery.getCreator().getUsername()#">#attributes.gallery.getCreator().getUsername()#</a> erstellt.</small></p>
+            
+            <cfset categories = attributes.gallery.getCategories()>
+            <cfloop from="1" to="#categories.len()#" index="categoryIndex">
+                <a class="label label-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
+            </cfloop>
+        </footer>
         
         <!--- overlay  --->
         <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-use-bootstrap-modal="false">

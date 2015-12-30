@@ -11,7 +11,7 @@
     padding: 0 5px;
 }
 
-footer {
+body > footer {
     border-top: 1px solid #e5e5e5;
     color: #767676;
     margin-top: 100px;
@@ -59,4 +59,15 @@ footer {
 
 .dropdown-menu {
     background-color: $highlight-color;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    > small {
+        color: $highlight-color;
+    }
 }
