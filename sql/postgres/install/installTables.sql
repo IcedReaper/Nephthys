@@ -12,8 +12,9 @@ CREATE TABLE public.nephthys_theme
 (
   themeid numeric NOT NULL DEFAULT nextval('seq_nephthys_theme_id'::regclass), 
   name character varying NOT NULL, 
-  foldername character varying,
-  active boolean NOT NULL DEFAULT true, 
+  foldername character varying(25),
+  active boolean NOT NULL DEFAULT true,
+  anonymousAvatarFileName character varying(50) NOT NULL DEFAULT 'anonymous.png',
   
   CONSTRAINT PK_nephthys_theme_themeId PRIMARY KEY (themeId),
   CONSTRAINT UK_nephthys_theme_name UNIQUE (name),
@@ -63,7 +64,7 @@ CREATE TABLE nephthys_user
   registrationDate timestamp with time zone NOT NULL DEFAULT now(),
   themeid integer NOT NULL,
   active boolean DEFAULT true,
-  avatarFilename character varying(35) NOT NULL DEFAULT 'anonymous.png',
+  avatarFilename character varying(35),
   
   CONSTRAINT PK_nephthys_user_userId PRIMARY KEY (userid),
   CONSTRAINT FK_nephthys_user_themeId FOREIGN KEY (themeid) REFERENCES nephthys_theme (themeid) ON UPDATE NO ACTION ON DELETE NO ACTION
