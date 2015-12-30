@@ -52,7 +52,7 @@ component implements="WWW.interfaces.connector" {
                     module template     = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/user/templates/userSearchResults.cfm"
                            options      = preparedOptions
                            searchQuery  = form.username
-                           results      = userListCtrl.search(form.username)
+                           results      = userListCtrl.search(form.username, true)
                            childContent = arguments.childContent;
                 }
             }

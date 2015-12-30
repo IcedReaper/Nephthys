@@ -1,3 +1,5 @@
 <cfoutput>
-#arguments.options.content#
+    <article>
+        #arguments.options.content#
+    </article>
 </cfoutput>

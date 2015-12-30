@@ -79,7 +79,12 @@ component {
         return variables.avatarFilename;
     }
     public string function getAvatarPath() {
-        return "/upload/com.Nephthys.user/avatar/" & variables.avatarFilename;
+        if(variables.avatarFilename != "" && variables.avatarFilename != null) {
+            return "/upload/com.Nephthys.user/avatar/" & variables.avatarFilename;
+        }
+        else {
+            return "/themes/"&request.user.getTheme().getFolderName() & "/img/" & request.user.getTheme().getAnonymousAvatarFilename();
+        }
     }
     
     public boolean function hasPermission(required string moduleName, string roleName = "") {
@@ -136,8 +141,8 @@ component {
                        .addParam(name = "avatarFilename", value = variables.avatarFilename, cfsqltype = "cf_sql_varchar")
                        .execute();
             
-            if(variables.keyExists("oldAvatarFilename") && oldAvatarFilename != "" && fileExists(expandPath("/upload/com.Nephthys.user/avatar/") & oldAvatarFilename)) {
-                fileDelete(expandPath("/upload/com.Nephthys.user/avatar/") & oldAvatarFilename);
+            if(variables.keyExists("oldAvatarFilename") && variables.oldAvatarFilename != "" && variables.oldAvatarFilename != null && fileExists(expandPath("/upload/com.Nephthys.user/avatar/") & oldAvatarFilename)) {
+                fileDelete(expandPath("/upload/com.Nephthys.user/avatar/") & variables.oldAvatarFilename);
             }
         }
         return this;
@@ -176,8 +181,8 @@ component {
                 variables.active           = qUser.active[1];
                 variables.password         = qUser.password[1];
                 variables.registrationDate = qUser.registrationDate[1];
-                variables.avatarFilename   = qUser.avatarFilename[1];
                 variables.themeId          = qUser.themeId[1];
+                variables.avatarFilename   = qUser.avatarFilename[1];
             }
             else {
                 throw(type = "nephthys.notFound.user", message = "Could not find user by ID ", detail = variables.userId);
@@ -190,7 +195,7 @@ component {
             variables.active           = 0;
             variables.registrationDate = now();
             variables.themeId          = application.system.settings.getValueOfKey("defaultThemeId");
-            variables.avatarFilename   = "anonymous.jpg";
+            variables.avatarFilename   = null;
         }
         
         variables.extendedProperties = createObject("component", "extendedProperties").init(variables.userId);

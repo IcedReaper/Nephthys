@@ -55,6 +55,14 @@ component {
                     directoryDelete(tmpDirectory, true);
                     
                     variables.folderName = arguments.folderName;
+                    
+                    var avatarFiles = directoryList(destFolder & uplodedWwwThemePath & "/img/", false, "name", "anonymous.*");
+                    if(avatarFiles.len() > 0) {
+                        variables.anonymousAvatarFilename = avatarFiles[1];
+                    }
+                    else {
+                        variables.anonymousAvatarFilename = "anonymous.png";
+                    }
                 }
                 else {
                     throw(type = "nephthys.application.uploadFailed", message = "The file could not be saved");
@@ -87,6 +95,9 @@ component {
     public string function getFolderName() {
         return variables.folderName;
     }
+    public string function getAnonymousAvatarFilename() {
+        return variables.anonymousAvatarFilename;
+    }
     
     // C R U D
     public theme function save() {
@@ -95,17 +106,20 @@ component {
                                                                 (
                                                                     name,
                                                                     active,
-                                                                    folderName
+                                                                    folderName,
+                                                                    anonymousAvatarFilename
                                                                 )
                                                          VALUES (
                                                                     :name,
                                                                     :active,
-                                                                    :folderName
+                                                                    :folderName,
+                                                                    :anonymousAvatarFilename
                                                                 );
                                                      SELECT last_value newThemeId FROM seq_nephthys_theme_id;")
-                                           .addParam(name = "name",       value = variables.name,       cfsqltype = "cf_sql_varchar")
-                                           .addParam(name = "active",     value = variables.active,     cfsqltype = "cf_sql_bit")
-                                           .addParam(name = "folderName", value = variables.folderName, cfsqltype = "cf_sql_varchar")
+                                           .addParam(name = "name",                    value = variables.name,                    cfsqltype = "cf_sql_varchar")
+                                           .addParam(name = "active",                  value = variables.active,                  cfsqltype = "cf_sql_bit")
+                                           .addParam(name = "folderName",              value = variables.folderName,              cfsqltype = "cf_sql_varchar")
+                                           .addParam(name = "anonymousAvatarFilename", value = variables.anonymousAvatarFilename, cfsqltype = "cf_sql_varchar")
                                            .execute()
                                            .getResult()
                                            .newThemeId[1];
@@ -148,18 +162,20 @@ component {
                                     .getResult();
             
             if(qTheme.getRecordCount() == 1) {
-                variables.name       = qTheme.name[1];
-                variables.active     = qTheme.active[1];
-                variables.folderName = qTheme.folderName[1];
+                variables.name                    = qTheme.name[1];
+                variables.active                  = qTheme.active[1];
+                variables.folderName              = qTheme.folderName[1];
+                variables.anonymousAvatarFilename = qTheme.AnonymousAvatarFilename[1];
             }
             else {
                 throw(type = "themeNotFound", message = "The Theme could not be found", detail = variables.themeId);
             }
         }
         else {
-            variables.name       = "";
-            variables.active     = false;
-            variables.folderName = "";
+            variables.name                    = "";
+            variables.active                  = false;
+            variables.folderName              = "";
+            variables.anonymousAvatarFilename = null;
         }
     }
 }

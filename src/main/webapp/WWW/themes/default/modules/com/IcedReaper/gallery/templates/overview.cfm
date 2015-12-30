@@ -1,5 +1,5 @@
 <cfoutput>
-    <div class="com-IcedReaper-gallery">
+    <section class="com-IcedReaper-gallery">
         <cfif attributes.totalPageCount GT 1>
             <nav>
                 <ul class="pagination">
@@ -23,13 +23,13 @@
         </cfif>
         
         <cfloop from="1" to="#attributes.galleries.len()#" index="galleryIndex">
-            <div class="row <cfif galleryIndex GT 1>m-t</cfif>">
-                <div class="col-md-12">
+            <article<cfif galleryIndex GT 1> class="m-t-lg"</cfif>>
+                <header>
                     <h2><a href="#request.page.getLink()##attributes.galleries[galleryIndex].getLink()#">#attributes.galleries[galleryIndex].getHeadline()#</a></h2>
                     <p><small>Diese Gallerie enthält #attributes.galleries[galleryIndex].getPictureCount()# Bilder</small></p>
-                    
+                </header>
+                <section>
                     <p>#attributes.galleries[galleryIndex].getIntroduction()#</p>
-                    
                     <cfset pictures = attributes.galleries[galleryIndex].getPictures()> <!--- check if there is a better solution --->
                     <cfloop from="1" to="#(pictures.len() GT 6 ? 6 : pictures.len())#" index="pictureIndex">
                         <cfif pictureIndex EQ 1>
@@ -49,13 +49,15 @@
                         </div>
                     </cfloop>
                     </div>
+                </section>
+                <footer>
                     <p><small>Diese Gallerie wurde am #application.tools.formatter.formatDate(attributes.galleries[galleryIndex].getCreationDate())# von <a href="/User/#attributes.galleries[galleryIndex].getCreator().getUsername()#">#attributes.galleries[galleryIndex].getCreator().getUsername()#</a> erstellt.</small></p>
                     <cfset categories = attributes.galleries[galleryIndex].getCategories()>
                     <cfloop from="1" to="#categories.len()#" index="categoryIndex">
                         <a class="label label-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
                     </cfloop>
-                </div>
-            </div>
+                </footer>
+            </article>
         </cfloop>
         
         <cfif attributes.totalPageCount GT 1>
@@ -79,5 +81,5 @@
                 </ul>
             </nav>
         </cfif>
-    </div>
+    </section>
 </cfoutput>
