@@ -144,7 +144,7 @@ component {
         request.user = createObject("component", "API.com.Nephthys.classes.user.user").init(session.userId);
         
         if(session.userId == 0) {
-            if(! structIsEmpty(form) && /* referer == loginForm */ true) {
+            if(! structIsEmpty(form) && form.keyExists("username") && form.keyExists("password") && /* check referrrer */ true) {
                 var userId = application.security.loginHandler.loginUser(form.username, form.password);
                 if(userId != 0 && userId != null) {
                     session.userId = userId;
