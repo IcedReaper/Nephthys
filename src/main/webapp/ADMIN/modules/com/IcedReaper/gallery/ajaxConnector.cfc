@@ -1,7 +1,7 @@
 component {
     // Galleries and their details
     remote struct function getList() {
-        var gallerySearchCtrl = createObject("component", "API.com.IcedReaper.gallery.search").init();
+        var gallerySearchCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.search").init();
         
         var galleries = gallerySearchCtrl.execute();
         var data = [];
@@ -17,7 +17,7 @@ component {
     }
     
     remote struct function getDetails(required numeric galleryId) {
-        var gallery = createObject("component", "API.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         return {
             "success" = true,
             "data"    = prepareDetailStruct(gallery)
@@ -25,7 +25,7 @@ component {
     }
     
     remote struct function loadPictures(required numeric galleryId) {
-        var gallery = createObject("component", "API.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         return {
             "success"  = true,
             "pictures" = preparePictureStruct(gallery.getPictures(), gallery.getRelativePath() & "/")
@@ -33,7 +33,7 @@ component {
     }
     
     remote struct function loadCategories(required numeric galleryId) {
-        var gallery = createObject("component", "API.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         
         return {
             "success"    = true,
@@ -42,14 +42,14 @@ component {
     }
     
     remote struct function loadAutoCompleteCategories(required string queryString) {
-        var categoryLoader = createObject("component", "API.com.IcedReaper.gallery.categoryLoader").init();
+        var categoryLoader = createObject("component", "API.modules.com.IcedReaper.gallery.categoryLoader").init();
         
         var categories = categoryLoader
                              .setName(arguments.queryString)
                              .load();
         
         if(categories.len() != 1 || categories[1].getName() != arguments.queryString) {
-            var dummyCategory = createObject("component", "API.com.IcedReaper.gallery.category").init(0)
+            var dummyCategory = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(0)
                                     .setName(arguments.queryString);
             
             categories.append(dummyCategory);
@@ -69,7 +69,7 @@ component {
                                 required string  introduction,
                                 required string  story,
                                 required numeric active) {
-        var gallery = createObject("component", "API.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         
         if(arguments.galleryId == 0) {
             gallery.setFoldername(attributes.foldername);
@@ -90,7 +90,7 @@ component {
     }
     
     remote struct function delete(required numeric galleryId) {
-        var gallery = createObject("component", "API.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         gallery.delete();
         
         return {
@@ -99,7 +99,7 @@ component {
     }
     
     remote struct function activate(required numeric galleryId) {
-        var gallery = createObject("component", "API.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         gallery.setActiveStatus(1)
                .save();
         
@@ -109,7 +109,7 @@ component {
     }
     
     remote struct function deactivate(required numeric galleryId) {
-        var gallery = createObject("component", "API.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         gallery.setActiveStatus(0)
                .save();
         
@@ -121,8 +121,8 @@ component {
     remote struct function addCategory(required numeric galleryId,
                                        required numeric categoryId,
                                        required string  categoryName) {
-        var gallery = createObject("component", "API.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
-        var newCategory = createObject("component", "API.com.IcedReaper.gallery.category").init(arguments.categoryId);
+        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var newCategory = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
         if(arguments.categoryId == 0) {
             newCategory.setName(arguments.categoryName)
                        .save();
@@ -137,7 +137,7 @@ component {
     
     remote struct function removeCategory(required numeric galleryId,
                                           required numeric categoryId) {
-        var gallery = createObject("component", "API.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         
         gallery.removeCategory(arguments.categoryId);
         
@@ -147,9 +147,9 @@ component {
     }
     
     remote struct function uploadPictures(required numeric galleryId) {
-        var gallery = createObject("component", "API.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         
-        var newPicture = createObject("component", "API.com.IcedReaper.gallery.picture").init(0);
+        var newPicture = createObject("component", "API.modules.com.IcedReaper.gallery.picture").init(0);
         newPicture.setGalleryId(arguments.galleryId)
                   .upload();
         
@@ -164,7 +164,7 @@ component {
                                          required string  caption,
                                          required string  alt,
                                          required string  title) {
-        var picture = createObject("component", "API.com.IcedReaper.gallery.picture").init(arguments.pictureId);
+        var picture = createObject("component", "API.modules.com.IcedReaper.gallery.picture").init(arguments.pictureId);
         
         picture.setCaption(arguments.caption)
                .setAlt(arguments.alt)
@@ -177,7 +177,7 @@ component {
     }
     
     remote struct function deletePicture(required numeric pictureId) {
-        var gallery = createObject("component", "API.com.IcedReaper.gallery.gallery").init(picture.getGalleryId());
+        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(picture.getGalleryId());
         gallery.removePicture(arguments.pictureId);
         
         return {
@@ -188,7 +188,7 @@ component {
     
     // categories and their details
     remote struct function getCategoryList() {
-        var categoryLoader = createObject("component", "API.com.IcedReaper.gallery.categoryLoader").init();
+        var categoryLoader = createObject("component", "API.modules.com.IcedReaper.gallery.categoryLoader").init();
         
         return {
             "success" = true,
@@ -197,7 +197,7 @@ component {
     }
     
     remote struct function getCategoryDetails(required numeric categoryId) {
-        var category = createObject("component", "API.com.IcedReaper.gallery.category").init(arguments.categoryId);
+        var category = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
         
         return {
             "success" = true,
@@ -207,7 +207,7 @@ component {
     
     remote struct function saveCategory(required numeric categoryId,
                                         required string  name) {
-        var category = createObject("component", "API.com.IcedReaper.gallery.category").init(arguments.categoryId);
+        var category = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
         category.setName(arguments.name)
                 .save();
         
@@ -217,7 +217,7 @@ component {
     }
     
     remote struct function deleteCategory(required numeric categoryId) {
-        var category = createObject("component", "API.com.IcedReaper.gallery.category").init(arguments.categoryId);
+        var category = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
         
         category.delete();
         
@@ -231,7 +231,7 @@ component {
             arguments.dayCount = 20;
         }
         
-        var statisticsCtrl = createObject("component", "API.com.IcedReaper.gallery.statistics").init();
+        var statisticsCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.statistics").init();
         
         var statisticsData = statisticsCtrl.load(arguments.galleryId, dateAdd("d", (dayCount - 1) * -1, now()), now());
         
@@ -291,7 +291,7 @@ component {
     
     private array function prepareCategoryDetails(required array categories, required boolean getGalleries = false) {
         var gCategories = [];
-        var gallerySearcher = createObject("component", "API.com.IcedReaper.gallery.search").init();
+        var gallerySearcher = createObject("component", "API.modules.com.IcedReaper.gallery.search").init();
         
         for(var c = 1; c <= arguments.categories.len(); c++) {
             gCategories.append({

@@ -1,6 +1,6 @@
 component {
     remote struct function getList() {
-        var userListCtrl = createObject("component", "API.com.Nephthys.controller.user.userList").init();
+        var userListCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
         
         var userArray = userListCtrl.getList();
         
@@ -26,7 +26,7 @@ component {
     }
     
     remote struct function getDetails(required numeric userId) {
-        var user = createObject("component", "API.com.Nephthys.classes.user.user").init(arguments.userId);
+        var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
         
         return {
             "success" = true,
@@ -40,8 +40,8 @@ component {
                                 required numeric active,
                                 required string  password,
                                 required numeric themeId) {
-        var user = createObject("component", "API.com.Nephthys.classes.user.user").init(arguments.userId);
-        var encryptionMethodLoader = createObject("component", "API.com.Nephthys.controller.security.encryptionMethodLoader").init();
+        var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
+        var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.controller.encryptionMethodLoader").init();
         
         if(arguments.userId == 0) {
             user.setUsername(arguments.userName);
@@ -61,12 +61,12 @@ component {
         
         return {
             "success" = true,
-            "data"    = prepareDetailStruct(createObject("component", "API.com.Nephthys.classes.user.user").init(arguments.userId))
+            "data"    = prepareDetailStruct(createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId))
         };
     }
     
     remote struct function delete(required numeric userId) {
-        var user = createObject("component", "API.com.Nephthys.classes.user.user").init(arguments.userId);
+        var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
         fileDelete(expandPath("/upload/com.Nephthys.user/avatar/") & user.getAvatarFilename());
         user.delete();
         
@@ -76,7 +76,7 @@ component {
     }
     
     remote struct function activate(required numeric userId) {
-        var user = createObject("component", "API.com.Nephthys.classes.user.user").init(arguments.userId);
+        var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
         user.setActiveStatus(1)
             .save();
         
@@ -86,7 +86,7 @@ component {
     }
     
     remote struct function deactivate(required numeric userId) {
-        var user = createObject("component", "API.com.Nephthys.classes.user.user").init(arguments.userId);
+        var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
         user.setActiveStatus(0)
             .save();
         
@@ -96,7 +96,7 @@ component {
     }
     
     remote struct function uploadAvatar(required numeric userId) {
-        var user = createObject("component", "API.com.Nephthys.classes.user.user").init(arguments.userId);
+        var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
         
         if(user.getUserId() == request.user.getUserId()) {
             user.uploadAvatar()
@@ -113,7 +113,7 @@ component {
     }
     
     remote struct function getPermissions(required numeric userId) {
-        var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
+        var permissionHandlerCtrl = createObject("component", "API.tools.com.Nephthys.security.permissionHandler").init();
         var permissions = permissionHandlerCtrl.loadForUserId(arguments.userId);
         
         for(var i = 1; i <= permissions.len(); i++) {
@@ -129,7 +129,7 @@ component {
     }
     
     remote struct function getRoles() {
-        var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
+        var permissionHandlerCtrl = createObject("component", "API.tools.com.Nephthys.security.permissionHandler").init();
         
         return {
             "success" = true,
@@ -138,7 +138,7 @@ component {
     }
     
     remote struct function savePermissions(required numeric userId, required array permissions) {
-        var permissionHandlerCtrl = createObject("component", "API.com.Nephthys.controller.security.permissionHandler").init();
+        var permissionHandlerCtrl = createObject("component", "API.tools.com.Nephthys.security.permissionHandler").init();
         
         transaction {
             for(var i = 1; i <= arguments.permissions.len(); i++) {
@@ -167,9 +167,9 @@ component {
     }
     
     remote struct function getThemes() {
-        var themeLoaderCtrl = createObject("component", "API.com.Nephthys.controller.system.themeLoader").init();
+        var filterCtrl = createObject("component", "API.modules.com.Nephthys.theme.filter").init();
         
-        var themeList = themeLoaderCtrl.getList();
+        var themeList = filterCtrl.getList();
         
         var themeData = [];
         for(var i = 1; i <= themeList.len(); i++) {

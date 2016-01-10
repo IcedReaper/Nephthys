@@ -31,12 +31,12 @@ component interface="ADMIN.interfaces.connector" {
         };
         
         module template     = "/ADMIN/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/dashboard/templates/index.cfm"
-               serverStatus = createObject("component", "API.com.Nephthys.classes.system.settings").init()
+               serverStatus = createObject("component", "API.modules.com.Nephthys.system.settings").init()
                memory       = memory;
     }
     
     public void function sidebar() {
-        var moduleCtrl = createObject("component", "API.com.Nephthys.controller.modules.overview").init();
+        var moduleCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
         var installedModules = moduleCtrl.getList();
         
         for(var i = 1; i <= installedModules.len(); i++) {

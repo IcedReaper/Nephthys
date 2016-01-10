@@ -15,7 +15,7 @@ component implements="WWW.interfaces.connector" {
         themeIndividualizer.invokeResources();
         
         var splitParameter = listToArray(request.page.getParameter(), "/");
-        var gallerySearchCtrl = createObject("component", "API.com.IcedReaper.gallery.search").init();
+        var gallerySearchCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.search").init();
         
         if(! arguments.options.keyExists("maxEntries")) {
             arguments.options.maxEntries = 5;
@@ -100,7 +100,7 @@ component implements="WWW.interfaces.connector" {
     
     private string function renderDetails(required struct options, required gallery gallery) {
         var renderedContent = "";
-        var statisticsCtrl = createObject("component", "API.com.IcedReaper.gallery.statistics").init();
+        var statisticsCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.statistics").init();
         
         statisticsCtrl.add(arguments.gallery.getGalleryId());
         

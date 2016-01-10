@@ -40,7 +40,7 @@
                         #request.user.getUsername()#
                     </button>
                     <div class="dropdown-menu p-r p-l p-b">
-                        <a href="?logout" class="dropdown-item"><i class="fa fa-sign-out"></i> Ausloggen</a>
+                        <a href="?logout" class="btn btn-secondary"><i class="fa fa-sign-out"></i> Ausloggen</a>
                     </div>
                 </div>
             </cfif>

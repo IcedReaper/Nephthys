@@ -5,15 +5,14 @@ component {
     
     public boolean function onApplicationStart() {
         // components
-        application.system.settings = createObject("component", "API.com.Nephthys.classes.system.settings").init();
+        application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
         
-        application.security.loginHandler = createObject("component", "API.com.Nephthys.controller.security.loginHandler").init();
+        application.security.authenticator = createObject("component", "API.tools.com.Nephthys.security.authenticator").init(); // todo server settings
         
-        application.page.loader   = createObject("component", "API.com.Nephthys.controller.page.loader").init();
-        application.page.renderer = createObject("component", "API.com.Nephthys.controller.page.renderer").init();
+        application.page.renderer = createObject("component", "API.modules.com.Nephthys.page.renderer").init();
         
-        application.tools.formatter = createObject("component", "API.com.Nephthys.controller.tools.formatter").init();
-        application.tools.validator = createObject("component", "API.com.Nephthys.controller.tools.validator").init();
+        application.tools.formatter = createObject("component", "API.tools.com.Nephthys.adapt.formatter").init();
+        application.tools.validator = createObject("component", "API.tools.com.Nephthys.security.validator").init();
         
         return true;
     }
@@ -59,7 +58,7 @@ component {
                         url.pageLink = "/"; // todo: get First link
                     }
                     
-                    request.page = application.page.loader.getPageId(url.pageLink);
+                    request.page = createObject("component", "API.modules.com.Nephthys.page.pageRequest").init(url.pageLink);
                     if(request.page.isOnline()) {
                         request.content = application.page.renderer.renderPageContent(request.page.getContent(), request.page.getParameter());
                         request.page.saveToStatistics();
@@ -98,8 +97,8 @@ component {
     
     public void function onError(required any exception) {
         try {
-            var errorHandler = createObject("component", "API.com.Nephthys.controller.error.errorHandler").init();
-            errorHandler.setException(arguments.exception)
+            var errorLogger = createObject("component", "API.modules.com.Nephthys.error.logger").init();
+            errorLogger.setException(arguments.exception)
                         .save();
             
             switch(request.requestType) {
@@ -122,14 +121,14 @@ component {
                     }
                     else {
                         if(application.keyExists("system") && application.system.keyExists("settings")) {
-                            themeFoldername = createObject("component", "API.com.Nephthys.classes.system.theme").init(application.system.settings.getValueOfKey("defaultThemeId")).getFolderName();
+                            themeFoldername = createObject("component", "API.modules.com.Nephthys.theme.theme").init(application.system.settings.getValueOfKey("defaultThemeId")).getFolderName();
                         }
                         else {
                             throw(type = "nephthys.critical.installation", message = "Neither the user nor the system settings are defined!");
                         }
                     }
-                    errorHandler.setThemePath("/ADMIN/themes/" & themeFoldername)
-                                .show();
+                    errorLogger.setThemePath("/ADMIN/themes/" & themeFoldername)
+                                .show(); // todo: check if needs to be changed to another component
                     
                     break;
                 }
@@ -141,11 +140,11 @@ component {
     }
     
     private boolean function checkIfLoggedIn() {
-        request.user = createObject("component", "API.com.Nephthys.classes.user.user").init(session.userId);
+        request.user = createObject("component", "API.modules.com.Nephthys.user.user").init(session.userId);
         
         if(session.userId == 0) {
             if(! structIsEmpty(form) && /* referer == loginForm */ true) {
-                var userId = application.security.loginHandler.loginUser(form.username, form.password);
+                var userId = application.security.authenticator.login(form.username, form.password);
                 if(userId != 0 && userId != null) {
                     session.userId = userId;
                     login();
@@ -156,7 +155,7 @@ component {
             return false;
         }
         else {
-            if(url.keyExists("logout") || ! application.security.loginHandler.checkForUser(session.userId)) {
+            if(url.keyExists("logout") || ! request.user.isActive()) {
                 logout();
                 return false;
             }
@@ -176,11 +175,11 @@ component {
     }
     
     private void function login() {
-        request.user = createObject("component", "API.com.Nephthys.classes.user.user").init(session.userId);
+        request.user = createObject("component", "API.modules.com.Nephthys.user.user").init(session.userId);
     }
     
     private void function logout() {
         session.userId = 0;
-        request.user = createObject("component", "API.com.Nephthys.classes.user.user").init(session.userId);
+        request.user = createObject("component", "API.modules.com.Nephthys.user.user").init(session.userId);
     }
 }
