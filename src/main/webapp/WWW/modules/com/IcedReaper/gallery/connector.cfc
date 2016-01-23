@@ -68,6 +68,8 @@ component implements="WWW.interfaces.connector" {
                 if(galleries.len() == 1) {
                     var gallery = galleries[1];
                     
+                    gallery.incrementViewCounter();
+                    
                     request.page.setDescription(gallery.getDescription())
                                 .setTitle(gallery.getHeadline());
                 
