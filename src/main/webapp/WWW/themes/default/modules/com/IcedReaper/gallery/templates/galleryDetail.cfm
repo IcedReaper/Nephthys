@@ -35,7 +35,7 @@
             </div> <!--- for row from loop --->
         </section>
         <footer>
-            <p><small>Diese Gallerie wurde am #application.tools.formatter.formatDate(attributes.gallery.getCreationDate())# von <a href="/User/#attributes.gallery.getCreator().getUsername()#">#attributes.gallery.getCreator().getUsername()#</a> erstellt.</small></p>
+            <p><small>Diese Gallerie wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.gallery.getCreationDate())# von <a href="/User/#attributes.gallery.getCreator().getUsername()#">#attributes.gallery.getCreator().getUsername()#</a> erstellt.</small></p>
             
             <cfset categories = attributes.gallery.getCategories()>
             <cfloop from="1" to="#categories.len()#" index="categoryIndex">

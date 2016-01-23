@@ -232,13 +232,14 @@ component {
         }
         
         var statisticsCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.statistics").init();
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var statisticsData = statisticsCtrl.load(arguments.galleryId, dateAdd("d", (dayCount - 1) * -1, now()), now());
         
         var labels = [];
         var data = [];
         for(var i = 1; i <= statisticsData.len(); i++) {
-            labels.append(application.tools.formatter.formatDate(statisticsData[i].date, false));
+            labels.append(formatCtrl.formatDate(statisticsData[i].date, false));
             data.append(statisticsData[i].count);
         }
         
@@ -252,6 +253,8 @@ component {
     
     // private
     private struct function prepareDetailStruct(required gallery gallery) {
+        //var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
+        
         var categories = [];
         var gCategories = arguments.gallery.getCategories();
         for(var c = 1; c <= gCategories.len(); c++) {
@@ -266,7 +269,7 @@ component {
             "foldername"   = arguments.gallery.getFoldername(),
             "introduction" = arguments.gallery.getIntroduction(),
             "story"        = arguments.gallery.getStory(),
-            //"releaseDate"  = application.tools.formatter.formatDate(arguments.gallery.getReleaseDate(), false),
+            //"releaseDate"  = formatCtrl.formatDate(arguments.gallery.getReleaseDate(), false),
             "active"       = toString(arguments.gallery.getActiveStatus()),
             "pictureCount" = arguments.gallery.getPictureCount(),
             "categories"   = categories
@@ -316,13 +319,15 @@ component {
     }
     
     private struct function prepareCategoryStruct(required category category) {
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
+        
         return {
             "categoryId"   = arguments.category.getCategoryId(),
             "name"         = arguments.category.getName(),
             "creator"      = getUserInformation(arguments.category.getCreator()),
             "lastEditor"   = getUserInformation(arguments.category.getLastEditor()),
-            "creationDate" = application.tools.formatter.formatDate(arguments.category.getCreationDate()),
-            "lastEditDate" = application.tools.formatter.formatDate(arguments.category.getLastEditDate())
+            "creationDate" = formatCtrl.formatDate(arguments.category.getCreationDate()),
+            "lastEditDate" = formatCtrl.formatDate(arguments.category.getLastEditDate())
         }
     }
     

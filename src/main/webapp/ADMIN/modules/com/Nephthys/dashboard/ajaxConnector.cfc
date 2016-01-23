@@ -48,8 +48,10 @@ component {
     }
     
     private array function prepareLoginData(required array loginData) {
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
+        
         for(var i = 1; i <= arguments.loginData.len(); i++) {
-            arguments.loginData[i].loginDate = application.tools.formatter.formatDate(arguments.loginData[i].loginDate);
+            arguments.loginData[i].loginDate = formatCtrl.formatDate(arguments.loginData[i].loginDate);
         }
         
         return arguments.loginData;

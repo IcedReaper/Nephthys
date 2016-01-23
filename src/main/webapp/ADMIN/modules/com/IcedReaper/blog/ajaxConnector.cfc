@@ -222,13 +222,14 @@ component {
         }
         
         var statisticsCtrl = createObject("component", "API.modules.com.IcedReaper.blog.statistics").init();
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var statisticsData = statisticsCtrl.load(arguments.blogpostId, dateAdd("d", (dayCount - 1) * -1, now()), now());
         
         var labels = [];
         var data = [];
         for(var i = 1; i <= statisticsData.len(); i++) {
-            labels.append(application.tools.formatter.formatDate(statisticsData[i].date, false));
+            labels.append(formatCtrl.formatDate(statisticsData[i].date, false));
             data.append(statisticsData[i].count);
         }
         
@@ -241,6 +242,7 @@ component {
     
     remote struct function loadComments(required numeric blogpostId) {
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var bp_comments = blogpost.getComments();
         var comments = [];
@@ -249,7 +251,7 @@ component {
                 "commentId"    = bp_comments[i].getCommentId(),
                 "username"     = bp_comments[i].getUsername(),
                 "comment"      = bp_comments[i].getComment(),
-                "creationDate" = application.tools.formatter.formatDate(bp_comments[i].getCreationDate()),
+                "creationDate" = formatCtrl.formatDate(bp_comments[i].getCreationDate()),
                 "published"    = bp_comments[i].isPublished()
             });
         }
@@ -309,6 +311,8 @@ component {
     
     // private
     private struct function prepareDetailStruct(required blogpost blogpost) {
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
+        
         var categories = [];
         var gCategories = arguments.blogpost.getCategories();
         for(var c = 1; c <= gCategories.len(); c++) {
@@ -322,8 +326,8 @@ component {
             "story"                      = arguments.blogpost.getStory(),
             "released"                   = toString(arguments.blogpost.getReleased()),
             "folderName"                 = arguments.blogpost.getFolderName(),
-            "releaseDate"                = application.tools.formatter.formatDate(date = arguments.blogpost.getReleaseDate() != null ? arguments.blogpost.getReleaseDate() : 0,
-                                                                                  dateFormat = "yyyy-mm-dd", timeFormat = "HH:MM"),
+            "releaseDate"                = formatCtrl.formatDate(date = arguments.blogpost.getReleaseDate() != null ? arguments.blogpost.getReleaseDate() : 0,
+                                                                 dateFormat = "yyyy-mm-dd", timeFormat = "HH:MM"),
             "commentsActivated"          = toString(arguments.blogpost.getCommentsActivated()),
             "anonymousCommentAllowed"    = toString(arguments.blogpost.getAnonymousCommentAllowed()),
             "commentsNeedToGetPublished" = toString(arguments.blogpost.getCommentsNeedToGetPublished()),
@@ -359,13 +363,15 @@ component {
     }
     
     private struct function prepareCategoryStruct(required category category) {
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
+        
         return {
             "categoryId"   = arguments.category.getCategoryId(),
             "name"         = arguments.category.getName(),
             "creator"      = getUserInformation(arguments.category.getCreator()),
             "lastEditor"   = getUserInformation(arguments.category.getLastEditor()),
-            "creationDate" = application.tools.formatter.formatDate(arguments.category.getCreationDate()),
-            "lastEditDate" = application.tools.formatter.formatDate(arguments.category.getLastEditDate())
+            "creationDate" = formatCtrl.formatDate(arguments.category.getCreationDate()),
+            "lastEditDate" = formatCtrl.formatDate(arguments.category.getLastEditDate())
         }
     }
     

@@ -21,7 +21,7 @@
                                     <strong>Registriert am:</strong>
                                 </div>
                                 <div class="col-md-9">
-                                    #application.tools.formatter.formatDate(attributes.results[userIndex].getRegistrationDate())#
+                                    #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.results[userIndex].getRegistrationDate())#
                                 </div>
                             </div>
                             <!--- todo: check further information --->

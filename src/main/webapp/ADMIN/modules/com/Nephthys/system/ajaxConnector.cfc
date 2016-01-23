@@ -1,15 +1,16 @@
 component {
     remote struct function getSettings() {
         var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var settings = duplicate(serverSettings.getAllSettings());
         
         for(var key in settings) {
             if(lcase(settings[key].type) == "datetime") {
-                settings[key].value = settings[key].value != null ? application.tools.formatter.formatDate(settings[key].value, true, "DD.MM.YYYY") : "";
+                settings[key].value = settings[key].value != null ? formatCtrl.formatDate(settings[key].value, true, "DD.MM.YYYY") : "";
             }
             if(lcase(settings[key].type) == "date") {
-                settings[key].value = settings[key].value != null ? application.tools.formatter.formatDate(settings[key].value, false, "DD.MM.YYYY") : "";
+                settings[key].value = settings[key].value != null ? formatCtrl.formatDate(settings[key].value, false, "DD.MM.YYYY") : "";
             }
             settings[key].delete("foreignTableOptions");
         }

@@ -8,6 +8,7 @@ component {
     
     remote struct function getDetails(required numeric pageId) {
         var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         return {
             'success' = true,
@@ -24,9 +25,9 @@ component {
                 'region'             = page.getRegion(),
                 'active'             = toString(page.getActiveStatus()),
                 'creator'            = getUserInformation(page.getCreator()),
-                'creationDate'       = application.tools.formatter.formatDate(page.getCreationDate()),
+                'creationDate'       = formatCtrl.formatDate(page.getCreationDate()),
                 'lastEditor'         = getUserInformation(page.getLastEditor()),
-                'lastEditDate'       = application.tools.formatter.formatDate(page.getLastEditDate()),
+                'lastEditDate'       = formatCtrl.formatDate(page.getLastEditDate()),
                 'subPages'           = getSubPages(page.getPageId(), page.getRegion()),
                 "pageStatusId"       = toString(page.getPageStatusId()),
                 "pageStatusName"     = page.getPageStatus().getName()
@@ -207,6 +208,7 @@ component {
     
     private array function getSubPages(required numeric parentId, required string region) {
         var pageCtrl = createObject("component", "API.modules.com.Nephthys.page.filter").init();
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var pageArray = pageCtrl.getList(arguments.parentId, arguments.region, false);
         
@@ -224,9 +226,9 @@ component {
                     'region'             = pageArray[i].getRegion(),
                     'useDynamicSuffixes' = pageArray[i].getUseDynamicSuffixes(),
                     'creator'            = getUserInformation(pageArray[i].getCreator()),
-                    'creationDate'       = application.tools.formatter.formatDate(pageArray[i].getCreationDate()),
+                    'creationDate'       = formatCtrl.formatDate(pageArray[i].getCreationDate()),
                     'lastEditor'         = getUserInformation(pageArray[i].getLastEditor()),
-                    'lastEditDate'       = application.tools.formatter.formatDate(pageArray[i].getLastEditDate()),
+                    'lastEditDate'       = formatCtrl.formatDate(pageArray[i].getLastEditDate()),
                     'subPages'           = getSubPages(pageArray[i].getPageId(), pageArray[i].getRegion()),
                     'active'             = toString(pageArray[i].getActiveStatus()),
                     "pageStatusId"       = toString(pageArray[i].getPageStatusId()),

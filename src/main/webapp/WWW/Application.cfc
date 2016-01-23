@@ -6,12 +6,8 @@ component {
     public boolean function onApplicationStart() {
         // components
         application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
-        
         application.security.authenticator = createObject("component", "API.tools.com.Nephthys.security.authenticator").init(); // todo server settings
-        
         application.page.renderer = createObject("component", "API.modules.com.Nephthys.page.renderer").init();
-        
-        application.tools.formatter = createObject("component", "API.tools.com.Nephthys.adapt.formatter").init();
         application.tools.validator = createObject("component", "API.tools.com.Nephthys.security.validator").init();
         
         return true;
