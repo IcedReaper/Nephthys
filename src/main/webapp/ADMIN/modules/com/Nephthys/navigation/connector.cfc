@@ -8,8 +8,8 @@ component interface="ADMIN.interfaces.connector" {
     }
     
     public void function render() {
-        var moduleCtrl = createObject("component", "API.com.Nephthys.controller.modules.overview").init();
-        var installedModules = moduleCtrl.getList();
+        var filterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
+        var installedModules = filterCtrl.getList();
         
         for(var i = 1; i <= installedModules.len(); i++) {
             if(! installedModules[i].getActiveStatus()) {

@@ -12,14 +12,14 @@ component implements="WWW.interfaces.connector" {
     }
     
     public void function header() {
-        var sitemapObj = createObject("component", "API.com.Nephthys.controller.page.sitemap").init();
+        var sitemapObj = createObject("component", "API.modules.com.Nephthys.page.sitemap").init();
         
         module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/navigation/header.cfm"
                sitemap  = sitemapObj.getSitemap('header');
     }
     
     public void function footer() {
-        var sitemapObj = createObject("component", "API.com.Nephthys.controller.page.sitemap").init();
+        var sitemapObj = createObject("component", "API.modules.com.Nephthys.page.sitemap").init();
         
         module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/navigation/footer.cfm"
                sitemap  = sitemapObj.getSitemap('footer');

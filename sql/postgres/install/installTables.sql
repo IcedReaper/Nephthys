@@ -201,6 +201,8 @@ CREATE TABLE nephthys_serverSetting
   enumOptions character varying(500),
   foreignTableOptions character varying(500),
   hidden boolean NOT NULL DEFAULT FALSE,
+  alwaysRevalidate boolean NOT NULL DEFAULT FALSE,
+  sortOrder integer NOT NULL,
   createdUserId integer NOT NULL,
   createdDate timestamp with time zone NOT NULL DEFAULT now(),
   lastEditorUserId integer NOT NULL,

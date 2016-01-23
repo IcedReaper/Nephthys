@@ -21,7 +21,7 @@ component implements="WWW.interfaces.connector" {
             }
         }
         else if(splitParameter.len() == 0 && ! form.isEmpty() && form.keyExists("searchStatement")) {
-            var searchComponent = application.system.settings.getValueOfKey("searchComponent");
+            var searchComponent = application.system.settings.getValueOfKey("globalSearchModule");
             
             var results = searchComponent.setSearchPhrase(form.searchStatement)
                                          .search()

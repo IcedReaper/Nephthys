@@ -21,7 +21,7 @@ component implements="WWW.interfaces.connector" {
             }
         }
         else if((splitParameter.len() == 0 && ! form.isEmpty()) || splitParameter.len() == 1) {
-            var userListCtrl = createObject("component", "API.com.Nephthys.controller.user.userList").init();
+            var userListCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
             
             if(splitParameter.len() == 1) {
                 var user = userListCtrl.search(splitParameter[1], false);
