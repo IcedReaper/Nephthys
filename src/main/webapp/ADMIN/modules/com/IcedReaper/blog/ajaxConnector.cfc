@@ -100,7 +100,7 @@ component {
                                         required string imageSizes) { // jsonString
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
         var _is = deserializeJSON(arguments.imageSizes);
-        var imageEditor = createObject("component", "API.tools.com.Nephthys.adapt.imageEdit");
+        var imageEditor = application.system.settings.getValueOfKey("imageEditLibrary");
         
         var files = fileUploadAll(blogpost.getAbsolutePath(), "*", "Overwrite");
         

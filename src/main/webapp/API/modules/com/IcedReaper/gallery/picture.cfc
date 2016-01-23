@@ -52,7 +52,7 @@ component {
             fileMove(uploaded.serverDirectory & "/" & uploaded.serverFile, uploaded.serverDirectory & "/" & newFilename);
         }
         
-        var imageEditor = createObject("component", "API.tools.com.Nephthys.adapt.imageEdit");
+        var imageEditor = application.system.settings.getValueOfKey("imageEditLibrary");
         imageEditor.resize(gallery.getAbsolutePath() & "/" & newFilename, 575, gallery.getAbsolutePath() & "/tn_" & newFilename);
         
         variables.pictureFilename   = newFilename;

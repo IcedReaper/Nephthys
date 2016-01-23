@@ -35,7 +35,7 @@ component {
             
             var uploaded = fileUpload(expandPath("/upload/com.Nephthys.user/avatar/"), "avatar", "image/*", "MakeUnique");
             
-            var imageFunctionCtrl = createObject("component", "API.tools.com.Nephthys.adapt.imageEdit");
+            var imageFunctionCtrl = application.system.settings.getValueOfKey("imageEditLibrary");
             imageFunctionCtrl.resize(expandPath("/upload/com.Nephthys.user/avatar/") & uploaded.serverFile, 1024);
             
             variables.avatarFilename = uploaded.serverFile;
