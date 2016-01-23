@@ -89,7 +89,7 @@ component {
     }
     
     remote struct function getRoles() {
-        var permissionHandlerCtrl = createObject("component", "API.tools.com.Nephthys.security.permissionHandler").init();
+        var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
         
         return {
             "success" = true,
@@ -98,7 +98,7 @@ component {
     }
     
     remote struct function getUser(required numeric moduleId) {
-        var permissionHandlerCtrl = createObject("component", "API.tools.com.Nephthys.security.permissionHandler").init();
+        var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
         
         var users = permissionHandlerCtrl.loadUserForModule(arguments.moduleId);
         var userArray = [];
@@ -118,7 +118,7 @@ component {
     }
     
     remote struct function savePermissions(required numeric moduleId, required array permissions) {
-        var permissionHandlerCtrl = createObject("component", "API.tools.com.Nephthys.security.permissionHandler").init();
+        var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
         
         transaction {
             for(var i = 1; i <= arguments.permissions.len(); i++) {

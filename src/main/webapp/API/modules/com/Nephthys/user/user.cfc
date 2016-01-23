@@ -94,7 +94,7 @@ component {
         if(variables.userId == 0 || variables.userId == null)
             return false;
         
-        var permissionHandler = createObject("component", "API.tools.com.Nephthys.security.permissionHandler").init();
+        var permissionHandler = application.system.settings.getValueOfKey("permissionManager");
         
         return permissionHandler.hasPermission(variables.userId, arguments.moduleName, arguments.roleName);
     }

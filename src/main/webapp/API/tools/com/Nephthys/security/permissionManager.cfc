@@ -1,5 +1,5 @@
-component {
-    public permissionHandler function init() {
+component interface="APi.interface.permissionManager" {
+    public permissionManager function init() {
         return this;
     }
     
