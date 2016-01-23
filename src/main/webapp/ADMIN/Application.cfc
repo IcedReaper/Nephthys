@@ -12,8 +12,6 @@ component {
         
         application.security.authenticator = createObject("component", "API.tools.com.Nephthys.security.authenticator").init(); // todo server settings
         
-        application.tools.validator = createObject("component", "API.tools.com.Nephthys.security.validator").init();
-        
         return true;
     }
     

@@ -162,6 +162,6 @@ component implements="WWW.interfaces.connector" {
     }
     
     private boolean function validateEmail(required string eMail) {
-        return arguments.eMail != "" && application.tools.validator.validate(data=arguments.eMail, ruleName="Email");
+        return arguments.eMail != "" && application.system.settings.getValueOfKey("validator").validate(data=arguments.eMail, ruleName="Email");
     }
 }
