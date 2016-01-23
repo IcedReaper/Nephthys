@@ -158,7 +158,9 @@ component implements="WWW.interfaces.connector" {
     }
     
     private boolean function validateUsername(required string username) {
-        return arguments.username != "" && application.security.authenticator.checkForUser(username=arguments.username) == false; // todo
+        var userFilterCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
+        
+        return arguments.username != "" && userFilterCtrl.checkForUser(username=arguments.username) == false;
     }
     
     private boolean function validateEmail(required string eMail) {

@@ -10,8 +10,6 @@ component {
         // components
         application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
         
-        application.security.authenticator = createObject("component", "API.tools.com.Nephthys.security.authenticator").init(); // todo server settings
-        
         return true;
     }
     
@@ -133,7 +131,7 @@ component {
         
         if(session.userId == 0) {
             if(! structIsEmpty(form) && /* referer == loginForm */ true) {
-                var userId = application.security.authenticator.login(form.username, form.password);
+                var userId = application.system.settings.getValueOfKey("authenticator").login(form.username, form.password);
                 if(userId != 0 && userId != null) {
                     session.userId = userId;
                     return true;

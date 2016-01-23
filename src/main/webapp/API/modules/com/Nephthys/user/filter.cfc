@@ -40,4 +40,17 @@ component {
         
         return userArray;
     }
+    
+    public boolean function checkForUser(numeric userId = 0, string username = "") {
+        return new Query().setSQL("SELECT userid
+                                     FROM nephthys_user
+                                    WHERE (userId = :userId OR username = :username)
+                                      AND active = :active")
+                          .addParam(name = "userId",   value = arguments.userId,   cfsqltype = "cf_sql_numeric")
+                          .addParam(name = "username", value = arguments.username, cfsqltype = "cf_sql_varchar")
+                          .addParam(name = "active",   value = '1',                cfsqltype = "cf_sql_bit")
+                          .execute()
+                          .getResult()
+                          .getRecordCount() == 1;
+    }
 }
