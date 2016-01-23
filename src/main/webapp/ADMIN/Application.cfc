@@ -9,6 +9,7 @@ component {
     public boolean function onApplicationStart() {
         // components
         application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
+        application.system.settings.load();
         
         return true;
     }
