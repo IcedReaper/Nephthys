@@ -89,11 +89,12 @@ API
 
 
 // todos afterwards
-// implement classes and controller subfolder????
-// imageEdit set as serverSetting
-// formatter set as serverSetting
-// validator set as serverSetting
-// loginHandler set as serverSetting
-// permissionHandler set as serverSetting
-// errorLogger set as serverSetting
+// imageEdit set as serverSetting - DONE
+// formatter set as serverSetting - DONE
+// validator set as serverSetting - DONE
+// authenticator set as serverSetting - DONE
+// permissionManager set as serverSetting - DONE
+// errorLogger set as serverSetting - DONE
 // implement component for encryption so use of CF standard and own components is possible
+
+// Ctrl pre- or suffix? for name difference from classes
