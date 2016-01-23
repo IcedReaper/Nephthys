@@ -12,22 +12,12 @@ component interface="ADMIN.interfaces.connector" {
     }
     
     public void function render() {
-        var qHeapMemory = getMemoryUsage('heap');
-        var totalHeapMemory = 0;
-        var totalUsedMemory = 0;
-        for(var i = 1; i <= qHeapMemory.getRecordCount(); i++) {
-            totalHeapMemory += qHeapMemory.max[i];
-            totalUsedMemory += qHeapMemory.used[i];
-        }
-        
-        // from bytes to megabytes
-        totalHeapMemory = ceiling(totalHeapMemory / (1024 * 1024));
-        totalUsedMemory = ceiling(totalUsedMemory / (1024 * 1024));
+        var memoryUsageCtrl = createObject("component", "API.modules.com.Nephthys.dashboard.memoryUsage").init();
         
         var memory = {
-            total          = totalHeapMemory,
-            used           = totalUsedMemory,
-            percentageUsed = ceiling((totalUsedMemory / totalHeapMemory) * 100)
+            total          = memoryUsageCtrl.getTotal(),
+            used           = memoryUsageCtrl.getUsed(),
+            percentageUsed = memoryUsageCtrl.getUsedPercentage()
         };
         
         module template     = "/ADMIN/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/dashboard/templates/index.cfm"
