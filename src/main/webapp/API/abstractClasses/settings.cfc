@@ -10,7 +10,7 @@ component {
     
     public settings function setValueOfKey(required string key, required any value) {
         if(variables.settings.keyExists(arguments.key)) {
-            variables.settings[arguments.key].value = convertBeforeSave(arguments.key, arguments.value);
+            variables.settings[arguments.key].rawValue = convertBeforeSave(arguments.key, arguments.value);
         }
         else {
             throw(type = "nephthys.notFound.general", message = "Could not find a setting with the name " & arguments.key);
@@ -105,6 +105,9 @@ component {
             case "enum": {
                 return arguments.value;
             }
+            case "component": {
+                return createObject("component", arguments.value).init();
+            }
         }
     }
     
@@ -165,19 +168,45 @@ component {
                 }
             }
             case "foreignKey": {
-                if(isStruct(variables.settings[arguments.key].enumOptions) && structKeyExists(variables.settings[arguments.key].enumOptions, arguments.value)) {
-                    return arguments.value;
+                if(isStruct(variables.settings[arguments.key].foreignTableOptions)) {
+                    if(lookupKeyInForeignTable(variables.settings[arguments.key].foreignTableOptions, arguments.value)) {
+                        return arguments.value;
+                    }
+                    else {
+                        throw(type = "nephthys.application.invalidFormat", message = "The value for key " & variables.settings[arguments.key].type & " is not within it's foreign table values");
+                    }
                 }
                 else {
-                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & variables.settings[arguments.key].type & " is not within it's foreign table values");
+                    throw(type = "nephthys.application.invalidFormat", message = "The foreign table options are missing");
                 }
             }
             case "enum": {
-                if(isStruct(variables.settings[arguments.key].enumOptions) && structKeyExists(variables.settings[arguments.key].enumOptions, arguments.value)) {
+                if(isStruct(variables.settings[arguments.key].enumOptions) && variables.settings[arguments.key].enumOptions.keyExists(arguments.value)) {
                     return arguments.value;
                 }
                 else {
                     throw(type = "nephthys.application.invalidFormat", message = "The value for key " & variables.settings[arguments.key].type & " is not within it's enum definitions");
+                }
+            }
+            case "component": {
+                if(! arguments.value.find("/")) {
+                    var fileName = replace(arguments.value, ".", "/", "ALL");
+                    if(fileExists(expandPath("/" & fileName & ".cfc"))) {
+                        try {
+                            var cfc = createObject("component", arguments.value).init();
+                            
+                            return arguments.value;
+                        }
+                        catch(any e) {
+                            throw(type = "nephthys.application.invalidResource", message = "The component is invalid. Please be sure that the component has an init method.");
+                        }
+                    }
+                    else {
+                        throw(type = "nephthys.application.invalidResource", message = "The component could not be found. Please be sure that the component is saved here: " & fileName);
+                    }
+                }
+                else {
+                    throw(type = "nephthys.application.invalidFormat", message = "The format of the component name is invalid. Please be sure that you separated the foldernames by dot.");
                 }
             }
         }
@@ -186,14 +215,27 @@ component {
     private string function convertToSaveFormat(required string key) {
         switch(lCase(variables.settings[arguments.key].type)) {
             case "date": {
-                return dateFormat(variables.settings[arguments.key].value, "YYYY-MM-DD");
+                return dateFormat(variables.settings[arguments.key].rawValue, "YYYY-MM-DD");
             }
             case "datetime": {
-                return dateFormat(variables.settings[arguments.key].value, "YYYY-MM-DD") & " " & timeFormat(variables.settings[arguments.key].value, "HH:MM:SS");
+                return dateFormat(variables.settings[arguments.key].rawValue, "YYYY-MM-DD") & " " & timeFormat(variables.settings[arguments.key].rawValue, "HH:MM:SS");
             }
             default: {
-                return variables.settings[arguments.key].value;
+                return variables.settings[arguments.key].rawValue;
             }
         }
+    }
+    
+    private boolean function lookupKeyInForeignTable(required struct foreignTableOptions, required any value) {
+        var ftOptions = arguments.foreignTableOptions;
+        
+        return new Query().setSQL("SELECT " & ftOptions.idField & " id
+                                     FROM " & ftOptions.table & " "
+                                            & ftOptions.condition &
+                                  "   AND " & ftOptions.idField & " = :value")
+                          .addParam(name = "value", value = arguments.value, cfsqltype = ftOptions.idType)
+                          .execute()
+                          .getResult()
+                          .getRecordCount() == 1;
     }
 }

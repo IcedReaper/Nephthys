@@ -20,8 +20,6 @@ component {
     public boolean function onRequestStart(required string targetPage) {
         request.requestType = "";
         
-        checkIfLoggedIn();
-        
         var callInformation = getHttpRequestData();
         if(url.keyExists("restart")) {
             if(callInformation.headers.keyExists("x-restart") && 
@@ -35,6 +33,8 @@ component {
                 onApplicationStart();
             }
         }
+        
+        checkIfLoggedIn();
         
         switch(lcase(right(arguments.targetPage, 3))) {
             case "cfm": {

@@ -11,19 +11,19 @@
                 <div class="form-group row" ng-repeat="(settingName, settingData) in settings"> <!--  | filter: hidden == 'false' -->
                     <label for="{{settingName}}" class="col-sm-5 form-control-label">{{settingData.description}}</label>
                     <div class="col-sm-7">
-                        <input type="input" class="form-control" id="{{settingName}}" maxLength="100" ng-model="settingData.value" ng-if="settingData.type.toLowerCase() == 'number' || settingData.type.toLowerCase() == 'string' || settingData.type.toLowerCase() == 'date' || settingData.type.toLowerCase() == 'datetime'" ng-disabled="settingData.readonly">
-                        <select class="form-control" id="{{settingName}}" ng-model="settingData.value" ng-if="settingData.type.toLowerCase() == 'bit'" ng-disabled="settingData.readonly">
+                        <input type="input" class="form-control" id="{{settingName}}" maxLength="100" ng-model="settingData.rawValue" ng-if="settingData.type.toLowerCase() == 'number' || settingData.type.toLowerCase() == 'string' || settingData.type.toLowerCase() == 'date' || settingData.type.toLowerCase() == 'datetime' || settingData.type.toLowerCase() == 'component'" ng-disabled="settingData.readonly">
+                        <select class="form-control" id="{{settingName}}" ng-model="settingData.rawValue" ng-if="settingData.type.toLowerCase() == 'bit'" ng-disabled="settingData.readonly">
                             <option value="1">Ja</option>
                             <option value="0">Nein</option>
                             <option value="null">null *</option>
                         </select>
-                        <select class="form-control" id="{{settingName}}" ng-model="settingData.value" ng-if="settingData.type.toLowerCase() == 'boolean'" ng-disabled="settingData.readonly">
+                        <select class="form-control" id="{{settingName}}" ng-model="settingData.rawValue" ng-if="settingData.type.toLowerCase() == 'boolean'" ng-disabled="settingData.readonly">
                             <option value="true">Ja</option>
                             <option value="false">Nein</option>
                             <option value="null">null *</option>
                         </select>
-                        <select class="form-control" id="{{settingName}}" ng-model="settingData.value" ng-if="settingData.type.toLowerCase() == 'enum' || settingData.type.toLowerCase() == 'foreignkey' && settingData.enumOptions != null" ng-disabled="settingData.readonly">
-                            <option ng-repeat="(value, name) in settingData.enumOptions" value="{{value}}">{{name}}</option>
+                        <select class="form-control" id="{{settingName}}" ng-model="settingData.rawValue" ng-if="settingData.type.toLowerCase() == 'enum' || settingData.type.toLowerCase() == 'foreignkey' && settingData.enumOptions != null" ng-disabled="settingData.readonly">
+                            <option ng-repeat="(rawValue, name) in settingData.enumOptions" value="{{rawValue}}">{{name}}</option>
                         </select>
                     </div>
                 </div>

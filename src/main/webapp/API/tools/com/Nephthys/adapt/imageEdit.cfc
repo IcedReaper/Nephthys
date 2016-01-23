@@ -1,4 +1,8 @@
 component interface="API.interfaces.imageEdit" {
+    public imageEdit function init() {
+        return this;
+    }
+    
     public void function resize(required string  source,
                                 required numeric width,
                                 required string  target        = "",

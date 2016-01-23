@@ -30,7 +30,7 @@ component {
             if(key != "encryptionMethodId" || key != "encryptionKey") {
                 if(newSettings[key].keyExists("value")) {
                     if(! serverSettings.isKeyReadonly(key)) {
-                        serverSettings.setValueOfKey(key, newSettings[key].value);
+                        serverSettings.setValueOfKey(key, newSettings[key].rawValue);
                     }
                 }
             }

@@ -7,7 +7,7 @@ component extends="API.abstractClasses.settings" {
             }
             
             if(! variables.settings[arguments.key].readonly || (variables.settings[arguments.key].readonly && arguments.force)) {
-                variables.settings[arguments.key].value = convertBeforeSave(arguments.key, arguments.value);
+                variables.settings[arguments.key].rawValue = convertBeforeSave(arguments.key, arguments.value);
             }
         }
         else {
@@ -59,6 +59,8 @@ component extends="API.abstractClasses.settings" {
             }
         }
         
+        loadDetails();
+        
         return this;
     }
     
@@ -72,6 +74,7 @@ component extends="API.abstractClasses.settings" {
             variables.settings[ qGetSettings.key[i] ] = {
                 id                  = qGetSettings.serverSettingId[i],
                 description         = qGetSettings.description[i],
+                rawValue            = qGetSettings.value[i],
                 value               = convertAfterLoad(qGetSettings.value[i], qGetSettings.type[i]),
                 type                = lCase(qGetSettings.type[i]),
                 systemKey           = qGetSettings.systemKey[i],
