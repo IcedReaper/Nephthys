@@ -16,6 +16,7 @@ CREATE TABLE public.icedreaper_gallery_gallery
   introduction character varying(400),
   story text,
   activeStatus boolean NOT NULL DEFAULT TRUE,
+  viewCounter integer NOT NULL DEFAULT 0,
   creatorUserId integer NOT NULL,
   creationDate timestamp with time zone NOT NULL DEFAULT now(),
   lastEditorUserId integer NOT NULL,
@@ -40,6 +41,7 @@ ALTER TABLE icedreaper_gallery_gallery OWNER TO nephthys_admin;
 
 GRANT ALL    ON TABLE icedreaper_gallery_gallery TO nephthys_admin;
 GRANT SELECT ON TABLE icedreaper_gallery_gallery TO nephthys_user;
+grant update(viewCounter) on icedreaper_gallery_gallery to nephthys_user;
 
 CREATE SEQUENCE seq_icedreaper_gallery_picture_id
   INCREMENT 1

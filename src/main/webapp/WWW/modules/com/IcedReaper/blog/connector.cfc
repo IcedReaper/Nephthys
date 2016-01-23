@@ -57,6 +57,9 @@ component implements="WWW.interfaces.connector" {
                 
                 if(blogposts.len() == 1) {
                     var blogpost = blogposts[1];
+                    
+                    blogpost.incrementViewCounter();
+                    
                     request.page.setTitle(blogpost.getHeadline());
                     
                     var commentAdded = checkAndAddComment(blogpost);

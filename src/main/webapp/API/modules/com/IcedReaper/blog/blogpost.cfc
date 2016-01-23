@@ -125,6 +125,20 @@ component {
         
         return this;
     }
+    public blogpost function incrementViewCounter() {
+        variables.viewCounter = new Query().setSQL("UPDATE IcedReaper_blog_blogpost
+                                                       SET viewCounter = viewCounter + 1
+                                                     WHERE blogpostId = :blogpostId;
+                                                    SELECT viewCounter
+                                                      FROM IcedReaper_blog_blogpost
+                                                     WHERE blogpostId = :blogpostId;")
+                                           .addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric")
+                                           .execute()
+                                           .getResult()
+                                           .viewCounter[1];
+        
+        return this;
+    }
     
     // G E T T E R
     public numeric function getBlogpostId() {
@@ -193,6 +207,9 @@ component {
     }
     public boolean function isPublished() {
         return (variables.releaseDate == null || variables.releaseDate < now()) && variables.released;
+    }
+    public numeric function getViewCounter() {
+        return variables.viewCounter;
     }
     
     // C R U D
@@ -365,6 +382,7 @@ component {
                 variables.folderName                 = qBlogpost.folderName[1];
                 variables.comments                   = [];
                 variables.categories                 = [];
+                variables.viewCounter                = qBlogpost.viewCounter[1];
                 
                 loadComments();
                 loadCategories();
@@ -391,6 +409,7 @@ component {
             variables.categories                 = [];
             variables.comments                   = [];
             variables.folderName                 = createUUID();
+            variables.viewCounter                = 0;
         }
     }
     

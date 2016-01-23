@@ -150,6 +150,21 @@ component {
         }
     }
     
+    public gallery function incrementViewCounter() {
+        variables.viewCounter = new Query().setSQL("UPDATE IcedReaper_gallery_gallery
+                                                       SET viewCounter = viewCounter + 1
+                                                     WHERE galleryId = :galleryId;
+                                                    SELECT viewCounter
+                                                      FROM IcedReaper_gallery_gallery
+                                                     WHERE galleryId = :galleryId;")
+                                           .addParam(name = "galleryId", value = variables.galleryId, cfsqltype = "cf_sql_numeric")
+                                           .execute()
+                                           .getResult()
+                                           .viewCounter[1];
+        
+        return this;
+    }
+    
     // G E T T E R
     
     public numeric function getGalleryId() {
@@ -213,6 +228,11 @@ component {
     public string function getAbsolutePath() {
         return expandPath("/upload/com.IcedReaper.gallery/" & variables.folderName);
     }
+    
+    public numeric function getViewCounter() {
+        return variables.viewCounter;
+    }
+    
     /*public boolean function isPublished() {
         return variables.releaseDate == null || variables.releaseDate < now();
     }*/
@@ -364,6 +384,7 @@ component {
                 variables.lastEditDate     = qGallery.lastEditDate[1];
                 variables.pictures         = [];
                 variables.categories       = [];
+                variables.viewCounter      = qGallery.viewCounter[1];
                 
                 loadPictures();
                 loadCategories();
@@ -387,6 +408,7 @@ component {
             variables.lastEditDate     = null;
             variables.pictures         = [];
             variables.categories       = [];
+            variables.viewCounter      = 0;
         }
     }
     

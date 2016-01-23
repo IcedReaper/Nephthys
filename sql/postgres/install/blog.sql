@@ -30,7 +30,6 @@ ALTER TABLE icedreaper_blog_settings OWNER TO nephthys_admin;
 GRANT ALL    ON TABLE icedreaper_blog_settings TO nephthys_admin;
 GRANT SELECT ON TABLE icedreaper_blog_settings TO nephthys_user;
 
-
 CREATE SEQUENCE seq_icedreaper_blog_blogpost_id
   INCREMENT 1
   MINVALUE 1
@@ -51,6 +50,7 @@ CREATE TABLE public.icedreaper_blog_blogpost
   commentsActivated boolean NOT NULL DEFAULT FALSE,
   anonymousCommentAllowed boolean NOT NULL DEFAULT FALSE,
   commentsNeedToGetPublished boolean NOT NULL DEFAULT FALSE,
+  viewCounter integer NOT NULL DEFAULT 0,
   creatorUserId integer NOT NULL,
   creationDate timestamp with time zone NOT NULL DEFAULT now(),
   lastEditorUserId integer NOT NULL,
@@ -76,7 +76,7 @@ ALTER TABLE icedreaper_blog_blogpost OWNER TO nephthys_admin;
 
 GRANT ALL    ON TABLE icedreaper_blog_blogpost TO nephthys_admin;
 GRANT SELECT ON TABLE icedreaper_blog_blogpost TO nephthys_user;
-
+grant update(viewCounter) on icedreaper_blog_blogpost to nephthys_user;
 
 CREATE SEQUENCE seq_icedreaper_blog_comment_id
   INCREMENT 1

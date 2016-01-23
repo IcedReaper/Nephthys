@@ -22,10 +22,8 @@ Allgemein
         2. i10n
 
 Website
-    1. Suche
-        Backend implementieren
-    2. Codeoptimierung
-    3. Userverwaltung ?
+    1. Codeoptimierung
+    2. Userverwaltung ?
 
 Adminbereich
     1. Modulinstallation
@@ -43,7 +41,7 @@ Adminbereich
             1. Check ob alle Module in dem Theme vorhanden sind. Sonst Warnung
     4. Modul-Theme-Management
         Was tun, wenn das Modul in einem Theme nicht vorhanden ist.
-    5. Workflow
+    5. Workflow - benötigt versionierung
     6. DB Dump anbieten
     7. Vorschau
         => Template in ADMIN, welches ein Template in WWW inkludiert, wo dann die richtigen Sachen angezeigt werden; dann halt nur auch schon nicht veröffentlichte Sachen.
