@@ -91,7 +91,7 @@ component {
     
     public void function onError(required any exception) {
         try {
-            var errorLogger = createObject("component", "API.modules.com.Nephthys.error.logger").init();
+            var errorLogger = application.system.settings.getValueOfKey("errorLogger");
             errorLogger.setException(arguments.exception)
                         .save();
             

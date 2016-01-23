@@ -83,7 +83,7 @@ component {
                 arguments.exception.message = "Primary Key violation while creating/updating";
             }
             
-            var errorLogger = createObject("component", "API.modules.com.Nephthys.error.logger").init();
+            var errorLogger = application.system.settings.getValueOfKey("errorLogger");
             errorLogger.setException(arguments.exception)
                         .save();
             
