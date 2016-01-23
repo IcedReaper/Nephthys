@@ -147,7 +147,7 @@ component {
     }
     
     private void function reloadServerSettings() {
-        application.system.settings.loadDetails();
+        application.system.settings.load();
     }
     
     private void function resetPasswordOfAllUsers(required string newSecretKey, required string newAlgorithm,

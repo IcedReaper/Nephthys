@@ -53,10 +53,14 @@
                     fileNames.push(images[i].name);
                 }
                 
-                $scope.blogpost.convertedStory = convContent();
+                var blogpostCopy = {};
+                for(var attrib in $scope.blogpost) {
+                    blogpostCopy[attrib] = $scope.blogpost[attrib];
+                }
+                blogpostCopy.story = convContent();
                 
                 blogService
-                    .save($scope.blogpost, fileNames)
+                    .save(blogpostCopy, fileNames)
                     .then(function (result) {
                         blogService.uploadImages(result.data.blogpostId, images, imageSizes)
                             .then(function(uploadResult) {

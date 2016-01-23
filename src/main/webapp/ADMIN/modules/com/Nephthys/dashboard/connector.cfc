@@ -21,7 +21,7 @@ component interface="ADMIN.interfaces.connector" {
         };
         
         module template     = "/ADMIN/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/dashboard/templates/index.cfm"
-               serverStatus = createObject("component", "API.modules.com.Nephthys.system.settings").init()
+               serverStatus = application.system.settings
                memory       = memory;
     }
     

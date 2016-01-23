@@ -3,8 +3,6 @@ component {
     public settings function init() {
         variables.settings = {};
         
-        loadDetails();
-        
         return this;
     }
     
@@ -21,7 +19,12 @@ component {
     
     public any function getValueOfKey(required string key) {
         if(variables.settings.keyExists(arguments.key)) {
-            return variables.settings[arguments.key].value;
+            if(! variables.settings[arguments.key].alwaysRevalidate) {
+                return variables.settings[arguments.key].value;
+            }
+            else {
+                return convertAfterLoad(variables.settings[arguments.key].rawValue, variables.settings[arguments.key].type);
+            }
         }
         else {
             throw(type = "nephthys.notFound.general", message = "Could not find a setting with the name " & arguments.key);

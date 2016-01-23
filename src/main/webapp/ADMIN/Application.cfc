@@ -9,6 +9,7 @@ component {
     public boolean function onApplicationStart() {
         // components
         application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
+        application.system.settings.load();
         
         return true;
     }
@@ -76,6 +77,7 @@ component {
     }
     
     public void function onError(required any exception) {
+        writeDump(var=arguments.exception, abort=true);
         try {
             // convert some error into a different shape
             if(arguments.exception.type == "Database" && arguments.exception.SQLState == 23505) {

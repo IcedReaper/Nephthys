@@ -6,6 +6,7 @@ component {
     public boolean function onApplicationStart() {
         // components
         application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
+        application.system.settings.load();
         application.page.renderer = createObject("component", "API.modules.com.Nephthys.page.renderer").init();
         
         return true;
@@ -90,6 +91,7 @@ component {
     }
     
     public void function onError(required any exception) {
+        writeDump(var=arguments.exception, abort=true);
         try {
             var errorLogger = application.system.settings.getValueOfKey("errorLogger");
             errorLogger.setException(arguments.exception)
@@ -137,7 +139,7 @@ component {
         request.user = createObject("component", "API.modules.com.Nephthys.user.user").init(session.userId);
         
         if(session.userId == 0) {
-            if(! structIsEmpty(form) && /* referer == loginForm */ true) {
+            if(! structIsEmpty(form) && form.keyExists("username") && form.keyExists("password") && /* check referrrer */ true) {
                 var userId = application.system.settings.getValueOfKey("authenticator").login(form.username, form.password);
                 if(userId != 0 && userId != null) {
                     session.userId = userId;

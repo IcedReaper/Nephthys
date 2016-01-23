@@ -59,14 +59,15 @@ component extends="API.abstractClasses.settings" {
             }
         }
         
-        loadDetails();
+        load();
         
         return this;
     }
     
-    public void function loadDetails() {
-        var qGetSettings = new Query().setSQL("SELECT *
-                                                FROM nephthys_serverSetting")
+    public void function load() {
+        var qGetSettings = new Query().setSQL("  SELECT *
+                                                   FROM nephthys_serverSetting
+                                               ORDER BY sortOrder ASC")
                                      .execute()
                                      .getResult();
         
@@ -75,14 +76,16 @@ component extends="API.abstractClasses.settings" {
                 id                  = qGetSettings.serverSettingId[i],
                 description         = qGetSettings.description[i],
                 rawValue            = qGetSettings.value[i],
-                value               = convertAfterLoad(qGetSettings.value[i], qGetSettings.type[i]),
                 type                = lCase(qGetSettings.type[i]),
                 systemKey           = qGetSettings.systemKey[i],
                 readonly            = qGetSettings.readonly[i],
                 enumOptions         = deserializeJSON(qGetSettings.enumOptions[i]),
                 hidden              = qGetSettings.hidden[i],
-                foreignTableOptions = deserializeJSON(qGetSettings.foreignTableOptions[i])
+                foreignTableOptions = deserializeJSON(qGetSettings.foreignTableOptions[i]),
+                alwaysRevalidate    = qGetSettings.alwaysRevalidate[i]
             };
+            
+            variables.settings[ qGetSettings.key[i] ].value = convertAfterLoad(qGetSettings.value[i], qGetSettings.type[i]);
             
             if(isStruct(variables.settings[ qGetSettings.key[i] ].foreignTableOptions)) {
                 loadForeignTableOptions(qGetSettings.key[i]);
