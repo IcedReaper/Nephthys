@@ -4,7 +4,7 @@ component {
         
         return {
             "success"    = true,
-            "pageVisits" = prepareVisitData(createObject("component", "API.com.Nephthys.controller.statistics.pageVisit").init().get(today, today)),
+            "pageVisits" = prepareVisitData(createObject("component", "API.modules.com.Nephthys.statistics.pageVisit").init().get(today, today)),
             "websiteUrl" = application.system.settings.getValueOfKey("wwwDomain")
         };
     }
@@ -14,13 +14,13 @@ component {
         
         return {
             "success"    = true,
-            "pageVisits" = prepareVisitData(createObject("component", "API.com.Nephthys.controller.statistics.pageVisit").init().get(yesterday, yesterday)),
+            "pageVisits" = prepareVisitData(createObject("component", "API.modules.com.Nephthys.statistics.pageVisit").init().get(yesterday, yesterday)),
             "websiteUrl" = application.system.settings.getValueOfKey("wwwDomain")
         };
     }
     
     remote struct function loginStatistics() {
-        var loginStatisticsCtrl = createObject("component", "API.com.Nephthys.controller.statistics.login").init();
+        var loginStatisticsCtrl = createObject("component", "API.modules.com.Nephthys.statistics.login").init();
         
         return {
             "success"    = true,
@@ -48,8 +48,10 @@ component {
     }
     
     private array function prepareLoginData(required array loginData) {
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
+        
         for(var i = 1; i <= arguments.loginData.len(); i++) {
-            arguments.loginData[i].loginDate = application.tools.formatter.formatDate(arguments.loginData[i].loginDate);
+            arguments.loginData[i].loginDate = formatCtrl.formatDate(arguments.loginData[i].loginDate);
         }
         
         return arguments.loginData;

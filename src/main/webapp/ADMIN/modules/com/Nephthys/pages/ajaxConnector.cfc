@@ -7,7 +7,8 @@ component {
     }
     
     remote struct function getDetails(required numeric pageId) {
-        var page = createObject("component", "API.com.Nephthys.classes.page.page").init(arguments.pageId);
+        var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         return {
             'success' = true,
@@ -24,9 +25,9 @@ component {
                 'region'             = page.getRegion(),
                 'active'             = toString(page.getActiveStatus()),
                 'creator'            = getUserInformation(page.getCreator()),
-                'creationDate'       = application.tools.formatter.formatDate(page.getCreationDate()),
+                'creationDate'       = formatCtrl.formatDate(page.getCreationDate()),
                 'lastEditor'         = getUserInformation(page.getLastEditor()),
-                'lastEditDate'       = application.tools.formatter.formatDate(page.getLastEditDate()),
+                'lastEditDate'       = formatCtrl.formatDate(page.getLastEditDate()),
                 'subPages'           = getSubPages(page.getPageId(), page.getRegion()),
                 "pageStatusId"       = toString(page.getPageStatusId()),
                 "pageStatusName"     = page.getPageStatus().getName()
@@ -46,7 +47,7 @@ component {
                                 required numeric useDynamicSuffixes,
                                 required numeric active,
                                 required numeric pageStatusId) {
-        var page = createObject("component", "API.com.Nephthys.classes.page.page").init(arguments.pageId);
+        var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         
         page.setParentId(arguments.parentId)
             .setLinkText(arguments.linkText)
@@ -73,7 +74,7 @@ component {
     }
     
     remote struct function delete(required numeric pageId) {
-        var page = createObject("component", "API.com.Nephthys.classes.page.page").init(arguments.pageId);
+        var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         page.delete();
         
         return {
@@ -82,7 +83,7 @@ component {
     }
     
     remote struct function activate(required numeric pageId) {
-        var page = createObject("component", "API.com.Nephthys.classes.page.page").init(arguments.pageId);
+        var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         page.setActiveStatus(1)
             .setLastEditorUserId(request.user.getUserId())
             .save();
@@ -93,7 +94,7 @@ component {
     }
     
     remote struct function deactivate(required numeric pageId) {
-        var page = createObject("component", "API.com.Nephthys.classes.page.page").init(arguments.pageId);
+        var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         page.setActiveStatus(0)
             .setLastEditorUserId(request.user.getUserId())
             .save();
@@ -104,9 +105,9 @@ component {
     }
     
     remote struct function loadStatistics(required numeric pageId) {
-        var page = createObject("component", "API.com.Nephthys.classes.page.page").init(arguments.pageId);
+        var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         
-        var pageStatistics = createObject("component", "API.com.Nephthys.controller.statistics.pageVisit").init();
+        var pageStatistics = createObject("component", "API.modules.com.Nephthys.statistics.pageVisit").init();
         var chartData              = prepareVisitData(pageStatistics.getPageStatistics(dateAdd("d", -30, now()), now(), arguments.pageId));
         var chartWithParameterData = prepareVisitDataWithParameter(pageStatistics.getPageStatistcsWithParameter(dateAdd("d", -10, now()), now(), arguments.pageId));
         
@@ -121,7 +122,7 @@ component {
     // STATUS
     
     remote struct function getStatusList() {
-        var pageStatusLoader = createObject("component", "API.com.Nephthys.controller.page.pageStatusLoader").init();
+        var pageStatusLoader = createObject("component", "API.modules.com.Nephthys.page.pageStatusFilter").init();
         
         var pageStatus = pageStatusLoader.load();
         var prepPageStatus = [];
@@ -142,7 +143,7 @@ component {
     }
     
     remote struct function getStatusDetails(required numeric pageStatusId) {
-        var pageStatus = createObject("component", "API.com.Nephthys.classes.page.pageStatus").init(arguments.pageStatusId);
+        var pageStatus = createObject("component", "API.modules.com.Nephthys.page.pageStatus").init(arguments.pageStatusId);
         
         return {
             "success" = true,
@@ -159,7 +160,7 @@ component {
                                       required string  name,
                                       required numeric active,
                                       required numeric offline) {
-        var pageStatus = createObject("component", "API.com.Nephthys.classes.page.pageStatus").init(arguments.pageStatusId);
+        var pageStatus = createObject("component", "API.modules.com.Nephthys.page.pageStatus").init(arguments.pageStatusId);
         
         pageStatus.setName(arguments.name)
                   .setActiveStatus(arguments.active)
@@ -172,7 +173,7 @@ component {
     }
     
     remote struct function deleteStatus(required numeric pageStatusId) {
-        var pageStatus = createObject("component", "API.com.Nephthys.classes.page.pageStatus").init(arguments.pageStatusId);
+        var pageStatus = createObject("component", "API.modules.com.Nephthys.page.pageStatus").init(arguments.pageStatusId);
         
         pageStatus.delete();
         
@@ -182,7 +183,7 @@ component {
     }
     
     remote struct function activateStatus(required numeric pageStatusId) {
-        var pageStatus = createObject("component", "API.com.Nephthys.classes.page.pageStatus").init(arguments.pageStatusId);
+        var pageStatus = createObject("component", "API.modules.com.Nephthys.page.pageStatus").init(arguments.pageStatusId);
         
         pageStatus.setActiveStatus(true)
                   .save();
@@ -193,7 +194,7 @@ component {
     }
     
     remote struct function deactivateStatus(required numeric pageStatusId) {
-        var pageStatus = createObject("component", "API.com.Nephthys.classes.page.pageStatus").init(arguments.pageStatusId);
+        var pageStatus = createObject("component", "API.modules.com.Nephthys.page.pageStatus").init(arguments.pageStatusId);
         
         pageStatus.setActiveStatus(false)
                   .save();
@@ -206,7 +207,8 @@ component {
     // P R I V A T E
     
     private array function getSubPages(required numeric parentId, required string region) {
-        var pageCtrl = createObject("component", "API.com.Nephthys.controller.page.pageList").init();
+        var pageCtrl = createObject("component", "API.modules.com.Nephthys.page.filter").init();
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var pageArray = pageCtrl.getList(arguments.parentId, arguments.region, false);
         
@@ -224,9 +226,9 @@ component {
                     'region'             = pageArray[i].getRegion(),
                     'useDynamicSuffixes' = pageArray[i].getUseDynamicSuffixes(),
                     'creator'            = getUserInformation(pageArray[i].getCreator()),
-                    'creationDate'       = application.tools.formatter.formatDate(pageArray[i].getCreationDate()),
+                    'creationDate'       = formatCtrl.formatDate(pageArray[i].getCreationDate()),
                     'lastEditor'         = getUserInformation(pageArray[i].getLastEditor()),
-                    'lastEditDate'       = application.tools.formatter.formatDate(pageArray[i].getLastEditDate()),
+                    'lastEditDate'       = formatCtrl.formatDate(pageArray[i].getLastEditDate()),
                     'subPages'           = getSubPages(pageArray[i].getPageId(), pageArray[i].getRegion()),
                     'active'             = toString(pageArray[i].getActiveStatus()),
                     "pageStatusId"       = toString(pageArray[i].getPageStatusId()),

@@ -7,7 +7,7 @@
             <p>#attributes.blogpost.getStory()#</p>
         </section>
         <footer>
-            <p><small>Dieser Blogeintrag wurde am #application.tools.formatter.formatDate(attributes.blogpost.getCreationDate())# von <a href="/User/#attributes.blogpost.getCreator().getUsername()#">#attributes.blogpost.getCreator().getUsername()#</a> erstellt.</small></p>
+            <p><small>Dieser Blogeintrag wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.blogpost.getCreationDate())# von <a href="/User/#attributes.blogpost.getCreator().getUsername()#">#attributes.blogpost.getCreator().getUsername()#</a> erstellt.</small></p>
             <cfset categories = attributes.blogpost.getCategories()>
             <p>
                 <cfloop from="1" to="#categories.len()#" index="categoryIndex">

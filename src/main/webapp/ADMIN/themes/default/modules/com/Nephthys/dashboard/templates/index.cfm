@@ -50,7 +50,7 @@
                 <strong>Installationsdatum</strong>
             </div>
             <div class="col-md-9">
-                <p>#application.tools.formatter.formatDate(attributes.serverStatus.getValueOfKey("installDate"))#</p>
+                <p>#application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.serverStatus.getValueOfKey("installDate"))#</p>
             </div>
         </div>
         

@@ -1,0 +1,100 @@
+Todo for this file
+    Check ADMIN and WWW folder for things/logics which can/should be moved to the API folder
+
+New API folder structure
+    _controllerName (Filenames in system without underscore)
+    __classname
+    ___abstactClass
+    ____interface
+
+API
+    definitions
+        com
+            Nephthys
+                i18n.json
+                i10n.json
+                validationRules.json
+    
+    interfaces
+        ____search
+        ____validator
+        ____formatter
+        ____imageSomething
+    
+    abstactClasses
+        ___search
+        ___settings
+    
+    modules
+        com
+            IcedReaper (for example)
+                gallery
+                blog
+                ...
+            ... (Other module authors with their modules)
+            Nephthys
+                dashboard
+                
+                moduleManager => to be renamed to modules - DONE
+                    __module - DONE
+                    _filter => to be renamed from overview - DONE
+                
+                user - DONE
+                    __user
+                    __extendedProperties => to be implemented
+                    _search (Other Branch)
+                    _filter
+                
+                theme
+                    __theme - DONE
+                    _filter - DONE
+                
+                page => to be renamed from pages
+                    __page
+                    __pageStatus
+                    __pageRequest (add loader to this component | we have a new page request for the link /xyz and the class/controller/whatelse will load the page, etc)
+                    _search (Other Branch)
+                    _sitemap
+                    _renderer
+                    _filter
+                
+                serverSettings => system - DONE
+                    _/_settings - DONE
+                    
+                
+                errorLog => error - DONE
+                    __error - DONE
+                    __settings - DONE
+                    _filter - Doesn't exist - needs to be implemented
+                    _logger - DONE
+                    
+                
+                statistics
+                    _login - DONE
+                    _pageVisit - DONE
+                    
+                
+    
+    tools
+        com
+            Nephthys
+                adapt
+                    _formatter - DONE
+                    _imageEdit - DONE
+                security
+                    _validator - DONE
+                    _encryptionMethodLoader (name needs to be updated)
+                    _loginHandler => authenticator - DONE
+                    _permissionHandler (name needs to be updated)
+
+
+// todos afterwards
+// imageEdit set as serverSetting - DONE
+// formatter set as serverSetting - DONE
+// validator set as serverSetting - DONE
+// authenticator set as serverSetting - DONE
+// permissionManager set as serverSetting - DONE
+// errorLogger set as serverSetting - DONE
+// implement component for encryption so use of CF standard and own components is possible
+
+// Ctrl pre- or suffix? for name difference from classes

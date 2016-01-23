@@ -1,8 +1,8 @@
 component {
     remote struct function getList() {
-        var themeLoaderCtrl = createObject("component", "API.com.Nephthys.controller.system.themeLoader").init();
+        var filterCtrl = createObject("component", "API.modules.com.Nephthys.theme.filter").init();
         
-        var themeList = themeLoaderCtrl.getList();
+        var themeList = filterCtrl.getList();
         
         var themeData = [];
         for(var i = 1; i <= themeList.len(); i++) {
@@ -22,7 +22,7 @@ component {
     }
     
     remote struct function getDetails(required numeric themeId) {
-        var theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(arguments.themeId);
+        var theme = createObject("component", "API.modules.com.Nephthys.theme.theme").init(arguments.themeId);
         
         return {
             "success" = true,
@@ -40,7 +40,7 @@ component {
                                 required string  name,
                                 required string  foldername,
                                 required numeric active) {
-        var theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(arguments.themeId);
+        var theme = createObject("component", "API.modules.com.Nephthys.theme.theme").init(arguments.themeId);
         theme.setName(arguments.name);
         
         if(arguments.themeId != 0) {
@@ -67,7 +67,7 @@ component {
     }
     
     remote struct function activate(required numeric themeId) {
-        var theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(arguments.themeId);
+        var theme = createObject("component", "API.modules.com.Nephthys.theme.theme").init(arguments.themeId);
         
         theme.setActiveStatus(1)
              .save();
@@ -78,7 +78,7 @@ component {
     }
     
     remote struct function deactivate(required numeric themeId) {
-        var theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(arguments.themeId);
+        var theme = createObject("component", "API.modules.com.Nephthys.theme.theme").init(arguments.themeId);
         
         if(themeList[i].getThemeId() != application.system.settings.getValueOfKey("defaultThemeId")) {
             theme.setActiveStatus(0)
@@ -94,7 +94,7 @@ component {
     }
     
     remote struct function delete() {
-        var theme = createObject("component", "API.com.Nephthys.classes.system.theme").init(arguments.themeId);
+        var theme = createObject("component", "API.modules.com.Nephthys.theme.theme").init(arguments.themeId);
         
         theme.delete();
         
