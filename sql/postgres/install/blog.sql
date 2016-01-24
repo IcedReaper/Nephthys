@@ -1,5 +1,3 @@
-DROP TABLE icedreaper_blog_settings;
-
 CREATE SEQUENCE seq_icedreaper_blog_setting_id
   INCREMENT 1
   MINVALUE 1
