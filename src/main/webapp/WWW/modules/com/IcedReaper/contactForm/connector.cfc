@@ -24,12 +24,12 @@ component implements="WWW.interfaces.connector" {
                                   .setMessage(form.message);
                 
                 if(request.user.isActive()) {
-                    contactFormRequest.setCreatorUserId(request.user.getUserId())
+                    contactFormRequest.setRequestorUserId(request.user.getUserId())
                                       .setUsername(request.user.getUsername())
                                       .setEmail(request.user.getEmail());
                 }
                 else {
-                    contactFormRequest.setCreatorUserId(0)
+                    contactFormRequest.setRequestorUserId(0)
                                       .setUsername(form.username)
                                       .setEmail(form.email);
                 }

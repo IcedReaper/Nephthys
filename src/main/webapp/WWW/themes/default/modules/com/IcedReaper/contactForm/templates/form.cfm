@@ -1,6 +1,7 @@
+<cfoutput>
 <div class="row">
     <div class="col-sm-12">
-        <h1>Nehmen Sie kontakt mit uns auf</h1>
+        <h1>Nehmen Sie Kontakt mit uns auf</h1>
 
         <p>Hier haben Sie die Möglichkeit mit dem Team hinter dem Nephthys CMS Kontakt aufzunehmen.</p>
         <p>Sie haben Fragen, Anregungen oder ein Problem? Lassen Sie es uns wissen. Wir werden versuchen Sie bei der Lösung zu unterstützen</p>
@@ -56,3 +57,4 @@
         Weitere Kontaktmöglichkeiten
     </div>
 </div>
+</cfoutput>

@@ -1,0 +1,71 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>Übersicht über eingegangene Kontaktanfragen</h1>
+    </div>
+</div>
+
+<h3>Filtern</h3>
+<form class="form-horizontal">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="filterReadStatus" class="col-sm-3 control-label">Gelesen</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="filterReadStatus" ng-model="search.read">
+                        <option value="">Alle</option>
+                        <option value="1">Ja</option>
+                        <option value="0">Nein</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="filterRepliedStatus" class="col-sm-3 control-label">Beantwortet</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="filterRepliedStatus" ng-model="search.replied">
+                        <option value="">Alle</option>
+                        <option value="1">Ja</option>
+                        <option value="0">Nein</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table table-inverse m-t">
+    <thead>
+        <th><i class="fa fa-eye"></i></th>
+        <th><i class="fa fa-envelope"></i></th>
+        <th>Datum</th>
+        <th>Betreff</th>
+        <th>User</th>
+        <th>Antworten</th>
+    </thead>
+    <tbody>
+        <tr ng-repeat="request in requests | filter:search">
+            <td>
+                <i ng-if="request.read == true" class="fa fa-circle text-success" title="Gelesen"></i>
+                <i ng-if="request.read == false" class="fa fa-circle text-danger" title="Ungelesen"></i>
+            </td>
+            <td>
+                <i ng-if="request.replied == true" class="fa fa-circle text-success" title="Beantwortet"></i>
+                <i ng-if="request.replied == false" class="fa fa-circle text-danger" title="Unbeantwortet"></i>
+            </td>
+            <td>
+                <a href="#/{{request.requestId}}">{{request.requestDate}}</a>
+            </td>
+            <td>
+                <a href="#/{{request.requestId}}">{{request.subject}}</a>
+            </td>
+            <td ng-if="request.requestorUserId != 0 && request.requestorUserId != null">
+                <a href="/com.Nephthys.user#/{{request.requestorUserId}}">{{request.userName}}</a>
+            </td>
+            <td ng-if="request.requestorUserId == 0 || request.requestorUserId == null">
+                {{request.userName}}
+            </td>
+            <td>{{request.replyCount}}</td>
+        </tr>
+    </tbody>
+</table>
