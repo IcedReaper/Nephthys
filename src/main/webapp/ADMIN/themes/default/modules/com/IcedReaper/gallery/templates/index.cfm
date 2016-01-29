@@ -1,7 +1,3 @@
-<script type="text/javascript" src="/themes/default/assets/angularJs/angular.min.js"></script>
-<script type="text/javascript" src="/themes/default/assets/angularJs/angular-route.min.js"></script>
-<script type="text/javascript" src="/themes/default/assets/angularJs/$QDecorator.js"></script>
-
 <!--- file upload --->
 <script type="text/javascript" src="/themes/default/assets/angular-fileUpload/ng-file-upload-shim.js"></script>
 <script type="text/javascript" src="/themes/default/assets/angular-fileUpload/ng-file-upload.js"></script>
@@ -21,7 +17,6 @@
 <link rel='stylesheet' href='/themes/default/assets/angular-tagsInput/ng-tags-input.min.css'>
 <script src='/themes/default/assets/angular-tagsInput/ng-tags-input.min.js'></script>
 
-<script type="text/javascript" src="/themes/default/js/globalAngularAjaxSettings.js"></script>
 <!--- app --->
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/gallery/js/galleryApp.js"></script>
 

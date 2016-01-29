@@ -1,7 +1,3 @@
-<script type="text/javascript" src="/themes/default/assets/angularJs/angular.min.js"></script>
-<script type="text/javascript" src="/themes/default/assets/angularJs/angular-route.min.js"></script>
-<script type="text/javascript" src="/themes/default/assets/angularJs/$QDecorator.js"></script>
-
 <!--- file upload --->
 <script type="text/javascript" src="/themes/default/assets/angular-fileUpload/ng-file-upload-shim.js"></script>
 <script type="text/javascript" src="/themes/default/assets/angular-fileUpload/ng-file-upload.js"></script>
@@ -25,7 +21,6 @@
 <script src='/themes/default/assets/angularUI/ui-bootstrap-custom-0.14.3.min.js'></script>
 <script src='/themes/default/assets/angularUI/ui-bootstrap-custom-tpls-0.14.3.min.js'></script>
 
-<script type="text/javascript" src="/themes/default/js/globalAngularAjaxSettings.js"></script>
 <!--- app --->
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/blogApp.js"></script>
 
