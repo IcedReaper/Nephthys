@@ -77,7 +77,6 @@ component {
     }
     
     public void function onError(required any exception) {
-        writeDump(var=arguments.exception, abort=true);
         try {
             // convert some error into a different shape
             if(arguments.exception.type == "Database" && arguments.exception.SQLState == 23505) {
