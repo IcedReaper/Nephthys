@@ -18,6 +18,11 @@
     
     <script src="/themes/default/assets/jQuery/jquery-2.1.4.min.js"></script>
     <script src="/themes/default/assets/bootstrap/js/bootstrap.min.js"></script>
+    
+    <script type="text/javascript" src="/themes/default/assets/angularJs/angular.min.js"></script>
+    <script type="text/javascript" src="/themes/default/assets/angularJs/angular-route.min.js"></script>
+    <script type="text/javascript" src="/themes/default/assets/angularJs/$QDecorator.js"></script>
+    <script type="text/javascript" src="/themes/default/js/globalAngularAjaxSettings.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-dark bg-inverse">

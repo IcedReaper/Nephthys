@@ -1,6 +1,7 @@
 component {
     remote struct function getSettings() {
         var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
+        serverSettings.load();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var settings = duplicate(serverSettings.getAllSettings());

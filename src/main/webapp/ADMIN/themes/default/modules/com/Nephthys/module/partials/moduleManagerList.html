@@ -42,14 +42,13 @@
     </div>
 </form>
 
-<table class="table table-striped m-t">
+<table class="table table-inverse m-t">
     <thead>
         <th>ID</th>
         <th>Modul</th>
         <th>Modulname</th>
         <th>Aktionen</th>
     </thead>
-    <tbody>
     <tbody>
         <tr ng-repeat="module in modules | filter:search">
             <td>{{module.moduleId}}</td>
