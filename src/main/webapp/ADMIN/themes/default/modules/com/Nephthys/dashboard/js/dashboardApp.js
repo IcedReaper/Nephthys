@@ -1,6 +1,4 @@
-var nephthysAdminApp = angular.module("nephthysAdminApp", ["visitService",
-                                                           "loginStatisticsService",
-                                                           "chart.js"]);
+var nephthysAdminApp = angular.module("nephthysAdminApp", ["chart.js"]);
 
 nephthysAdminApp
     .config(["$httpProvider", globalAngularAjaxSettings])
