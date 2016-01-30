@@ -12,6 +12,4 @@
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/theme/js/controller/themeList.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/theme/js/controller/themeDetail.js"></script>
 
-<div ng-app="themeAdmin">
-    <div ng-view></div>
-</div>
+<div ng-view></div>

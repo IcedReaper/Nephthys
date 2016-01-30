@@ -1,7 +1,5 @@
-(function(angular) {
-    var visitCtrl = angular.module('visitCtrl', ["chart.js", "visitService"]);
-    
-    visitCtrl.controller('visitCtrl', function ($scope, visitService, $q) {
+nephthysAdminApp
+    .controller('visitCtrl', ["$scope", "$q", "visitService", function ($scope, $q, visitService) {
         var refreshVisitData = function (visitData, type) {
             if(visitData.success) {
                 $scope[type + 'VisitChart'] = {
@@ -42,5 +40,4 @@
         };
         
         $scope.refresh();
-    });
-}(window.angular));
+    }]);

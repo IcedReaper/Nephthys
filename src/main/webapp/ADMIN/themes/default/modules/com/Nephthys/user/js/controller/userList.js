@@ -1,7 +1,5 @@
-(function(angular) {
-    var userListCtrl = angular.module('userListCtrl', ["userAdminService"]);
-    
-    userListCtrl.controller('userListCtrl', function ($scope, userService) {
+nephthysAdminApp
+    .controller('userListCtrl', ["$scope", "userService", function ($scope, userService) {
         $scope.activate = function (userId) {
             userService
                 .activate(userId)
@@ -32,5 +30,4 @@
             active: ""
         };
         $scope.refresh();
-    });
-}(window.angular));
+    }]);

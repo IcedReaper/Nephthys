@@ -1,7 +1,5 @@
-(function(angular) {
-    var pagesDetailCtrl = angular.module('pagesDetailCtrl', ["chart.js", "ngSanitize", "pagesAdminService"]);
-    
-    pagesDetailCtrl.controller('pagesDetailCtrl', function ($scope, $routeParams, $q, pagesService) {
+nephthysAdminApp
+    .controller('pagesDetailCtrl', ["$scope", "$routeParams", "$q", "pagesService", function ($scope, $routeParams, $q, pagesService) {
         /*
         var prepareContentForHtml = function () {
                 var htmlContent = prepareKnotForHtml(JSON.parse($scope.page.content));
@@ -96,5 +94,4 @@
         };
         
         $scope.load();
-    });
-}(window.angular));
+    }]);

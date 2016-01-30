@@ -22,9 +22,10 @@
     <script type="text/javascript" src="/themes/default/assets/angularJs/angular.min.js"></script>
     <script type="text/javascript" src="/themes/default/assets/angularJs/angular-route.min.js"></script>
     <script type="text/javascript" src="/themes/default/assets/angularJs/$QDecorator.js"></script>
+    
     <script type="text/javascript" src="/themes/default/js/globalAngularAjaxSettings.js"></script>
 </head>
-<body>
+<body ng-app="nephthysAdminApp">
     <nav class="navbar navbar-dark navbar-fixed-top bg-inverse">
         <div class="container-fluid">
             <a class="navbar-brand" href="/dashboard/">Adminpanel - IcedReaper's CMS "Nephthys"</a>
@@ -39,6 +40,10 @@
                         <div class="dropdown-divider"></div>
                         <a href="?logout" class="dropdown-item"><i class="fa fa-sign-out"></i> Ausloggen</a>
                     </div>
+                </div>
+                
+                <div class="pull-right" ng-controller="sessionTimeoutCtrl" ng-show="secondsRemaining">
+                    <a class="navbar-brand">Verbleibende Sessionzeit: {{secondsRemaining | secondsToDateTime | date:'mm:ss'}}</a>
                 </div>
             </cfif>
         </div>
@@ -66,6 +71,8 @@
     <footer>
         &copy; IcedReaper 2014-#year(now())#
     </footer>
+    
+    <script type="text/javascript" src="/themes/default/js/sessionTimeout.js"></script>
 </body>
 </html>
 </cfoutput>

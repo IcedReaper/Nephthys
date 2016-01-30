@@ -42,6 +42,4 @@
 
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/settings.js"></script>
 
-<div ng-app="blogAdmin">
-    <div ng-view></div>
-</div>
+<div ng-view></div>

@@ -1,7 +1,5 @@
-(function(angular) {
-    var statusDetailCtrl = angular.module('statusDetailCtrl', ["pageStatusService"]);
-    
-    statusDetailCtrl.controller('statusDetailCtrl', function ($scope, $routeParams, $q, pageStatusService) {
+nephthysAdminApp
+    .controller('statusDetailCtrl', ["$scope", "$routeParams", "$q", "pageStatusService", function ($scope, $routeParams, $q, pageStatusService) {
         $scope.load = function () {
             pageStatusService
                 .getDetails($routeParams.pageStatusId)
@@ -17,5 +15,4 @@
         };
         
         $scope.load();
-    });
-}(window.angular));
+    }]);

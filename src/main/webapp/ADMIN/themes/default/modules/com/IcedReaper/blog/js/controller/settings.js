@@ -1,7 +1,5 @@
-(function(angular) {
-    var settingsCtrl = angular.module('settingsCtrl', ["blogSettingsService"]);
-    
-    settingsCtrl.controller('settingsCtrl', function ($scope, settingsService) {
+nephthysAdminApp
+    .controller('settingsCtrl', ["$scope", "settingsService", function ($scope, settingsService) {
         $scope.load = function () {
             settingsService
                 .get()
@@ -17,5 +15,4 @@
         
         $scope.settings = {};
         $scope.load();
-    });
-}(window.angular));
+    }]);

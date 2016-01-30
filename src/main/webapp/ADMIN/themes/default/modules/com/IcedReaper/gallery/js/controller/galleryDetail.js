@@ -1,7 +1,5 @@
-(function(angular) {
-    var galleryDetailCtrl = angular.module('galleryDetailCtrl', ["galleryAdminService"]);
-    
-    galleryDetailCtrl.controller('galleryDetailCtrl', function ($scope, $rootScope, $routeParams, $q, galleryService) {
+nephthysAdminApp
+    .controller('galleryDetailCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "galleryService", function ($scope, $rootScope, $routeParams, $q, galleryService) {
         $rootScope.$$listeners['gallery-loaded'] = null; // as the different js-files will be invoken again and again the event listeners get applied multiple times, so we reset them here
             
             var activePage = "detail";
@@ -45,5 +43,4 @@
         
         $rootScope.galleryId = $routeParams.galleryId;
         $scope.initialized = false;
-    });
-}(window.angular));
+    }]);

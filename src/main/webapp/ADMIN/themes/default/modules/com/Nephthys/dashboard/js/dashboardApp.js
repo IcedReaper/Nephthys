@@ -1,6 +1,5 @@
-(function (angular) {
-    var dashboardApp = angular.module("dashboardApp", ["visitCtrl", "loginStatisticsCtrl"]);
-    
-    dashboardApp
-        .config(["$httpProvider", globalAngularAjaxSettings]);
-}(window.angular));
+var nephthysAdminApp = angular.module("nephthysAdminApp", ["chart.js"]);
+
+nephthysAdminApp
+    .config(["$httpProvider", globalAngularAjaxSettings])
+    .config(window.$QDecorator);

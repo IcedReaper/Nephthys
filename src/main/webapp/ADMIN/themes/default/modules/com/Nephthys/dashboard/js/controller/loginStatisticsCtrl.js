@@ -1,7 +1,5 @@
-(function(angular) {
-    var loginStatisticsCtrl = angular.module('loginStatisticsCtrl', ["loginStatisticsService"]);
-    
-    loginStatisticsCtrl.controller('loginStatisticsCtrl', function ($scope, loginStatisticsService, $q) {
+nephthysAdminApp
+    .controller('loginStatisticsCtrl', ["$scope", "$q", "loginStatisticsService", function ($scope, $q, loginStatisticsService) {
         $scope.refresh = function () {
             loginStatisticsService
                 .getList()
@@ -12,5 +10,4 @@
         };
         
         $scope.refresh();
-    });
-}(window.angular));
+    }]);

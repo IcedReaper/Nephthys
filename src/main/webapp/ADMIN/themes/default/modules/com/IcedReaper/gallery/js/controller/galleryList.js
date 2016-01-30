@@ -1,7 +1,5 @@
-(function(angular) {
-    var galleryListCtrl = angular.module('galleryListCtrl', ["galleryAdminService"]);
-    
-    galleryListCtrl.controller('galleryListCtrl', function ($scope, galleryService) {
+nephthysAdminApp
+    .controller('galleryListCtrl', ["$scope", "galleryService", function ($scope, galleryService) {
         $scope.activate = function (galleryId) {
             galleryService
                 .activate(galleryId)
@@ -32,5 +30,4 @@
             active: ""
         };
         $scope.refresh();
-    });
-}(window.angular));
+    }]);

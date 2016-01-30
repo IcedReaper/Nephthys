@@ -1,7 +1,5 @@
-(function(angular) {
-    var themeListCtrl = angular.module('themeListCtrl', ["themeAdminService"]);
-    
-    themeListCtrl.controller('themeListCtrl', function ($scope, themeService) {
+nephthysAdminApp
+    .controller('themeListCtrl', ["$scope", "themeService", function ($scope, themeService) {
         $scope.activate = function (themeId) {
             themeService
                 .activate(themeId)
@@ -32,5 +30,4 @@
             active: ""
         };
         $scope.refresh();
-    });
-}(window.angular));
+    }]);

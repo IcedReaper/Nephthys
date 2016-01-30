@@ -7,6 +7,4 @@
 <!--- controller --->
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/system/js/controller/serverSettingsDetail.js"></script>
 
-<div ng-app="serverSettingsAdmin">
-    <div ng-view></div>
-</div>
+<div ng-view></div>

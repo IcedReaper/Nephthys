@@ -1,7 +1,5 @@
-(function(angular) {
-    var userPermissionCtrl = angular.module('userPermissionCtrl', ["userAdminService"]);
-    
-    userPermissionCtrl.controller('userPermissionCtrl', function ($scope, $rootScope, $routeParams, userService, $q) {
+nephthysAdminApp
+    .controller('userPermissionCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "userService", function ($scope, $rootScope, $routeParams, $q, userService) {
         var userId = null;
         
         $scope.load = function () {
@@ -29,5 +27,4 @@
             
             $scope.load();
         });
-    });
-}(window.angular));
+    }]);

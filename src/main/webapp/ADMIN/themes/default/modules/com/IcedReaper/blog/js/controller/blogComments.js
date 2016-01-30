@@ -1,7 +1,5 @@
-(function(angular) {
-    var blogCommentsCtrl = angular.module('blogCommentsCtrl', ["blogAdminService"]);
-    
-    blogCommentsCtrl.controller('blogCommentsCtrl', function ($scope, $rootScope, $routeParams, blogService, $q) {
+nephthysAdminApp
+    .controller('blogCommentsCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "blogService", function ($scope, $rootScope, $routeParams, $q, blogService) {
         var blogpostId = null;
         
         $scope.load = function () {
@@ -33,5 +31,4 @@
             
             $scope.load();
         });
-    });
-}(window.angular));
+    }]);

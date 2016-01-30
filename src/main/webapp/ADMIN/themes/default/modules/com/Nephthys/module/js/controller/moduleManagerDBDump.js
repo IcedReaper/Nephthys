@@ -1,7 +1,4 @@
-(function(angular) {
-    var moduleManagerDBDumpCtrl = angular.module('moduleManagerDBDumpCtrl', ["moduleManagerService"]);
-    
-    moduleManagerDBDumpCtrl.controller('moduleManagerDBDumpCtrl', function ($scope, $routeParams, moduleManagerService) {
+nephthysAdminApp
+    .controller('moduleManagerDBDumpCtrl', ["$scope", "$routeParams", "moduleManagerService", function ($scope, $routeParams, moduleManagerService) {
         
-    });
-}(window.angular));
+    }]);

@@ -1,7 +1,5 @@
-(function(angular) {
-    var blogListCtrl = angular.module('blogListCtrl', ["blogAdminService"]);
-    
-    blogListCtrl.controller('blogListCtrl', function ($scope, blogService) {
+nephthysAdminApp
+    .controller('blogListCtrl', ["$scope", "blogService", function ($scope, blogService) {
         $scope.activate = function (blogpostId) {
             blogService
                 .activate(blogpostId)
@@ -33,5 +31,4 @@
             creatorUserId: ""
         };
         $scope.refresh();
-    });
-}(window.angular));
+    }]);
