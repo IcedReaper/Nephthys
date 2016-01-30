@@ -1,7 +1,5 @@
-(function(angular) {
-    var contactFormDetailCtrl = angular.module('contactFormDetailCtrl', ["contactFormService"]);
-    
-    contactFormDetailCtrl.controller('contactFormDetailCtrl', function ($scope, $routeParams, $q, contactFormService) {
+nephthysAdminApp
+    .controller('contactFormDetailCtrl', ["$scope", "$routeParams", "$q", "contactFormService", function ($scope, $routeParams, $q, contactFormService) {
         $scope.load = function () {
             $q.all([
                 contactFormService.getDetails($routeParams.requestId),
@@ -27,5 +25,4 @@
         };
         
         $scope.load();
-    });
-}(window.angular));
+    }]);

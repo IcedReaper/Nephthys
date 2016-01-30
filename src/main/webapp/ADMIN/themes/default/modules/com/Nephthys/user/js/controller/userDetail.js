@@ -1,7 +1,5 @@
-(function(angular) {
-    var userDetailCtrl = angular.module('userDetailCtrl', ["userAdminService"]);
-    
-    userDetailCtrl.controller('userDetailCtrl', function ($scope, $rootScope, $routeParams, $q, userService) {
+nephthysAdminApp
+    .controller('userDetailCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "userService", function ($scope, $rootScope, $routeParams, $q, userService) {
         $scope.load = function() {
             $q.all([
                 userService.getDetails($routeParams.userId),
@@ -42,5 +40,4 @@
         };
         
         $scope.load();
-    });
-}(window.angular));
+    }]);

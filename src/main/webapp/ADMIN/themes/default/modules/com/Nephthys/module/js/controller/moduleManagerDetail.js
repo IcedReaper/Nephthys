@@ -1,7 +1,5 @@
-(function(angular) {
-    var moduleManagerDetailCtrl = angular.module('moduleManagerDetailCtrl', ["moduleManagerService"]);
-    
-    moduleManagerDetailCtrl.controller('moduleManagerDetailCtrl', function ($scope, $routeParams, moduleManagerService) {
+nephthysAdminApp
+    .controller('moduleManagerDetailCtrl', ["$scope", "$routeParams", "moduleManagerService", function ($scope, $routeParams, moduleManagerService) {
         moduleManagerService
             .getDetails($routeParams.moduleId)
             .then(function (moduleDetails) {
@@ -12,5 +10,4 @@
             moduleManagerService
                 .save($scope.module);
         };
-    });
-}(window.angular));
+    }]);

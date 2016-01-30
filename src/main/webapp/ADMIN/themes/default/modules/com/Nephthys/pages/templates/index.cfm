@@ -17,6 +17,4 @@
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/statusDetail.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/pagesStatistics.js"></script>
 
-<div ng-app="pagesAdmin">
-    <div ng-view></div>
-</div>
+<div ng-view></div>

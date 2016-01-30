@@ -1,7 +1,5 @@
-(function(angular) {
-    var contactFormListCtrl = angular.module('contactFormListCtrl', ["contactFormService"]);
-    
-    contactFormListCtrl.controller('contactFormListCtrl', function ($scope, contactFormService) {
+nephthysAdminApp
+    .controller('contactFormListCtrl', ["$scope", "contactFormService", function ($scope, contactFormService) {
         $scope.refresh = function() {
             contactFormService
                 .getList()
@@ -16,5 +14,4 @@
             replied: ""
         };
         $scope.refresh();
-    });
-}(window.angular));
+    }]);

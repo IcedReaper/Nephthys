@@ -1,7 +1,5 @@
-(function(angular) {
-    var blogStatisticsCtrl = angular.module('blogStatisticsCtrl', ["chart.js", "blogAdminService"]);
-    
-    blogStatisticsCtrl.controller('blogStatisticsCtrl', function ($scope, $rootScope, $routeParams, blogService, $q) {
+nephthysAdminApp
+    .controller('blogStatisticsCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "blogService", function ($scope, $rootScope, $routeParams, $q, blogService) {
         var blogpostId = null;
         $scope.load = function () {
             if(blogpostId !== null && ! isNaN(parseInt($scope.dayCount, 10))) {
@@ -30,5 +28,4 @@
             
             $scope.load();
         });
-    });
-}(window.angular));
+    }]);

@@ -58,6 +58,8 @@ var globalAngularAjaxSettings = function($httpProvider) {
                         }
                     }
                     
+                    $rootScope.$emit('session-refreshed', {});
+                    
                     return response.data;
                 }
             },

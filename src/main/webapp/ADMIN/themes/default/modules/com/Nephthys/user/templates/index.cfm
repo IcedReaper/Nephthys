@@ -13,6 +13,4 @@
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/user/js/controller/userDetail.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/user/js/controller/userPermission.js"></script>
 
-<div ng-app="userAdmin">
-    <div ng-view></div>
-</div>
+<div ng-view></div>

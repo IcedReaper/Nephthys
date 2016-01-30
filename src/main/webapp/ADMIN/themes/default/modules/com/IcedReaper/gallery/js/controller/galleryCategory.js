@@ -1,7 +1,5 @@
-(function(angular) {
-    var galleryCategoryCtrl = angular.module('galleryCategoryCtrl', ["galleryAdminService"]);
-    
-    galleryCategoryCtrl.controller('galleryCategoryCtrl', function ($scope, $rootScope, $routeParams, galleryService, $q) {
+nephthysAdminApp
+    .controller('galleryCategoryCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "galleryService", function ($scope, $rootScope, $routeParams, $q, galleryService) {
         var galleryId = null;
         
         $scope.load = function () {
@@ -46,5 +44,4 @@
             
             $scope.load();
         });
-    });
-}(window.angular));
+    }]);

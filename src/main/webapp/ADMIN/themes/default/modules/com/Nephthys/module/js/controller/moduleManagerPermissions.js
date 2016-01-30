@@ -1,7 +1,5 @@
-(function(angular) {
-    var moduleManagerPermissionCtrl = angular.module('moduleManagerPermissionCtrl', ["moduleManagerService"]);
-    
-    moduleManagerPermissionCtrl.controller('moduleManagerPermissionCtrl', function ($scope, $routeParams, moduleManagerService, $q) {
+nephthysAdminApp
+    .controller('moduleManagerPermissionCtrl', ["$scope", "$routeParams", "$q", "moduleManagerService", function ($scope, $routeParams, $q, moduleManagerService) {
         $scope.load = function () {
             $q.all([
                 moduleManagerService.getDetails($routeParams.moduleId),
@@ -23,5 +21,4 @@
         };
         
         $scope.load();
-    });
-}(window.angular));
+    }]);

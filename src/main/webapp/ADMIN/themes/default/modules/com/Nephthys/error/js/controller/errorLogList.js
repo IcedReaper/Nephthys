@@ -1,7 +1,5 @@
-(function(angular) {
-    var errorLogListCtrl = angular.module('errorLogListCtrl', ["errorLogAdminService"]);
-    
-    errorLogListCtrl.controller('errorLogListCtrl', function ($scope, errorLogService) {
+nephthysAdminApp
+    .controller('errorLogListCtrl', ["$scope", "errorLogService", function ($scope, errorLogService) {
         $scope.refresh = function () {
             errorLogService
                 .getList()
@@ -15,5 +13,4 @@
             active: ""
         };
         $scope.refresh();
-    });
-}(window.angular));
+    }]);

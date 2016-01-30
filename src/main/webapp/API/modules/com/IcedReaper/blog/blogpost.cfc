@@ -392,7 +392,7 @@ component {
             }
         }
         else {
-            var defaultSettings = new settings();
+            var defaultSettings = new settings().load();
             
             variables.headline                   = "";
             variables.link                       = "";

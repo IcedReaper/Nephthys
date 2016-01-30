@@ -1,7 +1,5 @@
-(function(angular) {
-    var UploadImageModalCtrl = angular.module('UploadImageModalCtrl', ["blogAdminService"]);
-    
-    UploadImageModalCtrl.controller('UploadImageModalCtrl', function($scope, $modalInstance, Upload){
+nephthysAdminApp
+    .controller('UploadImageModalCtrl', ["$scope", "$modalInstance", function($scope, $modalInstance) {
         $scope.progress = 0;
         $scope.image = null;
 
@@ -9,5 +7,4 @@
             // implement image resizing
             $modalInstance.close($scope.image);
         };
-    });
-}(window.angular));
+    }]);

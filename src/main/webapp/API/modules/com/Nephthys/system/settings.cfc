@@ -64,7 +64,7 @@ component extends="API.abstractClasses.settings" {
         return this;
     }
     
-    public void function load() {
+    public settings function load() {
         var qGetSettings = new Query().setSQL("  SELECT *
                                                    FROM nephthys_serverSetting
                                                ORDER BY sortOrder ASC")
@@ -91,6 +91,7 @@ component extends="API.abstractClasses.settings" {
                 loadForeignTableOptions(qGetSettings.key[i]);
             }
         }
+        return this;
     }
     
     private void function loadForeignTableOptions(required string key) {

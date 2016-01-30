@@ -1,7 +1,5 @@
-(function(angular) {
-    var categoryDetailCtrl = angular.module('categoryDetailCtrl', ["galleryAdminCategoryService"]);
-    
-    categoryDetailCtrl.controller('categoryDetailCtrl', function ($scope, $routeParams, $q, categoryService) {
+nephthysAdminApp
+    .controller('categoryDetailCtrl', ["$scope", "$routeParams", "$q", "categoryService", function ($scope, $routeParams, $q, categoryService) {
         // load
         $scope.load = function() {
             categoryService
@@ -26,5 +24,4 @@
         
         // init
         $scope.load();
-    });
-}(window.angular));
+    }]);

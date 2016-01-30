@@ -1,7 +1,5 @@
-(function(angular) {
-    var pagesListCtrl = angular.module('pagesListCtrl', ["pagesAdminService"]);
-    
-    pagesListCtrl.controller('pagesListCtrl', function ($scope, pagesService) {
+nephthysAdminApp
+    .controller('pagesListCtrl', ["$scope", "pagesService", function ($scope, pagesService) {
         $scope.activate = function (pageId) {
             pagesService
                 .activate(pageId)
@@ -32,5 +30,4 @@
             active: ""
         };
         $scope.refresh();
-    });
-}(window.angular));
+    }]);

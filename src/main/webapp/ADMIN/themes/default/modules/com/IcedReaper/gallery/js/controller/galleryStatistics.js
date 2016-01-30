@@ -1,7 +1,5 @@
-(function(angular) {
-    var galleryStatisticsCtrl = angular.module('galleryStatisticsCtrl', ["chart.js", "galleryAdminService"]);
-    
-    galleryStatisticsCtrl.controller('galleryStatisticsCtrl', function ($scope, $rootScope, $routeParams, galleryService, $q) {
+nephthysAdminApp
+    .controller('galleryStatisticsCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "galleryService", function ($scope, $rootScope, $routeParams, $q, galleryService) {
         var galleryId = null;
         $scope.load = function () {
             if(galleryId !== null && ! isNaN(parseInt($scope.dayCount, 10))) {
@@ -30,5 +28,4 @@
             
             $scope.load();
         });
-    });
-}(window.angular));
+    }]);

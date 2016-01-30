@@ -1,7 +1,5 @@
-(function(angular) {
-    var categoryListCtrl = angular.module('categoryListCtrl', ["galleryAdminCategoryService"]);
-    
-    categoryListCtrl.controller('categoryListCtrl', function ($scope, categoryService) {
+nephthysAdminApp
+    .controller('categoryListCtrl', ["$scope", "categoryService", function ($scope, categoryService) {
         $scope.delete = function (categoryId) {
             categoryService
                 .delete(categoryId)
@@ -18,5 +16,4 @@
         
         $scope.categories = [];
         $scope.refresh();
-    });
-}(window.angular));
+    }]);

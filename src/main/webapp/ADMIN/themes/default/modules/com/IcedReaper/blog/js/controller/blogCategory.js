@@ -1,7 +1,5 @@
-(function(angular) {
-    var blogCategoryCtrl = angular.module('blogCategoryCtrl', ["blogAdminService"]);
-    
-    blogCategoryCtrl.controller('blogCategoryCtrl', function ($scope, $rootScope, $routeParams, blogService, $q) {
+nephthysAdminApp
+    .controller('blogCategoryCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "blogService", function ($scope, $rootScope, $routeParams, $q, blogService) {
         var blogpostId = null;
         
         $scope.load = function () {
@@ -46,5 +44,4 @@
             
             $scope.load();
         });
-    });
-}(window.angular));
+    }]);

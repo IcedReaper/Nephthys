@@ -1,7 +1,5 @@
-(function(angular) {
-    var pagesStatisticsCtrl = angular.module('pagesStatisticsCtrl', ["chart.js", "pagesAdminService"]);
-    
-    pagesStatisticsCtrl.controller('pagesStatisticsCtrl', function ($scope, $routeParams, pagesService) {
+nephthysAdminApp
+    .controller('pagesStatisticsCtrl', ["$scope", "$routeParams", "pagesService", function ($scope, $routeParams, pagesService) {
         $scope.refresh = function () {
             pagesService
                 .loadStatistics($routeParams.pageId)
@@ -22,5 +20,4 @@
         };
         
         $scope.refresh();
-    });
-}(window.angular));
+    }]);

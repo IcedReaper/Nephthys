@@ -70,7 +70,7 @@
         </div>
     </div>
     
-    <div ng-app="dashboardApp">
+    <div>
         <div class="card card-block">
             <div ng-controller="visitCtrl">
                 <div class="container-fluid">

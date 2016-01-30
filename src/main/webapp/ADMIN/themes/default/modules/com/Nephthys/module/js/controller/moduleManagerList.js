@@ -1,7 +1,5 @@
-(function(angular) {
-    var moduleManagerListCtrl = angular.module('moduleManagerListCtrl', [ "moduleManagerService" ]);
-    
-    moduleManagerListCtrl.controller('moduleManagerListCtrl', function ($scope, moduleManagerService) {
+nephthysAdminApp
+    .controller('moduleManagerListCtrl', ["$scope", "moduleManagerService", function ($scope, moduleManagerService) {
         $scope.activate = function (moduleId) {
             moduleManagerService
                 .activate(moduleId)
@@ -33,5 +31,4 @@
             active: ""
         };
         $scope.refresh();
-    });
-}(window.angular));
+    }]);

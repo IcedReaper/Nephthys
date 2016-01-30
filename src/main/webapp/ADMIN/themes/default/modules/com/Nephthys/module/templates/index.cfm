@@ -10,6 +10,4 @@
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/module/js/controller/moduleManagerPermissions.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/module/js/controller/moduleManagerDBDump.js"></script>
 
-<div ng-app="moduleManager">
-    <div ng-view></div>
-</div>
+<div ng-view></div>

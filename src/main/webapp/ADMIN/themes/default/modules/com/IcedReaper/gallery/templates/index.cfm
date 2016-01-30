@@ -34,6 +34,4 @@
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/gallery/js/controller/categoryList.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/gallery/js/controller/categoryDetail.js"></script>
 
-<div ng-app="galleryAdmin">
-    <div ng-view></div>
-</div>
+<div ng-view></div>

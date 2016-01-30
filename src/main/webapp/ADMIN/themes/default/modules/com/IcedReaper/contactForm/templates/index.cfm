@@ -8,6 +8,4 @@
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/contactForm/js/controller/contactFormList.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/contactForm/js/controller/contactFormDetail.js"></script>
 
-<div ng-app="contactFormAdmin">
-    <div ng-view></div>
-</div>
+<div ng-view></div>

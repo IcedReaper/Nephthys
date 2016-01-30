@@ -1,7 +1,5 @@
-(function(angular) {
-    var statusListCtrl = angular.module('statusListCtrl', ["pageStatusService"]);
-    
-    statusListCtrl.controller('statusListCtrl', function ($scope, pageStatusService) {
+nephthysAdminApp
+    .controller('statusListCtrl', ["$scope", "pageStatusService", function ($scope, pageStatusService) {
         $scope.activate = function (pageStatusId) {
             pageStatusService
                 .activate(pageStatusId)
@@ -32,5 +30,4 @@
             active: ""
         };
         $scope.refresh();
-    });
-}(window.angular));
+    }]);

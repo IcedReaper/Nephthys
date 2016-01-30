@@ -1,7 +1,5 @@
-(function(angular) {
-    var themeDetailCtrl = angular.module('themeDetailCtrl', ["themeAdminService"]);
-    
-    themeDetailCtrl.controller('themeDetailCtrl', function ($scope, $routeParams, themeService) {
+nephthysAdminApp
+    .controller('themeDetailCtrl', ["$scope", "$routeParams", "themeService", function ($scope, $routeParams, themeService) {
         themeService
             .getDetails($routeParams.themeId)
             .then(function (themeDetails) {
@@ -22,5 +20,4 @@
                     $scope.theme = result.data;
                 });
         };
-    });
-}(window.angular));
+    }]);
