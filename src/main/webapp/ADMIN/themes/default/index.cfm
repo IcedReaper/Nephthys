@@ -25,7 +25,7 @@
     <script type="text/javascript" src="/themes/default/js/globalAngularAjaxSettings.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-dark bg-inverse">
+    <nav class="navbar navbar-dark navbar-fixed-top bg-inverse">
         <div class="container-fluid">
             <a class="navbar-brand" href="/dashboard/">Adminpanel - IcedReaper's CMS "Nephthys"</a>
             
