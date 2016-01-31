@@ -28,6 +28,11 @@ component {
         
         return this;
     }
+    public user function setThemeId(required numeric themeId) {
+        variables.themeId = arguments.themeId;
+        
+        return this;
+    }
     
     public user function uploadAvatar() {
         if(variables.userId != 0) {
