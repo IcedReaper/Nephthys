@@ -2,7 +2,7 @@ nephthysAdminApp
     .controller('galleryDetailCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "galleryService", function ($scope, $rootScope, $routeParams, $q, galleryService) {
         $rootScope.$$listeners['gallery-loaded'] = null; // as the different js-files will be invoken again and again the event listeners get applied multiple times, so we reset them here
             
-            var activePage = "detail";
+        var activePage = "detail";
         // load
         $scope.load = function() {
             return galleryService

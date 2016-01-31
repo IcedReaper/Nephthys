@@ -14,7 +14,7 @@
                 <img class="card-img-top" src="#attributes.member[memberIndex].getUser().getAvatarPath()#">
                 <div class="card-block">
                     <h4 class="card-title">
-                        <a href="/User/#attributes.member[memberIndex].getUser().getUserName()#">#attributes.member[memberIndex].getUser().getUserName()#</a>
+                        <a href="/User/#attributes.member[memberIndex].getUser().getUserName()#"><cfif attributes.member[memberIndex].getUser().getExtendedProperty("realName") NEQ null>#attributes.member[memberIndex].getUser().getExtendedProperty("realName")#<cfelse>#attributes.member[memberIndex].getUser().getUserName()#</cfif></a>
                     </h4>
                     <cfif attributes.member[memberIndex].getUser().getExtendedProperty("description") NEQ null>
                         <p class="card-text">

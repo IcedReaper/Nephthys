@@ -13,7 +13,6 @@ component {
         
         return this;
     }
-    
     public member function setSortId(required numeric sortId) {
         variables.sortId = arguments.sortId;
         
@@ -21,37 +20,44 @@ component {
     }
     
     // GETTER
-    public number function getUserId () {
+    public number function getMemberId() {
+        return variables.memberId;
+    }
+    public number function getUserId() {
         return variables.userId;
     }
-    
+    public number function getSortId() {
+        return variables.sortId;
+    }
     public user function getUser() {
         if(! variables.keyExists("user")) {
             variables.user = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.userId);
         }
         return user;
     }
-    
     public number function getCreatorUserId () {
         return variables.creatorUserId;
     }
-    
     public user function getCreatorUser() {
         if(! variables.keyExists("creator")) {
             variables.creator = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.userId);
         }
         return creator;
     }
-    
+    public date function getCreationDate() {
+        return variables.creationDate;
+    }
     public number function getLastEditorUserId () {
         return variables.lastEditorUserId;
     }
-    
     public user function getLastEditorUser() {
         if(! variables.keyExists("lastEditor")) {
             variables.lastEditor = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.lastEditorUserId);
         }
         return lastEditor;
+    }
+    public date function getLastEditDate() {
+        return variables.lastEditDate;
     }
     
     // CRUD
@@ -73,7 +79,13 @@ component {
                     qInsMember.addParam(name = "sortId", value = arguments.sortId, cfsqltype = "cf_sql_numeric");
                 }
                 else {
-                    sql &= "               (SELECT MAX(sortId) + 1 FROM icedReaper_teamOverview_member), ";
+                    sql &= "               (SELECT CASE 
+                                                     WHEN MAX(sortId) IS NOT NULL THEN
+                                                       MAX(sortId)
+                                                     ELSE
+                                                       0
+                                                   END + 1
+                                              FROM icedReaper_teamOverview_member), ";
                 }
                 sql &= "                   :actualUserId,
                                            :actualUserId
@@ -81,6 +93,7 @@ component {
                            SELECT currval('seq_icedreaper_teamOverview_memberId' :: regclass) newMemberId;";
                 
                 variables.memberId = qInsMember.setSQL(sql)
+                                               .addParam(name = "userId",       value = variables.userId,         cfsqltype = "cf_sql_numeric")
                                                .addParam(name = "actualUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                                .execute()
                                                .getResult()
@@ -93,7 +106,7 @@ component {
                                            lastEditDate     = now()
                                      WHERE memberId = :memberId")
                            .addParam(name = "memberId",         value = variables.memberId,       cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "sortId",           value = arguments.sortId,         cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "sortId",           value = variables.sortId,         cfsqltype = "cf_sql_numeric")
                            .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                            .execute();
             }
@@ -101,8 +114,8 @@ component {
         else {
             throw(type = "nephthys.application.notAllowed", message = "You are not allowed to add an anonymous team member");
         }
+        return this;
     }
-    
     public void function delete() {
         new Query().setSQL("DELETE FROM icedReaper_teamOverview_member
                                   WHERE memberId = :memberId")
