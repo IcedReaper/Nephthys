@@ -64,8 +64,23 @@ nephthysAdminApp
                 });
             },
             
-            getThemes: function() {
+            getThemes: function () {
                 return $http.get("/ajax/com/Nephthys/user/getThemes");
+            },
+            
+            getExtProperties: function (userId) {
+                return $http.get("/ajax/com/Nephthys/user/getExtProperties", {
+                    params: {
+                        userId: userId
+                    }
+                });
+            },
+            
+            saveExtProperties: function (userId, extProperties) {
+                return $http.post("/ajax/com/Nephthys/user/saveExtProperties", {
+                    userId: userId,
+                    extProperties: extProperties
+                });
             }
         };
     });

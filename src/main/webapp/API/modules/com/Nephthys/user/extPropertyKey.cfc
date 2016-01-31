@@ -61,7 +61,7 @@ component {
     
     // CRUD
     public extPropertyKey function save() {
-        if((variables.extPropertyKeyId == 0 || variables.extPropertyKeyId == null) || (variables.keyName == "" || variables.keyName == null)) {
+        if((variables.extPropertyKeyId == 0 || variables.extPropertyKeyId == null) && (variables.keyName == "" || variables.keyName == null)) {
             variables.extPropertyKeyId = new Query().setSQL("INSERT INTO Nephthys_user_extPropertyKey
                                                                          (
                                                                              keyName,
@@ -107,7 +107,7 @@ component {
     
     // PRIVATE
     private void function loadDetails() {
-        if((variables.extPropertyKeyId == 0 || variables.extPropertyKeyId == null) || (variables.keyName == "" || variables.keyName == null)) {
+        if((variables.extPropertyKeyId == 0 || variables.extPropertyKeyId == null) && (variables.keyName == "" || variables.keyName == null)) {
             variables.description      = "";
             variables.creatorUserId    = null;
             variables.createdDate      = now();

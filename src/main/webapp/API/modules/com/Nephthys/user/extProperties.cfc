@@ -74,17 +74,18 @@ component {
         if(variables.extProperties.keyExists(arguments.key)) {
             if(! arguments.onlyPublic || arguments.onlyPublic && variables.extProperties[arguments.key].public) {
                 return {
-                    public      = variables.extProperties[arguments.key].public,
-                    value       = variables.extProperties[arguments.key].value,
-                    description = variables.extProperties[arguments.key].description
+                    extPropertyId = variables.extProperties[arguments.key].extPropertyId,
+                    public        = variables.extProperties[arguments.key].public,
+                    value         = variables.extProperties[arguments.key].value,
+                    description   = variables.extProperties[arguments.key].description
                 };
             }
             else {
-                return null;
+                return {};
             }
         }
         else {
-            return null;
+            return {};
         }
     }
     public string function getValue(required string key, boolean onlyPublic = true) {
@@ -119,9 +120,10 @@ component {
         for(var key in variables.extProperties) {
             if(! arguments.onlyPublic || arguments.onlyPublic && variables.extProperties[key].public) {
                 properties.append({
-                    public      = variables.extProperties[key].public,
-                    value       = variables.extProperties[key].value,
-                    description = variables.extProperties[key].description
+                    extPropertyId = variables.extProperties[key].extPropertyId,
+                    public        = variables.extProperties[key].public,
+                    value         = variables.extProperties[key].value,
+                    description   = variables.extProperties[key].description
                 });
             }
         }
@@ -129,7 +131,7 @@ component {
         return properties;
     }
     
-    public array function getAllDetailed() {
+    public struct function getAllDetailed() {
         return duplicate(variables.extProperties);
     }
     
@@ -152,10 +154,10 @@ component {
                                                                     :public
                                                                 );
                                                    SELECT currval('seq_nephthys_user_extProperty_id' :: regclass) newId;")
-                                           .addParam(name = "userId",           value = variables.userId,                       cfsqltype = "cf_sql_numeric")
-                                           .addParam(name = "extPropertyKeyId", value = variables.newProps[i].extPropertyKeyid, cfsqltype = "cf_sql_varchar")
-                                           .addParam(name = "value",            value = variables.extProperties[prop].value,    cfsqltype = "cf_sql_varchar")
-                                           .addParam(name = "public",           value = variables.extProperties[prop].public,   cfsqltype = "cf_sql_bit")
+                                           .addParam(name = "userId",           value = variables.userId,                               cfsqltype = "cf_sql_numeric")
+                                           .addParam(name = "extPropertyKeyId", value = variables.extProperties[prop].extPropertyKeyid, cfsqltype = "cf_sql_numeric")
+                                           .addParam(name = "value",            value = variables.extProperties[prop].value,            cfsqltype = "cf_sql_varchar")
+                                           .addParam(name = "public",           value = variables.extProperties[prop].public,           cfsqltype = "cf_sql_bit")
                                            .execute()
                                            .getResult()
                                            .newId[1];
@@ -171,7 +173,7 @@ component {
                                          WHERE extPropertyId = :extPropertyId
                                            AND userId        = :userId")
                               .addParam(name = "value",         value = variables.extProperties[prop].value,         cfsqltype = "cf_sql_varchar")
-                              .addParam(name = "public",        value = variables.extProperties[prop].public,        cfsqltype = "cf_sql_varchar")
+                              .addParam(name = "public",        value = variables.extProperties[prop].public,        cfsqltype = "cf_sql_bit")
                               .addParam(name = "extPropertyId", value = variables.extProperties[prop].extPropertyId, cfsqltype = "cf_sql_numeric")
                               .addParam(name = "userId",        value = variables.userId,                            cfsqltype = "cf_sql_numeric")
                               .execute();
@@ -194,6 +196,8 @@ component {
         else {
             throw(type = "nephthys.application.notAllowed", message = "Cannot save the extended user properties to an undefined user");
         }
+        
+        return this;
     }
     
     // PRIVATE
