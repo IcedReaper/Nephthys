@@ -71,3 +71,18 @@ h6 {
         color: $highlight-color;
     }
 }
+
+.card {
+    .card-img-top {
+        min-width: 100%;
+        max-width: 100;
+        width: 100%;
+    }
+}
+
+.container,
+.container-fluid {
+    &.highlight {
+        background: #0A1C2A;
+    }
+}

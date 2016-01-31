@@ -25,7 +25,7 @@
     
     <script type="text/javascript" src="/themes/default/js/globalAngularAjaxSettings.js"></script>
 </head>
-<body ng-app="nephthysAdminApp">
+<body<cfif request.user.getUserId() NEQ 0> ng-app="nephthysAdminApp"</cfif>>
     <nav class="navbar navbar-dark navbar-fixed-top bg-inverse">
         <div class="container-fluid">
             <a class="navbar-brand" href="/dashboard/">Adminpanel - IcedReaper's CMS "Nephthys"</a>
@@ -72,7 +72,9 @@
         &copy; IcedReaper 2014-#year(now())#
     </footer>
     
-    <script type="text/javascript" src="/themes/default/js/sessionTimeout.js"></script>
+    <cfif request.user.getUserId() NEQ 0>
+        <script type="text/javascript" src="/themes/default/js/sessionTimeout.js"></script>
+    </cfif>
 </body>
 </html>
 </cfoutput>

@@ -44,6 +44,23 @@ component {
         return variables.settings;
     }
     
+    public string function getValueOfKeyFromForeignTable(required string key) {
+        if(variables.settings[ arguments.key ].type == "foreignKey" && variables.settings[ arguments.key ].foreignTableOptions != "") {
+            var ftOptions = variables.settings[ arguments.key ].foreignTableOptions;
+            
+            return  new Query().setSQL("SELECT " & ftOptions.valueField & " v
+                                          FROM " & ftOptions.table & "  
+                                         WHERE " & ftOptions.idField & " = :id ")
+                               .addParam(name = "id", value = variables.settings[arguments.key].rawValue, cfsqltype = ftOptions.IDType)
+                               .execute()
+                               .getResult()
+                               .v[1];
+        }
+        else {
+            throw(type = "nephthys.application.invalidFormat", message = "The setting behind key " & arguments.key & " is not a foreign key option");
+        }
+    }
+    
     private any function convertAfterLoad(required any value, required string type) {
         switch(lCase(arguments.type)) {
             case "bit": {
@@ -51,7 +68,7 @@ component {
                     return arguments.value;
                 }
                 else {
-                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & arguments.type & " does not match it's type");
+                    throw(type = "nephthys.application.invalidFormat", message = "The value for type " & arguments.type & " does not match it's type");
                 }
             }
             case "number": {
@@ -59,7 +76,7 @@ component {
                     return lsParseNumber(arguments.value);
                 }
                 else {
-                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & arguments.type & " does not match it's type");
+                    throw(type = "nephthys.application.invalidFormat", message = "The value for type " & arguments.type & " does not match it's type");
                 }
             }
             case "string": {
@@ -70,7 +87,7 @@ component {
                     return arguments.value;
                 }
                 else {
-                    throw(type = "nephthys.application.invalidFormat", message = "The value for key " & arguments.type & " does not match it's type");
+                    throw(type = "nephthys.application.invalidFormat", message = "The value for type " & arguments.type & " does not match it's type");
                 }
             }
             case "date": {

@@ -24,6 +24,7 @@ Allgemein
     15. user => username überprüfen
     16. user => blacklist erstellen | Innerhalb des Username überprüfen
     17. F5-Raids unterbinden
+    18. Beim anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
 
 Website
     1. Codeoptimierung
@@ -55,23 +56,23 @@ Adminbereich
     11. Dashboard untermodule in andere Dateien verschieben ggf mehr übersicht schaffen
     12. Assets weiter optimieren
 
-Module ( in eigenen Repos/Projekten )
+Module (in eigenen Repos/Projekten)
     1. Gallery
-        1. Move plugin into own project
-        2. Weitere Möglichkeiten
+        1. Weitere Möglichkeiten
             Search
             Comments
             Release Date
+            Bewertungen
     2. Blog
         Mögliche Verbesserungen:
             File resizing after upload is only applied by width and height attributes
-            F5-Raiding beim Abschicken des Kommentars möglich
+            F5-Raiding beim Abschicken des Kommentars möglich (Siehe Allgemein 17)
         Comments
             Nested comments
         Adaptionen in der Übersicht
             Kalenderübersicht hinzufügen => Klick auf Datum => zeigt alle Posts des Tages
     3. Reviewsystem
-    4. Teamübersicht
+    4. Referenzen
 
 Optimierungen
     1. Angularcode auf gleiche Basis bringen - Guter Teil passiert.
@@ -79,9 +80,5 @@ Optimierungen
     3. CreatorUserId und LastEditUserId übergeben anstatt in der Klasse direkt verwenden?
     4. Settings der unterschiedlichen Module und des Systems verbinden
     5. Nach weiteren DB-Enums Ausschau halten
-
-
-Idee:
-Module loader implementieren
-in jenem sind für gewisse Sachen Module hinterlegt, die man austauschen kann. z.B. Search Komponente (Interface erforderlich)
-Dadurch kann man z.B. die normale Suche durch eine Solr Suchkomponente ersetzen, ohne im Code rumfummeln zu müssen.
+    6. Foreign Key Indices setzen
+    7, Aktuell gibt es sowohl creationDate als auch createdDate => gleichziehen!!!

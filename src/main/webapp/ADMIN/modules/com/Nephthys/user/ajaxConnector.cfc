@@ -41,7 +41,7 @@ component {
                                 required string  password,
                                 required numeric themeId) {
         var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
-        var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.controller.encryptionMethodLoader").init();
+        var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.security.encryptionMethodLoader").init();
         
         if(arguments.userId == 0) {
             user.setUsername(arguments.userName);
@@ -53,7 +53,7 @@ component {
         
         if(trim(arguments.password) != "") {
             user.setPassword(encrypt(arguments.password,
-                                     application.system.settings.getValueOfKey("encryption")),
+                                     application.system.settings.getValueOfKeyFromForeignTable("encryptionMethodId")),
                                      encryptionMethodLoader.getAlgorithm(application.system.settings.getValueOfKey("encryptionMethodId")));
         }
         
@@ -187,6 +187,63 @@ component {
         };
     }
     
+    remote array function getExtProperties(required numeric userId) {
+        var extProperties = [];
+        var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
+        var extPropertyKeyLoader = createObject("component", "API.modules.com.Nephthys.user.extPropertyKeyLoader").init();
+        var objExtProperties = user.getExtProperties();
+        var extPropertyKeys = extPropertyKeyLoader.load();
+        
+        var extPropertyId = 0;
+        var value = "";
+        var public = 0;
+        var prop = {};
+        
+        for(var i = 1; i <= extPropertyKeys.len(); ++i) {
+            prop = objExtProperties.get(extPropertyKeys[i].getKeyName(), false);
+            
+            if(! prop.isEmpty()) {
+                extPropertyId = prop.extPropertyId;
+                value         = prop.value;
+                public        = prop.public;
+            }
+            else {
+                extPropertyId = 0;
+                value         = "";
+                public        = 0;
+            }
+            
+            extProperties.append({
+                extPropertyId    = extPropertyId,
+                extPropertyKeyId = extPropertyKeys[i].getExtPropertyKeyId(),
+                value            = value,
+                public           = toString(public),
+                description      = extPropertyKeys[i].getDescription()
+            });
+        }
+        
+        return extProperties;
+    }
+    
+    remote boolean function saveExtProperties(required numeric userId, required array extProperties) {
+        var extProperties = createObject("API.modules.com.Nephthys.user.extProperties").init(arguments.userId);
+        for(var i = 1; i <= arguments.extProperties.len(); ++i) {
+            var extPropertyKey = createObject("component", "API.modules.com.Nephthys.user.extPropertyKey").init(arguments.extProperties[i].extPropertyKeyId);
+            
+            if(arguments.extProperties[i].value != "") {
+                extProperties.set(extPropertyKey.getKeyName(), arguments.extProperties[i].value, arguments.extProperties[i].public);
+            }
+            else{
+                if(arguments.extProperties[i].extPropertyId != 0) {
+                    extProperties.remove(extPropertyKey.getKeyName());
+                }
+            }
+        }
+        extProperties.save();
+        
+        return true;
+    }
+    
     // P R I V A T E   M E T H O D S
     
     private struct function prepareDetailStruct(required user userObject) {
@@ -196,7 +253,7 @@ component {
             "email"      = arguments.userObject.getEmail(),
             "active"     = toString(arguments.userObject.getActiveStatus()),
             "password"   = "      ",
-            "avatar"     = "/upload/com.Nephthys.user/avatar/" & arguments.userObject.getAvatarFilename(),
+            "avatar"     = arguments.userObject.getAvatarPath(false),
             "actualUser" = arguments.userObject.getUserId() == request.user.getUserId(),
             "themeId"    = toString(arguments.userObject.getThemeId())
         };

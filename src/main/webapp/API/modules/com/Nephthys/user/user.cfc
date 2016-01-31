@@ -28,6 +28,11 @@ component {
         
         return this;
     }
+    public user function setThemeId(required numeric themeId) {
+        variables.themeId = arguments.themeId;
+        
+        return this;
+    }
     
     public user function uploadAvatar() {
         if(variables.userId != 0) {
@@ -78,12 +83,17 @@ component {
     public string function getAvatarFilename() {
         return variables.avatarFilename;
     }
-    public string function getAvatarPath() {
+    public string function getAvatarPath(boolean returnAnonymous = true) {
         if(variables.avatarFilename != "" && variables.avatarFilename != null) {
             return "/upload/com.Nephthys.user/avatar/" & variables.avatarFilename;
         }
         else {
-            return "/themes/"&request.user.getTheme().getFolderName() & "/img/" & request.user.getTheme().getAnonymousAvatarFilename();
+            if(arguments.returnAnonymous) {
+                return "/themes/"&request.user.getTheme().getFolderName() & "/img/" & request.user.getTheme().getAnonymousAvatarFilename();
+            }
+            else {
+                return "";
+            }
         }
     }
     
@@ -97,6 +107,10 @@ component {
         var permissionHandler = application.system.settings.getValueOfKey("permissionManager");
         
         return permissionHandler.hasPermission(variables.userId, arguments.moduleName, arguments.roleName);
+    }
+    
+    public extProperties function getExtProperties() {
+        return variables.extProperties;
     }
     
     // C R U D
@@ -125,7 +139,7 @@ component {
                                           .addParam(name = "password",       value = variables.password,                                          cfsqltype = "cf_sql_varchar")
                                           .addParam(name = "active",         value = variables.active,                                            cfsqltype = "cf_sql_bit")
                                           .addParam(name = "themeId",        value = application.system.settings.getValueOfKey("defaultThemeId"), cfsqltype = "cf_sql_numeric")
-                                          .addParam(name = "avatarFilename", value = variables.avatarFilename,                                    cfsqltype = "cf_sql_varchar")
+                                          .addParam(name = "avatarFilename", value = variables.avatarFilename,                                    cfsqltype = "cf_sql_varchar", null = (variables.avatarFilename == "" || variables.avatarFileName == null))
                                           .execute()
                                           .getResult()
                                           .newUserId[1];
@@ -141,7 +155,7 @@ component {
                        .addParam(name = "eMail",          value = variables.eMail,          cfsqltype = "cf_sql_varchar")
                        .addParam(name = "password",       value = variables.password,       cfsqltype = "cf_sql_varchar")
                        .addParam(name = "active",         value = variables.active,         cfsqltype = "cf_sql_bit")
-                       .addParam(name = "avatarFilename", value = variables.avatarFilename, cfsqltype = "cf_sql_varchar")
+                       .addParam(name = "avatarFilename", value = variables.avatarFilename, cfsqltype = "cf_sql_varchar", null = (variables.avatarFilename == "" || variables.avatarFileName == null))
                        .execute();
             
             if(variables.keyExists("oldAvatarFilename") && variables.oldAvatarFilename != "" && variables.oldAvatarFilename != null && fileExists(expandPath("/upload/com.Nephthys.user/avatar/") & oldAvatarFilename)) {
@@ -201,6 +215,6 @@ component {
             variables.avatarFilename   = null;
         }
         
-        variables.extendedProperties = createObject("component", "extendedProperties").init(variables.userId);
+        variables.extProperties = new extProperties(variables.userId);
     }
 }

@@ -102,6 +102,72 @@ INSERT INTO nephthys_user
                 1
             );
 
+CREATE SEQUENCE seq_nephthys_user_extPropertyKey_id
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 65535
+  START 1
+  CACHE 1;
+ALTER SEQUENCE seq_nephthys_user_extPropertyKey_id OWNER TO nephthys_admin;
+
+CREATE TABLE nephthys_user_extPropertyKey
+(
+  extPropertyKeyId integer NOT NULL DEFAULT nextval('seq_nephthys_user_extPropertyKey_id'::regclass),
+  keyName character varying(50) NOT NULL,
+  description character varying(200) NOT NULL,
+  creatorUserId integer NOT NULL,
+  createdDate timestamp with time zone NOT NULL DEFAULT now(),
+  lastEditorUserId integer NOT NULL,
+  lastEditDate  timestamp with time zone NOT NULL DEFAULT now(),
+  
+  CONSTRAINT PK_nephthys_user_extPropertyKey_id PRIMARY KEY (extPropertyKeyId),
+  CONSTRAINT FK_nephthys_user_extPropertyKey_creatorUserId    FOREIGN KEY (creatorUserId)    REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL,
+  CONSTRAINT FK_nephthys_user_extPropertyKey_lastEditorUserId FOREIGN KEY (lastEditorUserId) REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE UNIQUE INDEX UK_nephthys_user_extPropertyKey_name ON nephthys_user_extPropertyKey(lower(keyName));
+  
+ALTER TABLE nephthys_user_extPropertyKey OWNER TO nephthys_admin;
+
+GRANT ALL    ON TABLE nephthys_user_extPropertyKey TO nephthys_admin;
+GRANT SELECT ON TABLE nephthys_user_extPropertyKey TO nephthys_user;
+
+CREATE SEQUENCE seq_nephthys_user_extProperty_id
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER SEQUENCE seq_nephthys_user_extProperty_id OWNER TO nephthys_admin;
+
+CREATE TABLE nephthys_user_extProperty
+(
+  extPropertyId integer NOT NULL DEFAULT nextval('seq_nephthys_user_extProperty_id'::regclass),
+  userId integer NOT NULL,
+  extPropertyKeyId integer NOT NULL,
+  value character varying(255) NOT NULL,
+  public boolean NOT NULL DEFAULT FALSE,
+  
+  CONSTRAINT PK_nephthys_user_extProperty_id PRIMARY KEY (extPropertyId),
+  CONSTRAINT FK_nephthys_user_extProperty_keyId  FOREIGN KEY (extPropertyKeyId) REFERENCES nephthys_user_extPropertyKey (extPropertyKeyId) ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT FK_nephthys_user_extProperty_userId FOREIGN KEY (userId)             REFERENCES nephthys_user (userId)                              ON UPDATE NO ACTION ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE        INDEX FKI_nephthys_user_extProperty_userId ON nephthys_user_extProperty(userId);
+CREATE UNIQUE INDEX UK_nephthys_user_extProperty_userKey ON nephthys_user_extProperty(userId, extPropertyKeyId);
+  
+ALTER TABLE nephthys_user_extProperty OWNER TO nephthys_admin;
+
+GRANT ALL    ON TABLE nephthys_user_extProperty TO nephthys_admin;
+GRANT SELECT ON TABLE nephthys_user_extProperty TO nephthys_user;
+
+
 /* ~~~~~~~~~~~~~~~~~~ E N C R Y P T M E T H O D ~~~~~~~~~~~~~~~~~~ */
 
 CREATE SEQUENCE seq_nephthys_encryptionMethod_id
@@ -203,20 +269,20 @@ CREATE TABLE nephthys_serverSetting
   hidden boolean NOT NULL DEFAULT FALSE,
   alwaysRevalidate boolean NOT NULL DEFAULT FALSE,
   sortOrder integer NOT NULL,
-  createdUserId integer NOT NULL,
+  creatorUserId integer NOT NULL,
   createdDate timestamp with time zone NOT NULL DEFAULT now(),
   lastEditorUserId integer NOT NULL,
   lastEditDate  timestamp with time zone NOT NULL DEFAULT now(),
   
   CONSTRAINT PK_nephthys_serverSetting_id PRIMARY KEY (serverSettingId),
-  CONSTRAINT FK_nephthys_serverSettings_setUserId        FOREIGN KEY (createdUserId)    REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL,
+  CONSTRAINT FK_nephthys_serverSettings_creatorUserId    FOREIGN KEY (creatorUserId)    REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL,
   CONSTRAINT FK_nephthys_serverSettings_lastEditorUserId FOREIGN KEY (lastEditorUserId) REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE SET NULL
 )
 WITH (
   OIDS = FALSE
 );
 
-CREATE UNIQUE INDEX UK_nephthys_serverSetting_name    ON nephthys_serverSetting(lower(key));
+CREATE UNIQUE INDEX UK_nephthys_serverSetting_name ON nephthys_serverSetting(lower(key));
   
 ALTER TABLE nephthys_serverSetting OWNER TO nephthys_admin;
 

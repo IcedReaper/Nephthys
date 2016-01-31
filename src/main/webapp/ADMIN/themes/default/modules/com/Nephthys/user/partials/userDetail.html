@@ -57,7 +57,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <h3>Aktuelles Avatar</h3>
-                    <img alt="user avatar" class="img-fluid" ng-src="{{user.avatar}}">
+                    <img alt="user avatar" class="img-fluid" ng-src="{{user.avatar}}" ng-if="user.avatar">
                 </div>
                 <div class="col-md-6" ng-if="user.actualUser">
                     <h3>Neues Avatar</h3>
@@ -77,8 +77,8 @@
         </div>
     </div>
 </div>
-<div class="row" ng-controller="userPermissionCtrl" ng-show="user.userId != 0">
-    <div class="col-md-6">
+<div class="row" ng-show="user.userId != 0">
+    <div class="col-md-6" ng-controller="userPermissionCtrl">
         <div class="card card-block">
             <h3>Berechtigungen</h3>
             
@@ -90,6 +90,41 @@
                         <option ng-repeat="role in roles" value="{{role.roleId}}">{{role.name}}</option>
                     </select>
                 </fieldset>
+                
+                <button ng-click="save()" class="btn btn-success"><i class="fa fa-floppy-o"></i> Speichern</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-6" ng-controller="userExtPropertiesCtrl">
+        <div class="card card-block">
+            <h3>Zusätzliche Angaben</h3>
+            
+            <form novalidate>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th>Wert</th>
+                            <th>Öffentlich</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="form-group" ng-repeat="extProperty in extProperties">
+                            <td>
+                                {{extProperty.description}}
+                            </td>
+                            <td>
+                                <input type="text" maxlength="255" ng-model="extProperty.value">
+                            </td>
+                            <td>
+                                <select ng-model="extProperty.public">
+                                    <option value="1">Ja</option>
+                                    <option value="0">Nein</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
                 
                 <button ng-click="save()" class="btn btn-success"><i class="fa fa-floppy-o"></i> Speichern</button>
             </form>

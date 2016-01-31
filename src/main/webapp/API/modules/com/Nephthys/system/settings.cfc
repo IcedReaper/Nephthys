@@ -42,10 +42,13 @@ component extends="API.abstractClasses.settings" {
                     // update only non readonly or forced settings
                     if(! variables.settings[key].readonly || (variables.settings[key].readonly && variables.settings[key].keyExists("forced"))) {
                         new Query().setSQL("UPDATE nephthys_serverSetting
-                                               SET value = :value
+                                               SET value = :value,
+                                                   lastEditorUserId = :userId,
+                                                   lastEditDate = now()
                                              WHERE key = :key")
-                                   .addParam(name = "value", value = convertToSaveFormat(key), cfsqltype = "cf_sql_varchar")
-                                   .addParam(name = "key",   value = key,                      cfsqltype = "cf_sql_varchar")
+                                   .addParam(name = "value",  value = convertToSaveFormat(key), cfsqltype = "cf_sql_varchar")
+                                   .addParam(name = "key",    value = key,                      cfsqltype = "cf_sql_varchar")
+                                   .addparam(name = "userId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                    .execute();
                     }
                 }
