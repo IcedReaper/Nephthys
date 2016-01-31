@@ -1,3 +1,3 @@
 <cfoutput>
-<div class="row">#arguments.childContent#</div>
+<div class="row">#attributes.childContent#</div>
 </cfoutput>
