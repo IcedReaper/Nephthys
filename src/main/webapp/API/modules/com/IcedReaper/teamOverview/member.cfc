@@ -40,7 +40,7 @@ component {
     }
     public user function getCreatorUser() {
         if(! variables.keyExists("creator")) {
-            variables.creator = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.userId);
+            variables.creator = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.creatorUserId);
         }
         return creator;
     }

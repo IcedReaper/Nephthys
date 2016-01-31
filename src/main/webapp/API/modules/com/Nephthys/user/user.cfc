@@ -47,16 +47,6 @@ component {
         return this;
     }
     
-    public user function addExtendedProperty(required string key, required string value) {
-        variables.extendedProperties.add(arguments.key, arguments.value);
-        return this;
-    }
-    
-    public user function updateExtendedProperty(required string key, required string value) {
-        variables.extendedProperties.update(arguments.key, arguments.value);
-        return this;
-    }
-    
     // G E T T E R
     public numeric function getUserId() {
         return variables.userId;
@@ -108,8 +98,9 @@ component {
         
         return permissionHandler.hasPermission(variables.userId, arguments.moduleName, arguments.roleName);
     }
-    public string function getExtendedProperty(required string key) {
-        return variables.extendedProperties.get(arguments.key);
+    
+    public extProperties function getExtProperties() {
+        return variables.extProperties;
     }
     
     // C R U D
@@ -214,6 +205,6 @@ component {
             variables.avatarFilename   = null;
         }
         
-        variables.extendedProperties = new extendedProperties(variables.userId);
+        variables.extProperties = new extProperties(variables.userId);
     }
 }

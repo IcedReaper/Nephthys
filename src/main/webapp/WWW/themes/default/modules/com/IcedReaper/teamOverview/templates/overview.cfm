@@ -14,22 +14,22 @@
                 <img class="card-img-top" src="#attributes.member[memberIndex].getUser().getAvatarPath()#">
                 <div class="card-block">
                     <h4 class="card-title">
-                        <a href="/User/#attributes.member[memberIndex].getUser().getUserName()#"><cfif attributes.member[memberIndex].getUser().getExtendedProperty("realName") NEQ null>#attributes.member[memberIndex].getUser().getExtendedProperty("realName")#<cfelse>#attributes.member[memberIndex].getUser().getUserName()#</cfif></a>
+                        <a href="/User/#attributes.member[memberIndex].getUser().getUserName()#"><cfif attributes.member[memberIndex].getUser().getExtProperties().getValue("realName") NEQ null>#attributes.member[memberIndex].getUser().getExtProperties().getValue("realName")#<cfelse>#attributes.member[memberIndex].getUser().getUserName()#</cfif></a>
                     </h4>
-                    <cfif attributes.member[memberIndex].getUser().getExtendedProperty("description") NEQ null>
+                    <cfif attributes.member[memberIndex].getUser().getExtProperties().getValue("description") NEQ null>
                         <p class="card-text">
-                            #attributes.member[memberIndex].getUser().getExtendedProperty("description")#
+                            #attributes.member[memberIndex].getUser().getExtProperties().getValue("description")#
                         </p>
                     </cfif>
                     <p class="card-text">
-                        <cfif attributes.member[memberIndex].getUser().getExtendedProperty("githubUser") NEQ null>
-                            <a href="https://www.gibhub.com/#attributes.member[memberIndex].getUser().getExtendedProperty('githubUser')#" class="btn btn-info" title="#attributes.member[memberIndex].getUser().getUserName()# auf GitHub" target="_blank"><i class="fa fa-github"></i></a>
+                        <cfif attributes.member[memberIndex].getUser().getExtProperties().getValue("githubUser") NEQ null>
+                            <a href="https://www.gibhub.com/#attributes.member[memberIndex].getUser().getExtProperties().getValue('githubUser')#" class="btn btn-info" title="#attributes.member[memberIndex].getUser().getUserName()# auf GitHub" target="_blank"><i class="fa fa-github"></i></a>
                         </cfif>
-                        <cfif attributes.member[memberIndex].getUser().getExtendedProperty("twitterUser") NEQ null>
-                            <a href="https://www.twitter.com/#attributes.member[memberIndex].getUser().getExtendedProperty('twitterUser')#" class="btn btn-info" title="#attributes.member[memberIndex].getUser().getUserName()# auf Twitter" target="_blank"><i class="fa fa-twitter"></i></a>
+                        <cfif attributes.member[memberIndex].getUser().getExtProperties().getValue("twitterUser") NEQ null>
+                            <a href="https://www.twitter.com/#attributes.member[memberIndex].getUser().getExtProperties().getValue('twitterUser')#" class="btn btn-info" title="#attributes.member[memberIndex].getUser().getUserName()# auf Twitter" target="_blank"><i class="fa fa-twitter"></i></a>
                         </cfif>
-                        <cfif attributes.member[memberIndex].getUser().getExtendedProperty("facebookPage") NEQ null>
-                            <a href="https://www.facebook.com/#attributes.member[memberIndex].getUser().getExtendedProperty('facebookPage')#" class="btn btn-info" title="#attributes.member[memberIndex].getUser().getUserName()# auf Facebook" target="_blank"><i class="fa fa-facebook"></i></a>
+                        <cfif attributes.member[memberIndex].getUser().getExtProperties().getValue("facebookPage") NEQ null>
+                            <a href="https://www.facebook.com/#attributes.member[memberIndex].getUser().getExtProperties().getValue('facebookPage')#" class="btn btn-info" title="#attributes.member[memberIndex].getUser().getUserName()# auf Facebook" target="_blank"><i class="fa fa-facebook"></i></a>
                         </cfif>
                     </p>
                 </div>
