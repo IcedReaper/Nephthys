@@ -41,7 +41,7 @@ component {
                                 required string  password,
                                 required numeric themeId) {
         var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
-        var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.controller.encryptionMethodLoader").init();
+        var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.security.encryptionMethodLoader").init();
         
         if(arguments.userId == 0) {
             user.setUsername(arguments.userName);
@@ -53,7 +53,7 @@ component {
         
         if(trim(arguments.password) != "") {
             user.setPassword(encrypt(arguments.password,
-                                     application.system.settings.getValueOfKey("encryption")),
+                                     application.system.settings.getValueOfKey("encryptionMethodId")),
                                      encryptionMethodLoader.getAlgorithm(application.system.settings.getValueOfKey("encryptionMethodId")));
         }
         
