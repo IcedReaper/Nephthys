@@ -102,6 +102,37 @@ INSERT INTO nephthys_user
                 1
             );
 
+CREATE SEQUENCE seq_nephthys_user_extProperties_id
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER SEQUENCE seq_nephthys_user_extProperties_id OWNER TO nephthys_admin;
+
+CREATE TABLE nephthys_user_extProperties
+(
+  extPropertiesId integer NOT NULL DEFAULT nextval('seq_nephthys_user_extProperties_id'::regclass),
+  userId integer NOT NULL,
+  key character varying(50) NOT NULL,
+  value character varying(255) NOT NULL,
+  
+  CONSTRAINT PK_nephthys_user_extProperties_id PRIMARY KEY (extPropertiesId),
+  CONSTRAINT FK_nephthys_user_extProperties_userId FOREIGN KEY (userId) REFERENCES nephthys_user (userId) ON UPDATE NO ACTION ON DELETE CASCADE
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE        INDEX FKI_nephthys_user_extProperties_userId ON nephthys_user_extProperties(userId);
+CREATE UNIQUE INDEX UK_nephthys_user_extProperties_userKey ON nephthys_user_extProperties(userId, key);
+  
+ALTER TABLE nephthys_user_extProperties OWNER TO nephthys_admin;
+
+GRANT ALL    ON TABLE nephthys_user_extProperties TO nephthys_admin;
+GRANT SELECT ON TABLE nephthys_user_extProperties TO nephthys_user;
+
+
 /* ~~~~~~~~~~~~~~~~~~ E N C R Y P T M E T H O D ~~~~~~~~~~~~~~~~~~ */
 
 CREATE SEQUENCE seq_nephthys_encryptionMethod_id
