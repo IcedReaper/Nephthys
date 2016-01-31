@@ -14,14 +14,6 @@ nephthysAdminApp
             }));
         };
         
-        userService
-            .getDetails($routeParams.userId)
-            .then(function (userDetails) {
-                $scope.user = userDetails.data;
-                
-                $rootScope.$emit('user-loaded', {userId: userDetails.data.userId});
-            });
-        
         $scope.save = function () {
             userService
                 .save($scope.user)

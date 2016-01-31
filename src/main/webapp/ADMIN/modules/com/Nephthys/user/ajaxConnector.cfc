@@ -196,7 +196,7 @@ component {
             "email"      = arguments.userObject.getEmail(),
             "active"     = toString(arguments.userObject.getActiveStatus()),
             "password"   = "      ",
-            "avatar"     = "/upload/com.Nephthys.user/avatar/" & arguments.userObject.getAvatarFilename(),
+            "avatar"     = arguments.userObject.getAvatarPath(false),
             "actualUser" = arguments.userObject.getUserId() == request.user.getUserId(),
             "themeId"    = toString(arguments.userObject.getThemeId())
         };

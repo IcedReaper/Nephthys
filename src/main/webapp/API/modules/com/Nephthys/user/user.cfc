@@ -78,12 +78,17 @@ component {
     public string function getAvatarFilename() {
         return variables.avatarFilename;
     }
-    public string function getAvatarPath() {
+    public string function getAvatarPath(boolean returnAnonymous = true) {
         if(variables.avatarFilename != "" && variables.avatarFilename != null) {
             return "/upload/com.Nephthys.user/avatar/" & variables.avatarFilename;
         }
         else {
-            return "/themes/"&request.user.getTheme().getFolderName() & "/img/" & request.user.getTheme().getAnonymousAvatarFilename();
+            if(arguments.returnAnonymous) {
+                return "/themes/"&request.user.getTheme().getFolderName() & "/img/" & request.user.getTheme().getAnonymousAvatarFilename();
+            }
+            else {
+                return "";
+            }
         }
     }
     

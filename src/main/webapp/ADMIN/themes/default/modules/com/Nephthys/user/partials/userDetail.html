@@ -57,7 +57,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <h3>Aktuelles Avatar</h3>
-                    <img alt="user avatar" class="img-fluid" ng-src="{{user.avatar}}">
+                    <img alt="user avatar" class="img-fluid" ng-src="{{user.avatar}}" ng-if="user.avatar">
                 </div>
                 <div class="col-md-6" ng-if="user.actualUser">
                     <h3>Neues Avatar</h3>
