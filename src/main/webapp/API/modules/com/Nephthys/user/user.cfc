@@ -129,7 +129,7 @@ component {
                                           .addParam(name = "password",       value = variables.password,                                          cfsqltype = "cf_sql_varchar")
                                           .addParam(name = "active",         value = variables.active,                                            cfsqltype = "cf_sql_bit")
                                           .addParam(name = "themeId",        value = application.system.settings.getValueOfKey("defaultThemeId"), cfsqltype = "cf_sql_numeric")
-                                          .addParam(name = "avatarFilename", value = variables.avatarFilename,                                    cfsqltype = "cf_sql_varchar")
+                                          .addParam(name = "avatarFilename", value = variables.avatarFilename,                                    cfsqltype = "cf_sql_varchar", null = (variables.avatarFilename == "" || variables.avatarFileName == null))
                                           .execute()
                                           .getResult()
                                           .newUserId[1];
@@ -145,7 +145,7 @@ component {
                        .addParam(name = "eMail",          value = variables.eMail,          cfsqltype = "cf_sql_varchar")
                        .addParam(name = "password",       value = variables.password,       cfsqltype = "cf_sql_varchar")
                        .addParam(name = "active",         value = variables.active,         cfsqltype = "cf_sql_bit")
-                       .addParam(name = "avatarFilename", value = variables.avatarFilename, cfsqltype = "cf_sql_varchar")
+                       .addParam(name = "avatarFilename", value = variables.avatarFilename, cfsqltype = "cf_sql_varchar", null = (variables.avatarFilename == "" || variables.avatarFileName == null))
                        .execute();
             
             if(variables.keyExists("oldAvatarFilename") && variables.oldAvatarFilename != "" && variables.oldAvatarFilename != null && fileExists(expandPath("/upload/com.Nephthys.user/avatar/") & oldAvatarFilename)) {
