@@ -1,5 +1,5 @@
 <project name="Dev-Deployment" basedir="." default="buildProject">
-    <target name="buildProject" depends="init,syncWWW,syncAPI"><!--,syncADMIN">-->
+    <target name="buildProject" depends="init,syncWWW,syncAPI">
         <echo>Build done</echo>
     </target>
     

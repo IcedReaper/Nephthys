@@ -45,7 +45,7 @@ component {
     }
     
     public string function getValueOfKeyFromForeignTable(required string key) {
-        if(variables.settings[ arguments.key ].type == "foreignKey" && variables.settings[ arguments.key ].foreignTableOptions != "") {
+        if(variables.settings[ arguments.key ].type == "foreignKey" && isStruct(variables.settings[ arguments.key ].foreignTableOptions)) {
             var ftOptions = variables.settings[ arguments.key ].foreignTableOptions;
             
             return  new Query().setSQL("SELECT " & ftOptions.valueField & " v

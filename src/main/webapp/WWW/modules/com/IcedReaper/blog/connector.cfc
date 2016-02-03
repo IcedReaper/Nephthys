@@ -19,6 +19,20 @@ component implements="WWW.interfaces.connector" {
             arguments.options.maxEntries = 5;
         }
         
+        if(arguments.options.keyExists("onlyLast")) {
+            blogpostSearchCtrl.setReleased(1)
+                              .setCount(1);
+            
+            var renderedContent = "";
+            saveContent variable="renderedContent" {
+                module template  = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/lastEntry.cfm"
+                       options   = arguments.options
+                       blogposts = blogpostSearchCtrl.execute();
+            }
+            
+            return renderedContent;
+        }
+        
         if(splitParameter.len() == 0) {
             blogpostSearchCtrl.setReleased(1)
                               .setCount(arguments.options.maxEntries);
@@ -81,14 +95,14 @@ component implements="WWW.interfaces.connector" {
         var categoryLoader = createObject("component", "API.modules.com.IcedReaper.blog.categoryLoader").init();
         
         saveContent variable="renderedContent" {
-            module template          = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/overview.cfm"
-                   options           = arguments.options
-                   blogposts         = arguments.blogpostSearchCtrl.execute()
-                   totalGalleryCount = arguments.blogpostSearchCtrl.getTotalGalleryCount()
-                   totalPageCount    = ceiling(arguments.blogpostSearchCtrl.getTotalGalleryCount() / arguments.options.maxEntries)
-                   actualPage        = arguments.actualPage
-                   categories        = categoryLoader.load()
-                   activeCategory    = arguments.activeCategory;
+            module template           = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/overview.cfm"
+                   options            = arguments.options
+                   blogposts          = arguments.blogpostSearchCtrl.execute()
+                   totalBlogpostCount = arguments.blogpostSearchCtrl.getTotalBlogpostCount()
+                   totalPageCount     = ceiling(arguments.blogpostSearchCtrl.getTotalBlogpostCount() / arguments.options.maxEntries)
+                   actualPage         = arguments.actualPage
+                   categories         = categoryLoader.load()
+                   activeCategory     = arguments.activeCategory;
         }
         
         return renderedContent;

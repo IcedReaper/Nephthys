@@ -1,15 +1,15 @@
 component {
     public search function init() {
-        variables.userId            = 0; // 0 => all | other => specific userId
-        variables.released          = -1; // -1 => all | 0 | 1
-        variables.sortBy            = "creationDate";
-        variables.sortDirection     = "DESC";
-        variables.link              = "";
-        variables.blogpostId        = 0;
-        variables.offset            = 0;
-        variables.count             = 0;
-        variables.totalGalleryCount = 0;
-        variables.categoryName      = "";
+        variables.userId             = 0; // 0 => all | other => specific userId
+        variables.released           = -1; // -1 => all | 0 | 1
+        variables.sortBy             = "creationDate";
+        variables.sortDirection      = "DESC";
+        variables.link               = "";
+        variables.blogpostId         = 0;
+        variables.offset             = 0;
+        variables.count              = 0;
+        variables.totalBlogpostCount = 0;
+        variables.categoryName       = "";
         //variables.releaseDate       = null;
         
         return this;
@@ -54,7 +54,7 @@ component {
     }*/
     
     public search function setSortBy(required string sortBy) {
-        switch(lower(arguments.sortBy)) {
+        switch(lCase(arguments.sortBy)) {
             case 'creationdate':
             case 'lasteditdate':
             // case 'imageCount': // not yet implemented...
@@ -67,7 +67,7 @@ component {
     }
     
     public search function setSortDirection(required string sortDirection) {
-        switch(lower(arguments.sortDirection)) {
+        switch(lCase(arguments.sortDirection)) {
             case 'asc':
             case 'desc': {
                 variables.sortDirection = arguments.sortDirection;
@@ -106,8 +106,8 @@ component {
         return this;
     }
     
-    public numeric function getTotalGalleryCount() {
-        return variables.totalGalleryCount;
+    public numeric function getTotalBlogpostCount() {
+        return variables.totalBlogpostCount;
     }
     
     public array function execute() {
@@ -156,7 +156,7 @@ component {
                                   .execute()
                                   .getResult();
         
-        variables.totalGalleryCount = qBlogpostIds.getRecordCount();
+        variables.totalBlogpostCount = qBlogpostIds.getRecordCount();
         
         var blogposts = [];
         
