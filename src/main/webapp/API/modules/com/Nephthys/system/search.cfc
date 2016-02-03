@@ -14,7 +14,7 @@ component extends="API.abstractClasses.search" {
     }
     
     private array function getModules() {
-        // TODO: refactor when I have a pretty idea for it... :/It bugs me that the API folder structure isn't the same as the module folder structure in WWW or ADMIN nor does it represent the modules in the DB
+        // TODO: refactor when I have a pretty idea for it... :/
         return [
             "modules.com.Nephthys.page",
             "modules.com.Nephthys.user"/*,
