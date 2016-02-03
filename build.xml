@@ -67,14 +67,14 @@
             <path path="${external.frameworks.bootstrap}/js/dist/util.js" />
             <path path="${external.frameworks.bootstrap}/js/dist/alert.js" />
             <path path="${external.frameworks.bootstrap}/js/dist/button.js" />
-            <path path="${external.frameworks.bootstrap}/js/dist/carousel.js" />
-            <path path="${external.frameworks.bootstrap}/js/dist/collapse.js" />
+            <!--<path path="${external.frameworks.bootstrap}/js/dist/carousel.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/collapse.js" />-->
             <path path="${external.frameworks.bootstrap}/js/dist/dropdown.js" />
             <path path="${external.frameworks.bootstrap}/js/dist/modal.js" />
             <path path="${external.frameworks.bootstrap}/js/dist/scrollspy.js" />
             <path path="${external.frameworks.bootstrap}/js/dist/tab.js" />
-            <path path="${external.frameworks.bootstrap}/js/dist/tooltip.js" />
-            <path path="${external.frameworks.bootstrap}/js/dist/popover.js" />
+            <!--<path path="${external.frameworks.bootstrap}/js/dist/tooltip.js" />
+            <path path="${external.frameworks.bootstrap}/js/dist/popover.js" />-->
         </concat>
     </target>
     
