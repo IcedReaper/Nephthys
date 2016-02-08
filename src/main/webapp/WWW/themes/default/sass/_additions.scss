@@ -11,12 +11,15 @@
     padding: 0 5px;
 }
 
-body > footer {
-    border-top: 1px solid #e5e5e5;
-    color: #767676;
-    padding-bottom: 40px;
-    padding-top: 40px;
-    text-align: center;
+body {
+    overflow-x: hidden;    
+    & > footer {
+        border-top: 1px solid #e5e5e5;
+        color: #767676;
+        padding-bottom: 40px;
+        padding-top: 40px;
+        text-align: center;
+    }
 }
 
 /* user search & results */
@@ -81,36 +84,201 @@ h6 {
 
 .container,
 .container-fluid {
-    $background-color: rgba(10, 28, 42, 0.9);
-    $highlight-color: rgba(35, 38, 40, 0.9);
-    
-    &.highlight {
+    &.alternativeFont {
+        h1 {
+            font-size: 3.5rem;
+            font-family: $font-family-handwriting;
+            color: $highlight-color;
+            text-shadow: 0 0 4px #000;
+        }
         
-        &.alternativeFont {
-            h1 {
-                font-size: 3.5rem;
-                font-family: $font-family-handwriting;
-                color: $highlight-font-color;
-            }
-            
-            h2 {
-                font-size: 3rem;
-                font-family: $font-family-handwriting;
-                color: $highlight-font-color;
+        h2 {
+            font-size: 3rem;
+            font-family: $font-family-handwriting;
+            color: $highlight-color;
+            text-shadow: 0 0 4px #000;
+        }
+    }
+    
+    &.intro {
+        h1 {
+            font-size: 5.5rem;
+        }
+        
+        h2 {
+            font-size: 4.5rem;
+        }
+    }
+    
+    &.background {
+        $static-background-list: rgba(10, 28, 42, 0.9);
+        
+        @for $i from 1 through length($static-background-list) {
+            &.static-background-#{$i} {
+                background-color: nth($static-background-list, $i);
             }
         }
-        &.static-background {
-            background: $background-color;
-        }
+        
         
         &.imaged-background-1 {
-            background: $background-color, url("/themes/default/img/highlight-background.jpg") 0 20% no-repeat;
-            background: -moz-linear-gradient($background-color 0%, $background-color 100%), url("/themes/default/img/highlight-background.jpg") 0 20% no-repeat;
-            background: -webkit-linear-gradient($background-color 0%, $background-color 100%), url("/themes/default/img/highlight-background.jpg") 0 20% no-repeat;
-            background: linear-gradient($background-color 0%, $background-color 100%), url("/themes/default/img/highlight-background.jpg") 0 20% no-repeat;
-            background-size:cover;
-            
-            color: $body-color;
+            &.light-overlay {
+                background: linear-gradient(rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.6)), url("/themes/default/img/highlight-background-1.jpg") center no-repeat;
+                background-size: cover;
+                color: #000000;
+            }
+            &.dark-overlay-1 {
+                background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("/themes/default/img/highlight-background-1.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+            &.dark-overlay-2 {
+                background: linear-gradient(rgba(0, 9, 20, 0.9), rgba(0, 9, 20, 0.9)), url("/themes/default/img/highlight-background-1.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+            &:not(.light-overlay):not(.dark-overlay-1):not(.dark-overlay-2) {
+                background: url("/themes/default/img/highlight-background-1.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+        }
+        
+        &.imaged-background-2 {
+            &.light-overlay {
+                background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url("/themes/default/img/highlight-background-2.jpg") center no-repeat;
+                background-size: cover;
+                color: #000000;
+            }
+            &.dark-overlay-1 {
+                background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("/themes/default/img/highlight-background-2.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+            &.dark-overlay-2 {
+                background: linear-gradient(rgba(0, 9, 20, 0.6), rgba(0, 9, 20, 0.6)), url("/themes/default/img/highlight-background-2.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+            &:not(.light-overlay):not(.dark-overlay-1):not(.dark-overlay-2) {
+                background: url("/themes/default/img/highlight-background-2.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+        }
+        
+        &.imaged-background-3 {
+            &.light-overlay {
+                background: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url("/themes/default/img/highlight-background-3.jpg") center bottom no-repeat;
+                background-size: cover;
+                color: #000000;
+            }
+            &.dark-overlay-1 {
+                background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("/themes/default/img/highlight-background-3.jpg") center bottom no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+            &.dark-overlay-2 {
+                background: linear-gradient(rgba(0, 9, 20, 0.6), rgba(0, 9, 20, 0.6)), url("/themes/default/img/highlight-background-3.jpg") center bottom no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+            &:not(.light-overlay):not(.dark-overlay-1):not(.dark-overlay-2) {
+                background: url("/themes/default/img/highlight-background-3.jpg") center bottom no-repeat;
+                background-size: cover;
+                color: #000000;
+            }
+        }
+        
+        &.imaged-background-4 {
+            &.light-overlay {
+                background: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url("/themes/default/img/highlight-background-4.jpg") center no-repeat;
+                background-size: cover;
+                color: #000000;
+            }
+            &.dark-overlay-1 {
+                background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("/themes/default/img/highlight-background-4.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+            &.dark-overlay-2 {
+                background: linear-gradient(rgba(0, 9, 20, 0.6), rgba(0, 9, 20, 0.6)), url("/themes/default/img/highlight-background-4.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+            &:not(.light-overlay):not(.dark-overlay-1):not(.dark-overlay-2) {
+                background: url("/themes/default/img/highlight-background-4.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+        }
+        
+        &.imaged-background-5 {
+            &.light-overlay {
+                background: linear-gradient(rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 0.6)), url("/themes/default/img/highlight-background-5.jpg") center no-repeat;
+                background-size: cover;
+                color: #000000;
+            }
+            &.dark-overlay-1 {
+                background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("/themes/default/img/highlight-background-5.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+            &.dark-overlay-2 {
+                background: linear-gradient(rgba(0, 9, 20, 0.6), rgba(0, 9, 20, 0.6)), url("/themes/default/img/highlight-background-5.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+            &:not(.light-overlay):not(.dark-overlay-1):not(.dark-overlay-2) {
+                background: url("/themes/default/img/highlight-background-5.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+        }
+        
+        &.imaged-background-6 {
+            &.light-overlay {
+                background: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url("/themes/default/img/highlight-background-6.jpg") center no-repeat;
+                background-size: cover;
+                color: #000000;
+            }
+            &.dark-overlay-1 {
+                background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("/themes/default/img/highlight-background-6.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+            &.dark-overlay-2 {
+                background: linear-gradient(rgba(0, 9, 20, 0.6), rgba(0, 9, 20, 0.6)), url("/themes/default/img/highlight-background-6.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+            &:not(.light-overlay):not(.dark-overlay-1):not(.dark-overlay-2) {
+                background: url("/themes/default/img/highlight-background-6.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+        }
+        
+        &.imaged-background-7 {
+            &.light-overlay {
+                background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.3)), url("/themes/default/img/highlight-background-7.jpg") center no-repeat;
+                background-size: cover;
+                color: #000000;
+            }
+            &.dark-overlay-1 {
+                background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("/themes/default/img/highlight-background-7.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+            &.dark-overlay-2 {
+                background: linear-gradient(rgba(0, 9, 20, 0.6), rgba(0, 9, 20, 0.6)), url("/themes/default/img/highlight-background-7.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
+            &:not(.light-overlay):not(.dark-overlay-1):not(.dark-overlay-2) {
+                background: url("/themes/default/img/highlight-background-7.jpg") center no-repeat;
+                background-size: cover;
+                color: $body-color;
+            }
         }
     }
 }
