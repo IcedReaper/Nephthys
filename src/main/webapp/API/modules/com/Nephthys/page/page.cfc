@@ -34,12 +34,15 @@ component {
         
         return this;
     }
-    public page function setContent(required string content) {
+    public page function setContent(required any content) { // json string or array
         if(isJSON(arguments.content)) {
             variables.content = deserializeJSON(arguments.content);
         }
+        else if(isArray(arguments.content)) {
+            variables.content = arguments.content;
+        }
         else {
-            throw(type = "nephthys.application.invalidContent", message = "The content is not a valid JSON format");
+            throw(type = "nephthys.application.invalidContent", message = "The content is not a valid JSON format or array");
         }
         
         return this;
