@@ -37,6 +37,7 @@ Adminbereich
         2. Installation per git-repository
     2. Seitenmanagement
         1. Contentbearbeitung
+            - 1. Version fertig - noch sehr abstrakt
         2. Seitenversionierung
         3. Mehrsprachigkeit des Contents
         4. Seitenhierarchie
@@ -75,10 +76,7 @@ Module (in eigenen Repos/Projekten)
     4. Referenzen
 
 Optimierungen
-    1. Angularcode auf gleiche Basis bringen - Guter Teil passiert.
-    2. Angularcode optimieren
-    3. CreatorUserId und LastEditUserId übergeben anstatt in der Klasse direkt verwenden?
-    4. Settings der unterschiedlichen Module und des Systems verbinden
-    5. Nach weiteren DB-Enums Ausschau halten
-    6. Foreign Key Indices setzen
-    7, Aktuell gibt es sowohl creationDate als auch createdDate => gleichziehen!!!
+    1. Settings der unterschiedlichen Module und des Systems verbinden
+    2. Nach weiteren DB-Enums Ausschau halten
+    3. Foreign Key Indices setzen
+    4, Aktuell gibt es sowohl creationDate als auch createdDate => gleichziehen!!!

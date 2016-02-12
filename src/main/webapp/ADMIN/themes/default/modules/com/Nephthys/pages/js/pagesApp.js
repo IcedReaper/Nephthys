@@ -1,5 +1,6 @@
 var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute", 
-                                                           "chart.js"]);
+                                                           "chart.js",
+                                                           "textAngular"]);
 
 nephthysAdminApp
     .config(["$routeProvider",
