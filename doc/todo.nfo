@@ -25,6 +25,7 @@ Allgemein
     16. user => blacklist erstellen | Innerhalb des Username überprüfen
     17. F5-Raids unterbinden
     18. Beim anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
+    19. filter-componten vereinheitlichen
 
 Website
     1. Codeoptimierung
@@ -79,4 +80,5 @@ Optimierungen
     1. Settings der unterschiedlichen Module und des Systems verbinden
     2. Nach weiteren DB-Enums Ausschau halten
     3. Foreign Key Indices setzen
-    4, Aktuell gibt es sowohl creationDate als auch createdDate => gleichziehen!!!
+    4. Aktuell gibt es sowohl creationDate als auch createdDate => gleichziehen!!!
+    5. Bei Ajax-Calls success entfernen, da Angular bei Fehlern anders reagiert und die Calls nicht in dem Success-Kreislauf landen :)

@@ -27,8 +27,6 @@ nephthysAdminApp
         };
         
         $scope.modules = [];
-        $scope.search = {
-            active: ""
-        };
+        $scope.search = {};
         $scope.refresh();
     }]);

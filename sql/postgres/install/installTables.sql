@@ -307,6 +307,8 @@ CREATE TABLE public.nephthys_module
   description character varying(100) NOT NULL,
   active boolean NOT NULL DEFAULT true,
   sortorder integer NOT NULL,
+  availableWWW boolean NOT NULL DEFAULT true,
+  availableADMIN boolean NOT NULL DEFAULT true,
   
   CONSTRAINT PK_nephthys_module_id PRIMARY KEY (moduleid),
   CONSTRAINT UK_nephthys_module_sortOrder UNIQUE (sordorder)
@@ -315,8 +317,10 @@ WITH (
   OIDS = FALSE
 );
 
-CREATE UNIQUE INDEX UK_nephthys_module_name    ON nephthys_module(lower(modulename));
-CREATE        INDEX IDX_nephthys_module_active ON nephthys_module(active);
+CREATE UNIQUE INDEX UK_nephthys_module_name            ON nephthys_module(lower(modulename));
+CREATE        INDEX IDX_nephthys_module_active         ON nephthys_module(active);
+CREATE        INDEX IDX_nephthys_module_availableWWW   ON nephthys_module(availableWWW);
+CREATE        INDEX IDX_nephthys_module_availableADMIN ON nephthys_module(availableADMIN);
   
 ALTER TABLE nephthys_module OWNER TO nephthys_admin;
 
