@@ -7,7 +7,7 @@ nephthysAdminApp
             ])
             // and merging them
             .then($q.spread(function (pageDetails, pageStatus) {
-                $scope.page = pageDetails.page;
+                $scope.page       = pageDetails.page;
                 $scope.pageStatus = pageStatus.data;
             }));
         };
@@ -47,7 +47,64 @@ nephthysAdminApp
             if(value === "") {
                 delete child.options[optionName];
             }
-        }
+        };
+        
+        $scope.moveUp = function(child) {
+            var searchSub = function(subElements) {
+                for(var i = 0; i < subElements.length; ++i) {
+                    if(subElements[i].$$hashKey === child.$$hashKey) {
+                        subElements.move(i, i-1);
+                        return true;
+                    }
+                    
+                    if(searchSub(subElements[i].children)) {
+                        return true;
+                    }
+                }
+                
+                return false;
+            };
+            
+            searchSub($scope.page.content);
+        };
+        
+        $scope.moveDown = function(child) {
+            var searchSub = function(subElements) {
+                for(var i = 0; i < subElements.length; ++i) {
+                    if(subElements[i].$$hashKey === child.$$hashKey) {
+                        subElements.move(i, i+1);
+                        return true;
+                    }
+                    
+                    if(searchSub(subElements[i].children)) {
+                        return true;
+                    }
+                }
+                
+                return false;
+            };
+            
+            searchSub($scope.page.content);
+        };
+        
+        $scope.deleteElement = function(child) {
+            var searchSub = function(subElements) {
+                for(var i = 0; i < subElements.length; ++i) {
+                    if(subElements[i].$$hashKey === child.$$hashKey) {
+                        subElements.splice(i, 1);
+                        return true;
+                    }
+                    
+                    if(searchSub(subElements[i].children)) {
+                        return true;
+                    }
+                }
+                
+                return false;
+            };
+            
+            searchSub($scope.page.content);
+        };
         
         $scope.logContent = function () {
             console.log($scope.page.content);
@@ -55,6 +112,7 @@ nephthysAdminApp
         
         $scope.load();
         
+        // todo: move to db and load via ajax
         $scope.availableSubTypes = {
             "com.Nephthys.container": [
                 "com.Nephthys.row"

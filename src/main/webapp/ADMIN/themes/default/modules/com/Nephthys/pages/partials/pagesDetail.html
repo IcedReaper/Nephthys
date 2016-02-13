@@ -88,7 +88,11 @@
 
 <script type="text/ng-template" id="contentChild">
     <form>
+        <button class="btn btn-danger pull-right" ng-click="deleteElement(child)"><i class="fa fa-trash"></i></button>
+        <button class="btn btn-secondary pull-right" ng-if="! $first" ng-click="moveUp(child)"><i class="fa fa-arrow-up"></i></button>
+        <button class="btn btn-secondary pull-right" ng-if="! $last" ng-click="moveDown(child)"><i class="fa fa-arrow-down"></i></button>
         <h2>{{child.type}}</h2>
+        
         <div class="form-group row" ng-repeat="option in availableOptions[child.type]">
             <label class="col-sm-2">{{option.description}}</label>
             <div class="col-sm-10">
