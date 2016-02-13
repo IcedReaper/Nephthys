@@ -37,7 +37,7 @@ nephthysAdminApp
                 });
             },
             
-            loadStatistics: function(pageId) {
+            loadStatistics: function (pageId) {
                 return $http.get('/ajax/com/Nephthys/pages/loadStatistics', {
                     params: {
                         pageId: pageId
@@ -45,12 +45,16 @@ nephthysAdminApp
                 });
             },
             
-            getStatus: function() {
+            getStatus: function () {
                 return $http.get("/ajax/com/Nephthys/pages/getStatusList");
             },
             
-            getAvailableSubModules: function() {
+            getAvailableSubModules: function () {
                 return $http.get("/ajax/com/Nephthys/pages/getAvailableSubModules");
+            },
+            
+            getAvailableOptions: function () {
+                return $http.get("/ajax/com/Nephthys/pages/getAvailableOptions");
             }
         };
     });

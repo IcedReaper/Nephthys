@@ -4,13 +4,14 @@ nephthysAdminApp
             $q.all([
                 pagesService.getDetails($routeParams.pageId),
                 pagesService.getStatus(),
-                pagesService.getAvailableSubModules()
+                pagesService.getAvailableSubModules(),
+                pagesService.getAvailableOptions()
             ])
-            // and merging them
-            .then($q.spread(function (pageDetails, pageStatus, availableSubModules) {
+            .then($q.spread(function (pageDetails, pageStatus, availableSubModules, availableOptions) {
                 $scope.page                = pageDetails.page;
                 $scope.pageStatus          = pageStatus.data;
                 $scope.availableSubModules = availableSubModules;
+                $scope.availableOptions    = availableOptions;
             }));
         };
         
@@ -18,10 +19,6 @@ nephthysAdminApp
             pagesService
                 .save($scope.page)
                 .then($scope.load);
-        };
-        
-        $scope.stringifiedConttent = function () {
-            return JSON.stringify($scope.page.content);
         };
         
         $scope.appendChild = function (child, newChildren) {
@@ -108,152 +105,5 @@ nephthysAdminApp
             searchSub($scope.page.content);
         };
         
-        $scope.logContent = function () {
-            console.log($scope.page.content);
-        };
-        
         $scope.load();
-        
-        // todo: move to db and load via ajax
-        $scope.availableOptions = {
-            "com.Nephthys.container": {
-                "background-class": { // todo: divide
-                    "dbName": "background-class",
-                    "description": "Hintergrunddesign",
-                    "type": "text"
-                },
-                "fullWidth": {
-                    "dbName": "fullWidth",
-                    "description": "Volle Breite",
-                    "type": "boolean"
-                },
-                "fullWidthOnlyBackground": {
-                    "dbName": "fullWidthOnlyBackground",
-                    "description": "Nur Hintergrund auf  voller Breite",
-                    "type": "boolean"
-                }
-            },
-            "com.Nephthys.row": {
-            },
-            "com.Nephthys.col": {
-                "width-xs": {
-                    "dbName": "width-xs",
-                    "description": "Breite XS",
-                    "type": "select",
-                    "values": [
-                        "8%",
-                        "16%",
-                        "25%",
-                        "33%",
-                        "41%",
-                        "50%",
-                        "58%",
-                        "66%",
-                        "75%",
-                        "83%",
-                        "91%",
-                        "100%"
-                    ]
-                },
-                "width-sm": {
-                    "dbName": "width-sm",
-                    "description": "Breite SM",
-                    "type": "select",
-                    "values": [
-                        "8%",
-                        "16%",
-                        "25%",
-                        "33%",
-                        "41%",
-                        "50%",
-                        "58%",
-                        "66%",
-                        "75%",
-                        "83%",
-                        "91%",
-                        "100%"
-                    ]
-                },
-                "width-md": {
-                    "dbName": "width-md",
-                    "description": "Breite MD",
-                    "type": "select",
-                    "values": [
-                        "8%",
-                        "16%",
-                        "25%",
-                        "33%",
-                        "41%",
-                        "50%",
-                        "58%",
-                        "66%",
-                        "75%",
-                        "83%",
-                        "91%",
-                        "100%"
-                    ]
-                },
-                "width-lg": {
-                    "dbName": "width-lg",
-                    "description": "Breite LG",
-                    "type": "select",
-                    "values": [
-                        "8%",
-                        "16%",
-                        "25%",
-                        "33%",
-                        "41%",
-                        "50%",
-                        "58%",
-                        "66%",
-                        "75%",
-                        "83%",
-                        "91%",
-                        "100%"
-                    ]
-                },
-                "width-xl": {
-                    "dbName": "width-xl",
-                    "description": "Breite XL",
-                    "type": "select",
-                    "values": [
-                        "8%",
-                        "16%",
-                        "25%",
-                        "33%",
-                        "41%",
-                        "50%",
-                        "58%",
-                        "66%",
-                        "75%",
-                        "83%",
-                        "91%",
-                        "100%"
-                    ]
-                }
-            },
-            "com.Nephthys.text": {
-                "content": {
-                    "dbName": "content",
-                    "description": "Inhalt",
-                    "type": "wysiwyg"
-                },
-                "centered": {
-                    "dbName": "centered",
-                    "description": "Zentriert",
-                    "type": "boolean"
-                }
-            },
-            "com.IcedReaper.teamOverview": {
-            },
-            "com.IcedReaper.blog": {
-                "onlyLast": {
-                    "dbName": "onlyLast",
-                    "description": "Nur den aktuellsten",
-                    "type": "boolean"
-                }
-            },
-            "com.IcedReaper.gallery": {
-            }
-        };
     }]);

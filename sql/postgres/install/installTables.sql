@@ -327,6 +327,7 @@ ALTER TABLE nephthys_module OWNER TO nephthys_admin;
 GRANT ALL    ON TABLE nephthys_module TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_module TO nephthys_user;
 
+
 CREATE SEQUENCE seq_nephthys_module_subModule_id
   INCREMENT 1
   MINVALUE 1
@@ -351,11 +352,46 @@ WITH (
 );
 
 CREATE INDEX IDX_nephthys_module_subModule_moduleId ON nephthys_module_subModule(moduleId);
-  
+
 ALTER TABLE nephthys_module_subModule OWNER TO nephthys_admin;
 
 GRANT ALL    ON TABLE nephthys_module_subModule TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_module_subModule TO nephthys_user;
+
+
+CREATE TYPE optionType AS ENUM ('boolean', 'text', 'select', 'wysiwyg');
+
+CREATE SEQUENCE seq_nephthys_module_option_id
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER SEQUENCE seq_nephthys_module_option_id OWNER TO nephthys_admin;
+
+CREATE TABLE public.nephthys_module_option
+(
+  optionId integer NOT NULL DEFAULT nextval('seq_nephthys_module_option_id'::regclass),
+  moduleId integer NOT NULL,
+  optionName character varying(100) NOT NULL,
+  description character varying(100) NOT NULL,
+  type optionType NOT NULL,
+  selectOptions character varying(400),
+  
+  CONSTRAINT PK_nephthys_module_option_id PRIMARY KEY (optionId),
+  CONSTRAINT UK_nephthys_module_option_moduleOptionName UNIQUE (moduleId, optionName),
+  CONSTRAINT FK_nephthys_module_option_moduleId FOREIGN KEY (moduleId) REFERENCES nephthys_module (moduleId) ON UPDATE NO ACTION ON DELETE CASCADE
+)
+WITH (
+  OIDS = FALSE
+);
+
+CREATE INDEX IDX_nephthys_module_option_optionName ON nephthys_module_option(optionName);
+
+ALTER TABLE nephthys_module_option OWNER TO nephthys_admin;
+
+GRANT ALL    ON TABLE nephthys_module_option TO nephthys_admin;
+GRANT SELECT ON TABLE nephthys_module_option TO nephthys_user;
 
 /* ~~~~~~~~~~~~~~~~~~ P A G E S ~~~~~~~~~~~~~~~~~~ */
 

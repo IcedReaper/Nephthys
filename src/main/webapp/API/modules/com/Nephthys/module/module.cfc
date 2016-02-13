@@ -3,6 +3,7 @@ component {
         variables.moduleId = arguments.moduleId;
         
         variables.subModulesEdited = false;
+        variables.optionsEdited = false;
         
         loadDetails();
         
@@ -79,6 +80,33 @@ component {
         
         return this;
     }
+    public module function addOption(required option newOption) {
+        var found = false;
+        for(var i = 1; i <= variables.options; ++i) {
+            if(variables.options[i].getOptionName() == arguments.newOption.getOptionName()) {
+                found = true;
+                break;
+            }
+        }
+        
+        if(! found) {
+            variables.options.append(duplicate(arguments.newOption));
+            variables.optionsEdited = true;
+        }
+        
+        return this;
+    }
+    public module function removeOption(required string optionName) {
+        for(var i = 1; i <= variables.options; ++i) {
+            if(variables.options[i].getOptionName() == arguments.optionName) {
+                variables.options.deleteAt(i);
+                variables.optionsEdited = true;
+                break;
+            }
+        }
+        
+        return this;
+    }
     
     
     public numeric function getModuleId() {
@@ -112,6 +140,13 @@ component {
         
         return variables.subModules;
     }
+    public array function getOptions() {
+        if(! variables.keyExists("options")) {
+            loadOptions();
+        }
+        
+        return variables.options;
+    }
     
     
     public module function save() {
@@ -136,7 +171,7 @@ component {
                                                                          :availableWWW,
                                                                          :availableADMIN
                                                                      );
-                                                        SELECT currval('seq_nephthys_module_id' :: regclass) newModuleId;") // spaces around :: are required because of parameter handling
+                                                        SELECT currval('seq_nephthys_module_id' :: regclass) newModuleId;")
                                                 .addParam(name = "moduleName",     value = variables.moduleName,     cfsqltype = "cf_sql_varchar")
                                                 .addParam(name = "description",    value = variables.description,    cfsqltype = "cf_sql_varchar")
                                                 .addParam(name = "active",         value = variables.active,         cfsqltype = "cf_sql_bit")
@@ -253,6 +288,26 @@ component {
             
             for(var i = 1; i <= qGetSubModules.getRecordCount(); ++i) {
                 variables.subModules.append(new module(qGetSubModules.subModuleId[i]));
+            }
+        }
+        else {
+            variables.subModules = [];
+        }
+    }
+    
+    private void function loadOptions() {
+        if(variables.moduleId != 0 && variables.moduleId != null) {
+            variables.options = [];
+            
+            var qGetOptions = new Query().setSQL("SELECT optionId
+                                                    FROM nephthys_module_option
+                                                   WHERE moduleId = :moduleId")
+                                         .addParam(name = "moduleId", value = variables.moduleId, cfsqltype = "cf_sql_numeric")
+                                         .execute()
+                                         .getResult();
+            
+            for(var i = 1; i <= qGetOptions.getRecordCount(); ++i) {
+                variables.options.append(new option(qGetOptions.optionId[i]));
             }
         }
         else {

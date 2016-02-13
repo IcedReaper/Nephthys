@@ -104,7 +104,7 @@
                 </select>
                 <select ng-model="child.options[option.dbName]" class="form-control" ng-if="option.type == 'select'" ng-change="checkOption(child, option.dbName, child.options[option.dbName])">
                     <option value="">Option entfernen/Nicht gesetzt</option>
-                    <option value="{{value}}" ng-repeat="value in option.values">{{value}}</option>
+                    <option value="{{value}}" ng-repeat="value in option.selectOptions">{{value}}</option>
                 </select>
                 <div ng-model="child.options[option.dbName]" class="form-control" ng-if="option.type == 'wysiwyg'" text-angular ta-toolbar="[['h1', 'h2', 'h3', 'h4', 'h5', 'h6'], ['p', 'pre', 'quote'], ['ul', 'ol'], ['bold','italics','underline','strikeThrough'], ['justifyLeft','justifyCenter','justifyRight','justifyFull'], ['insertLink'], ['undo', 'redo'],['wordcount','charcount']]"></div><!-- todo: implement insertImage | insertVideo -->
             </div>
@@ -125,8 +125,6 @@
         </div>
     </form>
 </script>
-
-<button ng-click="logContent()" class="btn btn-primary">Content loggen</button>
 
 <div class="row">
     <div class="col-md-12">
