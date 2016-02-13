@@ -204,8 +204,27 @@ component {
         };
     }
     
-    // P R I V A T E
+    remote struct function getAvailableSubModules() {
+        var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
+        
+        var modules = moduleFilterCtrl.setAvailableWWW(true)
+                                      .filter();
+        
+        var _modules = {};
+        
+        for(var i = 1; i <= modules.len(); ++i) {
+            _modules[modules[i].getModuleName()] = [];
+            
+            var subModules = modules[i].getSubModules();
+            for(var j = 1; j <= subModules.len(); ++j) {
+                _modules[modules[i].getModuleName()].append(subModules[j].getModuleName());
+            }
+        }
+        
+        return _modules;
+    }
     
+    // P R I V A T E
     private array function getSubPages(required numeric parentId, required string region) {
         var pageCtrl = createObject("component", "API.modules.com.Nephthys.page.filter").init();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");

@@ -2,6 +2,8 @@ component {
     public module function init(required string moduleId) {
         variables.moduleId = arguments.moduleId;
         
+        variables.subModulesEdited = false;
+        
         loadDetails();
         
         return this;
@@ -49,6 +51,34 @@ component {
         
         return this;
     }
+    public module function addSubModule(required module subModule) {
+        var found = false;
+        for(var i = 1; i <= variables.subModules.len(); ++i) {
+            if(variables.subModules[i].getModuleName() == arguments.moduleName) {
+                found = true;
+                break;
+            }
+        }
+        
+        if(! found) {
+            variables.getSubModules().append(duplicate(arguments.subModule));
+            variables.subModulesEdited = true;
+        }
+        
+        return this;
+    }
+    public module function removeSubModule(required string moduleName) {
+        for(var i = 1; i <= variables.subModules.len(); ++i) {
+            if(variables.subModules[i].getModuleName() == arguments.moduleName) {
+                variables.subModules.deleteAt(i);
+                variables.subModulesEdited = true;
+                
+                break;
+            }
+        }
+        
+        return this;
+    }
     
     
     public numeric function getModuleId() {
@@ -75,60 +105,95 @@ component {
     public boolean function getAvailableADMIN() {
         return variables.availableADMIN;
     }
+    public array function getSubModules() {
+        if(! variables.keyExists("subModules")) {
+            loadSubModules();
+        }
+        
+        return variables.subModules;
+    }
     
     
     public module function save() {
-        if(variables.moduleId == 0) {
-            variables.moduleId = new Query().setSQL("INSERT INTO nephthys_module
-                                                                 (
-                                                                     moduleName,
-                                                                     description,
-                                                                     active,
-                                                                     systemModule,
-                                                                     sortOrder,
-                                                                     availableWWW,
-                                                                     availableADMIN
-                                                                 )
-                                                          VALUES (
-                                                                     :moduleName,
-                                                                     :description,
-                                                                     :active,
-                                                                     :systemModule,
-                                                                     :sortOrder,
-                                                                     :availableWWW,
-                                                                     :availableADMIN
-                                                                 );
-                                                    SELECT currval('seq_nephthys_module_id' :: regclass) newModuleId;") // spaces around :: are required because of parameter handling
-                                            .addParam(name = "moduleName",     value = variables.moduleName,     cfsqltype = "cf_sql_varchar")
-                                            .addParam(name = "description",    value = variables.description,    cfsqltype = "cf_sql_varchar")
-                                            .addParam(name = "active",         value = variables.active,         cfsqltype = "cf_sql_bit")
-                                            .addParam(name = "systemModule",   value = variables.systemModule,   cfsqltype = "cf_sql_bit")
-                                            .addparam(name = "sortOrder",      value = variables.sortOrder,      cfsqltype = "cf_sql_numeric")
-                                            .addParam(name = "availableWWW",   value = variables.availableWWW,   cfsqltype = "cf_sql_bit")
-                                            .addParam(name = "availableADMIN", value = variables.availableADMIN, cfsqltype = "cf_sql_bit")
-                                            .execute()
-                                            .getResult()
-                                            .newModuleId[1];
-        }
-        else {
-            new Query().setSQL("UPDATE nephthys_module
-                                   SET moduleName     = :moduleName,
-                                       description    = :description,
-                                       active         = :active,
-                                       systemModule   = :systemModule,
-                                       sortOrder      = :sortOrder,
-                                       availableWWW   = :availableWWW,
-                                       availableADMIN = :availableADMIN
-                                 WHERE moduleId    = :moduleId")
-                       .addParam(name = "moduleId",       value = variables.moduleId,       cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "moduleName",     value = variables.moduleName,     cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "description",    value = variables.description,    cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "active",         value = variables.active,         cfsqltype = "cf_sql_bit")
-                       .addParam(name = "systemModule",   value = variables.systemModule,   cfsqltype = "cf_sql_bit")
-                       .addparam(name = "sortOrder",      value = variables.sortOrder,      cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "availableWWW",   value = variables.availableWWW,   cfsqltype = "cf_sql_bit")
-                       .addParam(name = "availableADMIN", value = variables.availableADMIN, cfsqltype = "cf_sql_bit")
-                       .execute();
+        transaction {
+            if(variables.moduleId == 0) {
+                variables.moduleId = new Query().setSQL("INSERT INTO nephthys_module
+                                                                     (
+                                                                         moduleName,
+                                                                         description,
+                                                                         active,
+                                                                         systemModule,
+                                                                         sortOrder,
+                                                                         availableWWW,
+                                                                         availableADMIN
+                                                                     )
+                                                              VALUES (
+                                                                         :moduleName,
+                                                                         :description,
+                                                                         :active,
+                                                                         :systemModule,
+                                                                         :sortOrder,
+                                                                         :availableWWW,
+                                                                         :availableADMIN
+                                                                     );
+                                                        SELECT currval('seq_nephthys_module_id' :: regclass) newModuleId;") // spaces around :: are required because of parameter handling
+                                                .addParam(name = "moduleName",     value = variables.moduleName,     cfsqltype = "cf_sql_varchar")
+                                                .addParam(name = "description",    value = variables.description,    cfsqltype = "cf_sql_varchar")
+                                                .addParam(name = "active",         value = variables.active,         cfsqltype = "cf_sql_bit")
+                                                .addParam(name = "systemModule",   value = variables.systemModule,   cfsqltype = "cf_sql_bit")
+                                                .addparam(name = "sortOrder",      value = variables.sortOrder,      cfsqltype = "cf_sql_numeric")
+                                                .addParam(name = "availableWWW",   value = variables.availableWWW,   cfsqltype = "cf_sql_bit")
+                                                .addParam(name = "availableADMIN", value = variables.availableADMIN, cfsqltype = "cf_sql_bit")
+                                                .execute()
+                                                .getResult()
+                                                .newModuleId[1];
+            }
+            else {
+                new Query().setSQL("UPDATE nephthys_module
+                                       SET moduleName     = :moduleName,
+                                           description    = :description,
+                                           active         = :active,
+                                           systemModule   = :systemModule,
+                                           sortOrder      = :sortOrder,
+                                           availableWWW   = :availableWWW,
+                                           availableADMIN = :availableADMIN
+                                     WHERE moduleId    = :moduleId")
+                           .addParam(name = "moduleId",       value = variables.moduleId,       cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "moduleName",     value = variables.moduleName,     cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "description",    value = variables.description,    cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "active",         value = variables.active,         cfsqltype = "cf_sql_bit")
+                           .addParam(name = "systemModule",   value = variables.systemModule,   cfsqltype = "cf_sql_bit")
+                           .addparam(name = "sortOrder",      value = variables.sortOrder,      cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "availableWWW",   value = variables.availableWWW,   cfsqltype = "cf_sql_bit")
+                           .addParam(name = "availableADMIN", value = variables.availableADMIN, cfsqltype = "cf_sql_bit")
+                           .execute();
+            }
+            
+            if(variables.subModulesEdited) {
+                for(var i = 1; i <= variables.subModules.len(); ++i) {
+                    try {
+                        new Query().setSQL("INSERT INTO nephthys_module_subModule
+                                                        (
+                                                            moduleId,
+                                                            subModuleId
+                                                        )
+                                                 VALUES (
+                                                            :moduleId,
+                                                            :subModuleId
+                                                        )")
+                                   .addParam(name = "moduleId",    value = variables.moduleId,                    cfsqltype = "cf_sql_numeric")
+                                   .addParam(name = "subModuleId", value = variables.subModules[i].getModuleId(), cfsqltype = "cf_sql_numeric")
+                                   .execute();
+                    }
+                    catch(database db) {
+                        // todo: check if error != duplicate key
+                    }
+                }
+                
+                variables.subModulesEdited = false;
+            }
+            
+            transactionCommit();
         }
         return this;
     }
@@ -172,6 +237,26 @@ component {
             variables.sortOrder      = 0;
             variables.availableWWW   = true;
             variables.availableADMIN = true;
+        }
+    }
+    
+    private void function loadSubModules() {
+        if(variables.moduleId != 0 && variables.moduleId != null) {
+            variables.subModules = [];
+            
+            var qGetSubModules = new Query().setSQL("SELECT subModuleId
+                                                       FROM nephthys_module_subModule
+                                                      WHERE moduleId = :moduleId")
+                                            .addParam(name = "moduleId", value = variables.moduleId, cfsqltype = "cf_sql_numeric")
+                                            .execute()
+                                            .getResult();
+            
+            for(var i = 1; i <= qGetSubModules.getRecordCount(); ++i) {
+                variables.subModules.append(new module(qGetSubModules.subModuleId[i]));
+            }
+        }
+        else {
+            variables.subModules = [];
         }
     }
 }

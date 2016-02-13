@@ -47,6 +47,10 @@ nephthysAdminApp
             
             getStatus: function() {
                 return $http.get("/ajax/com/Nephthys/pages/getStatusList");
+            },
+            
+            getAvailableSubModules: function() {
+                return $http.get("/ajax/com/Nephthys/pages/getAvailableSubModules");
             }
         };
     });

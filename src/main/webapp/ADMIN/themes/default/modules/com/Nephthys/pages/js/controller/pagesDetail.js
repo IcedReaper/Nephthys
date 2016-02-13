@@ -3,12 +3,14 @@ nephthysAdminApp
         $scope.load = function () {
             $q.all([
                 pagesService.getDetails($routeParams.pageId),
-                pagesService.getStatus()
+                pagesService.getStatus(),
+                pagesService.getAvailableSubModules()
             ])
             // and merging them
-            .then($q.spread(function (pageDetails, pageStatus) {
-                $scope.page       = pageDetails.page;
-                $scope.pageStatus = pageStatus.data;
+            .then($q.spread(function (pageDetails, pageStatus, availableSubModules) {
+                $scope.page                = pageDetails.page;
+                $scope.pageStatus          = pageStatus.data;
+                $scope.availableSubModules = availableSubModules;
             }));
         };
         
@@ -113,29 +115,6 @@ nephthysAdminApp
         $scope.load();
         
         // todo: move to db and load via ajax
-        $scope.availableSubTypes = {
-            "com.Nephthys.container": [
-                "com.Nephthys.row"
-            ],
-            "com.Nephthys.row": [
-                "com.Nephthys.col"
-            ],
-            "com.Nephthys.col": [
-                "com.Nephthys.text",
-                "com.IcedReaper.teamOverview",
-                "com.IcedReaper.blog",
-                "com.IcedReaper.gallery"
-            ],
-            "com.Nephthys.text": [
-            ],
-            "com.IcedReaper.teamOverview": [
-            ],
-            "com.IcedReaper.blog": [
-            ],
-            "com.IcedReaper.gallery": [
-            ]
-        };
-        
         $scope.availableOptions = {
             "com.Nephthys.container": {
                 "background-class": { // todo: divide

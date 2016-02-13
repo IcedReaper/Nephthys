@@ -327,6 +327,36 @@ ALTER TABLE nephthys_module OWNER TO nephthys_admin;
 GRANT ALL    ON TABLE nephthys_module TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_module TO nephthys_user;
 
+CREATE SEQUENCE seq_nephthys_module_subModule_id
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER SEQUENCE seq_nephthys_module_subModule_id OWNER TO nephthys_admin;
+
+CREATE TABLE public.nephthys_module_subModule
+(
+  module_subId integer NOT NULL DEFAULT nextval('seq_nephthys_module_subModule_id'::regclass),
+  moduleId integer NOT NULL,
+  subModuleId integer NOT NULL,
+  
+  CONSTRAINT PK_nephthys_module_subModule_id PRIMARY KEY (module_subId),
+  CONSTRAINT UK_nephthys_module_subModule_moduleSubModuleId UNIQUE (moduleId, subModuleId),
+  CONSTRAINT FK_nephthys_module_subModule_moduleId    FOREIGN KEY (moduleId)    REFERENCES nephthys_module (moduleId) ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT FK_nephthys_module_subModule_subModuleId FOREIGN KEY (subModuleId) REFERENCES nephthys_module (moduleId) ON UPDATE NO ACTION ON DELETE CASCADE
+)
+WITH (
+  OIDS = FALSE
+);
+
+CREATE INDEX IDX_nephthys_module_subModule_moduleId ON nephthys_module_subModule(moduleId);
+  
+ALTER TABLE nephthys_module_subModule OWNER TO nephthys_admin;
+
+GRANT ALL    ON TABLE nephthys_module_subModule TO nephthys_admin;
+GRANT SELECT ON TABLE nephthys_module_subModule TO nephthys_user;
+
 /* ~~~~~~~~~~~~~~~~~~ P A G E S ~~~~~~~~~~~~~~~~~~ */
 
 CREATE SEQUENCE seq_nephthys_page_status_id

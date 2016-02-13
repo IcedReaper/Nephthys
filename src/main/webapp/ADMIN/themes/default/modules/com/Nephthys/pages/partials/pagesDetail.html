@@ -115,12 +115,12 @@
             <div class="card card-block" ng-repeat="child in child.children" ng-include="'contentChild'"></div>
         </div>
         
-        <div ng-if="availableSubTypes[child.type].length > 0">
+        <div ng-if="availableSubModules[child.type].length > 0">
             <h4>Weiteres Unterelement hinzufügen</h4>
             
             <select class="form-control" ng-change="appendChild(child, newChildren)" ng-model="newChildren">
                 <option value="" selected="selected"></option>
-                <option ng-repeat="type in availableSubTypes[child.type]" value="{{type}}">{{type}}</option>
+                <option ng-repeat="type in availableSubModules[child.type]" value="{{type}}">{{type}}</option>
             </select>
         </div>
     </form>
