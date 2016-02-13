@@ -233,11 +233,11 @@ component {
         var _modules = {};
         
         for(var i = 1; i <= modules.len(); ++i) {
-            _modules[modules[i].getModuleName()] = {};
+            _modules[modules[i].getModuleName()] = [];
             
             var options = modules[i].getOptions();
             for(var j = 1; j <= options.len(); ++j) {
-                _modules[modules[i].getModuleName()][options[j].getOptionName()] = {
+                _modules[modules[i].getModuleName()][j] = {
                     "dbName"        = options[j].getOptionName(),
                     "description"   = options[j].getDescription(),
                     "type"          = options[j].getType(),

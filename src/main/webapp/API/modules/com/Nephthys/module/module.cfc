@@ -299,9 +299,10 @@ component {
         if(variables.moduleId != 0 && variables.moduleId != null) {
             variables.options = [];
             
-            var qGetOptions = new Query().setSQL("SELECT optionId
-                                                    FROM nephthys_module_option
-                                                   WHERE moduleId = :moduleId")
+            var qGetOptions = new Query().setSQL("  SELECT optionId
+                                                      FROM nephthys_module_option
+                                                     WHERE moduleId = :moduleId
+                                                  ORDER BY sortOrder ASC")
                                          .addParam(name = "moduleId", value = variables.moduleId, cfsqltype = "cf_sql_numeric")
                                          .execute()
                                          .getResult();
@@ -311,7 +312,7 @@ component {
             }
         }
         else {
-            variables.subModules = [];
+            variables.options = [];
         }
     }
 }

@@ -377,9 +377,11 @@ CREATE TABLE public.nephthys_module_option
   description character varying(100) NOT NULL,
   type optionType NOT NULL,
   selectOptions character varying(400),
+  sortOrder integer NOT NULL,
   
   CONSTRAINT PK_nephthys_module_option_id PRIMARY KEY (optionId),
   CONSTRAINT UK_nephthys_module_option_moduleOptionName UNIQUE (moduleId, optionName),
+  CONSTRAINT UK_nephthys_module_option_moduleSortOrder UNIQUE (moduleId, sortOrder),
   CONSTRAINT FK_nephthys_module_option_moduleId FOREIGN KEY (moduleId) REFERENCES nephthys_module (moduleId) ON UPDATE NO ACTION ON DELETE CASCADE
 )
 WITH (
