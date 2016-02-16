@@ -28,43 +28,49 @@
             <div class="col-md-6">
                 <h4>Details</h4>
                 
-                <div class="form-group">
-                    <label for="moduleId">Modul ID</label>
-                    <input type="text" class="form-control" id="moduleId" disabled readonly="readonly" ng-model="module.moduleId">
+                <div class="form-group row">
+                    <label class="col-sm-4 form-control-label">Modul ID</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-static">{{module.moduleId}}</p>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="moduleName">Modulname</label>
-                    <input type="text" class="form-control" id="moduleName" ng-disabled="module.moduleId != 0" placeholder="Modulname" ng-model="module.moduleName">
+                <div class="form-group row">
+                    <label class="col-sm-4 form-control-label">Modulname</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-static">{{module.moduleName}}</p>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="description">Beschreibung</label>
-                    <input type="text" class="form-control" id="description" placeholder="Beschreibung" ng-model="module.description">
+                <div class="form-group row">
+                    <label class="col-sm-4 form-control-label">Beschreibung</label>
+                    <div class="col-sm-8">
+                        <input type="text" class="form-control" id="description" placeholder="Beschreibung" ng-model="module.description">
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="active">Aktiv</label>
-                    <select class="form-control" ng-model="module.active">
-                        <option value="1">Aktiv</option>
-                        <option value="0">Inaktiv</option>
-                    </select>
+                <div class="form-group row">
+                    <label class="col-sm-4 form-control-label" for="active">Aktiv</label>
+                    <div class="col-sm-8">
+                        <select class="form-control" ng-model="module.active">
+                            <option value="1">Aktiv</option>
+                            <option value="0">Inaktiv</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="active">Verfügbar auf der Webseite</label>
-                    <select class="form-control" ng-model="module.availableWWW" ng-disabled="module.moduleId != 0">
-                        <option value="1">Ja</option>
-                        <option value="0">Nein</option>
-                    </select>
+                <div class="form-group row">
+                    <label class="col-sm-4 form-control-label">Verfügbar auf der Webseite</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-static">{{module.availableWWW !== '0' ? 'Ja' : 'Nein'}}</p>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="active">Verfügbar im Adminbereich</label>
-                    <select class="form-control" ng-model="module.availableADMIN" ng-disabled="module.moduleId != 0">
-                        <option value="1">Ja</option>
-                        <option value="0">Nein</option>
-                    </select>
+                <div class="form-group row">
+                    <label class="col-sm-4 form-control-label">Verfügbar im Adminbereich</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-static">{{module.availableADMIN !== '0' ? 'Ja' : 'Nein'}}</p>
+                    </div>
                 </div>
                 
                 <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
             </div>
-            <div class="col-md-6" ng-if="module.moduleId != 0 && module.availableWWW">
+            <div class="col-md-6" ng-if="module.availableWWW !== '0'">
                 <h4>Untermodule</h4>
                 
                 <table class="table">

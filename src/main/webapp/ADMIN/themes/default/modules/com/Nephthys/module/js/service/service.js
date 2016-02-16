@@ -1,5 +1,5 @@
 nephthysAdminApp
-    .service("moduleManagerService", function($http) {
+    .service("moduleService", function($http) {
         return {
             getList: function () {
                 return $http.get('/ajax/com/Nephthys/module/getList');

@@ -1,5 +1,5 @@
 nephthysAdminApp
-    .controller('moduleManagerDetailCtrl', ["$scope", "$routeParams", "$q", "moduleManagerService", function ($scope, $routeParams, $q, moduleManagerService) {
+    .controller('detailCtrl', ["$scope", "$routeParams", "$q", "moduleService", function ($scope, $routeParams, $q, moduleService) {
         var addedSubModules = [];
         var removedSubModules = [];
         var originalSubModules = [];
@@ -11,10 +11,10 @@ nephthysAdminApp
         
         $scope.load = function () {
             $q.all([
-                   moduleManagerService.getDetails($routeParams.moduleId),
-                   moduleManagerService.getOptions($routeParams.moduleId),
-                   moduleManagerService.getSubModules($routeParams.moduleId),
-                   moduleManagerService.getUnusedSubModules($routeParams.moduleId)
+                   moduleService.getDetails($routeParams.moduleId),
+                   moduleService.getOptions($routeParams.moduleId),
+                   moduleService.getSubModules($routeParams.moduleId),
+                   moduleService.getUnusedSubModules($routeParams.moduleId)
               ])
               .then($q.spread(function (moduleDetails, options, subModules, unusedSubModules) {
                     $scope.module           = moduleDetails.data;
@@ -30,9 +30,9 @@ nephthysAdminApp
         
         $scope.save = function () {
             $q.all([
-                   moduleManagerService.save($scope.module),
-                   moduleManagerService.addSubModules($routeParams.moduleId, addedSubModules),
-                   moduleManagerService.removeSubModules($routeParams.moduleId, removedSubModules)
+                   moduleService.save($scope.module),
+                   moduleService.addSubModules($routeParams.moduleId, addedSubModules),
+                   moduleService.removeSubModules($routeParams.moduleId, removedSubModules)
               ])
               .then($q.spread(function (save, added, removed) {
                   addedSubModules   = [];

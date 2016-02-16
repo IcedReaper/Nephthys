@@ -30,13 +30,20 @@ Allgemein
 Website
     1. Codeoptimierung
     2. Userverwaltung ?
+        User darf nur sich selber bearbeiten können => Keine Ajax-Request
+    3. Was passiert, wenn eine View in einem Theme für ein Modul nicht vorhanden ist?
+        Check im Admin einbauen
+            Weitere Views (für neue Themes) nachinstallieren?
+        Check im WWW einbauen => Wenn nicht gefunden im Default Theme anzeigen
+            Was passiert, wenn es auch da nicht vorhanden ist? Auslassen und Fehlerloggen? Fehler schmeißen?
 
 Adminbereich
     1. Modulinstallation
         1. Fileupload von einer zip/rar-Datei (siehe theme installation)
             Entpacken dieser in die 4 nötigen Ordner Frontend/Backend Admin/Website
         2. Installation per git-repository
-        3. Module-Modul überarbeiten: Name darf nicht geändert werden, Neues Modul => Installation
+        3. Module-Modul überarbeiten: Neues Modul => Installation
+        4. Theme Validierung hinzufügen
     2. Seitenmanagement
         1. Contentbearbeitung
             - 1. Version fertig - noch sehr abstrakt

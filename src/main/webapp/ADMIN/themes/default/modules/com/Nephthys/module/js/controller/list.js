@@ -1,25 +1,25 @@
 nephthysAdminApp
-    .controller('moduleManagerListCtrl', ["$scope", "moduleManagerService", function ($scope, moduleManagerService) {
+    .controller('listCtrl', ["$scope", "moduleService", function ($scope, moduleService) {
         $scope.activate = function (moduleId) {
-            moduleManagerService
+            moduleService
                 .activate(moduleId)
                 .then($scope.refresh);
         };
         
         $scope.deactivate = function (moduleId) {
-            moduleManagerService
+            moduleService
                 .deactivate(moduleId)
                 .then($scope.refresh);
         };
         
         $scope.delete = function (moduleId) {
-            moduleManagerService
+            moduleService
                 .delete(moduleId)
                 .then($scope.refresh);
         };
         
         $scope.refresh = function () {
-            moduleManagerService
+            moduleService
                 .getList()
                 .then(function (moduleManagerList) {
                     $scope.modules = moduleManagerList.data;
