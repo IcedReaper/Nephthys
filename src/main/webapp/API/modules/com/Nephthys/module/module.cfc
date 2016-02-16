@@ -3,6 +3,8 @@ component {
         variables.moduleId = arguments.moduleId;
         
         variables.subModulesEdited = false;
+        variables.newSubModuleIds = [];
+        variables.removedSubModuleIds = [];
         variables.optionsEdited = false;
         
         loadDetails();
@@ -53,24 +55,35 @@ component {
         return this;
     }
     public module function addSubModule(required module subModule) {
+        if(! variables.keyExists("subModules")) {
+            loadSubModules();
+        }
+        
         var found = false;
         for(var i = 1; i <= variables.subModules.len(); ++i) {
-            if(variables.subModules[i].getModuleName() == arguments.moduleName) {
+            if(variables.subModules[i].getModuleName() == arguments.subModule.getModuleName()) {
                 found = true;
                 break;
             }
         }
         
         if(! found) {
-            variables.getSubModules().append(duplicate(arguments.subModule));
+            variables.subModules.append(duplicate(arguments.subModule));
             variables.subModulesEdited = true;
+            variables.newSubModuleIds.append(arguments.subModule.getModuleId());
         }
         
         return this;
     }
     public module function removeSubModule(required string moduleName) {
+        if(! variables.keyExists("subModules")) {
+            loadSubModules();
+        }
+        
         for(var i = 1; i <= variables.subModules.len(); ++i) {
             if(variables.subModules[i].getModuleName() == arguments.moduleName) {
+                variables.removedSubModuleIds.append(variables.subModules[i].getModuleId());
+                
                 variables.subModules.deleteAt(i);
                 variables.subModulesEdited = true;
                 
@@ -81,6 +94,10 @@ component {
         return this;
     }
     public module function addOption(required option newOption) {
+        if(! variables.keyExists("options")) {
+            loadOptions();
+        }
+        
         var found = false;
         for(var i = 1; i <= variables.options; ++i) {
             if(variables.options[i].getOptionName() == arguments.newOption.getOptionName()) {
@@ -97,6 +114,10 @@ component {
         return this;
     }
     public module function removeOption(required string optionName) {
+        if(! variables.keyExists("options")) {
+            loadOptions();
+        }
+        
         for(var i = 1; i <= variables.options; ++i) {
             if(variables.options[i].getOptionName() == arguments.optionName) {
                 variables.options.deleteAt(i);
@@ -205,24 +226,28 @@ component {
             }
             
             if(variables.subModulesEdited) {
-                for(var i = 1; i <= variables.subModules.len(); ++i) {
-                    try {
-                        new Query().setSQL("INSERT INTO nephthys_module_subModule
-                                                        (
-                                                            moduleId,
-                                                            subModuleId
-                                                        )
-                                                 VALUES (
-                                                            :moduleId,
-                                                            :subModuleId
-                                                        )")
-                                   .addParam(name = "moduleId",    value = variables.moduleId,                    cfsqltype = "cf_sql_numeric")
-                                   .addParam(name = "subModuleId", value = variables.subModules[i].getModuleId(), cfsqltype = "cf_sql_numeric")
-                                   .execute();
-                    }
-                    catch(database db) {
-                        // todo: check if error != duplicate key
-                    }
+                for(var i = 1; i <= variables.newSubModuleIds.len(); ++i) {
+                    new Query().setSQL("INSERT INTO nephthys_module_subModule
+                                                    (
+                                                        moduleId,
+                                                        subModuleId
+                                                    )
+                                             VALUES (
+                                                        :moduleId,
+                                                        :subModuleId
+                                                    )")
+                               .addParam(name = "moduleId",    value = variables.moduleId,           cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "subModuleId", value = variables.newSubModuleIds[i], cfsqltype = "cf_sql_numeric")
+                               .execute();
+                }
+                
+                for(var i = 1; i <= variables.removedSubModuleIds.len(); ++i) {
+                    new Query().setSQL("DELETE FROM nephthys_module_subModule
+                                              WHERE moduleId    = :moduleId
+                                                AND subModuleId = :subModuleId")
+                               .addParam(name = "moduleId",    value = variables.moduleId,               cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "subModuleId", value = variables.removedSubModuleIds[i], cfsqltype = "cf_sql_numeric")
+                               .execute();
                 }
                 
                 variables.subModulesEdited = false;

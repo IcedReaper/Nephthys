@@ -8,14 +8,26 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h1>Details des Moduls <small>{{module.moduleName}}</small></h1>
+        <h1>Modul <small>{{module.moduleName}}</small></h1>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-md-6">
-        <div class="card card-block">
-            <form novalidate>
+<form novalidate>
+    <div class="card card-block">
+        <div class="row" ng-show="message">
+            <div class="col-md-12">
+                <div class="alert alert-{{message.type}} m-t" role="alert">
+                    <h3>{{message.headline}}</h3>
+                    <p>{{message.text}}</p>
+                    <p>{{message.errorMessage}}</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Details</h4>
+                
                 <div class="form-group">
                     <label for="moduleId">Modul ID</label>
                     <input type="text" class="form-control" id="moduleId" disabled readonly="readonly" ng-model="module.moduleId">
@@ -51,13 +63,63 @@
                 </div>
                 
                 <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
-            </form>
-        </div>
-        
-        <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
-            <h3>{{message.headline}}</h3>
-            <p>{{message.text}}</p>
-            <p>{{message.errorMessage}}</p>
+            </div>
+            <div class="col-md-6" ng-if="module.moduleId != 0 && module.availableWWW">
+                <h4>Untermodule</h4>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Untermodul</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="subModule in subModules">
+                            <td>{{subModule}}</td>
+                            <td>
+                                <button ng-click="removeSubModule($index)" class="btn btn-danger"><i class="fa fa-times"></i></button>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td>
+                                <select class="form-control" ng-model="newModule.name">
+                                    <option value=""></option>
+                                    <option ng-repeat="subModule in unusedSubModules" value="{{subModule}}">{{subModule}}</option>
+                                </select>
+                            </td>
+                            <td>
+                                <button ng-click="addSubModule(newSubModule)" class="btn btn-success"><i class="fa fa-plus"></i></button>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
+                
+                <h4>Vorhandene Optionen</h4>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Beschreibung</th>
+                            <th>Typ</th>
+                            <th>Optionen</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="option in options">
+                            <td>{{option.dbName}}</td>
+                            <td>{{option.description}}</td>
+                            <td>{{option.type}}</td>
+                            <td>
+                                {{option.selectOptions.join("\n")}}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
+</form>

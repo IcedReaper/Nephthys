@@ -155,4 +155,71 @@ component {
             "success" = true
         };
     }
+    
+    remote array function getOptions(required numeric moduleId) {
+        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        var options = [];
+        
+        for(var moduleOptions in module.getOptions()) {
+            options.append({
+                "dbName"        = moduleOptions.getOptionName(),
+                "description"   = moduleOptions.getDescription(),
+                "type"          = moduleOptions.getType(),
+                "selectOptions" = moduleOptions.getSelectOptions()
+            });
+        }
+        
+        return options;
+    }
+    
+    remote array function getSubModules(required numeric moduleId) {
+        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        
+        var subModules = [];
+        for(var subModule in module.getSubModules()) {
+            subModules.append(subModule.getModuleName());
+        }
+        
+        return subModules;
+    }
+    
+    remote array function getUnusedSubModules(required numeric moduleId) {
+        var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
+        
+        moduleFilterCtrl.setParentId(arguments.moduleId)
+                        .setAvailableWWW(true);
+        
+        var availableModules = [];
+        for(var module in moduleFilterCtrl.filter()) {
+            availableModules.append(module.getModuleName());
+        }
+        
+        return availableModules;
+    }
+    
+    remote boolean function addSubModules(required numeric moduleId, required array subModules) {
+        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
+        
+        var subModule = null;
+        for(var i = 1; i <= arguments.subModules.len(); ++i) {
+            subModule = moduleFilterCtrl.setModuleName(arguments.subModules[i]).filter()[1];
+            module.addSubModule(subModule);
+        }
+        module.save();
+        
+        return true;
+    }
+    
+    remote boolean function removeSubModules(required numeric moduleId, required array subModules) {
+        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        
+        var subModule = null;
+        for(var i = 1; i <= arguments.subModules.len(); ++i) {
+            module.removeSubModule(arguments.subModules[i]);
+        }
+        module.save();
+        
+        return true;
+    }
 }

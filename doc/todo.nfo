@@ -36,6 +36,7 @@ Adminbereich
         1. Fileupload von einer zip/rar-Datei (siehe theme installation)
             Entpacken dieser in die 4 nötigen Ordner Frontend/Backend Admin/Website
         2. Installation per git-repository
+        3. Module-Modul überarbeiten: Name darf nicht geändert werden, Neues Modul => Installation
     2. Seitenmanagement
         1. Contentbearbeitung
             - 1. Version fertig - noch sehr abstrakt
