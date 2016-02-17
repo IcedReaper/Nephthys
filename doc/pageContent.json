@@ -1,43 +1,102 @@
-[
-    {
-        "type": "com.Nephthys.container",
+[{
+    "type": "com.Nephthys.container",
+    "options": {
+        "background-class": "alternativeFont intro"
+    },
+    "children": [{
+        "type": "com.Nephthys.row",
         "options": {},
-        "children": [
-            {
-                "type": "com.Nephthys.row",
+        "children": [{
+            "type": "com.Nephthys.col",
+            "options": {
+                "width-md": "100%",
+                "width-xs": "100%"
+            },
+            "children": [{
+                "type": "com.Nephthys.text",
+                "options": {
+                    "content": "<h1>IcedReaper's Nephtyhs</h1>",
+                    "centered": true
+                },
+                "children": []
+            }]
+        }]
+    }]
+}, {
+    "type": "com.Nephthys.container",
+    "options": {
+        "background-class": "background imaged-background-2 dark-overlay-1",
+        "fullWidth": true,
+        "fullWidthOnlyBackground": true
+    },
+    "children": [{
+        "type": "com.Nephthys.row",
+        "options": {},
+        "children": [{
+            "type": "com.Nephthys.col",
+            "options": {
+                "width-md": "100%",
+                "width-xs": "100%"
+            },
+            "children": [{
+                "type": "com.Nephthys.text",
+                "options": {
+                    "content": "<h2>Willkommen auf der Plattform des CMS &ldquo;Nephythys&rdquo;.</h2><p>&ldquo;Nephythys&rdquo; ist ein modulares, multi Theme orientiertes Open-Source CMS, welches in ColdFusion entwickelt wurde, und aktuell in der Version V0.4A erhältlich ist.</p><h2>Features</h2><ul><li>Open Source</li><li>Erweiterbar</li><li>Modular</li><li>Multi Theme orientiert</li></ul><h2>Folgende Features werden mitgeliefert</h2><ul><li>5 Themes (werden ständig erweitert)</li><li>30 Seitenvorlagen zur einfachen Seitenerstellung</li><li>10 Module (weitere 100 Module stehen zusätzlich zur Verfügung)</li></ul>"
+                },
+                "children": []
+            }]
+        }]
+    }]
+}, {
+    "type": "com.Nephthys.container",
+    "options": {
+        "background-class": "alternativeFont"
+    },
+    "children": [{
+        "type": "com.Nephthys.row",
+        "options": {},
+        "children": [{
+            "type": "com.Nephthys.col",
+            "options": {
+                "width-md": "100%",
+                "width-xs": "100%"
+            },
+            "children": [{
+                "type": "com.IcedReaper.teamOverview",
                 "options": {},
-                "children": [
-                    {
-                        "type": "com.Nephthys.col",
-                        "options": {
-                            "width-md": "66%",
-                            "width-xs": "100%"
-                        },
-                        "children": [
-                            {
-                                "type": "com.Nephthys.text",
-                                "options": {
-                                    "content": "<h1>Eine dolle Überschrift</h1><p>Und ein ganz toller Text...</p>"
-                                },
-                                "children": []
-                            },
-                            {
-                                "type": "com.IcedReaper.gallery",
-                                "options": {},
-                                "children": []
-                            }
-                        ]
-                    },
-                    {
-                        "type": "com.Nephthys.col",
-                        "options": {
-                            "width-md": "33%",
-                            "width-xs": "100%"
-                        },
-                        "children": []
-                    }
-                ]
-            }
-        ]
-    }
-]
+                "children": []
+            }]
+        }]
+    }]
+}, {
+    "type": "com.Nephthys.container",
+    "options": {
+        "background-class": "alternativeFont background static-background-1",
+        "fullWidth": true,
+        "fullWidthOnlyBackground": true
+    },
+    "children": [{
+        "type": "com.Nephthys.row",
+        "options": {},
+        "children": [{
+            "type": "com.Nephthys.col",
+            "options": {
+                "width-md": "100%",
+                "width-xs": "100%"
+            },
+            "children": [{
+                "type": "com.Nephthys.text",
+                "options": {
+                    "content": "<h2>Neuigkeiten</h2>"
+                },
+                "children": []
+            }, {
+                "type": "com.IcedReaper.blog",
+                "options": {
+                    "onlyLast": true
+                },
+                "children": []
+            }]
+        }]
+    }]
+}]
