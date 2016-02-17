@@ -222,4 +222,30 @@ component {
         
         return true;
     }
+    
+    remote array function checkThemeAvailability(required numeric moduleId) {
+        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        
+        var themes = [];
+        var themeFilterCtrl = createObject("component", "API.modules.com.Nephthys.theme.filter").init();
+        var themeList = 
+        
+        var modulePath = module.getModuleName().replace(".", "/", "ALL");
+        var i = 0;
+        for(var theme in themeFilterCtrl.getList()) { // todo: refactor theme filter component
+            themes[++i] = {
+                available = false,
+                active    = toString(theme.getActiveStatus())
+            };
+            
+            if(fileExists(expandPath("/WWW/modules/" & modulePath & "/connector.cfc"))) {
+                var tComp = createObject("component", "WWW.modules." & module.getModuleName() & ".connector").init();
+                if(tComp.keyExists("render")) {
+                    themes[i].available = true;
+                }
+            }
+        }
+        
+        return themes;
+    }
 }

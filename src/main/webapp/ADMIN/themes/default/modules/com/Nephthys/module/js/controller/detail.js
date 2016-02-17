@@ -14,13 +14,15 @@ nephthysAdminApp
                    moduleService.getDetails($routeParams.moduleId),
                    moduleService.getOptions($routeParams.moduleId),
                    moduleService.getSubModules($routeParams.moduleId),
-                   moduleService.getUnusedSubModules($routeParams.moduleId)
+                   moduleService.getUnusedSubModules($routeParams.moduleId),
+                   moduleService.checkThemeAvailability($routeParams.moduleId)
               ])
-              .then($q.spread(function (moduleDetails, options, subModules, unusedSubModules) {
-                    $scope.module           = moduleDetails.data;
-                    $scope.options          = options;
-                    $scope.subModules       = subModules;
-                    $scope.unusedSubModules = unusedSubModules;
+              .then($q.spread(function (moduleDetails, options, subModules, unusedSubModules, themeAvailability) {
+                    $scope.module                 = moduleDetails.data;
+                    $scope.options                = options;
+                    $scope.subModules             = subModules;
+                    $scope.unusedSubModules       = unusedSubModules;
+                    $scope.themeAvailabilityCheck = themeAvailability;
                     
                     originalSubModules = [];
                     setOriginalSubModules();

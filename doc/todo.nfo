@@ -26,6 +26,8 @@ Allgemein
     17. F5-Raids unterbinden
     18. Beim anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
     19. filter-componten vereinheitlichen
+            filter in execute umbenennen
+            getResult adden
 
 Website
     1. Codeoptimierung
