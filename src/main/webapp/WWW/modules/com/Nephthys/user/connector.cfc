@@ -24,7 +24,9 @@ component implements="WWW.interfaces.connector" {
             var userListCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
             
             if(splitParameter.len() == 1) {
-                var user = userListCtrl.search(splitParameter[1], false);
+                var user = userListCtrl.setUserName(splitParameter[1])
+                                       .execute()
+                                       .getResult();
                 
                 if(user.len() == 1) {
                     request.page.setTitle("Benutzersuche - " & user[1].getUsername());
@@ -47,12 +49,16 @@ component implements="WWW.interfaces.connector" {
             }
             else {
                 request.page.setTitle("Benutzersuche - Suchergebnisse");
+                var user = userListCtrl.setUserName(form.username)
+                                       .setUserNameLike(true)
+                                       .execute()
+                                       .getResult();
                 
                 saveContent variable="renderedContent" {
                     module template     = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/user/templates/userSearchResults.cfm"
                            options      = preparedOptions
                            searchQuery  = form.username
-                           results      = userListCtrl.search(form.username, true)
+                           results      = user
                            childContent = arguments.childContent;
                 }
             }

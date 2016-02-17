@@ -175,9 +175,14 @@ component implements="WWW.interfaces.connector" {
     }
     
     private boolean function validateUsername(required string username) {
-        var userFilterCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
+        if(arguments.username == "") {
+            return false;
+        }
         
-        return arguments.username != "" && userFilterCtrl.checkForUser(username=arguments.username) == false;
+        var userFilterCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
+        return userFilterCtrl.setUserName(arguments.userName)
+                             .execute()
+                             .getResultCount() == 0;
     }
     
     private boolean function validateEmail(required string eMail) {

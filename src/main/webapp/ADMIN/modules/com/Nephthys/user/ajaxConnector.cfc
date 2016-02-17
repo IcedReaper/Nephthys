@@ -2,20 +2,14 @@ component {
     remote struct function getList() {
         var userListCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
         
-        var userArray = userListCtrl.getList();
-        
         var data = [];
         
-        for(var i = 1; i <= userArray.len(); i++) {
+        for(var user in userListCtrl.execute().getResult()) {
             data.append({
-                    "userId"   = userArray[i].getUserId(),
-                    "username" = userArray[i].getUserName(),
-                    "email"    = userArray[i].getEmail(),
-                    "active"   = userArray[i].getActiveStatus()/*,
-                    "actions" = [
-                        "activeStatus" = true,
-                        "permissions"  = false
-                    ]*/
+                    "userId"   = user.getUserId(),
+                    "username" = user.getUserName(),
+                    "email"    = user.getEmail(),
+                    "active"   = user.getActiveStatus()
                 });
         }
         

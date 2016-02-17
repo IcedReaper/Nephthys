@@ -155,12 +155,10 @@ component {
                                                   required string oldSecretKey, required string oldAlgorithm) {
         var userListCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
         
-        var userArray = userListCtrl.getList();
-        
-        for(var i = 1; i <= userArray.len(); i++) {
-            var rawPassword = decrypt(userArray[i].getPassword(), arguments.oldSecretKey, arguments.oldAlgorithm);
-            userArray[i].setPassword(encrypt(rawPassword, arguments.newSecretKey, arguments.newAlgorithm))
-                        .save();
+        for(var user in userListCtrl.execute().getResult()) {
+            var rawPassword = decrypt(user.getPassword(), arguments.oldSecretKey, arguments.oldAlgorithm);
+            user.setPassword(encrypt(rawPassword, arguments.newSecretKey, arguments.newAlgorithm))
+                .save();
         }
     }
 }
