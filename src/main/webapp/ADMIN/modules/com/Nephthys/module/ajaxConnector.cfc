@@ -222,31 +222,4 @@ component {
         
         return true;
     }
-    
-    remote array function checkThemeAvailability(required numeric moduleId) {
-        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
-        
-        var themes = [];
-        var themeFilterCtrl = createObject("component", "API.modules.com.Nephthys.theme.filter").init();
-        var themeList = 
-        
-        var modulePath = module.getModuleName().replace(".", "/", "ALL");
-        var i = 0;
-        for(var theme in themeFilterCtrl.getList()) { // todo: refactor theme filter component
-            themes[++i] = {
-                themeName = theme.getName(),
-                available = false,
-                active    = toString(theme.getActiveStatus())
-            };
-            
-            if(fileExists(expandPath("/WWW/modules/" & modulePath & "/connector.cfc"))) {
-                var tComp = createObject("component", "WWW.modules." & module.getModuleName() & ".connector").init();
-                if(structKeyExists(tComp, "render")) { // structKeyExists(comp, "") works on a component, comp.keyExists("") does not.
-                    themes[i].available = true;
-                }
-            }
-        }
-        
-        return themes;
-    }
 }

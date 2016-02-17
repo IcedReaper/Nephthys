@@ -94,14 +94,6 @@ nephthysAdminApp
                     moduleId:   moduleId,
                     subModules: removedSubModules
                 });
-            },
-            
-            checkThemeAvailability: function (moduleId) {
-                return $http.get('/ajax/com/Nephthys/module/checkThemeAvailability', {
-                    params: {
-                        moduleId: moduleId
-                    }
-                });
             }
         };
     });

@@ -15,20 +15,19 @@ Allgemein
     9. repair modus ?
     10. Pfade in DB speichern / Controller what else | aktuell hard-coded an mehreren Stellen
         1. Avatar
-    11. Check if some upload logics need to be in API instead of ADMIN components
-    12. Lizenzen von Assets und Plugins überprüfen
-    13. Mehrsprachigkeit/Internationalisierung
+    11. Lizenzen von Assets und Plugins überprüfen
+    12. Mehrsprachigkeit/Internationalisierung
         1. i18n
         2. i10n
-    14. filter.cfc auf gleichen Nenner bringen. (Aktuell gibt die Methode mal arrays, mal queries zurück) !!!
-    15. user => username überprüfen
-    16. user => blacklist erstellen | Innerhalb des Username überprüfen
-    17. F5-Raids unterbinden
-    18. Beim anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
-    19. filter-componten vereinheitlichen
+    13. filter.cfc auf gleichen Nenner bringen. (Aktuell gibt die Methode mal arrays, mal queries zurück) !!!
+    14. user => username überprüfen
+    15. user => blacklist erstellen | Innerhalb des Username überprüfen
+    16. F5-Raids unterbinden
+    17. Beim anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
+    18. filter-componten vereinheitlichen
             filter in execute umbenennen
             getResult adden
-    20. FileUpload, etc in eine Extra-Component aus dem Model auslagern
+    19. FileUpload, etc in eine Extra-Component aus dem Model auslagern
 
 Website
     1. Codeoptimierung
@@ -46,7 +45,6 @@ Adminbereich
             Entpacken dieser in die 4 nötigen Ordner Frontend/Backend Admin/Website
         2. Installation per git-repository
         3. Module-Modul überarbeiten: Neues Modul => Installation
-        4. Theme Validierung hinzufügen
     2. Seitenmanagement
         1. Contentbearbeitung
             - 1. Version fertig - noch sehr abstrakt

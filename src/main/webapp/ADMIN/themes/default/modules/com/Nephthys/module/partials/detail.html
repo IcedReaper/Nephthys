@@ -108,28 +108,7 @@
     
     <div class="card card-block" ng-if="module.availableWWW !== '0'">
         <div class="row">
-            <div class="col-sm-6">
-                <h4>Themecheck</h4>
-                
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th>Theme</th>
-                            <th>Vorhanden</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr ng-repeat="theme in themeAvailabilityCheck">
-                            <td ng-class="theme.active === '1' ? 'text-success' : 'text-danger'">{{theme.themeName}}</td>
-                            <td>
-                                <i class="fa fa-check fa-border text-success" ng-if="theme.available"></i>
-                                <i class="fa fa-times fa-border text-danger" ng-if="! theme.available"></i>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-sm-6">
+            <div class="col-sm-12">
                 <h4>Vorhandene Optionen</h4>
                 
                 <table class="table">
