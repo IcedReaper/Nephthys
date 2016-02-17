@@ -1,7 +1,8 @@
 component {
     remote struct function getList() {
         var filterCtrl = createObject("component", "API.modules.com.IcedReaper.contactForm.filter").init();
-        var rawRequests = filterCtrl.filter();
+        var rawRequests = filterCtrl.execute()
+                                    .getResult();
         
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
