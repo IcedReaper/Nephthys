@@ -106,7 +106,7 @@
         </div>
     </div>
     
-    <div class="card card-block">
+    <div class="card card-block" ng-if="module.availableWWW !== '0'">
         <div class="row">
             <div class="col-sm-6">
                 <h4>Themecheck</h4>
@@ -122,8 +122,8 @@
                         <tr ng-repeat="theme in themeAvailabilityCheck">
                             <td ng-class="theme.active === '1' ? 'text-success' : 'text-danger'">{{theme.themeName}}</td>
                             <td>
-                                <i class="fa fa-check fa-border text-success" ng-if="theme.available === '1'"></i>
-                                <i class="fa fa-times fa-border text-danger" ng-if="theme.available === '0'"></i>
+                                <i class="fa fa-check fa-border text-success" ng-if="theme.available"></i>
+                                <i class="fa fa-times fa-border text-danger" ng-if="! theme.available"></i>
                             </td>
                         </tr>
                     </tbody>

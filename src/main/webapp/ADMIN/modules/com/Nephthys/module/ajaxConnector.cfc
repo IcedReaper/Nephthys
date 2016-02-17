@@ -234,13 +234,14 @@ component {
         var i = 0;
         for(var theme in themeFilterCtrl.getList()) { // todo: refactor theme filter component
             themes[++i] = {
+                themeName = theme.getName(),
                 available = false,
                 active    = toString(theme.getActiveStatus())
             };
             
             if(fileExists(expandPath("/WWW/modules/" & modulePath & "/connector.cfc"))) {
                 var tComp = createObject("component", "WWW.modules." & module.getModuleName() & ".connector").init();
-                if(tComp.keyExists("render")) {
+                if(structKeyExists(tComp, "render")) { // structKeyExists(comp, "") works on a component, comp.keyExists("") does not.
                     themes[i].available = true;
                 }
             }

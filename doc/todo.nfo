@@ -28,6 +28,7 @@ Allgemein
     19. filter-componten vereinheitlichen
             filter in execute umbenennen
             getResult adden
+    20. FileUpload, etc in eine Extra-Component aus dem Model auslagern
 
 Website
     1. Codeoptimierung
