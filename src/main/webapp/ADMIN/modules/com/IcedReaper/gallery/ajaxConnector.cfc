@@ -1,9 +1,9 @@
 component {
     // Galleries and their details
     remote struct function getList() {
-        var gallerySearchCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.search").init();
+        var galleryFilterCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.filter").init();
         
-        var galleries = gallerySearchCtrl.execute();
+        var galleries = galleryFilterCtrl.execute().getResult();
         var data = [];
         
         for(var i = 1; i <= galleries.len(); i++) {
@@ -294,7 +294,7 @@ component {
     
     private array function prepareCategoryDetails(required array categories, required boolean getGalleries = false) {
         var gCategories = [];
-        var gallerySearcher = createObject("component", "API.modules.com.IcedReaper.gallery.search").init();
+        var galleryFilterCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.filter").init();
         
         for(var c = 1; c <= arguments.categories.len(); c++) {
             gCategories.append({
@@ -303,8 +303,9 @@ component {
             });
             
             if(arguments.getGalleries) {
-                var galleries = gallerySearcher.setCategory(arguments.categories[c].getName())
-                                               .execute();
+                var galleries = galleryFilterCtrl.setCategory(arguments.categories[c].getName())
+                                                 .execute()
+                                                 .getResult();
                 
                 var preparedGalleries = [];
                 for(var g = 1; g <= galleries.len(); g++) {
