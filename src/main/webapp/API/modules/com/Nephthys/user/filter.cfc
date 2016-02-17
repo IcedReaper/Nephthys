@@ -1,4 +1,4 @@
-component {
+component implements="API.interfaces.filter" {
     public filter function init() {
         variables.userId = null;
         
@@ -10,7 +10,7 @@ component {
         
         variables.active = null;
         
-        variables.qUser = null;
+        variables.qRes = null;
         variables.results = null;
         
         return this;
@@ -84,31 +84,31 @@ component {
         
         sql &= where & " ORDER BY userName ASC";
         
-        variables.qUser = qryFilter.setSQL(sql)
-                                   .execute()
-                                   .getResult();
+        variables.qRes = qryFilter.setSQL(sql)
+                                  .execute()
+                                  .getResult();
         return this;
     }
     
     public array function getResult() {
-        if(! isQuery(variables.qUser)) {
+        if(! isQuery(variables.qRes)) {
             throw(type = "nephthys.application.invalidResource", message = "Please be sure that you called execute() before you're trying to get the results");
         }
         
         if(variables.results == null) {
             variables.results = [];
-            for(var i = 1; i <= variables.qUser.getRecordCount(); i++) {
-                variables.results.append(new user(variables.qUser.userId[i]));
+            for(var i = 1; i <= variables.qRes.getRecordCount(); i++) {
+                variables.results.append(new user(variables.qRes.userId[i]));
             }
         }
         return variables.results;
     }
     
     public numeric function getResultCount() {
-        if(! isQuery(variables.qUser)) {
+        if(! isQuery(variables.qRes)) {
             throw(type = "nephthys.application.invalidResource", message = "Please be sure that you called execute() before you're trying to get the result count");
         }
         
-        return variables.qUser.getRecordCount();
+        return variables.qRes.getRecordCount();
     }
 }
