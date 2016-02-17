@@ -1,5 +1,5 @@
 nephthysAdminApp
-    .service("moduleManagerService", function($http) {
+    .service("moduleService", function($http) {
         return {
             getList: function () {
                 return $http.get('/ajax/com/Nephthys/module/getList');
@@ -55,6 +55,44 @@ nephthysAdminApp
                 return $http.post('/ajax/com/Nephthys/module/savePermissions', {
                     moduleId:    moduleId,
                     permissions: permissions
+                });
+            },
+            
+            getOptions: function (moduleId) {
+                return $http.get('/ajax/com/Nephthys/module/getOptions', {
+                    params: {
+                        moduleId: moduleId
+                    }
+                });
+            },
+            
+            getSubModules: function (moduleId) {
+                return $http.get('/ajax/com/Nephthys/module/getSubModules', {
+                    params: {
+                        moduleId: moduleId
+                    }
+                });
+            },
+            
+            getUnusedSubModules: function (moduleId) {
+                return $http.get('/ajax/com/Nephthys/module/getUnusedSubModules', {
+                    params: {
+                        moduleId: moduleId
+                    }
+                });
+            },
+            
+            addSubModules: function (moduleId, addedSubModules) {
+                return $http.post('/ajax/com/Nephthys/module/addSubModules', {
+                    moduleId:   moduleId,
+                    subModules: addedSubModules
+                });
+            },
+            
+            removeSubModules: function (moduleId, removedSubModules) {
+                return $http.post('/ajax/com/Nephthys/module/removeSubModules', {
+                    moduleId:   moduleId,
+                    subModules: removedSubModules
                 });
             }
         };

@@ -2,16 +2,18 @@ component {
     remote struct function getList() {
         var filterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
         
-        var installedModules = filterCtrl.getList();
+        var installedModules = filterCtrl.filter();
         var preparedModules = [];
         
         for(var i = 1; i <= installedModules.len(); i++) {
             preparedModules.append({
-                    'moduleId'     = installedModules[i].getModuleId(),
-                    'moduleName'   = installedModules[i].getModuleName(),
-                    'description'  = installedModules[i].getDescription(),
-                    'active'       = toString(installedModules[i].getActiveStatus()),
-                    'systemModule' = toString(installedModules[i].getSystemModule())
+                    'moduleId'       = installedModules[i].getModuleId(),
+                    'moduleName'     = installedModules[i].getModuleName(),
+                    'description'    = installedModules[i].getDescription(),
+                    'active'         = toString(installedModules[i].getActiveStatus()),
+                    'systemModule'   = toString(installedModules[i].getSystemModule()),
+                    'availableWWW'   = toString(installedModules[i].getAvailableWWW()),
+                    'availableADMIN' = toString(installedModules[i].getAvailableADMIN())
                 });
         }
         
@@ -27,11 +29,13 @@ component {
         return {
             'success' = true,
             'data' = {
-                'moduleId'     = module.getModuleId(),
-                'moduleName'   = module.getModuleName(),
-                'description'  = module.getDescription(),
-                'active'       = toString(module.getActiveStatus()),
-                'systemModule' = toString(module.getSystemModule())
+                'moduleId'       = module.getModuleId(),
+                'moduleName'     = module.getModuleName(),
+                'description'    = module.getDescription(),
+                'active'         = toString(module.getActiveStatus()),
+                'systemModule'   = toString(module.getSystemModule()),
+                'availableWWW'   = toString(module.getAvailableWWW()),
+                'availableADMIN' = toString(module.getAvailableADMIN())
             }
         };
     }
@@ -39,12 +43,16 @@ component {
     remote struct function save(required numeric moduleId,
                                 required string  moduleName,
                                 required string  description,
-                                required numeric active) {
+                                required numeric active,
+                                required numeric availableWWW,
+                                required numeric availableADMIN) {
         var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
         
+        // todo: refactor
         if(arguments.moduleId == 0) {
             var filterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
-            var maxSortOrder = filterCtrl.getMaxSortOrder();
+            var modules = filterCtrl.filter();
+            var maxSortOrder = modules[modules.len()].getSortId() + 1;
             
             module.setSortOrder(maxSortOrder + 1);
         }
@@ -52,6 +60,8 @@ component {
         module.setModuleName(arguments.moduleName)
               .setDescription(arguments.description)
               .setActiveStatus(arguments.active)
+              .setAvailableWWW(arguments.availableWWW)
+              .setAvailableADMIN(arguments.availableADMIN)
               .save();
         
         return {
@@ -144,5 +154,72 @@ component {
         return {
             "success" = true
         };
+    }
+    
+    remote array function getOptions(required numeric moduleId) {
+        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        var options = [];
+        
+        for(var moduleOptions in module.getOptions()) {
+            options.append({
+                "dbName"        = moduleOptions.getOptionName(),
+                "description"   = moduleOptions.getDescription(),
+                "type"          = moduleOptions.getType(),
+                "selectOptions" = moduleOptions.getSelectOptions()
+            });
+        }
+        
+        return options;
+    }
+    
+    remote array function getSubModules(required numeric moduleId) {
+        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        
+        var subModules = [];
+        for(var subModule in module.getSubModules()) {
+            subModules.append(subModule.getModuleName());
+        }
+        
+        return subModules;
+    }
+    
+    remote array function getUnusedSubModules(required numeric moduleId) {
+        var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
+        
+        moduleFilterCtrl.setParentId(arguments.moduleId)
+                        .setAvailableWWW(true);
+        
+        var availableModules = [];
+        for(var module in moduleFilterCtrl.filter()) {
+            availableModules.append(module.getModuleName());
+        }
+        
+        return availableModules;
+    }
+    
+    remote boolean function addSubModules(required numeric moduleId, required array subModules) {
+        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
+        
+        var subModule = null;
+        for(var i = 1; i <= arguments.subModules.len(); ++i) {
+            subModule = moduleFilterCtrl.setModuleName(arguments.subModules[i]).filter()[1];
+            module.addSubModule(subModule);
+        }
+        module.save();
+        
+        return true;
+    }
+    
+    remote boolean function removeSubModules(required numeric moduleId, required array subModules) {
+        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        
+        var subModule = null;
+        for(var i = 1; i <= arguments.subModules.len(); ++i) {
+            module.removeSubModule(arguments.subModules[i]);
+        }
+        module.save();
+        
+        return true;
     }
 }

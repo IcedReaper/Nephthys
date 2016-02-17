@@ -139,7 +139,7 @@ component {
         request.user = createObject("component", "API.modules.com.Nephthys.user.user").init(session.userId);
         
         if(session.userId == 0) {
-            if(! structIsEmpty(form) && form.keyExists("username") && form.keyExists("password") && /* check referrrer */ true) {
+            if(! structIsEmpty(form) && form.keyExists("username") && form.keyExists("password") && checkReferer()) {
                 var userId = application.system.settings.getValueOfKey("authenticator").login(form.username, form.password);
                 if(userId != 0 && userId != null) {
                     session.userId = userId;
@@ -177,5 +177,9 @@ component {
     private void function logout() {
         session.userId = 0;
         request.user = createObject("component", "API.modules.com.Nephthys.user.user").init(session.userId);
+    }
+    
+    private boolean function checkReferer() {
+        return reReplace(cgi.referer, "https?:\/\/" & cgi.http_host & ".*", "") == "";
     }
 }

@@ -3,6 +3,11 @@
 <script type="text/javascript" src="/themes/default/assets/angular-chart/angular-chart.min.js"></script>
 <link rel="stylesheet" href="/themes/default/assets/angular-chart/angular-chart.min.css"></script>
 
+<link rel='stylesheet' href='/themes/default/assets/angular-textAngular/textAngular.css'>
+<script src='/themes/default/assets/angular-textAngular/textAngular-rangy.min.js'></script>
+<script src='/themes/default/assets/angular-textAngular/textAngular-sanitize.min.js'></script>
+<script src='/themes/default/assets/angular-textAngular/textAngular.min.js'></script>
+
 <!--- app --->
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/pagesApp.js"></script>
 
