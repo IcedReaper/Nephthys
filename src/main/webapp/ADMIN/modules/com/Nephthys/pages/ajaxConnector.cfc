@@ -124,15 +124,14 @@ component {
     remote struct function getStatusList() {
         var pageStatusLoader = createObject("component", "API.modules.com.Nephthys.page.pageStatusFilter").init();
         
-        var pageStatus = pageStatusLoader.load();
         var prepPageStatus = [];
         
-        for(var i = 1; i <= pageStatus.len(); i++) {
+        for(var pageStatus in pageStatusLoader.execute().getResult()) {
             prepPageStatus.append({
-                "pageStatusId" = pageStatus[i].getPageStatusId(),
-                "name"         = pageStatus[i].getName(),
-                "active"       = toString(pageStatus[i].getActiveStatus()),
-                "offline"      = toString(pageStatus[i].getOfflineStatus())
+                "pageStatusId" = pageStatus.getPageStatusId(),
+                "name"         = pageStatus.getName(),
+                "active"       = toString(pageStatus.getActiveStatus()),
+                "offline"      = toString(pageStatus.getOfflineStatus())
             });
         }
         
