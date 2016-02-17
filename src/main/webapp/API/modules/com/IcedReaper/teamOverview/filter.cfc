@@ -1,10 +1,13 @@
-component {
+component implements="API.interfaces.filter" {
     public filter function init() {
         variables.isMember = true;
         variables.userId = null;
         variables.sortId = null;
         variables.minSortId = null;
         variables.maxSortId = null;
+        
+        variables.qRes = null;
+        variables.results = null;
         
         return this;
     }
@@ -30,7 +33,7 @@ component {
         return this;
     }
     
-    public array function filter() {
+    public filter function execute() {
         if(variables.isMember) {
             var qryMember = new Query();
             
@@ -59,19 +62,12 @@ component {
             sql &= where &
                    " ORDER BY sortId ASC";
             
-            var qMember = qryMember.setSQL(sql)
-                                   .execute()
-                                   .getResult();
-            
-            var member = [];
-            for(var i = 1; i <= qMember.getRecordCount(); ++i) {
-                member.append(new member(qMember.memberId[i]));
-            }
-            
-            return member;
+            variables.qRes = qryMember.setSQL(sql)
+                                      .execute()
+                                      .getResult();
         }
         else {
-            var qNoMember = new Query().setSQL("  SELECT userId
+           variables.qRes = new Query().setSQL("  SELECT userId
                                                     FROM nephthys_user
                                                    WHERE userId NOT IN (SELECT userId
                                                                           FROM icedReaper_teamOverview_member)
@@ -80,13 +76,35 @@ component {
                                        .addParam(name = "active", value = true, cfsqltype = "cf_sql_bit")
                                        .execute()
                                        .getResult();
-            
-            var user = [];
-            for(var i = 1; i <= qNoMember.getRecordCount(); ++i) {
-                user.append(createObject("component", "API.modules.com.Nephthys.user.user").init(qNoMember.userId[i]));
-            }
-            
-            return user;
         }
+        
+        return this;
+    }
+    
+    public array function getResult() {
+        if(! isQuery(variables.qRes)) {
+            throw(type = "nephthys.application.invalidResource", message = "Please be sure that you called execute() before you're trying to get the results");
+        }
+        
+        if(variables.results == null) {
+            variables.results = [];
+            for(var i = 1; i <= variables.qRes.getRecordCount(); i++) {
+                if(variables.isMember) {
+                    variables.results.append(new member(variables.qRes.memberId[i]));
+                }
+                else {
+                    variables.results.append(createObject("component", "API.modules.com.Nephthys.user.user").init(variables.qRes.userId[i]));
+                }
+            }
+        }
+        return variables.results;
+    }
+    
+    public numeric function getResultCount() {
+        if(! isQuery(variables.qRes)) {
+            throw(type = "nephthys.application.invalidResource", message = "Please be sure that you called execute() before you're trying to get the result count");
+        }
+        
+        return variables.qRes.getRecordCount();
     }
 }
