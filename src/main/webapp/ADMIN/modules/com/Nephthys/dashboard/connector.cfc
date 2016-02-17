@@ -24,19 +24,4 @@ component interface="ADMIN.interfaces.connector" {
                serverStatus = application.system.settings
                memory       = memory;
     }
-    
-    public void function sidebar() {
-        var moduleCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
-        var installedModules = moduleCtrl.getList();
-        
-        for(var i = 1; i <= installedModules.len(); i++) {
-            if(! installedModules[i].getActiveStatus()) {
-                installedModules.deleteAt(i);
-                i--;
-            }
-        }
-        
-        module template = "/ADMIN/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/dashboard/templates/sidebar.cfm"
-               modules  = installedModules;
-    }
 }

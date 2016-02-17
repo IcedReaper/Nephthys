@@ -131,7 +131,7 @@ component {
         request.user = createObject("component", "API.modules.com.Nephthys.user.user").init(session.userId);
         
         if(session.userId == 0) {
-            if(! structIsEmpty(form) && /* referer == loginForm */ true) {
+            if(! structIsEmpty(form) && checkReferer("com.Nephthys.login")) {
                 var userId = application.system.settings.getValueOfKey("authenticator").login(form.username, form.password);
                 if(userId != 0 && userId != null) {
                     session.userId = userId;
@@ -159,5 +159,9 @@ component {
     
     private connector function getTargetModule(required string moduleName) {
         return createObject("component", "modules." & arguments.moduleName & ".connector").init();
+    }
+    
+    private boolean function checkReferer(required string refererModule) {
+        return reReplace(cgi.referer, "https?:\/\/" & cgi.http_host & "\/" & arguments.refererModule, "") == "";
     }
 }

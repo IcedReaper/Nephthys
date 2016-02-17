@@ -1,12 +1,24 @@
 component {
     public struct function prepareOptions(required struct options) {
         var classes = "";
+        if(arguments.options.keyExists("width-xs")) {
+            classes &= "col-xs-" & getClassWidthSuffix(arguments.options["width-xs"]) & " ";
+        }
+        
+        if(arguments.options.keyExists("width-sm")) {
+            classes &= "col-sm-" & getClassWidthSuffix(arguments.options["width-sm"]) & " ";
+        }
+        
         if(arguments.options.keyExists("width-md")) {
             classes &= "col-md-" & getClassWidthSuffix(arguments.options["width-md"]) & " ";
         }
         
-        if(arguments.options.keyExists("width-xs")) {
-            classes &= "col-xs-" & getClassWidthSuffix(arguments.options["width-xs"]) & " ";
+        if(arguments.options.keyExists("width-lg")) {
+            classes &= "col-lg-" & getClassWidthSuffix(arguments.options["width-lg"]) & " ";
+        }
+        
+        if(arguments.options.keyExists("width-xl")) {
+            classes &= "col-xl-" & getClassWidthSuffix(arguments.options["width-xl"]) & " ";
         }
         
         return {

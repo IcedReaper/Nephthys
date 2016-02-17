@@ -1,10 +1,10 @@
 nephthysAdminApp
-    .controller('moduleManagerPermissionCtrl', ["$scope", "$routeParams", "$q", "moduleManagerService", function ($scope, $routeParams, $q, moduleManagerService) {
+    .controller('permissionsCtrl', ["$scope", "$routeParams", "$q", "moduleService", function ($scope, $routeParams, $q, moduleService) {
         $scope.load = function () {
             $q.all([
-                moduleManagerService.getDetails($routeParams.moduleId),
-                moduleManagerService.getUser($routeParams.moduleId),
-                moduleManagerService.getRoles()
+                moduleService.getDetails($routeParams.moduleId),
+                moduleService.getUser($routeParams.moduleId),
+                moduleService.getRoles()
             ])
             // and merging them
             .then($q.spread(function (moduleDetails, users, roles) {
@@ -15,7 +15,7 @@ nephthysAdminApp
         };
         
         $scope.save = function() {
-            moduleManagerService
+            moduleService
                 .savePermissions($routeParams.moduleId, $scope.users)
                 .then($scope.load);
         };
