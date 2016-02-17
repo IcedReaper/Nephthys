@@ -54,32 +54,32 @@ component implements="API.interfaces.filter" {
         var where = "";
         if(variables.userId != null) {
             where &= (where == "" ? " WHERE " : " AND ") & "userId = :userId";
-            qryFilter.addParam(name = "userId", value = variables.userId, cfsqltype="cf_sql_numeric");
+            qryFilter.addParam(name = "userId", value = variables.userId, cfsqltype = "cf_sql_numeric");
         }
         
         if(variables.userName != null) {
             if(variables.userNameLike) {
                 where &= (where == "" ? " WHERE " : " AND ") & "lower(userName) LIKE :userName";
-                qryFilter.addParam(name = "userName", value = "%" & lCase(variables.userName) & "%", cfsqltype="cf_sql_varchar");
+                qryFilter.addParam(name = "userName", value = "%" & lCase(variables.userName) & "%", cfsqltype = "cf_sql_varchar");
             }
             else {
                 where &= (where == "" ? " WHERE " : " AND ") & "lower(userName) = :userName";
-                qryFilter.addParam(name = "userName", value = lCase(variables.userName), cfsqltype="cf_sql_varchar");
+                qryFilter.addParam(name = "userName", value = lCase(variables.userName), cfsqltype = "cf_sql_varchar");
             }
         }
         
         if(variables.registerFromDate != null) {
             where &= (where == "" ? " WHERE " : " AND ") & "registrationDate >= :regFromDate";
-            qryFilter.addParam(name = "regFromDate", value = variables.registerFromDate, cfsqltype="cf_sql_date");
+            qryFilter.addParam(name = "regFromDate", value = variables.registerFromDate, cfsqltype = "cf_sql_date");
         }
         if(variables.registerToDate != null) {
             where &= (where == "" ? " WHERE " : " AND ") & "registrationDate < :regToDate";
-            qryFilter.addParam(name = "regToDate", value = variables.registerToDate, cfsqltype="cf_sql_date");
+            qryFilter.addParam(name = "regToDate", value = variables.registerToDate, cfsqltype = "cf_sql_date");
         }
         
         if(variables.active != null) {
             where &= (where == "" ? " WHERE " : " AND ") & "active = :active";
-            qryFilter.addParam(name = "active", value = variables.active, cfsqltype="cf_sql_bit");
+            qryFilter.addParam(name = "active", value = variables.active, cfsqltype = "cf_sql_bit");
         }
         
         sql &= where & " ORDER BY userName ASC";

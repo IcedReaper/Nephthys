@@ -251,10 +251,13 @@ component {
     
     // P R I V A T E
     private array function getSubPages(required numeric parentId, required string region) {
-        var pageCtrl = createObject("component", "API.modules.com.Nephthys.page.filter").init();
+        var pageFilterCtrl = createObject("component", "API.modules.com.Nephthys.page.filter").init();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
-        var pageArray = pageCtrl.getList(arguments.parentId, arguments.region, false);
+        var pageArray = pageFilterCtrl.setParentId(arguments.parentId)
+                                      .setRegion(arguments.region)
+                                      .execute()
+                                      .getResult();
         
         var pageData = [];
         for(var i = 1; i <= pageArray.len(); i++) {

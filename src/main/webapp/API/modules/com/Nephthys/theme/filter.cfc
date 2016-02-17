@@ -31,15 +31,15 @@ component implements="API.interfaces.filter" {
         var where = "";
         if(variables.themeId != null) {
             where &= (where == "" ? " WHERE " : " AND ") & "themeId = :themeId";
-            qryFilter.addParam(name = "themeId", value = variables.themeId, cfsqltype="cf_sql_numeric");
+            qryFilter.addParam(name = "themeId", value = variables.themeId, cfsqltype = "cf_sql_numeric");
         }
         if(variables.themeName != null) {
             where &= (where == "" ? " WHERE " : " AND ") & "lower(name) = :themeName";
-            qryFilter.addParam(name = "themeName", value = lCase(variables.themeName), cfsqltype="cf_sql_varchar");
+            qryFilter.addParam(name = "themeName", value = lCase(variables.themeName), cfsqltype = "cf_sql_varchar");
         }
         if(variables.active != null) {
             where &= (where == "" ? " WHERE " : " AND ") & "active = :active";
-            qryFilter.addParam(name = "active", value = variables.active, cfsqltype="cf_sql_bit");
+            qryFilter.addParam(name = "active", value = variables.active, cfsqltype = "cf_sql_bit");
         }
         
         sql &= where & " ORDER BY name ASC";

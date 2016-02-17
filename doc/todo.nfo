@@ -28,6 +28,7 @@ Allgemein
             filter in execute umbenennen
             getResult adden
     19. FileUpload, etc in eine Extra-Component aus dem Model auslagern
+    20. page filter erweitern
 
 Website
     1. Codeoptimierung
