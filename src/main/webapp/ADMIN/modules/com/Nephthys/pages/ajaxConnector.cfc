@@ -207,7 +207,8 @@ component {
         var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
         
         var modules = moduleFilterCtrl.setAvailableWWW(true)
-                                      .filter();
+                                      .execute()
+                                      .getResult();
         
         var _modules = {};
         
@@ -227,7 +228,8 @@ component {
         var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
         
         var modules = moduleFilterCtrl.setAvailableWWW(true)
-                                      .filter();
+                                      .execute()
+                                      .getResult();
         
         var _modules = {};
         

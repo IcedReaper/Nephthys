@@ -2,7 +2,8 @@ component {
     remote struct function getList() {
         var filterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
         
-        var installedModules = filterCtrl.filter();
+        var installedModules = filterCtrl.execute()
+                                         .getResult();
         var preparedModules = [];
         
         for(var i = 1; i <= installedModules.len(); i++) {
@@ -51,7 +52,8 @@ component {
         // todo: refactor
         if(arguments.moduleId == 0) {
             var filterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
-            var modules = filterCtrl.filter();
+            var modules = filterCtrl.execute()
+                                    .getResult();
             var maxSortOrder = modules[modules.len()].getSortId() + 1;
             
             module.setSortOrder(maxSortOrder + 1);
@@ -190,7 +192,7 @@ component {
                         .setAvailableWWW(true);
         
         var availableModules = [];
-        for(var module in moduleFilterCtrl.filter()) {
+        for(var module in moduleFilterCtrl.execute().getResult()) {
             availableModules.append(module.getModuleName());
         }
         
@@ -203,7 +205,9 @@ component {
         
         var subModule = null;
         for(var i = 1; i <= arguments.subModules.len(); ++i) {
-            subModule = moduleFilterCtrl.setModuleName(arguments.subModules[i]).filter()[1];
+            subModule = moduleFilterCtrl.setModuleName(arguments.subModules[i])
+                                        .execute()
+                                        .getResult()[1];
             module.addSubModule(subModule);
         }
         module.save();
