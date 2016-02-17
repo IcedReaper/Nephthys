@@ -11,7 +11,8 @@ component interface="ADMIN.interfaces.connector" {
         var filterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
         
         var installedModules = filterCtrl.setAvailableAdmin(true)
-                                         .filter();
+                                         .execute()
+                                         .getResult();
         
         for(var i = 1; i <= installedModules.len(); i++) {
             if(! installedModules[i].getActiveStatus()) {

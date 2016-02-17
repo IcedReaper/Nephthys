@@ -29,7 +29,7 @@
                         <header>
                             <h2><a href="#request.page.getLink()##attributes.blogposts[blogpostIndex].getLink()#">#attributes.blogposts[blogpostIndex].getHeadline()#</a></h2>
                         </header>
-                        <section>    
+                        <section class="story">    
                             #attributes.blogposts[blogpostIndex].getStory()#
                         </section>
                         <footer>

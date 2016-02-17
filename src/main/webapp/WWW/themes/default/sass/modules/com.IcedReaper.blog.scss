@@ -1,5 +1,24 @@
 .com-IcedReaper-blog {
-    img {
+    .story img {
         max-width: 95%;
+    }
+    
+    .media-list {
+        .media {
+            &:nth-child(2n+1) {
+                background-color: $highlight-color;
+                padding-top: 1px;
+                padding-left: 1px;
+                border-radius: $border-radius;
+                
+                a, a:hover, a:active, a:link, a:visited {
+                    color: #FFFFFF;
+                }
+            }
+            
+            .media-body {
+                padding-top: 2px;
+            }
+        }
     }
 }

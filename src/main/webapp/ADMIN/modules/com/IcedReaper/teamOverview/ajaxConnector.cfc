@@ -5,7 +5,7 @@ component {
         var filterCtrl = new filter();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
 
-        var rawMember = filterCtrl.filter();
+        var rawMember = filterCtrl.execute().getResult();
         var member = [];
         for(var i = 1; i <= rawMember.len(); ++i) {
             member.append({
@@ -21,7 +21,7 @@ component {
     remote array function getRemainingUser() {
         var filterCtrl = new filter();
         
-        var rawNoMember = filterCtrl.setIsMember(false).filter();
+        var rawNoMember = filterCtrl.setIsMember(false).execute().getResult();
         var noMember = [];
         for(var i = 1; i <= rawNoMember.len(); ++i) {
             noMember.append({
@@ -42,7 +42,7 @@ component {
     
     remote boolean function removeUser(required numeric userId) {
         var filterCtrl = new filter();
-        var member = filterCtrl.setUserId(arguments.userId).filter();
+        var member = filterCtrl.setUserId(arguments.userId).execute().getResult();
         if(member.len() == 1) {
             removeMember(member[1].getUserId());
         }
@@ -66,7 +66,7 @@ component {
         var actualSortId = actualMember.getSortId();
         
         var filterCtrl = new filter();
-        var higherMember = filterCtrl.setSortId(actualSortId - 1).filter()[1];
+        var higherMember = filterCtrl.setSortId(actualSortId - 1).execute().getResult()[1];
         
         transaction {
             // first we need to set the sortId to an unused space, as we would otherwise get an unique key error
@@ -94,7 +94,7 @@ component {
         var actualSortId = actualMember.getSortId();
         
         var filterCtrl = new filter();
-        var lowerMember = filterCtrl.setSortId(actualSortId + 1).filter()[1];
+        var lowerMember = filterCtrl.setSortId(actualSortId + 1).execute().getResult()[1];
         
         transaction {
             lowerMember

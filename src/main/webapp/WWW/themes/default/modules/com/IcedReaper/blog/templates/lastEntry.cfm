@@ -7,7 +7,7 @@
                         <header>
                             <h3><a href="#request.page.getLink()##attributes.blogposts[blogpostIndex].getLink()#">#attributes.blogposts[blogpostIndex].getHeadline()#</a></h3>
                         </header>
-                        <section>    
+                        <section class="story">    
                             #attributes.blogposts[blogpostIndex].getStory()#
                         </section>
                         <footer>

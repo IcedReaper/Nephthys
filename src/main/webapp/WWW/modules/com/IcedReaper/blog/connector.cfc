@@ -13,64 +13,69 @@ component implements="WWW.interfaces.connector" {
         var preparedOptions = themeIndividualizer.prepareOptions(arguments.options);
         
         var splitParameter = listToArray(request.page.getParameter(), "/");
-        var blogpostSearchCtrl = createObject("component", "API.modules.com.IcedReaper.blog.search").init();
+        var blogpostFilterCtrl = createObject("component", "API.modules.com.IcedReaper.blog.filter").init();
         
         if(! arguments.options.keyExists("maxEntries")) {
             arguments.options.maxEntries = 5;
         }
         
         if(arguments.options.keyExists("onlyLast")) {
-            blogpostSearchCtrl.setReleased(1)
-                              .setCount(1);
+            blogpostFilterCtrl.setReleased(1)
+                              .setCount(1)
+                              .execute();
             
             var renderedContent = "";
             saveContent variable="renderedContent" {
                 module template  = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/lastEntry.cfm"
                        options   = arguments.options
-                       blogposts = blogpostSearchCtrl.execute();
+                       blogposts = blogpostFilterCtrl;
             }
             
             return renderedContent;
         }
         
         if(splitParameter.len() == 0) {
-            blogpostSearchCtrl.setReleased(1)
-                              .setCount(arguments.options.maxEntries);
+            blogpostFilterCtrl.setReleased(1)
+                              .setCount(arguments.options.maxEntries)
+                              .execute();
             
-            return renderOverview(arguments.options, blogpostSearchCtrl, 1);
+            return renderOverview(arguments.options, blogpostFilterCtrl, 1);
         }
         else {
             if(splitParameter[1] == "Seite" && splitParameter.len() == 2) { // todo: Seite multilingual
-                blogpostSearchCtrl.setReleased(1)
+                blogpostFilterCtrl.setReleased(1)
                                   .setCount(arguments.options.maxEntries)
-                                  .setOffset((splitParameter[2]-1) * arguments.options.maxEntries);
+                                  .setOffset((splitParameter[2]-1) * arguments.options.maxEntries)
+                                  .execute();
                 
-                return renderOverview(arguments.options, blogpostSearchCtrl, splitParameter[2]);
+                return renderOverview(arguments.options, blogpostFilterCtrl, splitParameter[2]);
             }
             else if(splitParameter[1] == "Kategorie") { // todo: Kategorie multilingual
                 if(splitParameter.len() == 2) {
-                    blogpostSearchCtrl.setReleased(1)
-                                      .setCategory(splitParameter[2])
-                                      .setCount(arguments.options.maxEntries);
-                    
-                    return renderOverview(arguments.options, blogpostSearchCtrl, 1, splitParameter[2]);
-                }
-                else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") { // todo: Seite multilingual
-                    blogpostSearchCtrl.setReleased(1)
+                    blogpostFilterCtrl.setReleased(1)
                                       .setCategory(splitParameter[2])
                                       .setCount(arguments.options.maxEntries)
-                                      .setOffset((splitParameter[4]-1) * arguments.options.maxEntries);
+                                      .execute();
                     
-                    return renderOverview(arguments.options, blogpostSearchCtrl, splitParameter[2]);
+                    return renderOverview(arguments.options, blogpostFilterCtrl, 1, splitParameter[2]);
+                }
+                else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") { // todo: Seite multilingual
+                    blogpostFilterCtrl.setReleased(1)
+                                      .setCategory(splitParameter[2])
+                                      .setCount(arguments.options.maxEntries)
+                                      .setOffset((splitParameter[4]-1) * arguments.options.maxEntries)
+                                      .execute();
+                    
+                    return renderOverview(arguments.options, blogpostFilterCtrl, splitParameter[2]);
                 }
             }
             else { // Detail view
-                var blogposts = blogpostSearchCtrl.setReleased(1)
-                                                  .setLink(request.page.getParameter())
-                                                  .execute();
-                
-                if(blogposts.len() == 1) {
-                    var blogpost = blogposts[1];
+                blogpostFilterCtrl.setReleased(1)
+                                  .setLink(request.page.getParameter())
+                                  .execute();
+
+                if(blogpostFilterCtrl.getResultCount() == 1) {
+                    var blogpost = blogpostFilterCtrl.getResult()[1];
                     
                     blogpost.incrementViewCounter();
                     
@@ -88,7 +93,7 @@ component implements="WWW.interfaces.connector" {
     }
     
     private string function renderOverview(required struct  options,
-                                           required search  blogpostSearchCtrl,
+                                           required filter  blogpostFilterCtrl,
                                            required numeric actualPage,
                                                     string  activeCategory = "") {
         var renderedContent = "";
@@ -97,9 +102,9 @@ component implements="WWW.interfaces.connector" {
         saveContent variable="renderedContent" {
             module template           = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/overview.cfm"
                    options            = arguments.options
-                   blogposts          = arguments.blogpostSearchCtrl.execute()
-                   totalBlogpostCount = arguments.blogpostSearchCtrl.getTotalBlogpostCount()
-                   totalPageCount     = ceiling(arguments.blogpostSearchCtrl.getTotalBlogpostCount() / arguments.options.maxEntries)
+                   blogposts          = arguments.blogpostFilterCtrl.getResult()
+                   totalBlogpostCount = arguments.blogpostFilterCtrl.getResultCount()
+                   totalPageCount     = ceiling(arguments.blogpostFilterCtrl.getResultCount() / arguments.options.maxEntries)
                    actualPage         = arguments.actualPage
                    categories         = categoryLoader.load()
                    activeCategory     = arguments.activeCategory;
@@ -175,9 +180,14 @@ component implements="WWW.interfaces.connector" {
     }
     
     private boolean function validateUsername(required string username) {
-        var userFilterCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
+        if(arguments.username == "") {
+            return false;
+        }
         
-        return arguments.username != "" && userFilterCtrl.checkForUser(username=arguments.username) == false;
+        var userFilterCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
+        return userFilterCtrl.setUserName(arguments.userName)
+                             .execute()
+                             .getResultCount() == 0;
     }
     
     private boolean function validateEmail(required string eMail) {

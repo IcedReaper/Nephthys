@@ -3,7 +3,7 @@
         <header>
             <h2><a href="#request.page.getLink()##attributes.blogpost.getLink()#">#attributes.blogpost.getHeadline()#</a></h2>
         </header>
-        <section>    
+        <section class="story">    
             <p>#attributes.blogpost.getStory()#</p>
         </section>
         <footer>

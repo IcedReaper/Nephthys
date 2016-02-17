@@ -1,5 +1,5 @@
 nephthysAdminApp
-    .service("blogService", function($http, Upload) {
+    .service("blogService", function($http, $q, Upload) {
         return {
             getList: function () {
                 return $http.get('/ajax/com/IcedReaper/blog/getList');

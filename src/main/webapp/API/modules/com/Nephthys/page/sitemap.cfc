@@ -4,7 +4,11 @@ component {
     }
     
     public array function getSitemap(required string region) {
-        var pageCtrl = createObject("component", "API.modules.com.Nephthys.page.filter").init();
-        return pageCtrl.getList(0, arguments.region);
+        var pageFilterCtrl = createObject("component", "API.modules.com.Nephthys.page.filter").init();
+        return pageFilterCtrl.setParentId(0)
+                             .setRegion(arguments.region)
+                             .setActive(true)
+                             .execute()
+                             .getResult();
     }
 }
