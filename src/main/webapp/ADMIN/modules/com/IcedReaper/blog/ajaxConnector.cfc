@@ -1,9 +1,9 @@
 component {
     // Galleries and their details
     remote struct function getList() {
-        var blogpostSearchCtrl = createObject("component", "API.modules.com.IcedReaper.blog.search").init();
+        var blogpostFilterCtrl = createObject("component", "API.modules.com.IcedReaper.blog.filter").init();
         
-        var blogposts = blogpostSearchCtrl.execute();
+        var blogposts = blogpostFilterCtrl.execute().getResult();
         var data = [];
         
         for(var i = 1; i <= blogposts.len(); i++) {
@@ -340,7 +340,7 @@ component {
     
     private array function prepareCategoryDetails(required array categories, required boolean getBlogposts = false) {
         var gCategories = [];
-        var blogpostSearcher = createObject("component", "API.modules.com.IcedReaper.blog.search").init();
+        var blogpostFilterCtrl = createObject("component", "API.modules.com.IcedReaper.blog.filter").init();
         
         for(var c = 1; c <= arguments.categories.len(); c++) {
             gCategories.append({
@@ -349,8 +349,9 @@ component {
             });
             
             if(arguments.getBlogposts) {
-                var blogposts = blogpostSearcher.setCategory(arguments.categories[c].getName())
-                                                .execute();
+                var blogposts = blogpostFilterCtrl.setCategory(arguments.categories[c].getName())
+                                                  .execute()
+                                                  .getResult();
                 
                 var preparedBlogposts = [];
                 for(var g = 1; g <= blogposts.len(); g++) {
