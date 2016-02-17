@@ -67,7 +67,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <input type="file" ngf-select required accept="image/*" ng-model="user.newAvatar" ngf-fix-orientation="false">
+                            <input type="file" ngf-select required accept="image/*" ng-model="user.newAvatar" ngf-fix-orientation="false" class="form-control">
                         </div>
                         
                         <button type="submit" class="btn btn-success" ng-click="uploadAvatar()"><i class="fa fa-upload"></i> Hochladen</button>
@@ -114,10 +114,10 @@
                                 {{extProperty.description}}
                             </td>
                             <td>
-                                <input type="text" maxlength="255" ng-model="extProperty.value">
+                                <input type="text" maxlength="255" ng-model="extProperty.value" class="form-control">
                             </td>
                             <td>
-                                <select ng-model="extProperty.public">
+                                <select ng-model="extProperty.public" class="form-control">
                                     <option value="1">Ja</option>
                                     <option value="0">Nein</option>
                                 </select>

@@ -2,16 +2,14 @@ component {
     remote struct function getList() {
         var filterCtrl = createObject("component", "API.modules.com.Nephthys.theme.filter").init();
         
-        var themeList = filterCtrl.getList();
-        
         var themeData = [];
-        for(var i = 1; i <= themeList.len(); i++) {
+        for(var theme in filterCtrl.execute().getResult()) {
             themeData.append({
-                    "themeId"    = themeList[i].getThemeId(),
-                    "name"       = themeList[i].getName(),
-                    "foldername" = themeList[i].getFoldername(),
-                    "default"    = themeList[i].getThemeId() == application.system.settings.getValueOfKey("defaultThemeId"),
-                    "active"     = toString(themeList[i].getActiveStatus())
+                    "themeId"    = theme.getThemeId(),
+                    "name"       = theme.getName(),
+                    "foldername" = theme.getFoldername(),
+                    "default"    = theme.getThemeId() == application.system.settings.getValueOfKey("defaultThemeId"),
+                    "active"     = toString(theme.getActiveStatus())
                 });
         }
         
