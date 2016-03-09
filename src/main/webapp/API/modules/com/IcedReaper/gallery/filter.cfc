@@ -50,7 +50,7 @@ component implements="API.interfaces.filter" {
     }
     
     public filter function setSortBy(required string sortBy) {
-        switch(lower(arguments.sortBy)) {
+        switch(lCase(arguments.sortBy)) {
             case 'creationdate':
             case 'lasteditdate':
             // case 'imageCount': // not yet implemented...
@@ -60,10 +60,12 @@ component implements="API.interfaces.filter" {
                 break;
             }
         }
+        
+        return this;
     }
     
     public filter function setSortDirection(required string sortDirection) {
-        switch(lower(arguments.sortDirection)) {
+        switch(lCase(arguments.sortDirection)) {
             case 'asc':
             case 'desc': {
                 variables.sortDirection = arguments.sortDirection;
@@ -71,6 +73,8 @@ component implements="API.interfaces.filter" {
                 break;
             }
         }
+        
+        return this;
     }
     
     public filter function setCategory(required string categoryName) {

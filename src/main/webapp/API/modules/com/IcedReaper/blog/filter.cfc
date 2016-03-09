@@ -60,6 +60,8 @@ component implements="API.interfaces.filter" {
                 break;
             }
         }
+        
+        return this;
     }
     
     public filter function setSortDirection(required string sortDirection) {
@@ -71,6 +73,8 @@ component implements="API.interfaces.filter" {
                 break;
             }
         }
+        
+        return this;
     }
     
     public filter function setCategory(required string categoryName) {

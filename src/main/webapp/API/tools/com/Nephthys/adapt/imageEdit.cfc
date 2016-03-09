@@ -23,8 +23,11 @@ component interface="API.interfaces.imageEdit" {
                     arguments.height != 0 ? arguments.height : "",
                     arguments.interpolation);
         
-        if(arguments.target == "" && arguments.overwrite == true) {
+        if(arguments.target == "" && arguments.overwrite) {
             arguments.target = arguments.source;
+        }
+        else if(arguments.target == "" && ! arguments.overwrite) {
+            throw(type = "nephthys.application.notAllowed", message = "It is not allowed to save an image to a blank path without over writing the origin");
         }
         
         imageWrite(theImage, arguments.target, arguments.quality, arguments.overwrite);
