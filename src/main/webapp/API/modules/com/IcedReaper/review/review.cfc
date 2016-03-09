@@ -97,7 +97,7 @@ component {
         return this;
     }
     
-    public review function incViewCounter() {
+    public review function incrementViewCounter() {
         variables.viewCounter = new Query().setSQL("UPDATE IcedReaper_review_review
                                                        SET viewCounter = viewCounter + 1
                                                      WHERE reviewId = :reviewId;
