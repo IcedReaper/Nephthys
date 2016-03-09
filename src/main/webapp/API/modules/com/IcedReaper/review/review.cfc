@@ -2,7 +2,7 @@ component {
     public review function init(required numeric reviewId) {
         variables.reviewId = arguments.reviewId;
         
-        variables.genreEdited = false;
+        variables.genreAdded = [];
         variables.genreDeleteList = [];
         
         loadDetails();
@@ -42,12 +42,14 @@ component {
     public review function addGenre(required genre genre) {
         variables.genre.append(arguments.genre);
         
+        variables.genreAdded.append(arguments.genre.getGenreId());
+        
         return this;
     }
     public review function addGenreById(required numeric genreId) {
         variables.genre.append(new genre(arguments.genreId));
         
-        variables.genreEdited = true;
+        variables.genreAdded.append(arguments.genreId);
         
         return this;
     }
@@ -256,12 +258,35 @@ component {
             variables.lastEditDate     = now();
         }
         
-        if(variables.genreEdited) {
-            // todo: implement
+        if(variables.genreAdded.len() > 0) {
+            for(var genreId in variables.genreAdded) {
+                new Query().setSQL("INSERT INTO IcedReaper_review_reviewGenre
+                                                (
+                                                    reviewId,
+                                                    genreId,
+                                                    creatorUserId
+                                                )
+                                         VALUES (
+                                                    :reviewId,
+                                                    :genreId,
+                                                    :userId
+                                                )")
+                          .addParam(name = "reviewId", value = variables.reviewId,       cfsqltype = "cf_sql_numeric")
+                          .addParam(name = "genreId",  value = genreId,                  cfsqltype = "cf_sql_numeric")
+                          .addParam(name = "userId",   value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                          .execute();
+            }
         }
         
         if(variables.genreDeleteList.len() > 0) {
-            // todo: implement
+            for(var genreId in variables.genreDeleteList) {
+                new Query().setSQL("DELETE FROM IcedReaper_review_reviewGenre
+                                          WHERE reviewId = :reviewId
+                                            AND genreId  = :genreId")
+                          .addParam(name = "reviewId", value = variables.reviewId,       cfsqltype = "cf_sql_numeric")
+                          .addParam(name = "genreId",  value = genreId,                  cfsqltype = "cf_sql_numeric")
+                          .execute();
+            }
         }
         
         return this;

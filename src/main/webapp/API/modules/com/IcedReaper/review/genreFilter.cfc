@@ -2,6 +2,7 @@ component implements="API.interfaces.filter" {
     public filter function init() {
         variables.offset        = 0;
         variables.count         = 0;
+        variables.likeName      = null;
         variables.sortBy        = "creationDate";
         variables.sortDirection = "DESC";
         variables.qRes          = null;
@@ -46,6 +47,13 @@ component implements="API.interfaces.filter" {
         return this;
     }
     
+    public filter function setLikeName(required string likeName) {
+        // todo: security check here
+        variables.likeName = arguments.likeName;
+        
+        return this;
+    }
+    
     public filter function setCount(required numeric count) {
         if(arguments.count > 0) {
             variables.count = arguments.count;
@@ -60,6 +68,12 @@ component implements="API.interfaces.filter" {
         var sql = "SELECT genreId 
                      FROM IcedReaper_review_genre ";
         var where = "";
+        
+        if(variables.likeName != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & " name LIKE :likeName ";
+            qryFilter.addParam(name = "likeName", value = "%" & variables.likeName & "%", cfsqltype = "cf_sql_varchar");
+        }
+        
         var orderBy = " ORDER BY " & variables.sortBy & " " & variables.sortDirection;
         
         sql &= where & orderBy;

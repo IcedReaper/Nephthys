@@ -7,10 +7,11 @@ nephthysAdminApp
                     reviewService.getDetails($routeParams.reviewId),
                     typeService.getList()
                 ])
-                // and merging them
                 .then($q.spread(function (reviewDetails, types) {
                     $scope.review = reviewDetails;
                     $scope.types = types;
+                    
+                    $rootScope.$emit('review-loaded', {reviewId: $scope.review.reviewId});
                 }));
         };
         

@@ -63,8 +63,30 @@ component {
         return [];
     }
     
-    remote array function loadAutoCompleteGenre(required string queryString) {
-        return [];
+    remote array function loadAutoCompleteGenres(required string queryString) {
+        var genreFilter = new genreFilter();
+        
+        var genres = genreFilter
+                        .setLikeName(arguments.queryString)
+                        .execute()
+                        .getResult();
+        
+        if(genreFilter.getResultCount() != 1 || genres[1].getName() != arguments.queryString) {
+            var dummyGenre = new genre(0).setName(arguments.queryString);
+            
+            genres.append(dummyGenre);
+        }
+        
+        var genreList = [];
+        
+        for(genre in genres) {
+            genreList.append({
+                "genreId" = genre.getGenreId(),
+                "name"    = genre.getName()
+            });
+        }
+        
+        return genreList;
     }
     
     remote numeric function save(required numeric reviewId,
@@ -105,14 +127,48 @@ component {
         return true;
     }
     
-    remote boolean function addGenre(required numeric reviewId,
+    remote array function loadGenres(required numeric reviewId) {
+        var review = new review(arguments.reviewId);
+        
+        var genreList = [];
+        for(var genre in review.getGenre()) {
+            genreList.append({
+                "genreId" = genre.getGenreId(),
+                "name"    = genre.getName()
+            });
+        }
+        return genreList;
+    }
+    
+    remote numeric function addGenre(required numeric reviewId,
                                      required numeric genreId,
                                      required string  genreName) {
-        return true;
+        var review = new review(arguments.reviewId);
+        
+        if(arguments.genreId == null || arguments.genreId == 0) {
+            var genre = new genre(0)
+                            .setName(arguments.genreName)
+                            .save();
+        }
+        else {
+            var genre = new genre(arguments.genreId);
+        }
+        
+        review
+            .addGenre(genre)
+            .save();
+        
+        return genre.getGenreId();
     }
     
     remote boolean function removeGenre(required numeric reviewId,
                                         required numeric genreId) {
+        var review = new review(arguments.reviewId);
+        
+        review
+            .removeGenreById(arguments.genreId)
+            .save();
+        
         return true;
     }
     

@@ -60,8 +60,8 @@ nephthysAdminApp
                 });
             },
             
-            loadAutoCompleteGenre: function (queryString) {
-                return $http.get('/ajax/com/IcedReaper/review/loadAutoCompleteGenre', {
+            loadAutoCompleteGenres: function (queryString) {
+                return $http.get('/ajax/com/IcedReaper/review/loadAutoCompleteGenres', {
                     params: {
                         queryString: queryString
                     }
