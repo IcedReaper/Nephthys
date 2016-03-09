@@ -1,0 +1,47 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+            <a href="#/" class="btn btn-secondary"><i class="fa fa-chevron-left"></i> Zurück zur Reviewübersicht</a>
+            <a href="#/type/0" class="btn btn-primary"><i class="fa fa-tag"></i> Neue Reviewart anlegen</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Reviewartenübersicht</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-inverse m-t">
+            <thead>
+                <th>ID</th>
+                <th>type</th>
+                <th>Aktionen</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="type in types">
+                    <td>{{type.typeId}}</td>
+                    <td>
+                        <a href="#/type/{{type.typeId}}">{{type.name}}</a>
+                    </td>
+                    <td>
+                        <a href="#/type/{{type.typeId}}"
+                           class="btn btn-primary"
+                           title="typedetails">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                        
+                        <button class="btn btn-danger"
+                                ng-click="delete(type.typeId)"
+                                title="type löschen">
+                            <i class="fa fa-trash-o"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,54 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+            <a href="#/genres" class="btn btn-secondary"><i class="fa fa-tags"></i> Genreübersicht</a>
+            <a href="#/types" class="btn btn-secondary"><i class="fa fa-tags"></i> Typenübersicht</a>
+            <a href="#/0" class="btn btn-primary">Neuen Review anlegen</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Reviewübersicht</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-inverse m-t">
+            <thead>
+                <th>ID</th>
+                <th>Beschreibung</th>
+                <th>Interner Link</th>
+                <th>Bewertung</th>
+                <th>Genres</th>
+                <th>Aktionen</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="review in reviews">
+                    <td>{{review.reviewId}}</td>
+                    <td>
+                        <a href="#/{{review.reviewId}}">{{review.description}}</a>
+                    </td>
+                    <td>{{review.link}}</td>
+                    <td>{{review.rating}}</td>
+                    <td>{{review.genre.join(', ')}}</td>
+                    <td>
+                        <a href="#/{{review.reviewId}}"
+                           class="btn btn-primary"
+                           title="Reviewdetails">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                        
+                        <button class="btn btn-danger"
+                                ng-click="delete(review.reviewId)"
+                                title="Review löschen">
+                            <i class="fa fa-trash-o"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
