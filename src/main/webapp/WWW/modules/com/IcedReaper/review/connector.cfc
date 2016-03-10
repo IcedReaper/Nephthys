@@ -22,6 +22,8 @@ component implements="WWW.interfaces.connector" {
             reviewFilter//.setPublished(1)
                         .setCount(arguments.options.maxEntries)
                         .execute();
+                    
+            arguments.options.link = request.page.getLink();
             
             return renderOverview(arguments.options, reviewFilter, 1);
         }
@@ -31,28 +33,73 @@ component implements="WWW.interfaces.connector" {
                             .setCount(arguments.options.maxEntries)
                             .setOffset((splitParameter[2]-1) * arguments.options.maxEntries)
                             .execute();
+                    
+                arguments.options.link = request.page.getLink();
                 
                 return renderOverview(arguments.options, reviewFilter, splitParameter[2]);
             }
-            /*else if(splitParameter[1] == "Art") { // todo: Kategorie multilingual
+            else if(splitParameter[1] == "Kategorie") { // todo: Kategorie multilingual
                 if(splitParameter.len() == 2) {
                     reviewFilter//.setPublished(1)
                                 .setType(splitParameter[2])
                                 .setCount(arguments.options.maxEntries)
                                 .execute();
                     
-                    return renderOverview(arguments.options, galleryFilterCtrl, 1);
+                    arguments.options.link = request.page.getLink() & "/Kategorie/" & splitParameter[2];
+                    arguments.options.actualFilter = {
+                        type = "Kategorie",
+                        value = splitParameter[2]
+                    };
+                    
+                    return renderOverview(arguments.options, reviewFilter, 1);
                 }
                 else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") { // todo: Seite multilingual
-                    galleryFilterCtrl.setPublished(1)
-                                     .setCategory(splitParameter[2])
-                                     .setCount(arguments.options.maxEntries)
-                                     .setOffset((splitParameter[4]-1) * arguments.options.maxEntries)
-                                     .execute();
+                    reviewFilter//.setPublished(1)
+                                .setType(splitParameter[2])
+                                .setCount(arguments.options.maxEntries)
+                                .setOffset((splitParameter[4]-1) * arguments.options.maxEntries)
+                                .execute();
                     
-                    return renderOverview(arguments.options, galleryFilterCtrl, splitParameter[2]);
+                    arguments.options.link = request.page.getLink() & "/Kategorie/" & splitParameter[2];
+                    arguments.options.actualFilter = {
+                        type = "Kategorie",
+                        value = splitParameter[2]
+                    };
+                    
+                    return renderOverview(arguments.options, reviewFilter, splitParameter[4]);
                 }
-            }*/
+            }
+            else if(splitParameter[1] == "Genre") { // todo: Genre multilingual
+                if(splitParameter.len() == 2) {
+                    reviewFilter//.setPublished(1)
+                                .setGenre(splitParameter[2])
+                                .setCount(arguments.options.maxEntries)
+                                .execute();
+                    
+                    arguments.options.link = request.page.getLink() & "/Genre/" & splitParameter[2];
+                    arguments.options.actualFilter = {
+                        type = "Genre",
+                        value = splitParameter[2]
+                    };
+                    
+                    return renderOverview(arguments.options, reviewFilter, 1);
+                }
+                else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") { // todo: Seite multilingual
+                    reviewFilter//.setPublished(1)
+                                .setGenre(splitParameter[2])
+                                .setCount(arguments.options.maxEntries)
+                                .setOffset((splitParameter[4]-1) * arguments.options.maxEntries)
+                                .execute();
+                    
+                    arguments.options.link = request.page.getLink() & "/Genre/" & splitParameter[2];
+                    arguments.options.actualFilter = {
+                        type = "Genre",
+                        value = splitParameter[2]
+                    };
+                    
+                    return renderOverview(arguments.options, reviewFilter, splitParameter[4]);
+                }
+            }
             else {
                 var reviews = reviewFilter//.setPublished(1)
                                           .setLink(request.page.getParameter())

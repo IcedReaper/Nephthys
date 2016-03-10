@@ -31,6 +31,7 @@
         * Blog
         * Gallerie
         * Marketing/Produkt
+    21. QueryBuilder zur Unterstützung verschiedener DB-Systeme
 
 ## Website
     1. Codeoptimierung
@@ -80,7 +81,7 @@
                 * Anonym per Option
                 * Als eingeloggter User
     2. Blog
-        *Mögliche Verbesserungen:
+        * Mögliche Verbesserungen:
             * File resizing after upload is only applied by width and height attributes
             * F5-Raiding beim Abschicken des Kommentars möglich (Siehe Allgemein 17)
         * Comments
@@ -88,8 +89,23 @@
         * Adaptionen in der Übersicht
             * Kalenderübersicht hinzufügen => Klick auf Datum => zeigt alle Posts des Tages
     3. Reviewsystem
+        => genre in tags umbenennen
+        => Type in Kategorie umbennen
+        * review edit
+            * Fileupload im Text
+        * Publish by state and/or date
+        * ? Unterbewertungen (Spätere Version)
+        * Optionen
+            * Maximale Punkte
+            * Punkteanzeige
+                * Sterne
+                * Ausgeschrieben
     4. Referenzen
     5. Preis/Leistung
+
+## Templates
+    * Vollbild Vorschaltseite
+    * Vollbild Slider
 
 ## Optimierungen
     1. Settings der unterschiedlichen Module und des Systems verbinden

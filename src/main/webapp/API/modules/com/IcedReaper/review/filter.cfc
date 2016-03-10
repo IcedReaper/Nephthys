@@ -1,10 +1,16 @@
 component implements="API.interfaces.filter" {
     public filter function init() {
+        variables.userId        = null;
+        variables.reviewId      = null;
         variables.link          = "";
+        variables.typeName      = null;
+        variables.genreName     = null;
+        
         variables.offset        = 0;
         variables.count         = 0;
         variables.sortBy        = "creationDate";
         variables.sortDirection = "DESC";
+        
         variables.qRes          = null;
         variables.results       = null;
         
@@ -55,9 +61,32 @@ component implements="API.interfaces.filter" {
         return this;
     }
     
+    public filter function setUserId(required numeric userId) {
+        variables.userId = arguments.userId;
+        
+        return this;
+    }
+    
+    public filter function setReviewId(required numeric reviewId) {
+        variables.reviewId = arguments.reviewId;
+        
+        return this;
+    }
+    
     public filter function setLink(required string link) {
-        // todo: validation
         variables.link = arguments.link;
+        
+        return this;
+    }
+    
+    public filter function setType(required string type) {
+        variables.typeName = arguments.type;
+        
+        return this;
+    }
+    
+    public filter function setGenre(required string genre) {
+        variables.genreName = arguments.genre;
         
         return this;
     }
@@ -76,26 +105,31 @@ component implements="API.interfaces.filter" {
             qryFilter.addParam(name = "link", value = variables.link, cfsqltype = "cf_sql_varchar");
         }
         
-        /*
         if(variables.userId != 0 && variables.userId != null) {
-            where &= ((where != "") ? " AND " : " WHERE ") & " userId = :userId";
+            where &= ((where != "") ? " AND " : " WHERE ") & " creatorUserId = :userId";
             qryFilter.addParam(name = "userId", value = variables.userId, cfsqltype = "cf_sql_numeric");
         }
         
-        if(variables.galleryId != 0 && variables.galleryId != null) {
-            where &= ((where != "") ? " AND " : " WHERE ") & " galleryId = :galleryId";
-            qryFilter.addParam(name = "galleryId", value = variables.galleryId, cfsqltype = "cf_sql_numeric");
+        if(variables.reviewId != 0 && variables.reviewId != null) {
+            where &= ((where != "") ? " AND " : " WHERE ") & " reviewId = :reviewId";
+            qryFilter.addParam(name = "reviewId", value = variables.reviewId, cfsqltype = "cf_sql_numeric");
         }
         
-        if(variables.categoryName != "") {
-            where &= ((where != "") ? " AND " : " WHERE ") & "galleryId IN (SELECT galleryId
-                                                                              FROM icedreaper_gallery_galleryCategory
-                                                                             WHERE categoryId = (SELECT categoryId
-                                                                                                   FROM icedreaper_gallery_category
-                                                                                                  WHERE name = :categoryName))";
-            qryFilter.addParam(name = "categoryName", value = variables.categoryName, cfsqltype="cf_sql_varchar");
+        if(variables.typeName != "") {
+            where &= ((where != "") ? " AND " : " WHERE ") & "typeId = (SELECT typeId
+                                                                              FROM icedreaper_review_type
+                                                                             WHERE name = :typeName)";
+            qryFilter.addParam(name = "typeName", value = variables.typeName, cfsqltype="cf_sql_varchar");
         }
-        */
+        
+        if(variables.genreName != "") {
+            where &= ((where != "") ? " AND " : " WHERE ") & "reviewId IN (SELECT reviewId
+                                                                              FROM icedreaper_review_reviewGenre
+                                                                             WHERE genreId = (SELECT genreId
+                                                                                                   FROM icedreaper_review_genre
+                                                                                                  WHERE name = :genreName))";
+            qryFilter.addParam(name = "genreName", value = variables.genreName, cfsqltype="cf_sql_varchar");
+        }
         
         sql &= where & orderBy;
         

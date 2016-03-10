@@ -24,6 +24,11 @@ WITH (
   OIDS = FALSE
 );
 
+ALTER TABLE icedreaper_review_type OWNER TO nephthys_admin;
+
+GRANT ALL    ON TABLE icedreaper_review_type TO nephthys_admin;
+GRANT SELECT ON TABLE icedreaper_review_type TO nephthys_user;
+
 CREATE SEQUENCE seq_icedreaper_review_reviewId
   INCREMENT 1
   MINVALUE 1
@@ -65,7 +70,7 @@ CREATE UNIQUE INDEX IDX_IcedReaper_review_review_link   ON icedreaper_review_rev
 ALTER TABLE icedreaper_review_review OWNER TO nephthys_admin;
 
 GRANT ALL    ON TABLE icedreaper_review_review TO nephthys_admin;
-GRANT INSERT ON TABLE icedreaper_review_review TO nephthys_user;
+GRANT SELECT ON TABLE icedreaper_review_review TO nephthys_user;
 
 
 CREATE SEQUENCE seq_icedreaper_review_genre_id
