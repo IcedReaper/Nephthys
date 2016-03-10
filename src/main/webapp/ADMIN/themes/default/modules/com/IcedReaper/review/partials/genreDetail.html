@@ -1,14 +1,15 @@
 <div class="row">
     <div class="col-md-12">
         <div class="pull-right">
-            <a href="#/categories" class="btn btn-primary"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
+            <a href="#/" class="btn btn-secondary"><i class="fa fa-chevron-left"></i> Zurück zur Reviewübersicht</a>
+            <a href="#/genres" class="btn btn-primary"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
         </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <h1>Kategorie <small>{{category.name}}</small></h1>
+        <h1>Genre <small>{{genre.name}}</small></h1>
     </div>
 </div>
 <div class="row">
@@ -19,8 +20,8 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="name">Kategoriebezeichnung</label>
-                            <input type="text" class="form-control" id="name" placeholder="name" ng-model="category.name">
+                            <label for="name">Bezeichnung</label>
+                            <input type="text" class="form-control" id="name" placeholder="name" ng-model="genre.name">
                         </div>
                     </div>
                 </div>
@@ -32,8 +33,8 @@
                 </div>
             </form>
             
-            <p ng-show="category.categoryId != 0">Diese Kategorie wurde am {{category.creationDate}} angelegt von <a href="/com.Nephthys.user#/{{category.creator.userId}}">{{category.creator.userName}}</a></p>
-            <p ng-show="category.categoryId != 0">Diese Kategorie wurde zuletzt am {{category.creationDate}} geändert von <a href="/com.Nephthys.user#/{{category.lastEditor.userId}}">{{category.lastEditor.userName}}</a></p>
+            <p ng-show="genre.genreId != 0">Dieses Genre wurde am {{genre.creationDate}} angelegt von <a href="/com.Nephthys.user#/{{genre.creator.userId}}">{{genre.creator.userName}}</a></p>
+            <p ng-show="genre.genreId != 0">Dieses Genre wurde zuletzt am {{genre.creationDate}} geändert von <a href="/com.Nephthys.user#/{{genre.lastEditor.userId}}">{{genre.lastEditor.userName}}</a></p>
             
             <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
                 <h3>{{message.headline}}</h3>

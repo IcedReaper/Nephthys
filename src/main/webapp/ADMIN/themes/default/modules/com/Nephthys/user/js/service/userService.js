@@ -41,7 +41,7 @@ nephthysAdminApp
                     data: {
                         avatar: avatar,
                         userId: userId
-                    },
+                    }
                 });
             },
             

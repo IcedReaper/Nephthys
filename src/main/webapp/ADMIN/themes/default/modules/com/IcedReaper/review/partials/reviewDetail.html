@@ -1,0 +1,152 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+            <a href="#/" class="btn btn-primary"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Review <small>{{review.description}}</small></h1>
+    </div>
+</div>
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a ng-click="showPage('details')" ng-class="tabClasses('details')" class="nav-link clickable">Details</a>
+    </li>
+    <li class="nav-item">
+        <a ng-click="showPage('statistics')" ng-class="tabClasses('statistics')" class="nav-link clickable" ng-disabled="review.reviewId == 0">Statistiken</a>
+    </li>
+</ul>
+<div class="tab-content">
+    <div ng-class="pageClasses('details')" class="tab-pane">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-block">
+                    <h3>Details</h3>
+                    <form novalidate>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="description">Beschreibung</label>
+                                    <input type="text" class="form-control" id="description" placeholder="Beschreibung" ng-model="review.description">
+                                </div>
+                                <div class="form-group">
+                                    <label for="headline">Überschrift</label>
+                                    <input type="text" class="form-control" id="headline" placeholder="Überschrift" ng-model="review.headline">
+                                </div>
+                                <div class="form-group">
+                                    <label for="rating">Reviewart</label>
+                                    <select class="form-control" id="rating" placeholder="Reviewart" ng-model="review.typeId">
+                                        <option ng-repeat="type in types" value="{{type.typeId}}">{{type.name}}</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="rating">Bewertung</label>
+                                    <select class="form-control" id="rating" placeholder="Bewertung" ng-model="review.rating">
+                                        <option value="0">0/5</option>
+                                        <option value="1">1/5</option>
+                                        <option value="2">2/5</option>
+                                        <option value="3">3/5</option>
+                                        <option value="4">4/5</option>
+                                        <option value="5">5/5</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="viewCounter">Anzahl Aufrufe</label>
+                                    <input type="text" class="form-control" id="viewCounter" placeholder="Anzahl Aufrufe" ng-model="review.viewCounter" disabled="disabled">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="link">
+                                        Verlinkung<br>
+                                        <span class="text text-danger" ng-if="review.reviewId !== 0">Achtung! Alte Links sind nach einem Abändern nicht mehr erreichbar!</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="link" placeholder="Verlinkung" ng-model="review.link">
+                                </div>
+                                
+                                <div class="form-group" ng-if="review.imagePath || newImage">
+                                    <img alt="neues user avatar" class="img-fluid" ngf-src="imageSelect()">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <input type="file" ngf-select required accept="image/*" ng-model="newImage" ngf-fix-orientation="false" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 icedreaper-review-introduction">
+                                <h4>Einleitung</h4>
+                                <div text-angular ng-model="review.introduction" ta-toolbar="[['bold','italics','underline','strikeThrough'],['insertLink']]"></div>
+                            </div>
+                        </div>
+                        <div class="row m-t">
+                            <div class="col-md-12">
+                                <h4>Reviewtext</h4>
+                                <div text-angular ng-model="review.reviewText" ta-toolbar="[
+                                    ['h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
+                                    ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
+                                    ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],['insertLink']]"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-12 m-t">
+                                <button class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+                            </div>
+                        </div>
+                    </form>
+                    
+                    <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
+                        <h3>{{message.headline}}</h3>
+                        <p>{{message.text}}</p>
+                        <p>{{message.errorMessage}}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div ng-controller="reviewGenreCtrl" ng-show="reviewId != 0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-block">
+                        <h3>Genres</h3>
+                        
+                        <tags-input ng-model="genres" on-tag-removing="delete($tag)" on-tag-added="add($tag)" add-on-blur="false">
+                            <auto-complete source="loadAutoCompleteGenres($query)"></auto-complete>
+                        </tags-input>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div ng-class="pageClasses('statistics')" class="tab-pane">
+        <!--<div ng-controller="reviewStatisticsCtrl" ng-show="reviewId != 0">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card card-block">
+                        <button ng-click="load()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> Aktualisieren</button>
+                        
+                        <h3>Statistiken</h3>
+                        
+                        <h4>Aufrufe der letzten {{dayCount}} Tage</h4>
+                        <form novalidate>
+                            <div class="form-group row">
+                                <label for="dayCount" class="col-sm-5 col-md-3 form-control-label">Anzahl Tage</label>
+                                <div class="col-sm-7 col-md-9">
+                                    <input type="text" class="form-control" id="dayCount" placeholder="dayCount" ng-model="dayCount">
+                                </div>
+                            </div>
+                        </form>
+                        
+                        <canvas chart-options="visitChart.options" chart-series="visitChart.series" chart-labels="visitChart.labels" chart-data="visitChart.data" class="chart chart-bar"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>-->
+    </div>
+</div>

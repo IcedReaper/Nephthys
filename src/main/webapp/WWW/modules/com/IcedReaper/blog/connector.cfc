@@ -28,7 +28,7 @@ component implements="WWW.interfaces.connector" {
             saveContent variable="renderedContent" {
                 module template  = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/lastEntry.cfm"
                        options   = arguments.options
-                       blogposts = blogpostFilterCtrl;
+                       blogposts = blogpostFilterCtrl.getResult();
             }
             
             return renderedContent;
