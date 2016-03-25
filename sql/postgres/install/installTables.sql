@@ -376,7 +376,7 @@ CREATE TABLE public.nephthys_module_option
   optionName character varying(100) NOT NULL,
   description character varying(100) NOT NULL,
   type optionType NOT NULL,
-  selectOptions character varying(400),
+  selectOptions text,
   sortOrder integer NOT NULL,
   
   CONSTRAINT PK_nephthys_module_option_id PRIMARY KEY (optionId),

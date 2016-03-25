@@ -263,25 +263,25 @@ component {
         var pageData = [];
         for(var i = 1; i <= pageArray.len(); i++) {
             pageData.append({
-                    'pageId'             = pageArray[i].getPageId(),
-                    'parentId'           = pageArray[i].getParentId(),
-                    'linktext'           = pageArray[i].getLinktext(),
-                    'link'               = pageArray[i].getLink(),
-                    'title'              = pageArray[i].getTitle(),
-                    'description'        = pageArray[i].getDescription(),
-                    'content'            = serializeJSON(pageArray[i].getContent()),
-                    'sortOrder'          = pageArray[i].getSortOrder(),
-                    'region'             = pageArray[i].getRegion(),
-                    'useDynamicSuffixes' = pageArray[i].getUseDynamicSuffixes(),
-                    'creator'            = getUserInformation(pageArray[i].getCreator()),
-                    'creationDate'       = formatCtrl.formatDate(pageArray[i].getCreationDate()),
-                    'lastEditor'         = getUserInformation(pageArray[i].getLastEditor()),
-                    'lastEditDate'       = formatCtrl.formatDate(pageArray[i].getLastEditDate()),
-                    'subPages'           = getSubPages(pageArray[i].getPageId(), pageArray[i].getRegion()),
-                    'active'             = toString(pageArray[i].getActiveStatus()),
-                    "pageStatusId"       = toString(pageArray[i].getPageStatusId()),
-                    "pageStatusName"     = pageArray[i].getPageStatus().getName()
-                });
+                'pageId'             = pageArray[i].getPageId(),
+                'parentId'           = pageArray[i].getParentId(),
+                'linktext'           = pageArray[i].getLinktext(),
+                'link'               = pageArray[i].getLink(),
+                'title'              = pageArray[i].getTitle(),
+                'description'        = pageArray[i].getDescription(),
+                'content'            = serializeJSON(pageArray[i].getContent()),
+                'sortOrder'          = pageArray[i].getSortOrder(),
+                'region'             = pageArray[i].getRegion(),
+                'useDynamicSuffixes' = pageArray[i].getUseDynamicSuffixes(),
+                'creator'            = getUserInformation(pageArray[i].getCreator()),
+                'creationDate'       = formatCtrl.formatDate(pageArray[i].getCreationDate()),
+                'lastEditor'         = getUserInformation(pageArray[i].getLastEditor()),
+                'lastEditDate'       = formatCtrl.formatDate(pageArray[i].getLastEditDate()),
+                'subPages'           = getSubPages(pageArray[i].getPageId(), pageArray[i].getRegion()),
+                'active'             = toString(pageArray[i].getActiveStatus()),
+                "pageStatusId"       = toString(pageArray[i].getPageStatusId()),
+                "pageStatusName"     = pageArray[i].getPageStatus().getName()
+            });
         }
         
         return pageData;
