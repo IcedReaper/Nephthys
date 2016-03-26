@@ -130,6 +130,7 @@
     <div class="col-md-12">
         <div class="card card-block" ng-repeat="child in page.content" ng-include="'contentChild'"></div>
         
-        <button class="btn btn-primary" ng-click="appendContainer();"><i class="fa fa-plus"></i> Neuen Container hinzufügen</button>
+        <button class="btn btn-primary" ng-click="appendChild(page.content, 'com.Nephthys.container');"><i class="fa fa-plus"></i> Neuen Container hinzufügen</button>
+        <button class="btn btn-primary" ng-click="appendChild(page.content, 'com.IcedReaper.startpage');" ng-if="page.content.length === 0"><i class="fa fa-plus"></i> Nur Startseite verwenden</button>
     </div>
 </div>

@@ -24,22 +24,23 @@ nephthysAdminApp
         $scope.appendChild = function (child, newChildren) {
             // todo: check when col if 100% is exceeded
             if(newChildren != "") {
-                child.children.push({
-                    "type": newChildren,
-                    "options": {
-                    },
-                    "children": []
-                });
+                if(child.children) {
+                    child.children.push({
+                        "type": newChildren,
+                        "options": {
+                        },
+                        "children": []
+                    });
+                }
+                else {
+                    child.push({
+                        "type": newChildren,
+                        "options": {
+                        },
+                        "children": []
+                    });
+                }
             }
-        };
-        
-        $scope.appendContainer = function () {
-            $scope.page.content.push({
-                "type": "com.Nephthys.container",
-                "options": {
-                },
-                "children": []
-            });
         };
         
         $scope.checkOption = function(child, optionName, value) {
