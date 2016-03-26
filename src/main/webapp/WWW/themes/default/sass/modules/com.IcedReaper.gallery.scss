@@ -7,23 +7,14 @@
         .img-fluid {
             min-width: 100%;
         }
-    }
-    
-}
-
-@media (max-width: 767px) {
-    .com-IcedReaper-gallery {
-        .galleryLayout-1, &.galleryLayout-1 {
+        
+        @include media-breakpoint-down(sm) {
             .pictures > div:not(:first-child) {
                 margin-top: 1rem !important;
             }
         }
-    }
-}
 
-@media (max-width: 543px) {
-    .com-IcedReaper-gallery {
-        .galleryLayout-1, &.galleryLayout-1 {
+        @include media-breakpoint-down(xs) {
             .pictures > div > .row > div {
                 margin-top: 1rem !important;
             }
