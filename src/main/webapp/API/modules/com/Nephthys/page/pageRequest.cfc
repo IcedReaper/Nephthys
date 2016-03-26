@@ -6,6 +6,13 @@ component {
         };
         variables.title = "";
         variables.description = "";
+        variables.specialCssClasses = {
+            "html"   = "",
+            "body"   = "",
+            "header" = "",
+            "main"   = "",
+            "footer" = ""
+        };
         
         loadPage(arguments.link);
         
@@ -77,6 +84,59 @@ component {
         }
         
         return resources;
+    }
+    
+    public pageRequest function setSpecialCssClass(required string for, required string value, required boolean append = true) {
+        switch(arguments.for) {
+            case "html":
+            case "body":
+            case "header":
+            case "main":
+            case "footer": {
+                if(arguments.append) {
+                    variables.specialCssClasses[arguments.for] &= " " & arguments.value;
+                }
+                else {
+                    variables.specialCssClasses[arguments.for] = arguments.value;
+                }
+                break;
+            }
+            default: {
+                throw(type = "nephthys.application.notAllowed", message = "The type " & arguments.for & " isn't supported");
+            }
+        }
+        
+        return this;
+    }
+    
+    public boolean function isSpecialCssClassSet(required string for) {
+        switch(arguments.for) {
+            case "html":
+            case "body":
+            case "header":
+            case "main":
+            case "footer": {
+                return variables.specialCssClasses[arguments.for] != "";
+            }
+            default: {
+                throw(type = "nephthys.application.notAllowed", message = "The type " & arguments.for & " isn't supported");
+            }
+        }
+    }
+    
+    public string function getSpecialCssClass(required string for) {
+        switch(arguments.for) {
+            case "html":
+            case "body":
+            case "header":
+            case "main":
+            case "footer": {
+                return variables.specialCssClasses[arguments.for];
+            }
+            default: {
+                throw(type = "nephthys.application.notAllowed", message = "The type " & arguments.for & " isn't supported");
+            }
+        }
     }
     
     // inhertitations of page class
