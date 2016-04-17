@@ -32,6 +32,12 @@
         * Gallerie
         * Marketing/Produkt
     21. QueryBuilder zur Unterstützung verschiedener DB-Systeme
+    22. Zusätzliche Optionen
+        * sichtbar nur für eingeloggte User
+        * sichtbar nur mit spezieller Rolle
+        * sichtbar nur für nicht eingeloggte User
+        * Berechtigungssystem auf Menüpunkte ausweiten
+        * Berechtigung pro Element/Reihe
 
 ## Website
     1. Codeoptimierung
@@ -70,6 +76,10 @@
     10. Sidebar auf Icons reduzieren
     11. Dashboard untermodule in andere Dateien verschieben ggf mehr übersicht schaffen
     12. Assets weiter optimieren
+    13. Statistiken wie bei Last.fm nachbauen
+    14. Overview pro User variabel gestaltbar machen
+        * Anordnung
+        * Module
 
 ## Module (in eigenen Repos/Projekten)
     1. Gallery
@@ -102,9 +112,86 @@
                 * Ausgeschrieben
     4. Referenzen
     5. Preis/Leistung
+    6. Slider
+    7. YouTube Videoliste
+        * YouTube playlist id
+        * Anzahl der angezeigten Videos 
+        * Designauswahl
+
+    8. Facebookpostfeed
+        * Facebook pageId
+        * Anzahl der posts
+        * Designauswahl
+
+    9. Schnittstelle zu Twitter
+        * Username
+        * Anzahl der Tweets
+        * Designauswahl
+
+    10. Twitch.tv livestream
+        * Channelname
+        * Qualitätsauswahl des Streams, wenn es die API zulässt
+
+    11. Schnittstelle zu Last.fm
+        * Username
+        * Anzahl der Scrobbles
+        * Ggf Authentifizierung
+        * Designauswahl
+
+    12. Schnittstelle zu Flickr
+        (ggf in das Modul com.IcedReaper.gallery inkludieren)
+        * UserId
+        * AlbumId oder -name
+        * Designauswahl
+        * Upload der Bilder direkt nach Flickr. Erstellt das Album auf beiden Plattformen (API checken)
+
+    13. Schnittstelle zu DeviantArt
+        (ggf in das Modul com.IcedReaper.gallery inkludieren)
+        * UserId
+        * AlbumId oder -name
+        * Designauswahl
+
+    14. Downloadmodul
+        * Kategorien
+        * Tags
+        * Suche
+        * Admintool
+        * Übersicht
+        * Anzeige der letzten 4 Suchbegriffe
+
+    15. Adminchat
+        * Globaler Channel
+        * Private Chats/Channel
+
+    16. Private Nachrichten
+        (ggf ins Usermodul implementieren)
+        * Ein oder mehrere Empfänger
+        * Betreff
+        * Nachricht
+        * Anzeige neuer Nachrichten im Menüicon (Infos per Websockets am besten)
+
+    17. Admintaskliste (Aufgabenverwaltung)
+         * private / globale tasks
+         * Status
+             * Offen
+             * in Bearbeitung
+             * geschlossen
+        * "PostIt"-Setup des Desktops
+
+    18. Berechtigungsrequestor
+        (Tool um eine Anfrage an den/die Admins zu stellen, mit der Bitte eine gewisse Berechtigung zu erhalten - nur für eingeloggte User - Untermodul des Usermodul)
+        * Gruppe
+        * Rolle
+        * Begründung/Kommentar
+        * Auflistung und Status aktueller (letzte 10 Tage) Anfragen
+        * Admintool
+            * Setzen des Status
+                * Genehmigt
+                * Abgelehnt 
+            * Kommentar
+
 
 ## Templates
-    * Vollbild Vorschaltseite
     * Vollbild Slider
 
 ## Optimierungen
@@ -113,3 +200,7 @@
     3. Foreign Key Indices setzen
     4. Aktuell gibt es sowohl creationDate als auch createdDate => gleichziehen!!!
     5. Bei Ajax-Calls success entfernen, da Angular bei Fehlern anders reagiert und die Calls nicht in dem Success-Kreislauf landen :)
+    6. Tabellenprefix in Application verankern. Aus Datei auslesen.
+    7. Datasources aus Datei auslesen.
+    8. Serversettings in Applikation verankern
+    9. Querybuilder oder Ähnliches implementieren um die Tabellenprefixes sicher händeln zu können. Serversettings?
