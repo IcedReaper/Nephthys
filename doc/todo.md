@@ -84,8 +84,10 @@
 ## Module (in eigenen Repos/Projekten)
     1. Gallery
         1. Weitere Möglichkeiten
-            * Search
-            * Comments
+            * Suche
+            * Kommentarmöglichkeit
+            * teilen einer Gallerie oder eines Bilder per Soziale Medien
+                * Per Option ein oder ausschaltbar (jeweils)
             * Release Date
             * Bewertungen
                 * Anonym per Option
@@ -94,8 +96,8 @@
         * Mögliche Verbesserungen:
             * File resizing after upload is only applied by width and height attributes
             * F5-Raiding beim Abschicken des Kommentars möglich (Siehe Allgemein 17)
-        * Comments
-            * Nested comments
+        * Kommentarmöglichkeit
+            * Verschachtelte Kommentarmöglichkeit
         * Adaptionen in der Übersicht
             * Kalenderübersicht hinzufügen => Klick auf Datum => zeigt alle Posts des Tages
     3. Reviewsystem
@@ -114,8 +116,6 @@
     5. Preis/Leistung
     6. Slider
     7. YouTube Videoliste
-        * YouTube playlist id
-        * Anzahl der angezeigten Videos 
         * Designauswahl
 
     8. Facebookpostfeed
