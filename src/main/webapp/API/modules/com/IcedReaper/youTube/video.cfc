@@ -78,8 +78,6 @@ component {
                        & "&id=" & variables.videoId
                        & "&key=" & application.system.settings.getValueOfKey("googleApiKey");
         
-        var youTubeRequest = null;
-        
         var youTubeRequest = new http().setUrl(requestUrl)
                                        .setMethod("GET")
                                        .setTimeout(20)

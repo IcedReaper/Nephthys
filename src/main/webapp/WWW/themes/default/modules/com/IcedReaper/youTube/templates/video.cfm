@@ -7,7 +7,7 @@
             </header>
             <section>
                 <div class="iFrame-fluid">
-                    <iframe src="#attributes.video.getVideoEmbedUrl()#<cfif attributes.options.keyExists('autoplayFirstVideo') AND attributes.options.autoplayFirstVideo EQ true>?autoplay=1</cfif>" frameborder="0" allowfullscreen></iframe>
+                    <iframe src="#attributes.video.getVideoEmbedUrl()#<cfif attributes.options.keyExists('autoplayFirstVideo') AND attributes.options.autoplayFirstVideo EQ true>?autoplay=1</cfif>" frameborder="0" allowfullscreen scrolling="no"></iframe>
                 </div>
                 
                 <p>#attributes.video.getDescription()#</p>

@@ -13,7 +13,7 @@
                         </a>
                     <cfelse>
                         <div class="iFrame-fluid">
-                            <iframe src="#video.getVideoEmbedUrl()#<cfif videoIndex EQ 1 AND attributes.options.keyExists('autoplayFirstVideo') AND attributes.options.autoplayFirstVideo EQ true>?autoplay=1</cfif>" frameborder="0" allowfullscreen></iframe>
+                            <iframe src="#video.getVideoEmbedUrl()#<cfif videoIndex EQ 1 AND attributes.options.keyExists('autoplayFirstVideo') AND attributes.options.autoplayFirstVideo EQ true>?autoplay=1</cfif>" frameborder="0" allowfullscreen scrolling="no"></iframe>
                         </div>
                     </cfif>
                     

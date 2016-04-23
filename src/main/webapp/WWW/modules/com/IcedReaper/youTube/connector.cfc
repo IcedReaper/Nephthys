@@ -16,7 +16,7 @@ component implements="WWW.interfaces.connector" {
             if(arguments.options.keyExists("videoCount")) {
                 playlist.setMaxResults(arguments.options.videoCount);
             }
-        
+            
             saveContent variable="renderedContent" {
                 module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/youTube/templates/playlist.cfm"
                        playlist = playlist

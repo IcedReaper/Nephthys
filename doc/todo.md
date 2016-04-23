@@ -128,30 +128,26 @@
         * Anzahl der Tweets
         * Designauswahl
 
-    10. Twitch.tv livestream
-        * Channelname
-        * Qualitätsauswahl des Streams, wenn es die API zulässt
-
-    11. Schnittstelle zu Last.fm
+    10. Schnittstelle zu Last.fm
         * Username
         * Anzahl der Scrobbles
         * Ggf Authentifizierung
         * Designauswahl
 
-    12. Schnittstelle zu Flickr
+    11. Schnittstelle zu Flickr
         (ggf in das Modul com.IcedReaper.gallery inkludieren)
         * UserId
         * AlbumId oder -name
         * Designauswahl
         * Upload der Bilder direkt nach Flickr. Erstellt das Album auf beiden Plattformen (API checken)
 
-    13. Schnittstelle zu DeviantArt
+    12. Schnittstelle zu DeviantArt
         (ggf in das Modul com.IcedReaper.gallery inkludieren)
         * UserId
         * AlbumId oder -name
         * Designauswahl
 
-    14. Downloadmodul
+    13. Downloadmodul
         * Kategorien
         * Tags
         * Suche
@@ -159,18 +155,18 @@
         * Übersicht
         * Anzeige der letzten 4 Suchbegriffe
 
-    15. Adminchat
+    14. Adminchat
         * Globaler Channel
         * Private Chats/Channel
 
-    16. Private Nachrichten
+    15. Private Nachrichten
         (ggf ins Usermodul implementieren)
         * Ein oder mehrere Empfänger
         * Betreff
         * Nachricht
         * Anzeige neuer Nachrichten im Menüicon (Infos per Websockets am besten)
 
-    17. Admintaskliste (Aufgabenverwaltung)
+    16. Admintaskliste (Aufgabenverwaltung)
          * private / globale tasks
          * Status
              * Offen
@@ -178,7 +174,7 @@
              * geschlossen
         * "PostIt"-Setup des Desktops
 
-    18. Berechtigungsrequestor
+    17. Berechtigungsrequestor
         (Tool um eine Anfrage an den/die Admins zu stellen, mit der Bitte eine gewisse Berechtigung zu erhalten - nur für eingeloggte User - Untermodul des Usermodul)
         * Gruppe
         * Rolle
@@ -204,3 +200,4 @@
     7. Datasources aus Datei auslesen.
     8. Serversettings in Applikation verankern
     9. Querybuilder oder Ähnliches implementieren um die Tabellenprefixes sicher händeln zu können. Serversettings?
+    10. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
