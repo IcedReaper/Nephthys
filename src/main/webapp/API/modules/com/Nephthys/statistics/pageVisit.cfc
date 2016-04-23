@@ -204,4 +204,38 @@ component {
         
         return pageVisits;
     }
+    
+    public array function getRequestCountForDateRange(required date startDate, required date endDate) {
+        arguments.endDate = dateAdd("d", 1, arguments.endDate);
+        
+        var qPageRequests = new Query().setSQL("         SELECT dateRange.d, 
+                                                                CASE
+                                                                  WHEN pageRequests.requestCount IS NOT NULL THEN
+                                                                    pageRequests.requestCount
+                                                                  ELSE
+                                                                    0
+                                                                END requestCount
+                                                           FROM (SELECT i :: date d 
+                                                                   FROM generate_series(:startDate, :endDate, '1 day' :: interval) i) dateRange
+                                                LEFT OUTER JOIN (  SELECT COUNT(*) requestCount, date_trunc('day', visitDate) _date 
+                                                                     FROM nephthys_statistics
+                                                                    WHERE visitDate > :startDate
+                                                                      AND visitDate < :endDate
+                                                                 GROUP BY date_trunc('day', visitDate)) pageRequests ON dateRange.d = pageRequests._date
+                                                       ORDER BY dateRange.d")
+                                       .addParam(name = "startDate", value = arguments.startDate, cfsqltype = "cf_sql_date")
+                                       .addParam(name = "endDate",   value = arguments.endDate,   cfsqltype = "cf_sql_date")
+                                       .execute()
+                                       .getResult();
+        
+        var pageRequests = [];
+        for(var i = 1; i <= qPageRequests.getRecordCount(); ++i) {
+            pageRequests.append({
+                "date"         = qPageRequests.d[i],
+                "requestCount" = qPageRequests.requestCount[i]
+            });
+        }
+        
+        return pageRequests;
+    }
 }
