@@ -23,7 +23,7 @@ component {
         return variables.isLive;
     }
     
-    public number function getViewers() {
+    public numeric function getViewers() {
         return variables.viewers;
     }
     public boolean function getIsPlaylist() {
@@ -44,10 +44,10 @@ component {
     public string function getVideoBanner() {
         return variables.videoBanner;
     }
-    public number function getFollower() {
+    public numeric function getFollower() {
         return variables.follower;
     }
-    public number function getViews() {
+    public numeric function getViews() {
         return variables.views;
     }
     public string function getUrl() {

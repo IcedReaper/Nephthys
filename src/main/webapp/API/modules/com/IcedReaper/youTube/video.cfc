@@ -73,8 +73,21 @@ component {
         return variables.videoFound;
     }
     
+    public struct function getStatistics() {
+        return duplicate(variables.statistics);
+    }
+    public numeric function getViewCount() {
+        return variables.statistics.viewCount;
+    }
+    public numeric function getLikeCount() {
+        return variables.statistics.likeCount;
+    }
+    public numeric function getDislikeCount() {
+        return variables.statistics.dislikeCount;
+    }
+    
     private void function loadVideoInfo() {
-        var requestUrl = "https://www.googleapis.com/youtube/v3/videos?part=snippet"
+        var requestUrl = "https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics"
                        & "&id=" & variables.videoId
                        & "&key=" & application.system.settings.getValueOfKey("googleApiKey");
         
@@ -90,12 +103,29 @@ component {
             var videoInfo = deserializeJSON(youTubeRequest.fileContent);
             
             if(videoInfo.items.len() >= 1) {
-                var vidInfo = videoInfo.items[1].snippet;
+                var vidInfo       = videoInfo.items[1].snippet;
+                var vidStatistics = videoInfo.items[1].statistics;
                 
                 variables.publishedAt = vidInfo.publishedAt;
                 variables.title       = vidInfo.title;
                 variables.description = vidInfo.description;
                 variables.thumbnails  = vidInfo.thumbnails;
+                
+                variables.statistics = {
+                    viewCount    = 0,
+                    likeCount    = 0,
+                    dislikeCount = 0
+                };
+                
+                if(vidStatistics.keyExists("viewCount")) {
+                    variables.statistics.viewCount = vidStatistics.viewCount;
+                }
+                if(vidStatistics.keyExists("likeCount")) {
+                    variables.statistics.likeCount = vidStatistics.likeCount;
+                }
+                if(vidStatistics.keyExists("dislikeCount")) {
+                    variables.statistics.dislikeCount = vidStatistics.dislikeCount;
+                }
                 
                 if(vidInfo.keyExists("tags")) {
                     variables.tags = vidInfo.tags;
