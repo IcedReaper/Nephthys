@@ -18,7 +18,6 @@
 <script src='/themes/default/assets/angular-tagsInput/ng-tags-input.min.js'></script>
 
 <!--- Angular UI --->
-<script src='/themes/default/assets/angularUI/ui-bootstrap-1.3.2.min.js'></script>
 <script src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
 
 <!--- app --->
