@@ -1,10 +1,10 @@
 nephthysAdminApp
-    .controller('UploadImageModalCtrl', ["$scope", "$modalInstance", function($scope, $modalInstance) {
+    .controller('UploadImageModalCtrl', ["$scope", "$uibModalInstance", function ($scope, $uibModalInstance) {
         $scope.progress = 0;
         $scope.image = null;
 
-        $scope.insert = function(){
+        $scope.insert = function () {
             // implement image resizing
-            $modalInstance.close($scope.image);
+            $uibModalInstance.close($scope.image);
         };
     }]);
