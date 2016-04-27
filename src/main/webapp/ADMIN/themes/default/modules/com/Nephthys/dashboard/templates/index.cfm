@@ -3,6 +3,8 @@
 <script type="text/javascript" src="/themes/default/assets/angular-chart/angular-chart.min.js"></script>
 <link rel="stylesheet" href="/themes/default/assets/angular-chart/angular-chart.min.css"></script> <!--- check if this works - overwise implement resource handler - then refactor resource handler to work with website and admin panel --->
 
+<script src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
+
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/dashboardApp.js"></script>
 
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/service/visitService.js"></script>
@@ -12,7 +14,10 @@
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/service/loginStatisticsService.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/loginStatisticsCtrl.js"></script>
 
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/datePickerModalCtrl.js"></script>
+
 <cfoutput>
+<div class="com-Nephthys-dashboard">
     <h1>Willkommen im Adminpanel <small>#request.user.getUsername()#</small></h1>
     
     <div class="row">
@@ -137,8 +142,14 @@
                 <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> refresh</button>
                 <h2>Verlauf von Seitenaufrufen</h2>
                 
+                <h4 class="datePicker">
+                    Von <em>{{fromDate | date:'dd.MM.yyyy' }} bis {{toDate | date:'dd.MM.yyyy' }}</em>
+                    <button ng-click="openDatePickerDialog()" class="btn btn-link"><i class="fa fa-calendar"></i></button>
+                </h4>
+                
                 <canvas chart-options="chartData.options" chart-series="chartData.series" chart-labels="chartData.labels" chart-data="chartData.data" chart-type="chartData.type" class="chart chart-base ng-isolate-scope" height="1000px" chart-click="handleClick"></canvas>
             </div>
         </div>
     </div>
+</div>
 </cfoutput>

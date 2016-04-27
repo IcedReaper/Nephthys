@@ -131,6 +131,16 @@
     10. Schnittstelle zu Last.fm
         * Username
         * Anzahl der Scrobbles
+        * Last Scrobbles
+        * Top Artists
+            * Total
+            * Zeitraum
+        * Top Alben
+            * Total
+            * Zeitraum
+        * Top Songs
+            * Total
+            * Zeitraum
         * Ggf Authentifizierung
         * Designauswahl
 

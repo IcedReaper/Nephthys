@@ -64,6 +64,13 @@ component {
         return prepareRequestData(new pageVisit().getRequestCountForDateRange(_startDate, _endDate));
     }
     
+    remote struct function getVisitsForDay(required string day) {
+        var _day = dateFormat(arguments.day, "DD.MM.YYYY");
+        
+        // refactor to hour based.
+        return prepareRequestData(new pageVisit().getRequestCountForDateRange(_day, _day));
+    }
+    
     
     private struct function prepareVisitData(required array visitData) {
         var labels = [];

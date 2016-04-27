@@ -109,8 +109,8 @@ nephthysAdminApp
         $provide.decorator('taOptions', ['taRegisterTool', '$delegate', '$uibModal', function(taRegisterTool, taOptions, $uibModal){
             taRegisterTool('uploadImage', {
                 buttontext: 'Upload Image',
-                iconclass: "fa fa-image",
-                action: function (deferred,restoreSelection) {
+                iconclass:  "fa fa-image",
+                action: function (deferred, restoreSelection) {
                     $uibModal.open({
                         controller:  'UploadImageModalCtrl',
                         templateUrl: '/themes/default/modules/com/IcedReaper/blog/partials/upload.html'
