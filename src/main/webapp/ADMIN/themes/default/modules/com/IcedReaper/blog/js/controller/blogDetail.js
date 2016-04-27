@@ -112,7 +112,7 @@ nephthysAdminApp
                 iconclass: "fa fa-image",
                 action: function (deferred,restoreSelection) {
                     $uibModal.open({
-                        controller: 'UploadImageModalCtrl',
+                        controller:  'UploadImageModalCtrl',
                         templateUrl: '/themes/default/modules/com/IcedReaper/blog/partials/upload.html'
                     }).result.then(
                         function (image) { // we don't upload the image before but send them then with our other data. This is required as it could be otherwise that many images are uploaded for no blogpost as they will not be saved later on.
