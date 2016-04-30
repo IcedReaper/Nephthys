@@ -10,14 +10,18 @@
 <div class="modal-body">
     <div class="row">
         <div class="col-md-6">
-            Dieses Jahr
-            Diesen Monat
+            <p><a href="#" ng-click="selectTotal();">Insgesamt</a></p>
+            <p><a href="#" ng-click="selectYear('this');">Dieses Jahr</a></p>
+            <p><a href="#" ng-click="selectMonth('this');">Dieser Monat</a></p>
+            <p><a href="#" ng-click="selectMonth('last');">Vorheriger Monat</a></p>
         </div>
         <div class="col-md-6">
-            Letztes Jahr
-            Letzten Monat
+            <p><a href="#" ng-click="selectDayCount('60');">Letzte 60 Tage</a></p>
+            <p><a href="#" ng-click="selectDayCount('90');">Letzte 90 Tage</a></p>
+            <p><a href="#" ng-click="selectDayCount('180');">Letzte 180 Tage</a></p>
         </div>
     </div>
+    <hr>
     <div class="row">
         <div class="col-md-6">
             <p class="input-group">

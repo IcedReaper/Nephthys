@@ -1,5 +1,5 @@
 <script type="text/javascript" src="/themes/default/assets/ChartJS/Chart.min.js"></script>
-<script type="text/javascript" src="/themes/default/assets/ChartJS/Chart.HorizontalBar.min.js"></script>
+<script type="text/javascript" src="/themes/default/assets/ChartJS/Chart.HorizontalBar.js"></script>
 <script type="text/javascript" src="/themes/default/assets/angular-chart/angular-chart.min.js"></script>
 <link rel="stylesheet" href="/themes/default/assets/angular-chart/angular-chart.min.css"></script> <!--- check if this works - overwise implement resource handler - then refactor resource handler to work with website and admin panel --->
 
@@ -142,12 +142,12 @@
                 <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> refresh</button>
                 <h2>Verlauf von Seitenaufrufen</h2>
                 
-                <h4 class="datePicker">
-                    Von <em>{{fromDate | date:'dd.MM.yyyy' }} bis {{toDate | date:'dd.MM.yyyy' }}</em>
-                    <button ng-click="openDatePickerDialog()" class="btn btn-link"><i class="fa fa-calendar"></i></button>
+                <h4 class="datePicker clickable" ng-click="openDatePickerDialog()">
+                    <apan>Von <em>{{fromDate | date:'dd.MM.yyyy' }} bis {{toDate | date:'dd.MM.yyyy' }}</em></span>
+                    <button class="btn btn-link"><i class="fa fa-calendar"></i></button>
                 </h4>
                 
-                <canvas chart-options="chartData.options" chart-series="chartData.series" chart-labels="chartData.labels" chart-data="chartData.data" chart-type="chartData.type" class="chart chart-base ng-isolate-scope" height="1000px" chart-click="handleClick"></canvas>
+                <canvas chart-options="chartData.options" chart-series="chartData.series" chart-labels="chartData.labels" chart-data="chartData.data" chart-type="chartType" class="chart chart-base ng-isolate-scope testObject" height="1000px" chart-click="handleClick"></canvas>
             </div>
         </div>
     </div>

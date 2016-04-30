@@ -1,104 +1,84 @@
 nephthysAdminApp
     .controller('pageCtrl', ["$scope", "$q", "$uibModal", "visitService", function ($scope, $q, $uibModal, visitService) {
-        var filter = {
-                "actualChartType": "dayCount",
-                "forDay":          null,
-                "dayCount":        60,
-                "forMonth":        null,
-                "forYear":         null,
-                "forTimeFrame":    null
-            },
+        var actualView = "perDay", // perYear | perMonth | perDay | perHour
             
             renderChart = function (pageRequestData) {
-                $scope.chartData.type   = "HorizontalBar";
                 $scope.chartData.labels =  pageRequestData.labels;
                 $scope.chartData.data   = [pageRequestData.data];
+            },
+            today = function() {
+                var now = new Date();
+                
+                return new Date(now.getFullYear(), now.getMonth(), now.getDate());
             };
         
         $scope.refresh = function () {
+            var dateStringOptions = {
+                month: "2-digit",
+                day:   "2-digit",
+                year:  "numeric"
+            };
+            
             $scope.chartData = {
                 labels: [],
                 data:   []
             };
             
-            switch(filter.actualChartType) {
-                case "dayCount": {
-                    visitService
-                        .getVisitsForDayCount(filter.dayCount)
-                        .then(renderChart);
-                    break;
-                }
-                case "forMonth": {
-                    visitService
-                        .getVisitsForMonth(filter.forMonth.month,
-                                           filter.forMonth.year)
-                        .then(renderChart);
-                    break;
-                }
-                case "forYear": {
-                    visitService
-                        .getVisitsForYear(filter.forYear)
-                        .then(renderChart);
-                    break;
-                }
-                case "forTimeFrame": {
-                    visitService
-                        .getVisitsForTimeFrame(filter.forTimeFrame.startDate,
-                                               filter.forTimeFrame.endDate)
-                        .then(renderChart);
-                    break;
-                }
-                case "forDay": {
-                    visitService
-                        .getVisitsForDay(filter.forDay)
-                        .then(renderChart);
-                    break;
-                }
-                default: {
-                    console.error("Wrong chart type");
-                }
-            }
+            visitService
+                .getPageRequests($scope.fromDate.toLocaleDateString('de-DE', dateStringOptions),
+                                 $scope.toDate.toLocaleDateString('de-DE', dateStringOptions))
+                .then(function(res) {
+                    actualView = res.actualView;
+                    
+                    return res;
+                })
+                .then(renderChart);
         };
         
         $scope.handleClick = function (object, event) {
-            switch(filter.actualChartType) {
-                case "dayCount":
-                case "forTimeFrame":
-                case "forMonth": {
-                    $scope.setActualChartType('forDay');
-                    var dateParts = object[0].label.split(".");
-                    filter.forDay = new Date(dateParts[2], dateParts[1], dateParts[0]);
+            switch(actualView) {
+                case "perYear": {
+                    $scope.fromDate = new Date(object[0].label, 0, 1);
+                    $scope.toDate   = new Date(object[0].label + 1, 0, 0);
                     
-                    $scope.refresh();
+                    if($scope.toDate > today()) {
+                        $scope.toDate = today();
+                    }
                     
                     break;
                 }
-                case "forYear": {
+                case "perMonth": {
+                    var monthNames = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
+                    
+                    var month = monthNames.indexOf(object[0].label);
+                    
+                    if(month !== -1) {
+                        $scope.fromDate = new Date($scope.fromDate.getFullYear(), month, 1);
+                        $scope.toDate   = new Date($scope.fromDate.getFullYear(), month, 1);
+                        $scope.toDate.setMonth($scope.toDate.getMonth() + 1);
+                        $scope.toDate.setDate(0);
+                    }
+                    else {
+                        console.warn("Could not find month!");
+                        return;
+                    }
+                    
                     break;
                 }
-                case "forDay": {
+                case "perDay": {
+                    var d = object[0].label.split(".");
+                    
+                    $scope.fromDate = new Date(d[2], d[1] - 1, d[0]);
+                    $scope.toDate   = new Date(d[2], d[1] - 1, d[0]);
+                    
                     break;
                 }
                 default: {
-                    console.error("Wrong chart type");
+                    return;
                 }
             }
-        };
-        
-        $scope.setActualChartType = function (name) {
-            switch(filter.actualChartType) {
-                case "dayCount":
-                case "forMonth":
-                case "forYear":
-                case "forTimeFrame":
-                case "forDay": {
-                    filter.actualChartType = name;
-                    break;
-                }
-                default: {
-                    console.error("Wrong chart type");
-                }
-            }
+            
+            $scope.refresh();
         };
         
         $scope.openDatePickerDialog = function () {
@@ -108,35 +88,32 @@ nephthysAdminApp
                 windowTopClass: "datePickerModal",
                 resolve: {
                     items: function () {
-                        var fromDate = new Date();
-                        var toDate   = new Date();
-                        
-                        fromDate.setDate(fromDate.getDate() - 60);
-                        
                         return {
-                            'fromDate': fromDate,
-                            'toDate':   toDate
+                            'fromDate': $scope.fromDate,
+                            'toDate':   $scope.toDate
                         };
                     }
                 }
             }).result.then(function (modalResult) {
-                
-                $scope.setActualChartType(modalResult.type);
                 $scope.fromDate = modalResult.fromDate;
                 $scope.toDate   = modalResult.toDate;
-                
-                filter.forTimeFrame = {
-                    startDate: $scope.fromDate,
-                    endDate:   $scope.toDate
-                };
                 
                 $scope.refresh();
             });
         };
         
-        $scope.refresh();
+        $scope.getActualFilterType = function () {
+            return actualView;
+        }
         
-        $scope.fromDate = new Date();
+        $scope.chartType = "HorizontalBar";
+        
+        // init dates
+        var now = new Date();
+        $scope.fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
         $scope.toDate   = new Date();
-        $scope.fromDate.setDate($scope.fromDate.getDate() - filter.dayCount);
+        $scope.toDate.setMonth($scope.fromDate.getMonth() + 1);
+        $scope.toDate.setDate(0);
+        
+        $scope.refresh();
     }]);

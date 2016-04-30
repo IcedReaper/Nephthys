@@ -31,45 +31,74 @@ component {
         };
     }
     
-    remote struct function getVisitsForDayCount(required numeric dayCount) {
-        if(arguments.dayCount > 0) {
-            var _now = now();
-            var endDate = createDate(year(_now), month(_now), day(_now));
-            var startDate = dateAdd("d", arguments.dayCount * -1, endDate);
+    remote struct function getPageRequests(required string fromDate, required string toDate) { // format: DD.MM.YYYY // TODO: custom formats by server settings
+        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
+        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+
+        var returnData = {
+            "labels" = [],
+            "data" = []
+        };
+        
+        if(year(_fromDate) != year(_toDate)) {
+            var requestData = new pageRequestsQueryPerYear()
+                                      .setFromDate(_fromDate)
+                                      .setToDate(_toDate)
+                                      .execute()
+                                      .getResult();
             
-            return prepareRequestData(new pageVisit().getRequestCountForDateRange(startDate, endDate));
+            
+            returnData.actualView = "perYear";
+            
+            for(var i = 1; i <= requestData.len(); ++i) {
+                returnData.labels[i] = requestData[i].date;
+                returnData.data[i]   = requestData[i].requestCount;
+            }
+        }
+        else if(month(_fromDate) != month(_toDate)) {
+            var requestData = new pageRequestsQueryPerMonth()
+                                      .setFromDate(_fromDate)
+                                      .setToDate(_toDate)
+                                      .execute()
+                                      .getResult();
+            
+            returnData.actualView = "perMonth";
+            
+            for(var i = 1; i <= requestData.len(); ++i) {
+                returnData.labels[i] = monthAsString(requestData[i].date, "de-DE");
+                returnData.data[i]   = requestData[i].requestCount;
+            }
+        }
+        else if(day(_fromDate) != day(_toDate)) {
+            var requestData = new pageRequestsQueryPerDay()
+                                      .setFromDate(_fromDate)
+                                      .setToDate(_toDate)
+                                      .execute()
+                                      .getResult();
+            
+            returnData.actualView = "perDay";
+            
+            for(var i = 1; i <= requestData.len(); ++i) {
+                returnData.labels[i] = dateFormat(requestData[i].date, "DD.MM.YYYY");
+                returnData.data[i] = requestData[i].requestCount;
+            }
         }
         else {
-            throw(type = "application", message = "dayCount has to be a positive number");
+            var requestData = new pageRequestsQueryPerHour()
+                                      .setFromDate(_fromDate)
+                                      .setToDate(_toDate)
+                                      .execute()
+                                      .getResult();
+            
+            returnData.actualView = "perHour";
+            
+            for(var i = 1; i <= requestData.len(); ++i) {
+                returnData.labels[i] = requestData[i].date;
+                returnData.data[i] = requestData[i].requestCount;
+            }
         }
-    }
-    
-    remote struct function getVisitsForMonth(required numeric month, required numeric year) {
-        var startDate = createDate(arguments.year, arguments.month, 1);
-        var endDate   = createDate(arguments.year, arguments.month, daysInMonth(startDate));
         
-        return prepareRequestData(new pageVisit().getRequestCountForDateRange(startDate, endDate));
-    }
-    
-    remote struct function getVisitsForYear(required numeric year) {
-        var startDate = createDate(arguments.year,  1,  1);
-        var endDate   = createDate(arguments.year, 12, 31);
-        
-        return prepareRequestData(new pageVisit().getRequestCountForDateRange(startDate, endDate));
-    }
-    
-    remote struct function getVisitsForTimeframe(required string startDate, required string endDate) {
-        var _startDate = dateFormat(arguments.startDate, "DD.MM.YYYY");
-        var _endDate   = dateFormat(arguments.endDate, "DD.MM.YYYY");
-        
-        return prepareRequestData(new pageVisit().getRequestCountForDateRange(_startDate, _endDate));
-    }
-    
-    remote struct function getVisitsForDay(required string day) {
-        var _day = dateFormat(arguments.day, "DD.MM.YYYY");
-        
-        // refactor to hour based.
-        return prepareRequestData(new pageVisit().getRequestCountForDateRange(_day, _day));
+        return returnData;
     }
     
     
@@ -78,7 +107,7 @@ component {
         var data   = [];
         var id     = [];
         
-        for(var i = 1; i <= arguments.visitData.len(); i++) {
+        for(var i = 1; i <= arguments.visitData.len(); ++i) {
             labels[i] = arguments.visitData[i].link;
             data[i]   = arguments.visitData[i].count;
             id[i]     = arguments.visitData[i].pageId;
@@ -94,24 +123,10 @@ component {
     private array function prepareLoginData(required array loginData) {
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
-        for(var i = 1; i <= arguments.loginData.len(); i++) {
+        for(var i = 1; i <= arguments.loginData.len(); ++i) {
             arguments.loginData[i].loginDate = formatCtrl.formatDate(arguments.loginData[i].loginDate);
         }
         
         return arguments.loginData;
-    }
-    
-    private struct function prepareRequestData(required array requestData) {
-        var returnData = {
-            "labels" = [],
-            "data" = []
-        };
-        
-        for(var i = 1; i <= arguments.requestData.len(); ++i) {
-            returnData.labels[i] = dateFormat(arguments.requestData[i].date, "DD.MM.YYYY");
-            returnData.data[i] = arguments.requestData[i].requestCount;
-        }
-        
-        return returnData;
     }
 }
