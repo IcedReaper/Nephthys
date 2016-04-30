@@ -33,7 +33,8 @@ component {
     
     remote struct function getVisitsForDayCount(required numeric dayCount) {
         if(arguments.dayCount > 0) {
-            var endDate = createDate(year(now()), month(now()), day(now()) + 1);
+            var _now = now();
+            var endDate = createDate(year(_now), month(_now), day(_now));
             var startDate = dateAdd("d", arguments.dayCount * -1, endDate);
             
             return prepareRequestData(new pageVisit().getRequestCountForDateRange(startDate, endDate));
