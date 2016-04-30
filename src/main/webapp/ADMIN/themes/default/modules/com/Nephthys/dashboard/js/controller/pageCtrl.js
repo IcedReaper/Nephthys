@@ -19,10 +19,8 @@ nephthysAdminApp
                 year:  "numeric"
             };
             
-            $scope.chartData = {
-                labels: [],
-                data:   []
-            };
+            $scope.chartData.labels = [];
+            $scope.chartData.data   = [];
             
             visitService
                 .getPageRequests($scope.fromDate.toLocaleDateString('de-DE', dateStringOptions),
@@ -106,7 +104,12 @@ nephthysAdminApp
             return actualView;
         }
         
-        $scope.chartType = "HorizontalBar";
+        $scope.chartData = {};
+        $scope.chartData.type = "HorizontalBar";
+        $scope.chartData.options = {
+            showVerticalLines:   false,
+            showHorizontalLines: false
+        }
         
         // init dates
         var now = new Date();

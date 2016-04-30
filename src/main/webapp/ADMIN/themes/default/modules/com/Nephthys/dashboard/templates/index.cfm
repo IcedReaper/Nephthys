@@ -147,7 +147,7 @@
                     <button class="btn btn-link"><i class="fa fa-calendar"></i></button>
                 </h4>
                 
-                <canvas chart-options="chartData.options" chart-series="chartData.series" chart-labels="chartData.labels" chart-data="chartData.data" chart-type="chartType" class="chart chart-base ng-isolate-scope testObject" height="1000px" chart-click="handleClick"></canvas>
+                <canvas chart-options="chartData.options" chart-series="chartData.series" chart-labels="chartData.labels" chart-data="chartData.data" chart-type="chartData.type" class="chart chart-base ng-isolate-scope" height="1000px" chart-click="handleClick"></canvas>
             </div>
         </div>
     </div>
