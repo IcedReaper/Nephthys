@@ -109,21 +109,20 @@
                 * Ausgeschrieben
     4. Referenzen
     5. Preis/Leistung
-    6. Slider
-    7. YouTube Videoliste
+    6. YouTube Videoliste
         * Designauswahl
 
-    8. Facebookpostfeed
+    7. Facebookpostfeed
         * Facebook pageId
         * Anzahl der posts
         * Designauswahl
 
-    9. Schnittstelle zu Twitter
+    8. Schnittstelle zu Twitter
         * Username
         * Anzahl der Tweets
         * Designauswahl
     
-    10. Schnittstelle zu Last.fm
+    9. Schnittstelle zu Last.fm
         * Username
         * Anzahl der Scrobbles
         * Last Scrobbles
@@ -139,20 +138,20 @@
         * Ggf Authentifizierung
         * Designauswahl
     
-    11. Schnittstelle zu Flickr
+    10. Schnittstelle zu Flickr
         (ggf in das Modul com.IcedReaper.gallery inkludieren)
         * UserId
         * AlbumId oder -name
         * Designauswahl
         * Upload der Bilder direkt nach Flickr. Erstellt das Album auf beiden Plattformen (API checken)
     
-    12. Schnittstelle zu DeviantArt
+    11. Schnittstelle zu DeviantArt
         (ggf in das Modul com.IcedReaper.gallery inkludieren)
         * UserId
         * AlbumId oder -name
         * Designauswahl
     
-    13. Downloadmodul
+    12. Downloadmodul
         * Kategorien
         * Tags
         * Suche
@@ -160,18 +159,18 @@
         * Übersicht
         * Anzeige der letzten 4 Suchbegriffe
     
-    14. Adminchat
+    13. Adminchat
         * Globaler Channel
         * Private Chats/Channel
     
-    15. Private Nachrichten
+    14. Private Nachrichten
         (ggf ins Usermodul implementieren)
         * Ein oder mehrere Empfänger
         * Betreff
         * Nachricht
         * Anzeige neuer Nachrichten im Menüicon (Infos per Websockets am besten)
     
-    16. Admintaskliste (Aufgabenverwaltung)
+    15. Admintaskliste (Aufgabenverwaltung)
          * private / globale tasks
          * Status
              * Offen
@@ -179,7 +178,7 @@
              * geschlossen
         * "PostIt"-Setup des Desktops
     
-    17. Berechtigungsrequestor
+    16. Berechtigungsrequestor
         (Tool um eine Anfrage an den/die Admins zu stellen, mit der Bitte eine gewisse Berechtigung zu erhalten - nur für eingeloggte User - Untermodul des Usermodul)
         * Gruppe
         * Rolle
@@ -191,9 +190,6 @@
                 * Abgelehnt 
             * Kommentar
     
-
-## Templates
-    * Vollbild Slider
 
 ## Optimierungen
     1. Settings der unterschiedlichen Module und des Systems verbinden
