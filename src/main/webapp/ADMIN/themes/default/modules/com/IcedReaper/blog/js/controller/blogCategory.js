@@ -7,10 +7,10 @@ nephthysAdminApp
                     .loadCategories(blogpostId)
                     .then(function (result) {
                         $scope.categories = [];
-                        for(var c = 0; c < result.categories.length; c++) {
+                        for(var c = 0; c < result.length; c++) {
                             $scope.categories.push({
-                                id:   result.categories[c].categoryId,
-                                text: result.categories[c].name
+                                id:   result[c].categoryId,
+                                text: result[c].name
                             });
                         }
                     });
@@ -29,10 +29,10 @@ nephthysAdminApp
                        .loadAutoCompleteCategories(queryString)
                        .then(function (result) {
                            var categories = [];
-                           for(var c = 0; c < result.categories.length; c++) {
+                           for(var c = 0; c < result.length; c++) {
                                categories.push({
-                                   id:   result.categories[c].categoryId,
-                                   text: result.categories[c].name
+                                   id:   result[c].categoryId,
+                                   text: result[c].name
                                });
                            }
                            return categories;

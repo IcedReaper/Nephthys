@@ -5,7 +5,7 @@ nephthysAdminApp
             return galleryService
                     .loadPictures(galleryId)
                     .then(function (result) {
-                        $scope.pictures = result.pictures;
+                        $scope.pictures = result;
                     });
         };
         
@@ -19,7 +19,7 @@ nephthysAdminApp
             galleryService
                 .deletePicture(galleryId, pictureId)
                 .then(function (result) {
-                    $scope.pictures = result.pictures;
+                    $scope.pictures = result;
                 });
         };
         
@@ -36,7 +36,7 @@ nephthysAdminApp
                 .then($q.spread(function () {
                     var success = true;
                     for(var i = 0; i < arguments.length; i++) {
-                        success = success ? arguments[i].success : false;
+                        success = success ? arguments[i] : false;
                     }
                     
                     $scope.newPictures = [];

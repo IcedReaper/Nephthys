@@ -1,0 +1,23 @@
+.com-Nephthys-dashboard {
+    h4.datePicker {
+        color: #BD0000;
+        
+        .btn {
+            padding: 0;
+            margin-left: 20px;
+            color: inherit;
+            
+            .fa {
+                font-size: 2rem;
+                color: inherit;
+            }
+        }
+    }
+}
+
+.datePickerModal {
+    left: auto;
+    right: 60px;
+    top: 230px;
+    position: absolute;
+}

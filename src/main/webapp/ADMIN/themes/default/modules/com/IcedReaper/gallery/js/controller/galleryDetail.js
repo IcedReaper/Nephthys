@@ -8,9 +8,9 @@ nephthysAdminApp
             return galleryService
                        .getDetails($routeParams.galleryId)
                        .then(function (galleryDetails) {
-                           $scope.gallery = galleryDetails.data;
+                           $scope.gallery = galleryDetails;
                            
-                           $rootScope.$emit('gallery-loaded', {galleryId: galleryDetails.data.galleryId});
+                           $rootScope.$emit('gallery-loaded', {galleryId: galleryDetails.galleryId});
                        });
         };
         
@@ -18,7 +18,7 @@ nephthysAdminApp
             galleryService
                 .save($scope.gallery)
                 .then(function (result) {
-                    $scope.gallery = result.data;
+                    $scope.gallery = result;
                 })
                 .then($scope.loadPictures);
         };

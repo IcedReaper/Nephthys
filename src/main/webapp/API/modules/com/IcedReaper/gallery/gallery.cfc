@@ -100,7 +100,7 @@ component {
         for(var p = 1; p <= variables.pictures.len(); p++) {
             if(variables.pictures[p].getPictureId() == arguments.pictureId) {
                 variables.pictures[p].delete();
-                variables.pictures.remove(p);
+                variables.pictures.deleteAt(p);
                 
                 break;
             }

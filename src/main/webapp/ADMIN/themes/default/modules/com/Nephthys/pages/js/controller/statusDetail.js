@@ -4,7 +4,7 @@ nephthysAdminApp
             pageStatusService
                 .getDetails($routeParams.pageStatusId)
                 .then(function (pageStatus) {
-                    $scope.pageStatus = pageStatus.data;
+                    $scope.pageStatus = pageStatus;
                 });
         };
         

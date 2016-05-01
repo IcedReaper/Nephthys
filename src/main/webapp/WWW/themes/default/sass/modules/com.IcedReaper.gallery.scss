@@ -2,4 +2,22 @@
     img.card-img-top {
         width: 100%;
     }
+    
+    .galleryLayout-1, &.galleryLayout-1 {
+        .img-fluid {
+            min-width: 100%;
+        }
+        
+        @include media-breakpoint-down(sm) {
+            .pictures > div:not(:first-child) {
+                margin-top: 1rem !important;
+            }
+        }
+
+        @include media-breakpoint-down(xs) {
+            .pictures > div > .row > div {
+                margin-top: 1rem !important;
+            }
+        }
+    }
 }

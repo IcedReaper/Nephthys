@@ -21,7 +21,7 @@ nephthysAdminApp
             blogService
                 .getList()
                 .then(function (blogposts) {
-                    $scope.blogposts = blogposts.data;
+                    $scope.blogposts = blogposts;
                 });
         };
         

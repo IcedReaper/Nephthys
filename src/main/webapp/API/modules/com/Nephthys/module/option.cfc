@@ -182,7 +182,12 @@ component {
                 variables.optionName    = qGetOption.optionName[1];
                 variables.description   = qGetOption.description[1];
                 variables.type          = qGetOption.type[1].getValue();
-                variables.selectOptions = qGetOption.selectOptions[1] != null ? deserializeJSON(qGetOption.selectOptions[1]) : [];
+                if(variables.type == "query") {
+                    variables.selectOptions = getSelectOptionsForQuery(deserializeJSON(qGetOption.selectOptions[1]));
+                }
+                else {
+                    variables.selectOptions = qGetOption.selectOptions[1] != null ? deserializeJSON(qGetOption.selectOptions[1]) : [];
+                }
                 variables.sortOrder     = qGetOption.sortOrder[1];
             }
             else {
@@ -196,5 +201,24 @@ component {
             variables.selectOptions = [];
             variables.sortOrder     = 0;
         }
+    }
+    
+    private array function getSelectOptionsForQuery(required struct queryOptions) {
+        var selectOptions = [];
+        
+        var qSelectOptions = new Query().setSQL("SELECT t." & arguments.queryOptions.idColumn    & " val,
+                                                        t." & arguments.queryOptions.labelColumn & " description
+                                                   FROM " & arguments.queryOptions.table & " AS t")
+                                        .execute()
+                                        .getResult();
+        
+        for(var option in qSelectOptions) {
+            selectOptions.append({
+                value       = option.val,
+                description = option.description
+            });
+        }
+        
+        return selectOptions;
     }
 }

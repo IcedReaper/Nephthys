@@ -102,9 +102,9 @@
                     <option value="false">Nein</option>
                     <option value="true">Ja</option>
                 </select>
-                <select ng-model="child.options[option.dbName]" class="form-control" ng-if="option.type == 'select'" ng-change="checkOption(child, option.dbName, child.options[option.dbName])">
+                <select ng-model="child.options[option.dbName]" class="form-control" ng-if="option.type == 'select' || option.type == 'query'" ng-change="checkOption(child, option.dbName, child.options[option.dbName])">
                     <option value="">Option entfernen/Nicht gesetzt</option>
-                    <option value="{{value}}" ng-repeat="value in option.selectOptions">{{value}}</option>
+                    <option value="{{selectOption.value}}" ng-repeat="selectOption in option.selectOptions">{{selectOption.description}}</option>
                 </select>
                 <div ng-model="child.options[option.dbName]" class="form-control" ng-if="option.type == 'wysiwyg'" text-angular ta-toolbar="[['h1', 'h2', 'h3', 'h4', 'h5', 'h6'], ['p', 'pre', 'quote'], ['ul', 'ol'], ['bold','italics','underline','strikeThrough'], ['justifyLeft','justifyCenter','justifyRight','justifyFull'], ['insertLink'], ['undo', 'redo'],['wordcount','charcount']]"></div><!-- todo: implement insertImage | insertVideo -->
             </div>
@@ -130,6 +130,7 @@
     <div class="col-md-12">
         <div class="card card-block" ng-repeat="child in page.content" ng-include="'contentChild'"></div>
         
-        <button class="btn btn-primary" ng-click="appendContainer();"><i class="fa fa-plus"></i> Neuen Container hinzufügen</button>
+        <button class="btn btn-primary" ng-click="appendChild(page.content, 'com.Nephthys.container');"><i class="fa fa-plus"></i> Neuen Container hinzufügen</button>
+        <button class="btn btn-primary" ng-click="appendChild(page.content, 'com.IcedReaper.startpage');" ng-if="page.content.length === 0"><i class="fa fa-plus"></i> Nur Startseite verwenden</button>
     </div>
 </div>

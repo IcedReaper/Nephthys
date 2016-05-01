@@ -10,8 +10,8 @@ nephthysAdminApp
                 ])
                 // and merging them
                 .then($q.spread(function (permissionsOfUser, roles) {
-                    $scope.permissions = permissionsOfUser.permissions;
-                    $scope.roles       = roles.roles;
+                    $scope.permissions = permissionsOfUser;
+                    $scope.roles       = roles;
                 }));
             }
         };

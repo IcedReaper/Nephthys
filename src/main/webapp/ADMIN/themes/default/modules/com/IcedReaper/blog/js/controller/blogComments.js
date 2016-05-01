@@ -8,7 +8,7 @@ nephthysAdminApp
             blogService
                 .loadComments(blogpostId)
                 .then(function (result) {
-                    $scope.comments = result.comments;
+                    $scope.comments = result;
                 });
         };
         

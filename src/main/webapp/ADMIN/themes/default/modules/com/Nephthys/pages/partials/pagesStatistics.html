@@ -6,13 +6,17 @@
     </div>
 </div>
 
-<div class="row">
+<div class="row m-t">
     <div class="col-md-6">
-        <h3>Seitenaufrufe der letzten 30 Tage <small>ohne dynamische Unterseiten</small></h3>
-        <canvas chart-options="chart.options" chart-series="chart.series" chart-labels="chart.labels" chart-data="chart.data" class="chart chart-bar ng-isolate-scope"></canvas>
+        <div class="card card-block">
+            <h3>Seitenaufrufe der letzten 30 Tage <small>ohne dynamische Unterseiten</small></h3>
+            <canvas chart-options="chart.options" chart-series="chart.series" chart-labels="chart.labels" chart-data="chart.data" class="chart chart-bar ng-isolate-scope"></canvas>
+        </div>
     </div>
     <div class="col-md-6" ng-show="useDynamicSuffixes == '1'">
-        <h3>Seitenaufrufe der letzten 10 Tage <small>mit dynamischen Unterseiten</small></h3>
-        <canvas chart-options="chartWithParameter.options" chart-series="chartWithParameter.series" chart-labels="chartWithParameter.labels" chart-data="chartWithParameter.data" chart-legend="true" class="chart chart-bar ng-isolate-scope"></canvas>
+        <div class="card card-block">
+            <h3>Seitenaufrufe der letzten 10 Tage <small>mit dynamischen Unterseiten</small></h3>
+            <canvas chart-options="chartWithParameter.options" chart-series="chartWithParameter.series" chart-labels="chartWithParameter.labels" chart-data="chartWithParameter.data" chart-legend="true" class="chart chart-bar ng-isolate-scope"></canvas>
+        </div>
     </div>
 </div>

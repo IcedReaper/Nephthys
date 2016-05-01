@@ -1,5 +1,5 @@
 component {
-    remote struct function getList() {
+    remote array function getList() {
         var filterCtrl = createObject("component", "API.modules.com.IcedReaper.contactForm.filter").init();
         var rawRequests = filterCtrl.execute()
                                     .getResult();
@@ -20,10 +20,7 @@ component {
             });
         }
         
-        return {
-            "success"  = true,
-            "requests" = requests
-        };
+        return requests;
     }
     
     remote struct function getDetails(required numeric requestId) {
@@ -36,20 +33,17 @@ component {
         }
         
         return {
-            "success" = true,
-            "request" = {
-                "requestId"       = cf_request.getRequestId(),
-                "requestDate"     = formatCtrl.formatDate(cf_request.getRequestDate()),
-                "subject"         = cf_request.getSubject(),
-                "requestorUserId" = cf_request.getRequestorUserId(),
-                "email"           = cf_request.getEmail(),
-                "userName"        = cf_request.getUserName(),
-                "message"         = cf_request.getMessage()
-            }
+            "requestId"       = cf_request.getRequestId(),
+            "requestDate"     = formatCtrl.formatDate(cf_request.getRequestDate()),
+            "subject"         = cf_request.getSubject(),
+            "requestorUserId" = cf_request.getRequestorUserId(),
+            "email"           = cf_request.getEmail(),
+            "userName"        = cf_request.getUserName(),
+            "message"         = cf_request.getMessage()
         };
     }
     
-    remote struct function getReplies(required numeric requestId) {
+    remote array function getReplies(required numeric requestId) {
         var cf_request = createObject("component", "API.modules.com.IcedReaper.contactForm.request").init(arguments.requestId);
         var rawReplies = cf_request.getReplies();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
@@ -64,21 +58,16 @@ component {
             });
         }
         
-        return {
-            "success" = true,
-            "replies" = replies
-        };
+        return replies;
     }
     
-    remote struct function reply(required numeric requestId, required string message) {
+    remote boolean function reply(required numeric requestId, required string message) {
         var reply = createObject("component", "API.modules.com.IcedReaper.contactForm.reply").init(0);
         
         reply.setRequestId(arguments.requestId)
              .setMessage(arguments.message)
              .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
 }

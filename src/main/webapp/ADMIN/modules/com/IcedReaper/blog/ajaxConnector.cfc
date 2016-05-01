@@ -1,6 +1,6 @@
 component {
     // Galleries and their details
-    remote struct function getList() {
+    remote array function getList() {
         var blogpostFilterCtrl = createObject("component", "API.modules.com.IcedReaper.blog.filter").init();
         
         var blogposts = blogpostFilterCtrl.execute().getResult();
@@ -10,31 +10,22 @@ component {
             data.append(prepareDetailStruct(blogposts[i]));
         }
         
-        return {
-            "success" = true,
-            "data"    = data
-        };
+        return data;
     }
     
     remote struct function getDetails(required numeric blogpostId) {
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
         
-        return {
-            "success" = true,
-            "data"    = prepareDetailStruct(blogpost)
-        };
+        return prepareDetailStruct(blogpost);
     }
     
-    remote struct function loadCategories(required numeric blogpostId) {
+    remote array function loadCategories(required numeric blogpostId) {
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
         
-        return {
-            "success"    = true,
-            "categories" = prepareCategoryDetails(blogpost.getCategories(), false)
-        };
+        return prepareCategoryDetails(blogpost.getCategories(), false);
     }
     
-    remote struct function loadAutoCompleteCategories(required string queryString) {
+    remote array function loadAutoCompleteCategories(required string queryString) {
         var categoryLoader = createObject("component", "API.modules.com.IcedReaper.blog.categoryLoader").init();
         
         var categories = categoryLoader.setName(arguments.queryString)
@@ -47,10 +38,7 @@ component {
             categories.append(dummyCategory);
         }
         
-        return {
-            "success"    = true,
-            "categories" = prepareCategoryDetails(categories, false)
-        };
+        return prepareCategoryDetails(categories, false);
     }
     
     remote struct function save(required numeric blogpostId,
@@ -90,10 +78,7 @@ component {
                 .setCommentsNeedToGetPublished(arguments.commentsNeedToGetPublished)
                 .save();
         
-        return {
-            "success" = true,
-            "data"    = prepareDetailStruct(blogpost)
-        };
+        return prepareDetailStruct(blogpost);
     }
     
     remote struct function uploadImages(required string blogpostId,
@@ -113,42 +98,35 @@ component {
         }
         
         return {
-            "success" = true,
-            "files" = files,
+            "files"      = files,
             "imageSizes" = _is
         };
     }
     
-    remote struct function delete(required numeric blogpostId) {
+    remote boolean function delete(required numeric blogpostId) {
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
         blogpost.delete();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function activate(required numeric blogpostId) {
+    remote boolean function activate(required numeric blogpostId) {
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
         blogpost.setReleased(1)
                 .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function deactivate(required numeric blogpostId) {
+    remote boolean function deactivate(required numeric blogpostId) {
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
         blogpost.setReleased(0)
                 .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function addCategory(required numeric blogpostId,
+    remote boolean function addCategory(required numeric blogpostId,
                                        required numeric categoryId,
                                        required string  categoryName) {
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
@@ -160,60 +138,46 @@ component {
         blogpost.addCategory(newCategory)
                 .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function removeCategory(required numeric blogpostId,
+    remote boolean function removeCategory(required numeric blogpostId,
                                           required numeric categoryId) {
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
         
         blogpost.removeCategory(arguments.categoryId);
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
     // categories and their details
     remote struct function getCategoryList() {
         var categoryLoader = createObject("component", "API.modules.com.IcedReaper.blog.categoryLoader").init();
         
-        return {
-            "success" = true,
-            "data"    = prepareCategoryDetails(categoryLoader.load(), true)
-        };
+        return prepareCategoryDetails(categoryLoader.load(), true);
     }
     
     remote struct function getCategoryDetails(required numeric categoryId) {
         var category = createObject("component", "API.modules.com.IcedReaper.blog.category").init(arguments.categoryId);
         
-        return {
-            "success" = true,
-            "data"    = prepareCategoryStruct(category)
-        };
+        return prepareCategoryStruct(category);
     }
     
-    remote struct function saveCategory(required numeric categoryId,
+    remote boolean function saveCategory(required numeric categoryId,
                                         required string  name) {
         var category = createObject("component", "API.modules.com.IcedReaper.blog.category").init(arguments.categoryId);
         category.setName(arguments.name)
                 .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function deleteCategory(required numeric categoryId) {
+    remote boolean function deleteCategory(required numeric categoryId) {
         var category = createObject("component", "API.modules.com.IcedReaper.blog.category").init(arguments.categoryId);
         
         category.delete();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
     remote struct function getLastVisitChart(required numeric blogpostId, required numeric dayCount) {
@@ -234,13 +198,12 @@ component {
         }
         
         return {
-            "success" = true,
             "labels"  = labels,
             "data"    = data
         };
     }
     
-    remote struct function loadComments(required numeric blogpostId) {
+    remote array function loadComments(required numeric blogpostId) {
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
@@ -256,44 +219,34 @@ component {
             });
         }
         
-        return {
-            "success"  = true,
-            "comments" = comments
-        };
+        return comments;
     }
     
-    remote struct function publishComment(required numeric commentId) {
+    remote boolean function publishComment(required numeric commentId) {
         var comment = createObject("component", "API.modules.com.IcedReaper.blog.comment").init(arguments.commentId);
         
         comment.publish()
                .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function deleteComment(required numeric commentId) {
+    remote boolean function deleteComment(required numeric commentId) {
         var comment = createObject("component", "API.modules.com.IcedReaper.blog.comment").init(arguments.commentId);
         
         comment.delete();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
     remote struct function getSettings() {
         var settings = createObject("component", "API.modules.com.IcedReaper.blog.settings").init();
         settings.load();
         
-        return {
-            "success" = true,
-            "data"    = settings.getAllSettings()
-        };
+        return settings.getAllSettings();
     }
     
-    remote struct function saveSettings(required string settings) {
+    remote boolean function saveSettings(required string settings) {
         var settingsObj = createObject("component", "API.modules.com.IcedReaper.blog.settings").init();
         settingsObj.load();
         var newSettings = deserializeJSON(arguments.settings);
@@ -306,9 +259,7 @@ component {
         
         settingsObj.save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
     // private

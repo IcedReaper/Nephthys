@@ -18,8 +18,7 @@
 <script src='/themes/default/assets/angular-tagsInput/ng-tags-input.min.js'></script>
 
 <!--- Angular UI --->
-<script src='/themes/default/assets/angularUI/ui-bootstrap-custom-0.14.3.min.js'></script>
-<script src='/themes/default/assets/angularUI/ui-bootstrap-custom-tpls-0.14.3.min.js'></script>
+<script src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
 
 <!--- app --->
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/blogApp.js"></script>

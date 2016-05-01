@@ -8,9 +8,9 @@ nephthysAdminApp
             ])
             // and merging them
             .then($q.spread(function (moduleDetails, users, roles) {
-                $scope.moduleName = moduleDetails.data.moduleName;
-                $scope.users      = users.users;
-                $scope.roles      = roles.roles;
+                $scope.moduleName = moduleDetails.moduleName;
+                $scope.users      = users;
+                $scope.roles      = roles;
             }));
         };
         

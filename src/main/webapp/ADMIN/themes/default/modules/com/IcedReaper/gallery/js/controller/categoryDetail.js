@@ -5,7 +5,7 @@ nephthysAdminApp
             categoryService
                 .getDetails($routeParams.categoryId)
                 .then(function (categoryDetails) {
-                    $scope.category = categoryDetails.data;
+                    $scope.category = categoryDetails;
                 });
         };
         

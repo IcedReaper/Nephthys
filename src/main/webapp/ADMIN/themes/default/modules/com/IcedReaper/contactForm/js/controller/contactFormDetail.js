@@ -6,8 +6,8 @@ nephthysAdminApp
                 contactFormService.getReplies($routeParams.requestId)
             ])
             .then($q.spread(function (requestDetails, replies) {
-                $scope.request = requestDetails.request;
-                $scope.replies = replies.replies;
+                $scope.request = requestDetails;
+                $scope.replies = replies;
             }));
         };
         
@@ -18,7 +18,7 @@ nephthysAdminApp
                     return contactFormService.getReplies($routeParams.requestId);
                 })
                 .then(function(replies) {
-                    $scope.replies = replies.replies;
+                    $scope.replies = replies;
                     
                     $scope.reply.message = "";
                 });

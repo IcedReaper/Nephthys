@@ -13,7 +13,7 @@ nephthysAdminApp
             return blogService
                        .getDetails($routeParams.blogpostId)
                        .then(function (blogDetails) {
-                           $scope.blogpost = blogDetails.data;
+                           $scope.blogpost = blogDetails;
                            
                            if($scope.blogpost.blogpostId != 0) {
                                $scope.linkSet = true;
@@ -59,14 +59,14 @@ nephthysAdminApp
             blogService
                 .save(blogpostCopy, fileNames)
                 .then(function (result) {
-                    blogService.uploadImages(result.data.blogpostId, images, imageSizes)
+                    blogService.uploadImages(result.blogpostId, images, imageSizes)
                         .then(function(uploadResult) {
                             var oldBlogpostId = $scope.blogpost.blogpostId;
-                            $scope.blogpost = result.data;
+                            $scope.blogpost = result;
                             
                             if(oldBlogpostId == 0) {
                                 $route.updateParams({
-                                    blogpostId: result.data.blogpostId
+                                    blogpostId: result.blogpostId
                                 });
                             }
                             
@@ -109,10 +109,10 @@ nephthysAdminApp
         $provide.decorator('taOptions', ['taRegisterTool', '$delegate', '$uibModal', function(taRegisterTool, taOptions, $uibModal){
             taRegisterTool('uploadImage', {
                 buttontext: 'Upload Image',
-                iconclass: "fa fa-image",
-                action: function (deferred,restoreSelection) {
+                iconclass:  "fa fa-image",
+                action: function (deferred, restoreSelection) {
                     $uibModal.open({
-                        controller: 'UploadImageModalCtrl',
+                        controller:  'UploadImageModalCtrl',
                         templateUrl: '/themes/default/modules/com/IcedReaper/blog/partials/upload.html'
                     }).result.then(
                         function (image) { // we don't upload the image before but send them then with our other data. This is required as it could be otherwise that many images are uploaded for no blogpost as they will not be saved later on.

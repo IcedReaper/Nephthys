@@ -11,7 +11,7 @@ nephthysAdminApp
                 $interval.cancel(interval);
                 
                 // session is expired? reroute the user to the login page
-                $location.path("/com.Nephthys.login");
+                window.location = "/com.Nephthys.login";
             }
         }, 1000);
         

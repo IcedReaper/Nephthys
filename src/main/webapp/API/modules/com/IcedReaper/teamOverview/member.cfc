@@ -20,13 +20,13 @@ component {
     }
     
     // GETTER
-    public number function getMemberId() {
+    public numeric function getMemberId() {
         return variables.memberId;
     }
-    public number function getUserId() {
+    public numeric function getUserId() {
         return variables.userId;
     }
-    public number function getSortId() {
+    public numeric function getSortId() {
         return variables.sortId;
     }
     public user function getUser() {
@@ -35,7 +35,7 @@ component {
         }
         return user;
     }
-    public number function getCreatorUserId () {
+    public numeric function getCreatorUserId () {
         return variables.creatorUserId;
     }
     public user function getCreatorUser() {
@@ -47,7 +47,7 @@ component {
     public date function getCreationDate() {
         return variables.creationDate;
     }
-    public number function getLastEditorUserId () {
+    public numeric function getLastEditorUserId () {
         return variables.lastEditorUserId;
     }
     public user function getLastEditorUser() {

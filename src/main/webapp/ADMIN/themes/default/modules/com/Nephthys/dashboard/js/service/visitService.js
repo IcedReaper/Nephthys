@@ -6,6 +6,15 @@ nephthysAdminApp
             },
             getYesterdaysVisits: function () {
                 return $http.get('/ajax/com/Nephthys/dashboard/getYesterdaysVisits');
+            },
+            
+            getPageRequests: function(fromDate, toDate) {
+                return $http.get('/ajax/com/Nephthys/dashboard/getPageRequests', {
+                    params: {
+                        fromDate: fromDate,
+                        toDate:   toDate
+                    }
+                });
             }
         };
     });

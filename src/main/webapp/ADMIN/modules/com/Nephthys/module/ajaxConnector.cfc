@@ -1,5 +1,5 @@
 component {
-    remote struct function getList() {
+    remote array function getList() {
         var filterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
         
         var installedModules = filterCtrl.execute()
@@ -8,40 +8,34 @@ component {
         
         for(var i = 1; i <= installedModules.len(); i++) {
             preparedModules.append({
-                    'moduleId'       = installedModules[i].getModuleId(),
-                    'moduleName'     = installedModules[i].getModuleName(),
-                    'description'    = installedModules[i].getDescription(),
-                    'active'         = toString(installedModules[i].getActiveStatus()),
-                    'systemModule'   = toString(installedModules[i].getSystemModule()),
-                    'availableWWW'   = toString(installedModules[i].getAvailableWWW()),
-                    'availableADMIN' = toString(installedModules[i].getAvailableADMIN())
+                    "moduleId"       = installedModules[i].getModuleId(),
+                    "moduleName"     = installedModules[i].getModuleName(),
+                    "description"    = installedModules[i].getDescription(),
+                    "active"         = toString(installedModules[i].getActiveStatus()),
+                    "systemModule"   = toString(installedModules[i].getSystemModule()),
+                    "availableWWW"   = toString(installedModules[i].getAvailableWWW()),
+                    "availableADMIN" = toString(installedModules[i].getAvailableADMIN())
                 });
         }
         
-        return {
-            'success' = true,
-            'data'    = preparedModules
-        };
+        return preparedModules;
     }
     
     remote struct function getDetails(required numeric moduleId) {
         var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
         
         return {
-            'success' = true,
-            'data' = {
-                'moduleId'       = module.getModuleId(),
-                'moduleName'     = module.getModuleName(),
-                'description'    = module.getDescription(),
-                'active'         = toString(module.getActiveStatus()),
-                'systemModule'   = toString(module.getSystemModule()),
-                'availableWWW'   = toString(module.getAvailableWWW()),
-                'availableADMIN' = toString(module.getAvailableADMIN())
-            }
+            "moduleId"       = module.getModuleId(),
+            "moduleName"     = module.getModuleName(),
+            "description"    = module.getDescription(),
+            "active"         = toString(module.getActiveStatus()),
+            "systemModule"   = toString(module.getSystemModule()),
+            "availableWWW"   = toString(module.getAvailableWWW()),
+            "availableADMIN" = toString(module.getAvailableADMIN())
         };
     }
     
-    remote struct function save(required numeric moduleId,
+    remote boolean function save(required numeric moduleId,
                                 required string  moduleName,
                                 required string  description,
                                 required numeric active,
@@ -66,50 +60,39 @@ component {
               .setAvailableADMIN(arguments.availableADMIN)
               .save();
         
-        return {
-            'success' = true
-        };
+        return true;
     }
     
-    remote struct function delete(required numeric moduleId) {
+    remote boolean function delete(required numeric moduleId) {
         var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
         module.delete();
         
-        return {
-            'success' = true
-        };
+        return true;
     }
     
-    remote struct function activate(required numeric moduleId) {
+    remote boolean function activate(required numeric moduleId) {
         var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
         module.setActiveStatus(1)
               .save();
         
-        return {
-            'success' = true
-        };
+        return true;
     }
     
-    remote struct function deactivate(required numeric moduleId) {
+    remote boolean function deactivate(required numeric moduleId) {
         var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
         module.setActiveStatus(0)
               .save();
         
-        return {
-            'success' = true
-        };
+        return true;
     }
     
-    remote struct function getRoles() {
+    remote array function getRoles() {
         var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
         
-        return {
-            "success" = true,
-            "roles"   = permissionHandlerCtrl.loadRoles()
-        };
+        return permissionHandlerCtrl.loadRoles();
     }
     
-    remote struct function getUser(required numeric moduleId) {
+    remote array function getUser(required numeric moduleId) {
         var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
         
         var users = permissionHandlerCtrl.loadUserForModule(arguments.moduleId);
@@ -123,13 +106,10 @@ component {
             });
         }
         
-        return {
-            "success" = true,
-            "users"   = userArray
-        };
+        return userArray;
     }
     
-    remote struct function savePermissions(required numeric moduleId, required array permissions) {
+    remote boolean function savePermissions(required numeric moduleId, required array permissions) {
         var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
         
         transaction {
@@ -153,9 +133,7 @@ component {
             transactionCommit();
         }
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
     remote array function getOptions(required numeric moduleId) {

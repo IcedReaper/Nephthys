@@ -91,7 +91,6 @@ component {
             switch(request.requestType) {
                 case "cfc": {
                     writeOutput(serializeJSON({
-                            "success"      = false,
                             "errorMessage" = arguments.exception.message,
                             "type"         = arguments.exception.type,
                             "detail"       = arguments.exception.detail,

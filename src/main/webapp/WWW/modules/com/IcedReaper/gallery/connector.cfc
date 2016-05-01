@@ -1,4 +1,6 @@
 component implements="WWW.interfaces.connector" {
+    import "API.modules.com.IcedReaper.gallery.*";
+    
     public connector function init() {
         return this;
     }
@@ -14,66 +16,75 @@ component implements="WWW.interfaces.connector" {
         
         themeIndividualizer.invokeResources();
         
-        var splitParameter = listToArray(request.page.getParameter(), "/");
-        var galleryFilterCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.filter").init();
-        
-        if(! arguments.options.keyExists("maxEntries")) {
-            arguments.options.maxEntries = 5;
-        }
-        
-        if(splitParameter.len() == 0) {
-            galleryFilterCtrl.setPublished(1)
-                             .setCount(arguments.options.maxEntries)
-                             .execute();
+        if(arguments.options.keyExists("galleryId") && isNumeric(arguments.options.galleryId)) {
+            var gallery = new gallery(arguments.options.galleryId);
             
-            return renderOverview(arguments.options, galleryFilterCtrl, 1);
+            gallery.incrementViewCounter();
+        
+            return renderDetails(arguments.options, gallery);
         }
         else {
-            if(splitParameter[1] == "Seite" && splitParameter.len() == 2) { // todo: Seite multilingual
-                galleryFilterCtrl.setPublished(1)
-                               .setCount(arguments.options.maxEntries)
-                               .setOffset((splitParameter[2]-1) * arguments.options.maxEntries)
-                               .execute();
-                
-                return renderOverview(arguments.options, galleryFilterCtrl, splitParameter[2]);
+            var splitParameter = listToArray(request.page.getParameter(), "/");
+            var galleryFilterCtrl = new filter();
+            
+            if(! arguments.options.keyExists("maxEntries")) {
+                arguments.options.maxEntries = 5;
             }
-            else if(splitParameter[1] == "Kategorie") { // todo: Kategorie multilingual
-                if(splitParameter.len() == 2) {
+            
+            if(splitParameter.len() == 0) {
+                galleryFilterCtrl.setPublished(1)
+                                 .setCount(arguments.options.maxEntries)
+                                 .execute();
+                
+                return renderOverview(arguments.options, galleryFilterCtrl, 1);
+            }
+            else {
+                if(splitParameter[1] == "Seite" && splitParameter.len() == 2) { // todo: Seite multilingual
                     galleryFilterCtrl.setPublished(1)
-                                     .setCategory(splitParameter[2])
-                                     .setCount(arguments.options.maxEntries)
-                                     .execute();
-                    
-                    return renderOverview(arguments.options, galleryFilterCtrl, 1);
-                }
-                else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") { // todo: Seite multilingual
-                    galleryFilterCtrl.setPublished(1)
-                                     .setCategory(splitParameter[2])
-                                     .setCount(arguments.options.maxEntries)
-                                     .setOffset((splitParameter[4]-1) * arguments.options.maxEntries)
-                                     .execute();
+                                   .setCount(arguments.options.maxEntries)
+                                   .setOffset((splitParameter[2]-1) * arguments.options.maxEntries)
+                                   .execute();
                     
                     return renderOverview(arguments.options, galleryFilterCtrl, splitParameter[2]);
                 }
-            }
-            else {
-                var galleries = galleryFilterCtrl.setPublished(1)
-                                                 .setLink(request.page.getParameter())
-                                                 .execute()
-                                                 .getResult();
-                
-                if(galleries.len() == 1) {
-                    var gallery = galleries[1];
-                    
-                    gallery.incrementViewCounter();
-                    
-                    request.page.setDescription(gallery.getDescription())
-                                .setTitle(gallery.getHeadline());
-                
-                    return renderDetails(arguments.options, gallery);
+                else if(splitParameter[1] == "Kategorie") { // todo: Kategorie multilingual
+                    if(splitParameter.len() == 2) {
+                        galleryFilterCtrl.setPublished(1)
+                                         .setCategory(splitParameter[2])
+                                         .setCount(arguments.options.maxEntries)
+                                         .execute();
+                        
+                        return renderOverview(arguments.options, galleryFilterCtrl, 1);
+                    }
+                    else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") { // todo: Seite multilingual
+                        galleryFilterCtrl.setPublished(1)
+                                         .setCategory(splitParameter[2])
+                                         .setCount(arguments.options.maxEntries)
+                                         .setOffset((splitParameter[4]-1) * arguments.options.maxEntries)
+                                         .execute();
+                        
+                        return renderOverview(arguments.options, galleryFilterCtrl, splitParameter[2]);
+                    }
                 }
                 else {
-                    throw(type = "icedreaper.gallery.notFound", message = "Could not find the gallery " & request.page.getParameter(), detail = request.page.getParameter());
+                    var galleries = galleryFilterCtrl.setPublished(1)
+                                                     .setLink(request.page.getParameter())
+                                                     .execute()
+                                                     .getResult();
+                    
+                    if(galleries.len() == 1) {
+                        var gallery = galleries[1];
+                        
+                        gallery.incrementViewCounter();
+                        
+                        request.page.setDescription(gallery.getDescription())
+                                    .setTitle(gallery.getHeadline());
+                    
+                        return renderDetails(arguments.options, gallery);
+                    }
+                    else {
+                        throw(type = "icedreaper.gallery.notFound", message = "Could not find the gallery " & request.page.getParameter(), detail = request.page.getParameter());
+                    }
                 }
             }
         }
@@ -98,7 +109,7 @@ component implements="WWW.interfaces.connector" {
     
     private string function renderDetails(required struct options, required gallery gallery) {
         var renderedContent = "";
-        var statisticsCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.statistics").init();
+        var statisticsCtrl = new statistics();
         
         statisticsCtrl.add(arguments.gallery.getGalleryId());
         

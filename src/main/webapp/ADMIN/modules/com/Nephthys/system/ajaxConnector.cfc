@@ -16,13 +16,10 @@ component {
             settings[key].delete("foreignTableOptions");
         }
         
-        return {
-            "success" = true,
-            "data"    = settings
-        };
+        return settings;
     }
     
-    remote struct function saveSettings(required string settings) {
+    remote boolean function saveSettings(required string settings) {
         var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
         var newSettings = deserializeJSON(arguments.settings);
         var resetAllPasswords = false;
@@ -67,63 +64,51 @@ component {
         reloadServerSettings();
         reloadWebsite();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function activate() {
+    remote boolean function activate() {
         var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
         
         serverSettings.setValueOfKey("active", true)
                       .save();
         
-        return {
-            'success' = true
-        };
+        return true;
     }
     
-    remote struct function deactivate() {
+    remote boolean function deactivate() {
         var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
         
         serverSettings.setValueOfKey("active", false)
                       .save();
         
-        return {
-            'success' = true
-        };
+        return true;
     }
     
-    remote struct function activateMaintenanceMode() {
+    remote boolean function activateMaintenanceMode() {
         var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
         
         serverSettings.setValueOfKey("maintenanceMode", true)
                       .save();
         
-        return {
-            'success' = true
-        };
+        return true;
     }
     
-    remote struct function deactivateMaintenanceMode() {
+    remote boolean function deactivateMaintenanceMode() {
         var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
         
         serverSettings.setValueOfKey("maintenanceMode", false)
                       .save();
         
-        return {
-            'success' = true
-        };
+        return true;
     }
     
-    remote struct function getEncryptionMethods() {
+    remote array function getEncryptionMethods() {
         var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.controller.encryptionMethodLoader").init();
         
-        return {
-            'success' = true,
-            'data'    = encryptionMethodLoader.getEncryptionMethods()
-        };
+        return encryptionMethodLoader.getEncryptionMethods();
     }
+    
     
     private struct function getUserInformation(required user _user) {
         return {

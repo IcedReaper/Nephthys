@@ -21,7 +21,7 @@ nephthysAdminApp
             themeService
                 .getList()
                 .then(function (themeList) {
-                    $scope.themes = themeList.data;
+                    $scope.themes = themeList;
                 });
         };
         

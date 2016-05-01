@@ -10,7 +10,7 @@ nephthysAdminApp
             categoryService
                 .getList()
                 .then(function (categories) {
-                    $scope.categories = categories.data;
+                    $scope.categories = categories;
                 });
         };
         
