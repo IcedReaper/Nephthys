@@ -102,7 +102,7 @@
                     <option value="false">Nein</option>
                     <option value="true">Ja</option>
                 </select>
-                <select ng-model="child.options[option.dbName]" class="form-control" ng-if="option.type == 'select'" ng-change="checkOption(child, option.dbName, child.options[option.dbName])">
+                <select ng-model="child.options[option.dbName]" class="form-control" ng-if="option.type == 'select' || option.type == 'query'" ng-change="checkOption(child, option.dbName, child.options[option.dbName])">
                     <option value="">Option entfernen/Nicht gesetzt</option>
                     <option value="{{selectOption.value}}" ng-repeat="selectOption in option.selectOptions">{{selectOption.description}}</option>
                 </select>

@@ -67,6 +67,10 @@ component {
             }
         }
         else if(day(_fromDate) != day(_toDate)) {
+            if(_toDate > now()) {
+                var n = now();
+                _toDate = createDate(year(n), month(n), day(n));
+            }
             var requestData = new pageRequestsQueryPerDay()
                                       .setFromDate(_fromDate)
                                       .setToDate(_toDate)
