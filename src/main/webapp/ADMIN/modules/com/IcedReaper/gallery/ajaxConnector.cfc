@@ -1,6 +1,6 @@
 component {
     // Galleries and their details
-    remote struct function getList() {
+    remote array function getList() {
         var galleryFilterCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.filter").init();
         
         var galleries = galleryFilterCtrl.execute().getResult();
@@ -10,38 +10,28 @@ component {
             data.append(prepareDetailStruct(galleries[i]));
         }
         
-        return {
-            "success" = true,
-            "data"    = data
-        };
+        return data;
     }
     
     remote struct function getDetails(required numeric galleryId) {
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
-        return {
-            "success" = true,
-            "data"    = prepareDetailStruct(gallery)
-        };
+        
+        return prepareDetailStruct(gallery);
     }
     
-    remote struct function loadPictures(required numeric galleryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
-        return {
-            "success"  = true,
-            "pictures" = preparePictureStruct(gallery.getPictures(), gallery.getRelativePath() & "/")
-        };
-    }
-    
-    remote struct function loadCategories(required numeric galleryId) {
+    remote array function loadPictures(required numeric galleryId) {
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         
-        return {
-            "success"    = true,
-            "categories" = prepareCategoryDetails(gallery.getCategories(), false)
-        };
+        return preparePictureStruct(gallery.getPictures(), gallery.getRelativePath() & "/");
     }
     
-    remote struct function loadAutoCompleteCategories(required string queryString) {
+    remote array function loadCategories(required numeric galleryId) {
+        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        
+        return prepareCategoryDetails(gallery.getCategories(), false);
+    }
+    
+    remote array function loadAutoCompleteCategories(required string queryString) {
         var categoryLoader = createObject("component", "API.modules.com.IcedReaper.gallery.categoryLoader").init();
         
         var categories = categoryLoader
@@ -55,10 +45,7 @@ component {
             categories.append(dummyCategory);
         }
         
-        return {
-            "success"    = true,
-            "categories" = prepareCategoryDetails(categories, false)
-        };
+        return prepareCategoryDetails(categories, false);
     }
     
     remote struct function save(required numeric galleryId,
@@ -83,42 +70,33 @@ component {
                .setActiveStatus(arguments.active)
                .save();
         
-        return {
-            "success" = true,
-            "data"    = prepareDetailStruct(gallery)
-        };
+        return prepareDetailStruct(gallery);
     }
     
-    remote struct function delete(required numeric galleryId) {
+    remote boolean function delete(required numeric galleryId) {
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         gallery.delete();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function activate(required numeric galleryId) {
+    remote boolean function activate(required numeric galleryId) {
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         gallery.setActiveStatus(1)
                .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function deactivate(required numeric galleryId) {
+    remote boolean function deactivate(required numeric galleryId) {
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         gallery.setActiveStatus(0)
                .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function addCategory(required numeric galleryId,
+    remote boolean function addCategory(required numeric galleryId,
                                        required numeric categoryId,
                                        required string  categoryName) {
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
@@ -130,23 +108,19 @@ component {
         gallery.addCategory(newCategory)
                .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function removeCategory(required numeric galleryId,
+    remote boolean function removeCategory(required numeric galleryId,
                                           required numeric categoryId) {
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         
         gallery.removeCategory(arguments.categoryId);
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function uploadPictures(required numeric galleryId) {
+    remote boolean function uploadPictures(required numeric galleryId) {
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         
         var newPicture = createObject("component", "API.modules.com.IcedReaper.gallery.picture").init(0);
@@ -155,12 +129,10 @@ component {
         
         gallery.addPicture(newPicture);
         
-        return {
-            "success"  = true
-        };
+        return true;
     }
     
-    remote struct function updatePicture(required numeric pictureId,
+    remote boolean function updatePicture(required numeric pictureId,
                                          required string  caption,
                                          required string  alt,
                                          required string  title) {
@@ -171,59 +143,45 @@ component {
                .setTitle(arguments.title)
                .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function deletePicture(required numeric pictureId) {
+    remote array function deletePicture(required numeric pictureId) {
+        var picture = createObject("component", "API.modules.com.IcedReaper.gallery.picture").init(arguments.pictureId);
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(picture.getGalleryId());
         gallery.removePicture(arguments.pictureId);
         
-        return {
-            "success"  = true,
-            "pictures" = preparePictureStruct(gallery.getPictures(), gallery.getRelativePath() & "/")
-        };
+        return preparePictureStruct(gallery.getPictures(), gallery.getRelativePath() & "/");
     }
     
     // categories and their details
-    remote struct function getCategoryList() {
+    remote array function getCategoryList() {
         var categoryLoader = createObject("component", "API.modules.com.IcedReaper.gallery.categoryLoader").init();
         
-        return {
-            "success" = true,
-            "data"    = prepareCategoryDetails(categoryLoader.load(), true)
-        };
+        return prepareCategoryDetails(categoryLoader.load(), true);
     }
     
     remote struct function getCategoryDetails(required numeric categoryId) {
         var category = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
         
-        return {
-            "success" = true,
-            "data"    = prepareCategoryStruct(category)
-        };
+        return prepareCategoryStruct(category);
     }
     
-    remote struct function saveCategory(required numeric categoryId,
+    remote boolean function saveCategory(required numeric categoryId,
                                         required string  name) {
         var category = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
         category.setName(arguments.name)
                 .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function deleteCategory(required numeric categoryId) {
+    remote boolean function deleteCategory(required numeric categoryId) {
         var category = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
         
         category.delete();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
     remote struct function getLastVisitChart(required numeric galleryId, required numeric dayCount) {
@@ -244,7 +202,6 @@ component {
         }
         
         return {
-            "success" = true,
             "labels"  = labels,
             "data"    = data
         };

@@ -1,19 +1,17 @@
 nephthysAdminApp
     .controller('visitCtrl', ["$scope", "$q", "visitService", function ($scope, $q, visitService) {
         var refreshVisitData = function (visitData, type) {
-            if(visitData.success) {
-                $scope[type + 'VisitChart'] = {
-                    labels: visitData.pageVisits.labels,
-                    data:   [visitData.pageVisits.data]
-                };
-                
-                angular.forEach(visitData.pageVisits.labels, function (value, key) {
-                    $scope[type + 'VisitChartLegend'].push({
-                        link: visitData.websiteUrl + value,
-                        label: value
-                    });
+            $scope[type + 'VisitChart'] = {
+                labels: visitData.pageVisits.labels,
+                data:   [visitData.pageVisits.data]
+            };
+            
+            angular.forEach(visitData.pageVisits.labels, function (value, key) {
+                $scope[type + 'VisitChartLegend'].push({
+                    link: visitData.websiteUrl + value,
+                    label: value
                 });
-            }
+            });
         };
         var cleanVisitData = function(type) {
             $scope[type + 'VisitChart'] = {

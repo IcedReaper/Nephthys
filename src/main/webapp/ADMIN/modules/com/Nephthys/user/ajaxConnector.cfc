@@ -1,5 +1,5 @@
 component {
-    remote struct function getList() {
+    remote array function getList() {
         var userListCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
         
         var data = [];
@@ -13,19 +13,13 @@ component {
                 });
         }
         
-        return {
-            "success" = true,
-            "data"    = data
-        };
+        return data;
     }
     
     remote struct function getDetails(required numeric userId) {
         var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
         
-        return {
-            "success" = true,
-            "data" = prepareDetailStruct(user)
-        };
+        return prepareDetailStruct(user);
     }
     
     remote struct function save(required numeric userId,
@@ -53,60 +47,48 @@ component {
         
         user.save();
         
-        return {
-            "success" = true,
-            "data"    = prepareDetailStruct(createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId))
-        };
+        return prepareDetailStruct(user);
     }
     
-    remote struct function delete(required numeric userId) {
+    remote boolean function delete(required numeric userId) {
         var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
         fileDelete(expandPath("/upload/com.Nephthys.user/avatar/") & user.getAvatarFilename());
         user.delete();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function activate(required numeric userId) {
+    remote boolean function activate(required numeric userId) {
         var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
         user.setActiveStatus(1)
             .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function deactivate(required numeric userId) {
+    remote boolean function deactivate(required numeric userId) {
         var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
         user.setActiveStatus(0)
             .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function uploadAvatar(required numeric userId) {
+    remote string function uploadAvatar(required numeric userId) {
         var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
         
         if(user.getUserId() == request.user.getUserId()) {
             user.uploadAvatar()
                 .save();
             
-            return {
-                "success" = true,
-                "avatar"  = "/upload/com.Nephthys.user/avatar/" & user.getAvatarFilename()
-            };
+            return  "/upload/com.Nephthys.user/avatar/" & user.getAvatarFilename();
         }
         else {
             throw(type = "nephthys.permission.notAuthorized", message = "It is only allowed to upload an avatar for yourself");
         }
     }
     
-    remote struct function getPermissions(required numeric userId) {
+    remote array function getPermissions(required numeric userId) {
         var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
         var permissions = permissionHandlerCtrl.loadForUserId(arguments.userId);
         
@@ -115,23 +97,16 @@ component {
             permissions[i].roleId       = toString(permissions[i].roleId != null ? permissions[i].roleId : 0);
         }
         
-        
-        return {
-            "success"     = true,
-            "permissions" = permissions
-        };
+        return permissions;
     }
     
-    remote struct function getRoles() {
+    remote array function getRoles() {
         var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
         
-        return {
-            "success" = true,
-            "roles"   = permissionHandlerCtrl.loadRoles()
-        };
+        return permissionHandlerCtrl.loadRoles();
     }
     
-    remote struct function savePermissions(required numeric userId, required array permissions) {
+    remote boolean function savePermissions(required numeric userId, required array permissions) {
         var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
         
         transaction {
@@ -155,12 +130,10 @@ component {
             transactionCommit();
         }
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function getThemes() {
+    remote array function getThemes() {
         var filterCtrl = createObject("component", "API.modules.com.Nephthys.theme.filter").init();
         
         var themeData = [];
@@ -173,10 +146,7 @@ component {
                 });
         }
         
-        return {
-            "success" = true,
-            "data" = themeData
-        };
+        return themeData;
     }
     
     remote array function getExtProperties(required numeric userId) {

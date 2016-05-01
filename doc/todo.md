@@ -205,9 +205,9 @@
     2. Nach weiteren DB-Enums Ausschau halten
     3. Foreign Key Indices setzen
     4. Aktuell gibt es sowohl creationDate als auch createdDate => gleichziehen!!!
-    5. Bei Ajax-Calls success entfernen, da Angular bei Fehlern anders reagiert und die Calls nicht in dem Success-Kreislauf landen :)
-    6. Tabellenprefix in Application verankern. Aus Datei auslesen.
-    7. Datasources aus Datei auslesen.
-    8. Serversettings in Applikation verankern
-    9. Querybuilder oder Ähnliches implementieren um die Tabellenprefixes sicher händeln zu können. Serversettings?
-    10. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
+    5. Tabellenprefix in Application verankern. Aus Datei auslesen.
+    6. Datasources aus Datei auslesen.
+    7. Serversettings in Applikation verankern
+    8. Querybuilder oder Ähnliches implementieren um die Tabellenprefixes sicher händeln zu können. Serversettings?
+    9. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
+    10. Prüfen ob D3 besser ist als Chart.js | Chart.js V2 ausprobieren

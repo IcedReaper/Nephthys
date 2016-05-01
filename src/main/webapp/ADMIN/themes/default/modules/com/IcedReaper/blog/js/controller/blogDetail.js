@@ -13,7 +13,7 @@ nephthysAdminApp
             return blogService
                        .getDetails($routeParams.blogpostId)
                        .then(function (blogDetails) {
-                           $scope.blogpost = blogDetails.data;
+                           $scope.blogpost = blogDetails;
                            
                            if($scope.blogpost.blogpostId != 0) {
                                $scope.linkSet = true;
@@ -59,14 +59,14 @@ nephthysAdminApp
             blogService
                 .save(blogpostCopy, fileNames)
                 .then(function (result) {
-                    blogService.uploadImages(result.data.blogpostId, images, imageSizes)
+                    blogService.uploadImages(result.blogpostId, images, imageSizes)
                         .then(function(uploadResult) {
                             var oldBlogpostId = $scope.blogpost.blogpostId;
-                            $scope.blogpost = result.data;
+                            $scope.blogpost = result;
                             
                             if(oldBlogpostId == 0) {
                                 $route.updateParams({
-                                    blogpostId: result.data.blogpostId
+                                    blogpostId: result.blogpostId
                                 });
                             }
                             

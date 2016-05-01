@@ -36,6 +36,10 @@
 
 		//Number - Spacing between data sets within X values
 		barDatasetSpacing : 1,
+        
+        // Added by IcedReaper
+        fixedBarHeight: true,
+        barHeight: 40,
 
 		//String - A legend template
 		legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"
@@ -110,7 +114,12 @@
 				},
 
         calculateBaseHeight : function(){
-					return ((this.endPoint - this.startPoint) / this.yLabels.length) - (2*options.barValueSpacing);
+                    if(options.fixedBarHeight) {
+                        return options.barHeight;
+                    }
+                    else {
+					   return ((this.endPoint - this.startPoint) / this.yLabels.length) - (2*options.barValueSpacing);
+                    }
 				},
 				calculateBarHeight : function(datasetCount){
 					//The padding between datasets is to the right of each bar, providing that there are more than 1 dataset
@@ -169,7 +178,12 @@
     		},
 
         draw : function(){
-    			var ctx = this.ctx,
+                // Added by IcedReaper to automatically resize the chart and 
+                //this.height = this.yLabels.length * this.calculateBaseHeight() + this.startPoint + 50;
+                //this.ctx.canvas.height = this.ctx.canvas.style.height = this.height;
+                this.endPoint = this.yLabels.length * this.calculateBaseHeight() + this.startPoint;
+    			
+                var ctx = this.ctx,
     				yLabelGap = (this.endPoint - this.startPoint) / this.yLabels.length,
     				xStart = Math.round(this.xScalePaddingLeft);
     			if (this.display){
@@ -225,49 +239,50 @@
 
     				helpers.each(this.xLabels,function(label,index){
     					var width = this.calculateX(1) - this.calculateX(0);
-    					var xPos = this.calculateX(index) + helpers.aliasPixel(this.lineWidth) - (width / 2),
+                        var xPos = this.calculateX(index) + helpers.aliasPixel(this.lineWidth) - (width / 2),
     						// Check to see if line/bar here and decide where to place the line
     						linePos = this.calculateX(index - (this.offsetGridLines ? 0.5 : 0)) + helpers.aliasPixel(this.lineWidth),
     						isRotated = (this.xLabelRotation > 0);
 
-    					ctx.beginPath();
+                        if(this.xLabels.length <= 10 || index % Math.ceil(this.xLabels.length / 10) === 0) {
+                            ctx.beginPath();
 
-    					if (index > 0){
-    						// This is a grid line in the centre, so drop that
-    						ctx.lineWidth = this.gridLineWidth;
-    						ctx.strokeStyle = this.gridLineColor;
-    					} else {
-    						// This is the first line on the scale
-    						ctx.lineWidth = this.lineWidth;
-    						ctx.strokeStyle = this.lineColor;
-    					}
-    					ctx.moveTo(linePos,this.endPoint);
-    					ctx.lineTo(linePos,this.startPoint - 3);
-    					ctx.stroke();
-    					ctx.closePath();
-
-
-    					ctx.lineWidth = this.lineWidth;
-    					ctx.strokeStyle = this.lineColor;
+        					if (index > 0){
+        						// This is a grid line in the centre, so drop that
+        						ctx.lineWidth = this.gridLineWidth;
+        						ctx.strokeStyle = this.gridLineColor;
+        					} else {
+        						// This is the first line on the scale
+        						ctx.lineWidth = this.lineWidth;
+        						ctx.strokeStyle = this.lineColor;
+        					}
+        					ctx.moveTo(linePos,this.endPoint);
+        					ctx.lineTo(linePos,this.startPoint - 3);
+        					ctx.stroke();
+        					ctx.closePath();
 
 
-    					// Small lines at the bottom of the base grid line
-    					ctx.beginPath();
-    					ctx.moveTo(linePos,this.endPoint);
-    					ctx.lineTo(linePos,this.endPoint + 5);
-    					ctx.stroke();
-    					ctx.closePath();
+        					ctx.lineWidth = this.lineWidth;
+        					ctx.strokeStyle = this.lineColor;
 
-    					ctx.save();
-    					ctx.translate(xPos,(isRotated) ? this.endPoint + 12 : this.endPoint + 8);
-    					ctx.rotate(helpers.radians(this.xLabelRotation)*-1);
-    					ctx.font = this.font;
-    					ctx.textAlign = (isRotated) ? "right" : "center";
-    					ctx.textBaseline = (isRotated) ? "middle" : "top";
-    					ctx.fillText(label, 0, 0);
-    					ctx.restore();
+
+        					// Small lines at the bottom of the base grid line
+        					ctx.beginPath();
+        					ctx.moveTo(linePos,this.endPoint);
+        					ctx.lineTo(linePos,this.endPoint + 5);
+        					ctx.stroke();
+        					ctx.closePath();
+
+        					ctx.save();
+        					ctx.translate(xPos,(isRotated) ? this.endPoint + 12 : this.endPoint + 8);
+        					ctx.rotate(helpers.radians(this.xLabelRotation)*-1);
+        					ctx.font = this.font;
+        					ctx.textAlign = (isRotated) ? "right" : "center";
+        					ctx.textBaseline = (isRotated) ? "middle" : "top";
+        					ctx.fillText(label, 0, 0);
+        					ctx.restore();
+                        }
     				},this);
-
     			}
     		}
 

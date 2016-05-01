@@ -1,5 +1,5 @@
 component {
-    remote struct function getList() {
+    remote array function getList() {
         var qErrorList = new Query().setSQL("  SELECT errorCode, COUNT(*) count
                                                  FROM nephthys_error
                                              GROUP BY errorCode
@@ -16,9 +16,6 @@ component {
                 });
         }
         
-        return {
-            "success"   = true,
-            "errorList" = errorList
-        };
+        return errorList;
     }
 }

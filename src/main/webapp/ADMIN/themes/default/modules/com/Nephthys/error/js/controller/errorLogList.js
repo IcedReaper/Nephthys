@@ -3,8 +3,8 @@ nephthysAdminApp
         $scope.refresh = function () {
             errorLogService
                 .getList()
-                .then(function (result) {
-                    $scope.errorList = result.errorList;
+                .then(function (errorList) {
+                    $scope.errorList = errorList;
                 });
         };
         

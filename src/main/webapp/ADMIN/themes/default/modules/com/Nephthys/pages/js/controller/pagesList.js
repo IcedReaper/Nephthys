@@ -21,7 +21,7 @@ nephthysAdminApp
             pagesService
                 .getList()
                 .then(function (pagesList) {
-                    $scope.pages = pagesList.data;
+                    $scope.pages = pagesList;
                 });
         }
         

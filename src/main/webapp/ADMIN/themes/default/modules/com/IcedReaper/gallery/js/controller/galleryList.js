@@ -21,7 +21,7 @@ nephthysAdminApp
             galleryService
                 .getList()
                 .then(function (galleries) {
-                    $scope.galleries = galleries.data;
+                    $scope.galleries = galleries;
                 });
         };
         

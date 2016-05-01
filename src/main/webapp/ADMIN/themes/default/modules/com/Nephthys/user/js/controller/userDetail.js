@@ -7,26 +7,26 @@ nephthysAdminApp
             ])
             // and merging them
             .then($q.spread(function (userDetails, themes) {
-                $scope.user   = userDetails.data;
-                $scope.themes = themes.data;
+                $scope.user   = userDetails;
+                $scope.themes = themes;
                 
-                $rootScope.$emit('user-loaded', {userId: userDetails.data.userId});
+                $rootScope.$emit('user-loaded', {userId: userDetails.userId});
             }));
         };
         
         $scope.save = function () {
             userService
                 .save($scope.user)
-                .then(function (result) {
-                    $scope.user = result.data;
+                .then(function (user) {
+                    $scope.user = user;
                 });
         };
         
         $scope.uploadAvatar = function () {
             userService
                 .uploadAvatar($scope.user.userId, $scope.user.newAvatar)
-                .then(function (result) {
-                    $scope.user.avatar    = result.avatar;
+                .then(function (avatar) {
+                    $scope.user.avatar    = avatar;
                     $scope.user.newAvatar = "";
                 });
         };

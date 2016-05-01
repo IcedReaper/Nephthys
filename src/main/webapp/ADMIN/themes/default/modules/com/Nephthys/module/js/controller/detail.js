@@ -17,10 +17,10 @@ nephthysAdminApp
                    moduleService.getUnusedSubModules($routeParams.moduleId)
               ])
               .then($q.spread(function (moduleDetails, options, subModules, unusedSubModules) {
-                    $scope.module                 = moduleDetails.data;
-                    $scope.options                = options;
-                    $scope.subModules             = subModules;
-                    $scope.unusedSubModules       = unusedSubModules;
+                    $scope.module           = moduleDetails;
+                    $scope.options          = options;
+                    $scope.subModules       = subModules;
+                    $scope.unusedSubModules = unusedSubModules;
                     
                     originalSubModules = [];
                     setOriginalSubModules();

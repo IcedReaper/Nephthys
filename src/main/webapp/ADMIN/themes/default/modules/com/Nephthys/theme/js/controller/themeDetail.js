@@ -3,13 +3,13 @@ nephthysAdminApp
         themeService
             .getDetails($routeParams.themeId)
             .then(function (themeDetails) {
-                $scope.theme = themeDetails.data;
+                $scope.theme = themeDetails;
             });
         
         $scope.createTheme = function () {
             themeService.createTheme($scope.theme.uploadFile, $scope.theme)
                 .then(function (result) {
-                    $scope.theme = result.data;
+                    $scope.theme = result;
                 });
         };
         
@@ -17,7 +17,7 @@ nephthysAdminApp
             themeService
                 .save($scope.theme)
                 .then(function (result) {
-                    $scope.theme = result.data;
+                    $scope.theme = result;
                 });
         };
     }]);

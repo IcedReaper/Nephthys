@@ -1,5 +1,5 @@
 component {
-    remote struct function getList() {
+    remote array function getList() {
         var filterCtrl = createObject("component", "API.modules.com.Nephthys.theme.filter").init();
         
         var themeData = [];
@@ -13,24 +13,18 @@ component {
                 });
         }
         
-        return {
-            "success" = true,
-            "data" = themeData
-        };
+        return themeData;
     }
     
     remote struct function getDetails(required numeric themeId) {
         var theme = createObject("component", "API.modules.com.Nephthys.theme.theme").init(arguments.themeId);
         
         return {
-            "success" = true,
-            "data" = {
-                "themeId"    = theme.getThemeId(),
-                "name"       = theme.getName(),
-                "foldername" = theme.getFoldername(),
-                "default"    = theme.getThemeId() == application.system.settings.getValueOfKey("defaultThemeId"),
-                "active"     = toString(theme.getActiveStatus())
-            }
+            "themeId"    = theme.getThemeId(),
+            "name"       = theme.getName(),
+            "foldername" = theme.getFoldername(),
+            "default"    = theme.getThemeId() == application.system.settings.getValueOfKey("defaultThemeId"),
+            "active"     = toString(theme.getActiveStatus())
         };
     }
     
@@ -43,7 +37,7 @@ component {
         
         if(arguments.themeId != 0) {
             if(arguments.active == 1 || (arguments.active == 0 && themeList[i].getThemeId() != application.system.settings.getValueOfKey("defaultThemeId"))) {
-                theme.setActive(arguments.active);
+                theme.setActiveStatus(arguments.active);
             }
         }
         else {
@@ -53,29 +47,24 @@ component {
         theme.save();
         
         return {
-            "success" = true,
-            "data" = {
-                "themeId"    = theme.getThemeId(),
-                "name"       = theme.getName(),
-                "foldername" = theme.getFoldername(),
-                "default"    = theme.getThemeId() == application.system.settings.getValueOfKey("defaultThemeId"),
-                "active"     = toString(theme.getActiveStatus())
-            }
+            "themeId"    = theme.getThemeId(),
+            "name"       = theme.getName(),
+            "foldername" = theme.getFoldername(),
+            "default"    = theme.getThemeId() == application.system.settings.getValueOfKey("defaultThemeId"),
+            "active"     = toString(theme.getActiveStatus())
         };
     }
     
-    remote struct function activate(required numeric themeId) {
+    remote boolean function activate(required numeric themeId) {
         var theme = createObject("component", "API.modules.com.Nephthys.theme.theme").init(arguments.themeId);
         
         theme.setActiveStatus(1)
              .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function deactivate(required numeric themeId) {
+    remote boolean function deactivate(required numeric themeId) {
         var theme = createObject("component", "API.modules.com.Nephthys.theme.theme").init(arguments.themeId);
         
         if(themeList[i].getThemeId() != application.system.settings.getValueOfKey("defaultThemeId")) {
@@ -86,18 +75,14 @@ component {
             throw(type = "nephthys.application.deleteFailed", message = "Cannot delete the default theme. Please change the systems default theme first.");
         }
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function delete() {
+    remote boolean function delete() {
         var theme = createObject("component", "API.modules.com.Nephthys.theme.theme").init(arguments.themeId);
         
         theme.delete();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
 }

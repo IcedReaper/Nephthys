@@ -8,8 +8,8 @@ nephthysAdminApp
                 pagesService.getAvailableOptions()
             ])
             .then($q.spread(function (pageDetails, pageStatus, availableSubModules, availableOptions) {
-                $scope.page                = pageDetails.page;
-                $scope.pageStatus          = pageStatus.data;
+                $scope.page                = pageDetails;
+                $scope.pageStatus          = pageStatus;
                 $scope.availableSubModules = availableSubModules;
                 $scope.availableOptions    = availableOptions;
             }));

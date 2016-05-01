@@ -1,9 +1,6 @@
 component {
-    remote struct function getList() {
-        return {
-            'success' = true,
-            'data'    = getSubPages(0, 'header').append(getSubPages(0, 'footer'), true)
-        }
+    remote array function getList() {
+        return getSubPages(0, 'header').append(getSubPages(0, 'footer'), true);
     }
     
     remote struct function getDetails(required numeric pageId) {
@@ -11,42 +8,39 @@ component {
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         return {
-            'success' = true,
-            'page'    = {
-                'pageId'             = page.getPageId(),
-                'parentId'           = page.getParentId(),
-                'linktext'           = page.getLinktext(),
-                'link'               = page.getLink(),
-                'title'              = page.getTitle(),
-                'description'        = page.getDescription(),
-                'content'            = page.getContent(),
-                'sortOrder'          = page.getSortOrder(),
-                'useDynamicSuffixes' = toString(page.getUseDynamicSuffixes()),
-                'region'             = page.getRegion(),
-                'active'             = toString(page.getActiveStatus()),
-                'creator'            = getUserInformation(page.getCreator()),
-                'creationDate'       = formatCtrl.formatDate(page.getCreationDate()),
-                'lastEditor'         = getUserInformation(page.getLastEditor()),
-                'lastEditDate'       = formatCtrl.formatDate(page.getLastEditDate()),
-                'subPages'           = getSubPages(page.getPageId(), page.getRegion()),
-                "pageStatusId"       = toString(page.getPageStatusId()),
-                "pageStatusName"     = page.getPageStatus().getName()
-            }
+            "pageId"             = page.getPageId(),
+            "parentId"           = page.getParentId(),
+            "linktext"           = page.getLinktext(),
+            "link"               = page.getLink(),
+            "title"              = page.getTitle(),
+            "description"        = page.getDescription(),
+            "content"            = page.getContent(),
+            "sortOrder"          = page.getSortOrder(),
+            "useDynamicSuffixes" = toString(page.getUseDynamicSuffixes()),
+            "region"             = page.getRegion(),
+            "active"             = toString(page.getActiveStatus()),
+            "creator"            = getUserInformation(page.getCreator()),
+            "creationDate"       = formatCtrl.formatDate(page.getCreationDate()),
+            "lastEditor"         = getUserInformation(page.getLastEditor()),
+            "lastEditDate"       = formatCtrl.formatDate(page.getLastEditDate()),
+            "subPages"           = getSubPages(page.getPageId(), page.getRegion()),
+            "pageStatusId"       = toString(page.getPageStatusId()),
+            "pageStatusName"     = page.getPageStatus().getName()
         };
     }
     
-    remote struct function save(required numeric pageId,
-                                required numeric parentId,
-                                required string  linkText,
-                                required string  link,
-                                required string  title,
-                                required string  description,
-                                required array   content,
-                                required numeric sortOrder,
-                                required string  region,
-                                required numeric useDynamicSuffixes,
-                                required numeric active,
-                                required numeric pageStatusId) {
+    remote boolean function save(required numeric pageId,
+                                 required numeric parentId,
+                                 required string  linkText,
+                                 required string  link,
+                                 required string  title,
+                                 required string  description,
+                                 required array   content,
+                                 required numeric sortOrder,
+                                 required string  region,
+                                 required numeric useDynamicSuffixes,
+                                 required numeric active,
+                                 required numeric pageStatusId) {
         var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         
         page.setParentId(arguments.parentId)
@@ -68,40 +62,32 @@ component {
         
         page.save();
         
-        return {
-            'success' = true
-        };
+        return true;
     }
     
-    remote struct function delete(required numeric pageId) {
+    remote boolean function delete(required numeric pageId) {
         var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         page.delete();
         
-        return {
-            'success' = true
-        };
+        return true;
     }
     
-    remote struct function activate(required numeric pageId) {
+    remote boolean function activate(required numeric pageId) {
         var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         page.setActiveStatus(1)
             .setLastEditorUserId(request.user.getUserId())
             .save();
         
-        return {
-            'success' = true
-        };
+        return true;
     }
     
-    remote struct function deactivate(required numeric pageId) {
+    remote boolean function deactivate(required numeric pageId) {
         var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         page.setActiveStatus(0)
             .setLastEditorUserId(request.user.getUserId())
             .save();
         
-        return {
-            'success' = true
-        };
+        return true;
     }
     
     remote struct function loadStatistics(required numeric pageId) {
@@ -112,16 +98,15 @@ component {
         var chartWithParameterData = prepareVisitDataWithParameter(pageStatistics.getPageStatistcsWithParameter(dateAdd("d", -10, now()), now(), arguments.pageId));
         
         return {
-            'success'            = true,
-            'useDynamicSuffixes' = page.getUseDynamicSuffixes(),
-            'chart'              = chartData,
-            'chartWithParameter' = chartWithParameterData
+            "useDynamicSuffixes" = page.getUseDynamicSuffixes(),
+            "chart"              = chartData,
+            "chartWithParameter" = chartWithParameterData
         };
     }
     
     // STATUS
     
-    remote struct function getStatusList() {
+    remote array function getStatusList() {
         var pageStatusLoader = createObject("component", "API.modules.com.Nephthys.page.pageStatusFilter").init();
         
         var prepPageStatus = [];
@@ -135,27 +120,21 @@ component {
             });
         }
         
-        return {
-            "success" = true,
-            "data"    = prepPageStatus
-        };
+        return prepPageStatus;
     }
     
     remote struct function getStatusDetails(required numeric pageStatusId) {
         var pageStatus = createObject("component", "API.modules.com.Nephthys.page.pageStatus").init(arguments.pageStatusId);
         
         return {
-            "success" = true,
-            "data"    = {
-                "pageStatusId" = pageStatus.getPageStatusId(),
-                "name"         = pageStatus.getName(),
-                "active"       = toString(pageStatus.getActiveStatus()),
-                "offline"      = toString(pageStatus.getOfflineStatus())
-            }
+            "pageStatusId" = pageStatus.getPageStatusId(),
+            "name"         = pageStatus.getName(),
+            "active"       = toString(pageStatus.getActiveStatus()),
+            "offline"      = toString(pageStatus.getOfflineStatus())
         };
     }
     
-    remote struct function saveStatus(required numeric pageStatusId,
+    remote boolean function saveStatus(required numeric pageStatusId,
                                       required string  name,
                                       required numeric active,
                                       required numeric offline) {
@@ -166,41 +145,33 @@ component {
                   .setOfflineStatus(arguments.offline)
                   .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function deleteStatus(required numeric pageStatusId) {
+    remote boolean function deleteStatus(required numeric pageStatusId) {
         var pageStatus = createObject("component", "API.modules.com.Nephthys.page.pageStatus").init(arguments.pageStatusId);
         
         pageStatus.delete();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function activateStatus(required numeric pageStatusId) {
+    remote boolean function activateStatus(required numeric pageStatusId) {
         var pageStatus = createObject("component", "API.modules.com.Nephthys.page.pageStatus").init(arguments.pageStatusId);
         
         pageStatus.setActiveStatus(true)
                   .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
-    remote struct function deactivateStatus(required numeric pageStatusId) {
+    remote boolean function deactivateStatus(required numeric pageStatusId) {
         var pageStatus = createObject("component", "API.modules.com.Nephthys.page.pageStatus").init(arguments.pageStatusId);
         
         pageStatus.setActiveStatus(false)
                   .save();
         
-        return {
-            "success" = true
-        };
+        return true;
     }
     
     remote struct function getAvailableSubModules() {

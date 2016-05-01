@@ -22,7 +22,7 @@ nephthysAdminApp
             moduleService
                 .getList()
                 .then(function (moduleManagerList) {
-                    $scope.modules = moduleManagerList.data;
+                    $scope.modules = moduleManagerList;
                 });
         };
         

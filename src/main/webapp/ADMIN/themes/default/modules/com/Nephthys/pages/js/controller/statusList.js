@@ -21,7 +21,7 @@ nephthysAdminApp
             pageStatusService
                 .getList()
                 .then(function (pageStatusList) {
-                    $scope.pageStatus = pageStatusList.data;
+                    $scope.pageStatus = pageStatusList;
                 });
         }
         

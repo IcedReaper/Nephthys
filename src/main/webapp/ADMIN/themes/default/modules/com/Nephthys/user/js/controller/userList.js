@@ -21,7 +21,7 @@ nephthysAdminApp
             userService
                 .getList()
                 .then(function (userList) {
-                    $scope.users = userList.data;
+                    $scope.users = userList;
                 });
         };
         

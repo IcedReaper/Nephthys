@@ -5,7 +5,6 @@ component {
         var today = now();
         
         return {
-            "success"    = true,
             "pageVisits" = prepareVisitData(new pageVisit().get(today, today)),
             "websiteUrl" = application.system.settings.getValueOfKey("wwwDomain")
         };
@@ -15,7 +14,6 @@ component {
         var yesterday = dateAdd("d", -1, now());
         
         return {
-            "success"    = true,
             "pageVisits" = prepareVisitData(new pageVisit().get(yesterday, yesterday)),
             "websiteUrl" = application.system.settings.getValueOfKey("wwwDomain")
         };
@@ -25,7 +23,6 @@ component {
         var loginStatisticsCtrl = new login();
         
         return {
-            "success"    = true,
             "successful" = prepareLoginData(loginStatisticsCtrl.getSuccessful()),
             "failed"     = prepareLoginData(loginStatisticsCtrl.getFailed())
         };

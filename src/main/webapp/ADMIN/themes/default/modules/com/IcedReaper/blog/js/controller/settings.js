@@ -4,7 +4,7 @@ nephthysAdminApp
             settingsService
                 .get()
                 .then(function (settings) {
-                    $scope.settings = settings.data;
+                    $scope.settings = settings;
                 });
         };
         

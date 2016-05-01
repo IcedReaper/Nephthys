@@ -38,7 +38,7 @@ component {
     }
     
     public picture function upload() {
-        if(variables.picureId != 0) {
+        if(variables.pictureId != 0) {
             deleteFiles();
         }
         
@@ -59,6 +59,8 @@ component {
         variables.thumbnailFilename = "tn_" & newFilename;
         
         save();
+        
+        return this;
     }
     
     // G E T T E R
