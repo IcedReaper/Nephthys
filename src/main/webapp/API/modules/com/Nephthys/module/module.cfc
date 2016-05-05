@@ -140,19 +140,19 @@ component {
         return variables.description;
     }
     public boolean function getActiveStatus() {
-        return variables.active;
+        return variables.active == 1;
     }
     public boolean function getSystemModule() {
-        return variables.systemModule;
+        return variables.systemModule == 1;
     }
     public numeric function getSortOrder() {
         return variables.sortOrder;
     }
     public boolean function getAvailableWWW() {
-        return variables.availableWWW;
+        return variables.availableWWW == 1;
     }
     public boolean function getAvailableADMIN() {
-        return variables.availableADMIN;
+        return variables.availableADMIN == 1;
     }
     public array function getSubModules() {
         if(! variables.keyExists("subModules")) {

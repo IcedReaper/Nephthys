@@ -13,7 +13,7 @@ component {
         
         return this;
     }
-    public theme function setActiveStatus(required numeric active) {
+    public theme function setActiveStatus(required boolean active) {
         variables.active = arguments.active;
         
         return this;
@@ -89,8 +89,8 @@ component {
     public string function getName() {
         return variables.name;
     }
-    public numeric function getActiveStatus() {
-        return variables.active;
+    public boolean function getActiveStatus() {
+        return variables.active == 1;
     }
     public string function getFolderName() {
         return variables.folderName;

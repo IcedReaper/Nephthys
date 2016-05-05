@@ -207,4 +207,4 @@
     9. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
     10. Prüfen ob D3 besser ist als Chart.js | Chart.js V2 ausprobieren
     11. Verwendung von nicht Klassenattributen (z.B. request.user) aus den Klassen entfernen und als Parameter erwarten
-    12. toString entfernen - mit Boolean arbeiten
+    12. Berechtigungen in Module einbauen

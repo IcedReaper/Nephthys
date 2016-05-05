@@ -71,7 +71,7 @@ component {
         return variables.requestDate;
     }
     public boolean function getRead() {
-        return variables.read;
+        return variables.read == 1;
     }
     public any function getReadDate() {
         return variables.readDate;

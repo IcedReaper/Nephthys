@@ -195,7 +195,7 @@ component {
         return variables.story;
     }
     public boolean function getActiveStatus() {
-        return variables.activeStatus;
+        return variables.activeStatus == 1;
     }
     /*public date function getReleaseDate() {
         return variables.releaseDate;

@@ -23,10 +23,8 @@
                     <div class="form-group">
                         <label for="filterActiveStatus" class="col-sm-3 control-label">Veröffentlicht</label>
                         <div class="col-sm-6">
-                            <select class="form-control" name="filterActiveStatus" ng-model="search.released">
-                                <option value="">Alle</option>
-                                <option value="1">Ja</option>
-                                <option value="0">Nein</option>
+                            <select class="form-control" name="filterActiveStatus" ng-model="search.released"
+                                    ng-options="o.v as o.n for o in [{ n: 'Alle', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]">
                             </select>
                         </div>
                     </div>
@@ -67,14 +65,14 @@
                         
                         <button class="btn btn-success"
                                 ng-click="activate(blogpost.blogpostId)"
-                                ng-show="blogpost.active == 0"
+                                ng-show="! blogpost.active"
                                 title="Gallerie aktivieren"
                                 ng-disabled="! blogpost.isEditable">
                             <i class="fa fa-toggle-on"></i>
                         </button>
                         <button class="btn btn-warning"
                                 ng-click="deactivate(blogpost.blogpostId)"
-                                ng-show="blogpost.active == 1"
+                                ng-show="blogpost.active"
                                 title="Gallerie deaktivieren"
                                 ng-disabled="! blogpost.isEditable">
                             <i class="fa fa-toggle-off"></i>

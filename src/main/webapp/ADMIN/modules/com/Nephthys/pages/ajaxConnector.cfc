@@ -16,15 +16,15 @@ component {
             "description"        = page.getDescription(),
             "content"            = page.getContent(),
             "sortOrder"          = page.getSortOrder(),
-            "useDynamicSuffixes" = toString(page.getUseDynamicSuffixes()),
+            "useDynamicSuffixes" = page.getUseDynamicSuffixes(),
             "region"             = page.getRegion(),
-            "active"             = toString(page.getActiveStatus()),
+            "active"             = page.getActiveStatus(),
             "creator"            = getUserInformation(page.getCreator()),
             "creationDate"       = formatCtrl.formatDate(page.getCreationDate()),
             "lastEditor"         = getUserInformation(page.getLastEditor()),
             "lastEditDate"       = formatCtrl.formatDate(page.getLastEditDate()),
             "subPages"           = getSubPages(page.getPageId(), page.getRegion()),
-            "pageStatusId"       = toString(page.getPageStatusId()),
+            "pageStatusId"       = page.getPageStatusId(),
             "pageStatusName"     = page.getPageStatus().getName()
         };
     }
@@ -39,7 +39,7 @@ component {
                                  required numeric sortOrder,
                                  required string  region,
                                  required numeric useDynamicSuffixes,
-                                 required numeric active,
+                                 required boolean active,
                                  required numeric pageStatusId) {
         var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         
@@ -115,8 +115,8 @@ component {
             prepPageStatus.append({
                 "pageStatusId" = pageStatus.getPageStatusId(),
                 "name"         = pageStatus.getName(),
-                "active"       = toString(pageStatus.getActiveStatus()),
-                "offline"      = toString(pageStatus.getOfflineStatus())
+                "active"       = pageStatus.getActiveStatus(),
+                "offline"      = pageStatus.getOfflineStatus()
             });
         }
         
@@ -129,8 +129,8 @@ component {
         return {
             "pageStatusId" = pageStatus.getPageStatusId(),
             "name"         = pageStatus.getName(),
-            "active"       = toString(pageStatus.getActiveStatus()),
-            "offline"      = toString(pageStatus.getOfflineStatus())
+            "active"       = pageStatus.getActiveStatus(),
+            "offline"      = pageStatus.getOfflineStatus()
         };
     }
     
@@ -249,8 +249,8 @@ component {
                 'lastEditor'         = getUserInformation(pageArray[i].getLastEditor()),
                 'lastEditDate'       = formatCtrl.formatDate(pageArray[i].getLastEditDate()),
                 'subPages'           = getSubPages(pageArray[i].getPageId(), pageArray[i].getRegion()),
-                'active'             = toString(pageArray[i].getActiveStatus()),
-                "pageStatusId"       = toString(pageArray[i].getPageStatusId()),
+                'active'             = pageArray[i].getActiveStatus(),
+                "pageStatusId"       = pageArray[i].getPageStatusId(),
                 "pageStatusName"     = pageArray[i].getPageStatus().getName()
             });
         }

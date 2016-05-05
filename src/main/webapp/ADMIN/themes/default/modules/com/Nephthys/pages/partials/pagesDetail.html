@@ -46,9 +46,8 @@
                         </div>
                         <div class="form-group">
                             <label for="useDynamicSuffixes" title="Dynamische Seiten Suffixe sind Erweiterungen der Url, über welche sich Datensätze eines Moduls laden lassen">Dynamische Seiten Suffixe verwenden *</label>
-                            <select class="form-control" ng-model="page.useDynamicSuffixes">
-                                <option value="1">Ja</option>
-                                <option value="0">Nein</option>
+                            <select class="form-control" ng-model="page.useDynamicSuffixes"
+                                    ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]">
                             </select>
                         </div>
                         <div class="form-group">
@@ -60,15 +59,13 @@
                         </div>
                         <div class="form-group">
                             <label for="active">Aktiv</label>
-                            <select class="form-control" ng-model="page.active">
-                                <option value="1">Aktiv</option>
-                                <option value="0">Inaktiv</option>
+                            <select class="form-control" ng-model="page.active"
+                                    ng-options="o.v as o.n for o in [{ n: 'Aktiv', v: true }, { n: 'Inaktiv', v: false }]">
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="active">Status</label>
-                            <select class="form-control" ng-model="page.pageStatusId">
-                                <option ng-repeat="status in pageStatus" value="{{status.pageStatusId}}">{{status.name}}</option>
+                            <select class="form-control" ng-model="page.pageStatusId" ng-options="o.pageStatusId as o.name for o in pageStatus">
                             </select>
                         </div>
                     </div>
@@ -97,10 +94,11 @@
             <label class="col-sm-2">{{option.description}}</label>
             <div class="col-sm-10">
                 <input ng-model="child.options[option.dbName]" class="form-control" ng-if="option.type == 'text'" ng-change="checkOption(child, option.dbName, child.options[option.dbName])">
-                <select ng-model="child.options[option.dbName]" class="form-control" ng-if="option.type == 'boolean'" ng-change="checkOption(child, option.dbName, child.options[option.dbName])">
-                    <option value="">Option entfernen/Nicht gesetzt</option>
-                    <option value="false">Nein</option>
-                    <option value="true">Ja</option>
+                <select class="form-control"
+                        ng-model="child.options[option.dbName]"
+                        ng-if="option.type == 'boolean'"
+                        ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
+                        ng-options="o.v as o.n for o in [{ n: 'Option entfernen/Nicht gesetzt', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]">
                 </select>
                 <select ng-model="child.options[option.dbName]" class="form-control" ng-if="option.type == 'select' || option.type == 'query'" ng-change="checkOption(child, option.dbName, child.options[option.dbName])">
                     <option value="">Option entfernen/Nicht gesetzt</option>

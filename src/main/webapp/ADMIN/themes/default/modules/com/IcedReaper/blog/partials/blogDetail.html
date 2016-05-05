@@ -38,9 +38,8 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="active">Veröffentlicht</label>
-                                    <select class="form-control" ng-model="blogpost.released" ng-disabled="! blogpost.isEditable">
-                                        <option value="1">Ja</option>
-                                        <option value="0">Nein</option>
+                                    <select class="form-control" ng-model="blogpost.released" ng-disabled="! blogpost.isEditable"
+                                            ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]">
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -52,23 +51,20 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="active">Kommentare erlaubt?</label>
-                                    <select class="form-control" ng-model="blogpost.commentsActivated" ng-disabled="! blogpost.isEditable">
-                                        <option value="1">Ja</option>
-                                        <option value="0">Nein</option>
+                                    <select class="form-control" ng-model="blogpost.commentsActivated" ng-disabled="! blogpost.isEditable"
+                                            ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]">
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="active">Anonyme Kommentare erlaubt?</label>
-                                    <select class="form-control" ng-model="blogpost.anonymousCommentAllowed" ng-disabled="! blogpost.isEditable">
-                                        <option value="1">Ja</option>
-                                        <option value="0">Nein</option>
+                                    <select class="form-control" ng-model="blogpost.anonymousCommentAllowed" ng-disabled="! blogpost.isEditable"
+                                            ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]">
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="active">Kommentare müssen frei gegeben werden?</label>
-                                    <select class="form-control" ng-model="blogpost.commentsNeedToGetPublished" ng-disabled="! blogpost.isEditable">
-                                        <option value="1">Ja</option>
-                                        <option value="0">Nein</option>
+                                    <select class="form-control" ng-model="blogpost.commentsNeedToGetPublished" ng-disabled="! blogpost.isEditable"
+                                            ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]">
                                     </select>
                                 </div>
                             </div>

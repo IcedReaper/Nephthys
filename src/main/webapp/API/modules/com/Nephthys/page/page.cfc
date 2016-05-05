@@ -72,7 +72,7 @@ component {
         
         return this;
     }
-    public page function setActiveStatus(required numeric active) {
+    public page function setActiveStatus(required boolean active) {
         variables.active = arguments.active;
         
         return this;
@@ -117,7 +117,7 @@ component {
         return variables.sortOrder;
     }
     public boolean function getUseDynamicSuffixes() {
-        return variables.useDynamicSuffixes;
+        return variables.useDynamicSuffixes == 1;
     }
     public numeric function getCreatorUserId() {
         return variables.creatorUserId;
@@ -131,8 +131,8 @@ component {
     public date function getLastEditDate() {
         return variables.lastEditDate;
     }
-    public numeric function getActiveStatus() {
-        return variables.active;
+    public boolean function getActiveStatus() {
+        return variables.active == 1;
     }
     public page function getParentPage() {
         return new page(variables.parentId);
@@ -159,7 +159,7 @@ component {
         return variables.pageStatusId;
     }
     public boolean function isOnline() {
-        return ! variables.pageStatus.getOfflineStatus();
+        return variables.pageStatus.getOfflineStatus();
     }
     public boolean function isOffline() {
         return variables.pageStatus.getOfflineStatus();

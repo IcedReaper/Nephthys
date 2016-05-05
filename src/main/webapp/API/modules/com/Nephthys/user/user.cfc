@@ -23,7 +23,7 @@ component {
         
         return this;
     }
-    public user function setActiveStatus(required numeric active) {
+    public user function setActiveStatus(required boolean active) {
         variables.active = arguments.active;
         
         return this;
@@ -74,8 +74,8 @@ component {
         }
         return theme;
     }
-    public numeric function getActiveStatus() {
-        return variables.active;
+    public boolean function getActiveStatus() {
+        return variables.active == 1;
     }
     public date function getRegistrationDate() {
         return variables.registrationDate;
@@ -98,7 +98,7 @@ component {
     }
     
     public boolean function isActive() {
-        return variables.active;
+        return variables.active == 1;
     }
     public boolean function hasPermission(required string moduleName, string roleName = "") {
         if(variables.userId == 0 || variables.userId == null)

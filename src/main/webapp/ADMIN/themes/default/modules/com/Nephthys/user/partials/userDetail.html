@@ -30,15 +30,13 @@
                 </div>
                 <div class="form-group">
                     <label for="active">Aktiv</label>
-                    <select class="form-control" ng-model="user.active">
-                        <option value="1">Aktiv</option>
-                        <option value="0">Inaktiv</option>
+                    <select class="form-control" ng-model="user.active"
+                            ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]">
                     </select>
                 </div>
                 <div class="form-group">
                     <label for="active">Theme</label>
-                    <select class="form-control" ng-model="user.themeId">
-                        <option ng-repeat="theme in themes" value="{{theme.themeId}}">{{theme.name}}</option>
+                    <select class="form-control" ng-model="user.themeId" ng-options="o.themeId as o.name for o in themes">
                     </select>
                 </div>
                 
@@ -85,9 +83,9 @@
             <form novalidate>
                 <fieldset class="form-group" ng-repeat="permission in permissions">
                     <label for="permission_{{permission.moduleId}}">{{permission.moduleName}}</label>
-                    <select name="{{permission.moduleId}}" id="permission_{{permission.moduleId}}" ng-model="permission.roleId" class="form-control">
-                        <option value="0">Nicht gesetzt</option>
-                        <option ng-repeat="role in roles" value="{{role.roleId}}">{{role.name}}</option>
+                    <select name="{{permission.moduleId}}" id="permission_{{permission.moduleId}}" ng-model="permission.roleId" class="form-control"
+                            ng-options="o.roleId as o.name for o in roles">
+                        <option value="">Nicht gesetzt</option>
                     </select>
                 </fieldset>
                 
@@ -117,9 +115,8 @@
                                 <input type="text" maxlength="255" ng-model="extProperty.value" class="form-control">
                             </td>
                             <td>
-                                <select ng-model="extProperty.public" class="form-control">
-                                    <option value="1">Ja</option>
-                                    <option value="0">Nein</option>
+                                <select ng-model="extProperty.public" class="form-control"
+                                        ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]">
                                 </select>
                             </td>
                         </tr>

@@ -27,7 +27,7 @@ nephthysAdminApp
         
         $scope.users = [];
         $scope.search = {
-            active: ""
+            active: ''
         };
         $scope.refresh();
     }]);

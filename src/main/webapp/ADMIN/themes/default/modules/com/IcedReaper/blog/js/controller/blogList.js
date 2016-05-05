@@ -27,8 +27,7 @@ nephthysAdminApp
         
         $scope.blogposts = [];
         $scope.search = {
-            released: "",
-            creatorUserId: ""
+            released: ''
         };
         $scope.refresh();
     }]);

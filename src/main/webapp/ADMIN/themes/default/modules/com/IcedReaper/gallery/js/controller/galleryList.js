@@ -27,7 +27,7 @@ nephthysAdminApp
         
         $scope.galleries = [];
         $scope.search = {
-            active: ""
+            active: ''
         };
         $scope.refresh();
     }]);

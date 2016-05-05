@@ -10,8 +10,8 @@ nephthysAdminApp
         
         $scope.requests = [];
         $scope.search = {
-            read: "",
-            replied: ""
+            read: '',
+            replied: ''
         };
         $scope.refresh();
     }]);

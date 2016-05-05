@@ -160,7 +160,7 @@ component {
         return variables.story;
     }
     public boolean function getReleased() {
-        return variables.released;
+        return variables.released == 1;
     }
     public any function getReleaseDate() { // any is required as a null date isn't of type date :/
         return variables.releaseDate;
@@ -169,7 +169,7 @@ component {
         return variables.folderName;
     }
     public boolean function getCommentsActivated() {
-        return variables.commentsActivated;
+        return variables.commentsActivated == 1;
     }
     public numeric function getCreatorUserId() {
         return variables.creatorUserId;
@@ -202,10 +202,10 @@ component {
         return variables.comments;
     }
     public boolean function getAnonymousCommentAllowed() {
-        return variables.anonymousCommentAllowed;
+        return variables.anonymousCommentAllowed == 1;
     }
     public boolean function getCommentsNeedToGetPublished() {
-        return variables.commentsNeedToGetPublished;
+        return variables.commentsNeedToGetPublished == 1;
     }
     
     public string function getAbsolutePath() {

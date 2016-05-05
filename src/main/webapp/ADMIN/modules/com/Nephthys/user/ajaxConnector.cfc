@@ -25,7 +25,7 @@ component {
     remote struct function save(required numeric userId,
                                 required string  userName,
                                 required string  eMail,
-                                required numeric active,
+                                required boolean active,
                                 required string  password,
                                 required numeric themeId) {
         var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
@@ -93,8 +93,8 @@ component {
         var permissions = permissionHandlerCtrl.loadForUserId(arguments.userId);
         
         for(var i = 1; i <= permissions.len(); i++) {
-            permissions[i].permissionId = toString(permissions[i].permissionId != null ? permissions[i].permissionId : 0);
-            permissions[i].roleId       = toString(permissions[i].roleId != null ? permissions[i].roleId : 0);
+            permissions[i].permissionId = permissions[i].permissionId != null ? permissions[i].permissionId : 0;
+            permissions[i].roleId       = permissions[i].roleId != null ? permissions[i].roleId : 0;
         }
         
         return permissions;
@@ -139,10 +139,10 @@ component {
         var themeData = [];
         for(var theme in filterCtrl.execute().getResult()) {
             themeData.append({
-                    "themeId"    = theme.getThemeId(),
-                    "name"       = theme.getName(),
-                    "default"    = theme.getThemeId() == application.system.settings.getValueOfKey("defaultThemeId"),
-                    "active"     = toString(theme.getActiveStatus())
+                    "themeId" = theme.getThemeId(),
+                    "name"    = theme.getName(),
+                    "default" = theme.getThemeId() == application.system.settings.getValueOfKey("defaultThemeId"),
+                    "active"  = theme.getActiveStatus()
                 });
         }
         
@@ -158,7 +158,7 @@ component {
         
         var extPropertyId = 0;
         var value = "";
-        var public = 0;
+        var public = false;
         var prop = {};
         
         for(var i = 1; i <= extPropertyKeys.len(); ++i) {
@@ -172,14 +172,14 @@ component {
             else {
                 extPropertyId = 0;
                 value         = "";
-                public        = 0;
+                public        = false;
             }
             
             extProperties.append({
                 extPropertyId    = extPropertyId,
                 extPropertyKeyId = extPropertyKeys[i].getExtPropertyKeyId(),
                 value            = value,
-                public           = toString(public),
+                public           = public,
                 description      = extPropertyKeys[i].getDescription()
             });
         }
@@ -213,11 +213,11 @@ component {
             "userId"     = arguments.userObject.getUserId(),
             "username"   = arguments.userObject.getUserName(),
             "email"      = arguments.userObject.getEmail(),
-            "active"     = toString(arguments.userObject.getActiveStatus()),
+            "active"     = arguments.userObject.getActiveStatus(),
             "password"   = "      ",
             "avatar"     = arguments.userObject.getAvatarPath(false),
             "actualUser" = arguments.userObject.getUserId() == request.user.getUserId(),
-            "themeId"    = toString(arguments.userObject.getThemeId())
+            "themeId"    = arguments.userObject.getThemeId()
         };
     }
 }

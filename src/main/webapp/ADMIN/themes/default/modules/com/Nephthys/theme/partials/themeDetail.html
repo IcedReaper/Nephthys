@@ -25,9 +25,8 @@
                 </div>
                 <div class="form-group">
                     <label for="active">Aktiv</label>
-                    <select class="form-control" ng-model="theme.active">
-                        <option value="1">Aktiv</option>
-                        <option value="0" ng-show="theme.default == 0">Inaktiv</option>
+                    <select class="form-control" ng-model="theme.active"
+                            ng-options="o.v as o.n for o in [{ n: 'Aktiv', v: true }, { n: 'Inaktiv', v: false }]">
                     </select>
                 </div>
                 <div class="form-group" ng-show="theme.default == 0">
@@ -35,8 +34,8 @@
                     <input type="file" ng-model="theme.uploadFile" ngf-select required accept="application/*" />
                 </div>
                 
-                <button type="submit" class="btn btn-success" ng-click="createTheme()" ng-show="theme.default == 0"><i class="fa fa-upload"></i> Erstellen</button>
-                <button type="submit" class="btn btn-success" ng-click="save()" ng-show="theme.default != 0"><i class="fa fa-floppy-o"></i> Speichern</button>
+                <button type="submit" class="btn btn-success" ng-click="createTheme()" ng-show="! theme.default"><i class="fa fa-upload"></i> Erstellen</button>
+                <button type="submit" class="btn btn-success" ng-click="save()" ng-show="theme.default"><i class="fa fa-floppy-o"></i> Speichern</button>
             </form>
         </div>
         

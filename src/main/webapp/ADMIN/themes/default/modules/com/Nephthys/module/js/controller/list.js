@@ -27,6 +27,11 @@ nephthysAdminApp
         };
         
         $scope.modules = [];
-        $scope.search = {};
+        $scope.search = {
+            active: '',
+            systemModule: '',
+            availableWWW: '',
+            availableADMIN: ''
+        };
         $scope.refresh();
     }]);

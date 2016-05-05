@@ -10,7 +10,7 @@ component {
         for(var i = 1; i <= arrayLen(rawRequests); ++i) {
             requests.append({
                 "requestId"       = rawRequests[i].getRequestId(),
-                "read"            = toString(rawRequests[i].getRead()),
+                "read"            = rawRequests[i].getRead(),
                 "requestDate"     = formatCtrl.formatDate(rawRequests[i].getRequestDate()),
                 "subject"         = rawRequests[i].getSubject(),
                 "requestorUserId" = rawRequests[i].getRequestorUserId(),

@@ -75,7 +75,7 @@ component {
             if(! arguments.onlyPublic || arguments.onlyPublic && variables.extProperties[arguments.key].public) {
                 return {
                     extPropertyId = variables.extProperties[arguments.key].extPropertyId,
-                    public        = variables.extProperties[arguments.key].public,
+                    public        = variables.extProperties[arguments.key].public == 1,
                     value         = variables.extProperties[arguments.key].value,
                     description   = variables.extProperties[arguments.key].description
                 };
@@ -121,7 +121,7 @@ component {
             if(! arguments.onlyPublic || arguments.onlyPublic && variables.extProperties[key].public) {
                 properties.append({
                     extPropertyId = variables.extProperties[key].extPropertyId,
-                    public        = variables.extProperties[key].public,
+                    public        = variables.extProperties[key].public == 1,
                     value         = variables.extProperties[key].value,
                     description   = variables.extProperties[key].description
                 });

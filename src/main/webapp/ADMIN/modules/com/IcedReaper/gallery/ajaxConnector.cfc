@@ -281,7 +281,7 @@ component {
             "introduction" = arguments.gallery.getIntroduction(),
             "story"        = arguments.gallery.getStory(),
             //"releaseDate"  = formatCtrl.formatDate(arguments.gallery.getReleaseDate(), false),
-            "active"       = toString(arguments.gallery.getActiveStatus()),
+            "active"       = arguments.gallery.getActiveStatus(),
             "pictureCount" = arguments.gallery.getPictureCount(),
             "categories"   = categories,
             "private"      = arguments.gallery.getPrivate(),

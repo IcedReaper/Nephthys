@@ -34,11 +34,11 @@ component {
     }
     
     public boolean function getActiveStatus() {
-        return variables.active;
+        return variables.active == 1;
     }
     
     public boolean function getOfflineStatus() {
-        return variables.offline;
+        return variables.offline == 1;
     }
     
     public numeric function getCreatorUserId() {

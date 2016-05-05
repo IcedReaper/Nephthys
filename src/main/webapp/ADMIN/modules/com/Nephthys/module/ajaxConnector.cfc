@@ -6,16 +6,8 @@ component {
                                          .getResult();
         var preparedModules = [];
         
-        for(var i = 1; i <= installedModules.len(); i++) {
-            preparedModules.append({
-                    "moduleId"       = installedModules[i].getModuleId(),
-                    "moduleName"     = installedModules[i].getModuleName(),
-                    "description"    = installedModules[i].getDescription(),
-                    "active"         = toString(installedModules[i].getActiveStatus()),
-                    "systemModule"   = toString(installedModules[i].getSystemModule()),
-                    "availableWWW"   = toString(installedModules[i].getAvailableWWW()),
-                    "availableADMIN" = toString(installedModules[i].getAvailableADMIN())
-                });
+        for(var module in installedModules) {
+            preparedModules.append(prepareModule(module));
         }
         
         return preparedModules;
@@ -24,15 +16,7 @@ component {
     remote struct function getDetails(required numeric moduleId) {
         var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
         
-        return {
-            "moduleId"       = module.getModuleId(),
-            "moduleName"     = module.getModuleName(),
-            "description"    = module.getDescription(),
-            "active"         = toString(module.getActiveStatus()),
-            "systemModule"   = toString(module.getSystemModule()),
-            "availableWWW"   = toString(module.getAvailableWWW()),
-            "availableADMIN" = toString(module.getAvailableADMIN())
-        };
+        return prepareModule(module);
     }
     
     remote boolean function save(required numeric moduleId,
@@ -102,7 +86,7 @@ component {
                 "permissionId" = users[i].permissionId,
                 "userId"       = users[i].user.getUserId(),
                 "userName"     = users[i].user.getUserName(),
-                "roleId"       = toString(users[i].roleId != null ? users[i].roleId : 0)
+                "roleId"       = users[i].roleId != null ? users[i].roleId : 0
             });
         }
         
@@ -203,5 +187,18 @@ component {
         module.save();
         
         return true;
+    }
+    
+    
+    private struct function prepareModule(required module module) {
+        return {
+            "moduleId"       = arguments.module.getModuleId(),
+            "moduleName"     = arguments.module.getModuleName(),
+            "description"    = arguments.module.getDescription(),
+            "active"         = arguments.module.getActiveStatus(),
+            "systemModule"   = arguments.module.getSystemModule(),
+            "availableWWW"   = arguments.module.getAvailableWWW(),
+            "availableADMIN" = arguments.module.getAvailableADMIN()
+        };
     }
 }

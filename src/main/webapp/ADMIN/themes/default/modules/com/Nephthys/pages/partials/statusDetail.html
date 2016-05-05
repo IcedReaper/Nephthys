@@ -23,16 +23,14 @@
                         </div>
                         <div class="form-group">
                             <label for="active">Aktiv</label>
-                            <select class="form-control" ng-model="pageStatus.active">
-                                <option value="1">Aktiv</option>
-                                <option value="0">Inaktiv</option>
+                            <select class="form-control" ng-model="pageStatus.active"
+                                    ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]">
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="active" title="Seiten, die einen Status haben, der als Offline markiert ist, werden nicht auf der Webseite angezeigt und können nicht angesurft werden.">Offline</label>
-                            <select class="form-control" ng-model="pageStatus.offline">
-                                <option value="1">Ja</option>
-                                <option value="0">Nein</option>
+                            <select class="form-control" ng-model="pageStatus.offline"
+                                    ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]">
                             </select>
                         </div>
                     </div>

@@ -49,28 +49,27 @@
                 <div class="form-group row">
                     <label class="col-sm-4 form-control-label" for="active">Aktiv</label>
                     <div class="col-sm-8">
-                        <select class="form-control" ng-model="module.active">
-                            <option value="1">Aktiv</option>
-                            <option value="0">Inaktiv</option>
+                        <select class="form-control" ng-model="module.active"
+                            ng-options="o.v as o.n for o in [{ n: 'Inaktiv', v: false }, { n: 'Aktiv', v: true }]">
                         </select>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-sm-4 form-control-label">Verfügbar auf der Webseite</label>
                     <div class="col-sm-8">
-                        <p class="form-control-static">{{module.availableWWW !== '0' ? 'Ja' : 'Nein'}}</p>
+                        <p class="form-control-static">{{module.availableWWW ? 'Ja' : 'Nein'}}</p>
                     </div>
                 </div>
                 <div class="form-group row">
                     <label class="col-sm-4 form-control-label">Verfügbar im Adminbereich</label>
                     <div class="col-sm-8">
-                        <p class="form-control-static">{{module.availableADMIN !== '0' ? 'Ja' : 'Nein'}}</p>
+                        <p class="form-control-static">{{module.availableADMIN ? 'Ja' : 'Nein'}}</p>
                     </div>
                 </div>
                 
                 <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
             </div>
-            <div class="col-md-6" ng-if="module.availableWWW !== '0'">
+            <div class="col-md-6" ng-if="module.availableWWW">
                 <h4>Untermodule</h4>
                 
                 <table class="table">
@@ -106,7 +105,7 @@
         </div>
     </div>
     
-    <div class="card card-block" ng-if="module.availableWWW !== '0'">
+    <div class="card card-block" ng-if="module.availableWWW">
         <div class="row">
             <div class="col-sm-12">
                 <h4>Vorhandene Optionen</h4>

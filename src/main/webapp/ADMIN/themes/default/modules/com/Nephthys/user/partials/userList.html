@@ -19,10 +19,8 @@
             <div class="form-group">
                 <label for="filterActiveStatus" class="col-sm-3 control-label">Aktiv</label>
                 <div class="col-sm-6">
-                    <select class="form-control" name="filterActiveStatus" ng-model="search.active">
-                        <option value="">Alle</option>
-                        <option value="1">Aktiv</option>
-                        <option value="0">Inaktiv</option>
+                    <select class="form-control" name="filterActiveStatus" ng-model="search.active"
+                            ng-options="o.v as o.n for o in [{ n: 'Alle', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]">
                     </select>
                 </div>
             </div>
