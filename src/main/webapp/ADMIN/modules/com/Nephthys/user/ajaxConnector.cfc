@@ -41,8 +41,8 @@ component {
         
         if(trim(arguments.password) != "") {
             user.setPassword(encrypt(arguments.password,
-                                     application.system.settings.getValueOfKeyFromForeignTable("encryptionMethodId")),
-                                     encryptionMethodLoader.getAlgorithm(application.system.settings.getValueOfKey("encryptionMethodId")));
+                                     application.system.settings.getValueOfKey("encryptionKey"),
+                                     encryptionMethodLoader.getAlgorithm(application.system.settings.getValueOfKey("encryptionMethodId"))));
         }
         
         user.save();

@@ -19,7 +19,7 @@ component {
         return this;
     }
     public user function setPassword(required string password) {
-        variables.password = arguments.password
+        variables.password = arguments.password;
         
         return this;
     }
