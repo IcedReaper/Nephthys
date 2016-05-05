@@ -108,6 +108,12 @@ component {
         
         return this;
     }
+    public gallery function setPrivate(required boolean private) {
+        variables.private = arguments.private;
+        variables.attributesChanged = true;
+        
+        return this;
+    }
     
     public gallery function addCategory(required category _category) {
         variables.categories.append(duplicate(arguments._category));
@@ -224,13 +230,24 @@ component {
     public array function getCategories() {
         return variables.categories;
     }
+    public numeric function getViewCounter() {
+        return variables.viewCounter;
+    }
+    public boolean function getPrivate() {
+        return variables.private == 1;
+    }
+    
+    public boolean function isEditable(required numeric userId) {
+        if(variables.private) {
+            return variables.creatorUserId == arguments.userId;
+        }
+        else {
+            return true;
+        }
+    }
     
     public string function getAbsolutePath() {
         return expandPath("/upload/com.IcedReaper.gallery/" & variables.folderName);
-    }
-    
-    public numeric function getViewCounter() {
-        return variables.viewCounter;
     }
     
     /*public boolean function isPublished() {
@@ -249,6 +266,7 @@ component {
                                                                       introduction,
                                                                       story,
                                                                       activeStatus,
+                                                                      private,
                                                                       creatorUserId,
                                                                       lastEditorUserId,
                                                                       lastEditDate
@@ -261,6 +279,7 @@ component {
                                                                       :introduction,
                                                                       :story,
                                                                       :activeStatus,
+                                                                      :private,
                                                                       :creatorUserId,
                                                                       :lastEditorUserId,
                                                                       now()
@@ -273,6 +292,7 @@ component {
                                              .addParam(name = "introduction",     value = variables.introduction,   cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "story",            value = variables.story,          cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "activeStatus",     value = variables.activeStatus,   cfsqltype = "cf_sql_bit")
+                                             .addParam(name = "private",          value = variables.private,        cfsqltype = "cf_sql_bit")
                                              .addParam(name = "creatorUserId",    value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                              .execute()
@@ -288,6 +308,7 @@ component {
                                            introduction     = :introduction,
                                            story            = :story,
                                            activeStatus     = :activeStatus,
+                                           private          = :private,
                                            lastEditorUserId = :lastEditorUserId,
                                            lastEditDate     = now()
                                      WHERE galleryId = :galleryId")
@@ -299,6 +320,7 @@ component {
                            .addParam(name = "introduction",     value = variables.introduction,   cfsqltype = "cf_sql_varchar", null = variables.introduction == "")
                            .addParam(name = "story",            value = variables.story,          cfsqltype = "cf_sql_varchar", null = variables.story == "")
                            .addParam(name = "activeStatus",     value = variables.activeStatus,   cfsqltype = "cf_sql_bit")
+                           .addParam(name = "private",          value = variables.private,        cfsqltype = "cf_sql_bit")
                            .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                            .execute();
             }
@@ -385,6 +407,7 @@ component {
                 variables.pictures         = [];
                 variables.categories       = [];
                 variables.viewCounter      = qGallery.viewCounter[1];
+                variables.private          = qGallery.private[1];
                 
                 loadPictures();
                 loadCategories();
@@ -409,6 +432,7 @@ component {
             variables.pictures         = [];
             variables.categories       = [];
             variables.viewCounter      = 0;
+            variables.private          = false;
         }
     }
     

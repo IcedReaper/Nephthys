@@ -51,6 +51,8 @@
                 <tr ng-repeat="blogpost in blogposts | filter:search"> <!-- change indicator to published -->
                     <td>{{blogpost.blogpostId}}</td>
                     <td>
+                        <i class="fa fa-star" ng-if="blogpost.private"></i>
+                        <i class="fa fa-lock" ng-if="! blogpost.isEditable"></i>
                         <a href="#/{{blogpost.blogpostId}}">{{blogpost.headline}}</a>
                     </td>
                     <td>{{blogpost.link}}</td>
@@ -66,19 +68,22 @@
                         <button class="btn btn-success"
                                 ng-click="activate(blogpost.blogpostId)"
                                 ng-show="blogpost.active == 0"
-                                title="Gallerie aktivieren">
+                                title="Gallerie aktivieren"
+                                ng-disabled="! blogpost.isEditable">
                             <i class="fa fa-toggle-on"></i>
                         </button>
                         <button class="btn btn-warning"
                                 ng-click="deactivate(blogpost.blogpostId)"
                                 ng-show="blogpost.active == 1"
-                                title="Gallerie deaktivieren">
+                                title="Gallerie deaktivieren"
+                                ng-disabled="! blogpost.isEditable">
                             <i class="fa fa-toggle-off"></i>
                         </button>
                         
                         <button class="btn btn-danger"
                                 ng-click="delete(blogpost.blogpostId)"
-                                title="Gallerie löschen">
+                                title="Gallerie löschen"
+                                ng-disabled="! blogpost.isEditable">
                             <i class="fa fa-trash-o"></i>
                         </button>
                     </td>

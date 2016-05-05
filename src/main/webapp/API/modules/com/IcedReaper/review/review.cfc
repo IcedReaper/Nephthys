@@ -96,6 +96,11 @@ component {
         
         return this;
     }
+    public review function setPrivate(required boolean private) {
+        variables.private = arguments.private;
+        
+        return this;
+    }
     
     public review function incrementViewCounter() {
         variables.viewCounter = new Query().setSQL("UPDATE IcedReaper_review_review
@@ -177,6 +182,18 @@ component {
     public type function getType() {
         return new type(variables.typeId);
     }
+    public boolean function getPrivate() {
+        return variables.private == 1;
+    }
+    
+    public boolean function isEditable(required numeric userId) {
+        if(variables.private) {
+            return variables.creatorUserId == arguments.userId;
+        }
+        else {
+            return true;
+        }
+    }
     
     
     public review function save() {
@@ -192,6 +209,7 @@ component {
                                                                      imagePath,
                                                                      viewCounter,
                                                                      link,
+                                                                     private,
                                                                      creatorUserId,
                                                                      lastEditorUserId
                                                                  )
@@ -205,6 +223,7 @@ component {
                                                                      :imagePath,
                                                                      :viewCounter,
                                                                      :link,
+                                                                     :private,
                                                                      :userId,
                                                                      :userId
                                                                  );
@@ -218,6 +237,7 @@ component {
                                             .addParam(name = "imagePath",    value = variables.imagePath,      cfsqltype = "cf_sql_varchar")
                                             .addParam(name = "viewCounter",  value = variables.viewCounter,    cfsqltype = "cf_sql_numeric")
                                             .addParam(name = "link",         value = variables.link,           cfsqltype = "cf_sql_varchar")
+                                            .addParam(name = "private",      value = variables.private,        cfsqltype = "cf_sql_bit")
                                             .addParam(name = "userId",       value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                             .execute()
                                             .getResult()
@@ -239,6 +259,7 @@ component {
                                        imagePath        = :imagePath,
                                        viewCounter      = :viewCounter,
                                        link             = :link,
+                                       private          = :private,
                                        lastEditorUserId = :lastEditorUserId,
                                        lastEditDate     = now()
                                  WHERE reviewId = :reviewId ")
@@ -252,6 +273,7 @@ component {
                        .addParam(name = "imagePath",        value = variables.imagePath,      cfsqltype = "cf_sql_varchar")
                        .addParam(name = "viewCounter",      value = variables.viewCounter,    cfsqltype = "cf_sql_numeric")
                        .addParam(name = "link",             value = variables.link,           cfsqltype = "cf_sql_varchar")
+                       .addParam(name = "private",          value = variables.private,        cfsqltype = "cf_sql_bit")
                        .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                        .execute();
             variables.lastEditorUserId = request.user.getUserId();
@@ -325,6 +347,7 @@ component {
                 variables.lastEditorUserId = qReview.lastEditorUserId[1];
                 variables.lastEditDate     = qReview.lastEditDate[1];
                 variables.link             = qReview.link[1];
+                variables.private          = qReview.private[1];
                 variables.genre            = [];
                 
                 loadGenre();
@@ -348,6 +371,7 @@ component {
             variables.lastEditDate     = now();
             variables.link             = "";
             variables.genre            = [];
+            variables.private          = false;
         }
     }
     

@@ -34,6 +34,10 @@
     21. QueryBuilder zur Unterstützung verschiedener DB-Systeme
     22. Zusätzliche Optionen
         * Berechtigungssystem auf Menüpunkte ausweiten
+    13. Erweiterte Sicherheit in Modulen
+        * Private Option => Nur der Autor kann editieren
+        * Personen freischalten => Nur normales Editieren
+        * 
 
 ## Website
     1. Codeoptimierung
@@ -202,3 +206,5 @@
     8. Querybuilder oder Ähnliches implementieren um die Tabellenprefixes sicher händeln zu können. Serversettings?
     9. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
     10. Prüfen ob D3 besser ist als Chart.js | Chart.js V2 ausprobieren
+    11. Verwendung von nicht Klassenattributen (z.B. request.user) aus den Klassen entfernen und als Parameter erwarten
+    12. toString entfernen - mit Boolean arbeiten

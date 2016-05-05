@@ -34,11 +34,11 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="headline">Überschrift</label>
-                                    <input type="text" class="form-control" id="headline" placeholder="headline" ng-model="gallery.headline">
+                                    <input type="text" class="form-control" id="headline" placeholder="headline" ng-model="gallery.headline" ng-disabled="! gallery.isEditable">
                                 </div>
                                 <div class="form-group">
                                     <label for="active">Aktiv</label>
-                                    <select class="form-control" ng-model="gallery.active">
+                                    <select class="form-control" ng-model="gallery.active" ng-disabled="! gallery.isEditable">
                                         <option value="1">Aktiv</option>
                                         <option value="0">Inaktiv</option>
                                     </select>
@@ -50,21 +50,30 @@
                                         Verlinkung<br>
                                         <span class="text text-danger">Achtung! Alte Links sind nach einem Abändern nicht mehr erreichbar!</span>
                                     </label>
-                                    <input type="text" class="form-control" id="link" placeholder="Verlinkung" ng-model="gallery.link">
+                                    <input type="text" class="form-control" id="link" placeholder="Verlinkung" ng-model="gallery.link" ng-disabled="! gallery.isEditable">
                                 </div>
                                 <div class="form-group">
                                     <label for="foldername">
                                         Ordner<br>
                                         <span class="text text-warning">Dieser Ordner darf noch nicht vorhanden sein. Sollten Sie sich unsicher sein, lassen sie dieses Feld leer, dann wird ein generierter Wert gewählt</span>
                                     </label>
-                                    <input type="text" class="form-control" id="foldername" ng-disabled="gallery.galleryId != 0" placeholder="foldername" ng-model="gallery.foldername">
+                                    <input type="text" class="form-control" id="foldername" placeholder="foldername" ng-model="gallery.foldername" ng-disabled="! gallery.isEditable && gallery.galleryId != 0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="active">
+                                        Privat<br>
+                                        <span class="text text-info">Diese Gallerie kann nur von Ihnen bearbeitet werden</span>
+                                    </label>
+                                    <select class="form-control" ng-model="gallery.private"
+                                            ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]" ng-disabled="! gallery.isEditable">
+                                    </select>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12 icedreaper-gallery-introduction">
                                 <h4>Einleitung</h4>
-                                <div text-angular ng-model="gallery.introduction" ta-toolbar="[['bold','italics','underline','strikeThrough'],['insertLink']]"></div>
+                                <div text-angular ng-model="gallery.introduction" ta-toolbar="[['bold','italics','underline','strikeThrough'],['insertLink']]" ta-disabled="! gallery.isEditable"></div>
                             </div>
                         </div>
                         <div class="row m-t">
@@ -73,13 +82,14 @@
                                 <div text-angular ng-model="gallery.story" ta-toolbar="[
                                     ['h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
                                     ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
-                                    ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent']]"></div>
+                                    ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent']]"
+                                    ta-disabled="! gallery.isEditable"></div>
                             </div>
                         </div>
                         
                         <div class="row">
                             <div class="col-md-12 m-t">
-                                <button class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+                                <button class="btn btn-success" ng-click="save()" ng-disabled="! gallery.isEditable"><i class="fa fa-floppy-o"></i> Speichern</button>
                             </div>
                         </div>
                     </form>
@@ -99,7 +109,7 @@
                     <div class="card card-block">
                         <h3>Kategorien</h3>
                         
-                        <tags-input ng-model="categories" on-tag-removing="delete($tag)" on-tag-added="add($tag)" add-on-blur="false">
+                        <tags-input ng-model="categories" on-tag-removing="delete($tag)" on-tag-added="add($tag)" add-on-blur="false" ng-disabled="! gallery.isEditable">
                             <auto-complete source="loadAutoCompleteCategories($query)"></auto-complete>
                         </tags-input>
                     </div>
@@ -110,7 +120,7 @@
     
     <div ng-class="pageClasses('pictures')" class="tab-pane">
         <div ng-controller="galleryPictureCtrl" ng-show="galleryId != 0">
-            <div class="row">
+            <div class="row" ng-if="gallery.isEditable">
                 <div class="col-md-12">
                     <div class="card card-block">
                         <h3>Neue Bilder hocladen</h3>
@@ -137,24 +147,24 @@
                                             <div class="form-group row">
                                                 <label for="caption" class="col-sm-5 col-md-3 form-control-label">Bezeichnung</label>
                                                 <div class="col-sm-7 col-md-9">
-                                                    <input type="text" class="form-control" ng-model="picture.caption" name="caption" id="caption">
+                                                    <input type="text" class="form-control" ng-model="picture.caption" name="caption" id="caption" ng-disabled="! gallery.isEditable">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label for="title" class="col-sm-5 col-md-3 form-control-label">Titel</label>
                                                 <div class="col-sm-7 col-md-9">
-                                                    <input type="text" class="form-control" ng-model="picture.title" name="title" id="title">
+                                                    <input type="text" class="form-control" ng-model="picture.title" name="title" id="title" ng-disabled="! gallery.isEditable">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
                                                 <label for="alt" class="col-sm-5 col-md-3 form-control-label">Alt. Text</label>
                                                 <div class="col-sm-7 col-md-9">
-                                                    <input type="text" class="form-control" ng-model="picture.alt" name="alt" id="alt">
+                                                    <input type="text" class="form-control" ng-model="picture.alt" name="alt" id="alt" ng-disabled="! gallery.isEditable">
                                                 </div>
                                             </div>
                                             <div class="form-group row">
-                                                <button class="btn btn-xs btn-success pull-left m-l" ng-click="save(picture)"><span class="fa fa-save"></span> Aktualisieren</button>
-                                                <button class="pull-right btn btn-xs btn-danger pull-right m-r" ng-click="delete(picture.pictureId)"><span class="fa fa-trash-o"></span> Löschen</button>
+                                                <button class="btn btn-xs btn-success pull-left m-l" ng-click="save(picture)" ng-disabled="! gallery.isEditable"><span class="fa fa-save"></span> Aktualisieren</button>
+                                                <button class="pull-right btn btn-xs btn-danger pull-right m-r" ng-click="delete(picture.pictureId)" ng-disabled="! gallery.isEditable"><span class="fa fa-trash-o"></span> Löschen</button>
                                             </div>
                                         </form>
                                     </div>

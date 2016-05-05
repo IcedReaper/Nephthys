@@ -34,11 +34,11 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="headline">Überschrift</label>
-                                    <input type="text" class="form-control" id="headline" placeholder="headline" ng-model="blogpost.headline" ng-keyup="updateLink()">
+                                    <input type="text" class="form-control" id="headline" placeholder="headline" ng-model="blogpost.headline" ng-keyup="updateLink()" ng-disabled="! blogpost.isEditable">
                                 </div>
                                 <div class="form-group">
                                     <label for="active">Veröffentlicht</label>
-                                    <select class="form-control" ng-model="blogpost.released">
+                                    <select class="form-control" ng-model="blogpost.released" ng-disabled="! blogpost.isEditable">
                                         <option value="1">Ja</option>
                                         <option value="0">Nein</option>
                                     </select>
@@ -48,25 +48,25 @@
                                         Veröffentlichungsdatum<br>
                                         <span class="text text-warning">Sollte Ihr Browser hier keinen Datepicker anzeigen ist das Format 2015-11-27 00:00</span>
                                     </label>
-                                    <input class="form-control" ng-model="blogpost.releaseDate" type="text"> <!--- Datetime-local does not work in firefox :/ -->
+                                    <input class="form-control" ng-model="blogpost.releaseDate" type="text" ng-disabled="! blogpost.isEditable"> <!--- Datetime-local does not work in firefox :/ - TODO: change to angular UI bootstrap datepicker -->
                                 </div>
                                 <div class="form-group">
                                     <label for="active">Kommentare erlaubt?</label>
-                                    <select class="form-control" ng-model="blogpost.commentsActivated">
+                                    <select class="form-control" ng-model="blogpost.commentsActivated" ng-disabled="! blogpost.isEditable">
                                         <option value="1">Ja</option>
                                         <option value="0">Nein</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="active">Anonyme Kommentare erlaubt?</label>
-                                    <select class="form-control" ng-model="blogpost.anonymousCommentAllowed">
+                                    <select class="form-control" ng-model="blogpost.anonymousCommentAllowed" ng-disabled="! blogpost.isEditable">
                                         <option value="1">Ja</option>
                                         <option value="0">Nein</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="active">Kommentare müssen frei gegeben werden?</label>
-                                    <select class="form-control" ng-model="blogpost.commentsNeedToGetPublished">
+                                    <select class="form-control" ng-model="blogpost.commentsNeedToGetPublished" ng-disabled="! blogpost.isEditable">
                                         <option value="1">Ja</option>
                                         <option value="0">Nein</option>
                                     </select>
@@ -78,26 +78,35 @@
                                         Verlinkung<br>
                                         <span class="text text-danger">Achtung! Alte Links sind nach einem Abändern nicht mehr erreichbar!</span>
                                     </label>
-                                    <input type="text" class="form-control" id="link" placeholder="Verlinkung" ng-model="blogpost.link" ng-keydown="linkSet = true">
+                                    <input type="text" class="form-control" id="link" placeholder="Verlinkung" ng-model="blogpost.link" ng-keydown="linkSet = true" ng-disabled="! blogpost.isEditable">
                                 </div>
                                 <div class="form-group">
                                     <label for="folderName">
                                         Ordner<br>
                                         <span class="text text-warning">Dieser Ordner darf noch nicht vorhanden sein. Sollten Sie sich unsicher sein, lassen sie dieses Feld leer, dann wird ein generierter Wert gewählt</span>
                                     </label>
-                                    <input type="text" class="form-control" id="folderName" placeholder="folderName" ng-model="blogpost.folderName">
+                                    <input type="text" class="form-control" id="folderName" placeholder="folderName" ng-model="blogpost.folderName" ng-disabled="! blogpost.isEditable">
+                                </div>
+                                <div class="form-group">
+                                    <label for="active">
+                                        Privat<br>
+                                        <span class="text text-info">Dieser Blogpost kann nur von Ihnen bearbeitet werden</span>
+                                    </label>
+                                    <select class="form-control" ng-model="blogpost.private"
+                                            ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]" ng-disabled="! blogpost.isEditable">
+                                    </select>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12">
-                                <div text-angular ng-model="blogpost.story"></div>
+                                <div text-angular ng-model="blogpost.story" ta-disabled="! blogpost.isEditable"></div>
                             </div>
                         </div>
                         
                         <div class="row">
                             <div class="col-md-12 m-t">
-                                <button class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+                                <button class="btn btn-success" ng-click="save()" ng-disabled="! blogpost.isEditable"><i class="fa fa-floppy-o"></i> Speichern</button>
                             </div>
                         </div>
                     </form>
@@ -117,7 +126,7 @@
                     <div class="card card-block">
                         <h3>Kategorien</h3>
                         
-                        <tags-input ng-model="categories" on-tag-removing="delete($tag)" on-tag-added="add($tag)" add-on-blur="false">
+                        <tags-input ng-model="categories" on-tag-removing="delete($tag)" on-tag-added="add($tag)" add-on-blur="false" ng-disabled="! blogpost.isEditable">
                             <auto-complete source="loadAutoCompleteCategories($query)"></auto-complete>
                         </tags-input>
                     </div>

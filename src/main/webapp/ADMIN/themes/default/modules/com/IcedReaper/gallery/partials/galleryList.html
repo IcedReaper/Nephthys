@@ -51,6 +51,8 @@
                 <tr ng-repeat="gallery in galleries | filter:search"> <!-- change indicator to published -->
                     <td>{{gallery.galleryId}}</td>
                     <td>
+                        <i class="fa fa-star" ng-if="gallery.private"></i>
+                        <i class="fa fa-lock" ng-if="! gallery.isEditable"></i>
                         <a href="#/{{gallery.galleryId}}">{{gallery.headline}}</a>
                     </td>
                     <td>{{gallery.link}}</td>
@@ -67,19 +69,22 @@
                         <button class="btn btn-success"
                                 ng-click="activate(gallery.galleryId)"
                                 ng-show="gallery.active == 0"
-                                title="Gallerie aktivieren">
+                                title="Gallerie aktivieren"
+                                ng-disabled="! gallery.isEditable">
                             <i class="fa fa-toggle-on"></i>
                         </button>
                         <button class="btn btn-warning"
                                 ng-click="deactivate(gallery.galleryId)"
                                 ng-show="gallery.active == 1"
-                                title="Gallerie deaktivieren">
+                                title="Gallerie deaktivieren"
+                                ng-disabled="! gallery.isEditable">
                             <i class="fa fa-toggle-off"></i>
                         </button>
                         
                         <button class="btn btn-danger"
                                 ng-click="delete(gallery.galleryId)"
-                                title="Gallerie löschen">
+                                title="Gallerie löschen"
+                                ng-disabled="! gallery.isEditable">
                             <i class="fa fa-trash-o"></i>
                         </button>
                     </td>

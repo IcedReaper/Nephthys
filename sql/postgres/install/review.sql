@@ -49,6 +49,7 @@ CREATE TABLE public.icedreaper_review_review
     imagePath character varying(255),
     viewCounter integer NOT NULL DEFAULT 0,
     link character varying(50) NOT NULL,
+    private boolean NOT NULL DEFAULT FALSE,
     creatorUserId integer NOT NULL,
     creationDate timestamp with time zone NOT NULL DEFAULT now(),
     lastEditorUserId integer NOT NULL,

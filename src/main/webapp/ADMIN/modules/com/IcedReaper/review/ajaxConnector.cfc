@@ -9,21 +9,7 @@ component {
         
         var reviewList = [];
         for(var review in reviewFilter.execute().getResult()) {
-            reviewList.append({
-                "reviewId"     = review.getReviewId(),
-                "typeId"       = review.getTypeId(),
-                "typeName"     = review.getType().getName(),
-                "rating"       = review.getRating(),
-                "description"  = review.getDescription(),
-                "headline"     = review.getHeadline(),
-                "introduction" = review.getIntroduction(),
-                "reviewText"   = review.getReviewText(),
-                "imagePath"    = review.getImagePath(),
-                "link"         = review.getLink(),
-                "viewCounter"  = review.getViewCounter(),
-                "creator"      = getUserInformation(review.getCreator()),
-                "lastEditor"   = getUserInformation(review.getLastEditor())
-            });
+            reviewList.append(prepareReviewData(review));
         }
         
         return reviewList;
@@ -31,21 +17,8 @@ component {
     
     remote struct function getDetails(required numeric reviewId) {
         var review = new review(arguments.reviewId);
-        return {
-            "reviewId"     = review.getReviewId(),
-            "typeId"       = toString(review.getTypeId()),
-            "typeName"     = review.getType().getName(),
-            "rating"       = toString(review.getRating()),
-            "description"  = review.getDescription(),
-            "introduction" = review.getIntroduction(),
-            "headline"     = review.getHeadline(),
-            "reviewText"   = review.getReviewText(),
-            "imagePath"    = review.getImagePath(),
-            "link"         = review.getLink(),
-            "viewCounter"  = review.getViewCounter(),
-            "creator"      = getUserInformation(review.getCreator()),
-            "lastEditor"   = getUserInformation(review.getLastEditor())
-        };
+        
+        return prepareReviewData(review);
     }
     
     remote array function loadGenre(required numeric reviewId) {
@@ -96,35 +69,53 @@ component {
                                  required string  headline,
                                  required string  introduction,
                                  required string  reviewText,
-                                 required string  link) {
+                                 required string  link,
+                                 required boolean private) {
         var review = new review(arguments.reviewId);
         
-        review.setTypeId(arguments.typeId)
-              .setRating(arguments.rating)
-              .setDescription(arguments.description)
-              .setHeadline(arguments.headline)
-              .setIntroduction(arguments.introduction)
-              .setReviewText(arguments.reviewText)
-              .setLink(arguments.link)
-              .save();
-        
-        return review.getReviewId();
+        if(review.isEditable(request.user.getUserID())) {
+            review.setTypeId(arguments.typeId)
+                  .setRating(arguments.rating)
+                  .setDescription(arguments.description)
+                  .setHeadline(arguments.headline)
+                  .setIntroduction(arguments.introduction)
+                  .setReviewText(arguments.reviewText)
+                  .setLink(arguments.link)
+                  .setPrivate(arguments.private)
+                  .save();
+            
+            return review.getReviewId();
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this review");
+        }
     }
     
     remote string function uploadImage(required numeric reviewId) {
         var review = new review(arguments.reviewId);
         
-        review.uploadImage()
-              .save();
-        
-        return review.getImagePath();
+        if(review.isEditable(request.user.getUserID())) {
+            review.uploadImage()
+                  .save();
+            
+            return review.getImagePath();
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this review");
+        }
     }
     
     remote boolean function delete(required numeric reviewId) {
-        new review(arguments.reviewId)
-            .delete();
+        new review(arguments.reviewId);
         
-        return true;
+        if(review.isEditable(request.user.getUserID())) {
+            review.delete();
+        
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this review");
+        }
     }
     
     remote array function loadGenres(required numeric reviewId) {
@@ -145,31 +136,41 @@ component {
                                      required string  genreName) {
         var review = new review(arguments.reviewId);
         
-        if(arguments.genreId == null || arguments.genreId == 0) {
-            var genre = new genre(0)
-                            .setName(arguments.genreName)
-                            .save();
+        if(review.isEditable(request.user.getUserID())) {
+            if(arguments.genreId == null || arguments.genreId == 0) {
+                var genre = new genre(0)
+                                .setName(arguments.genreName)
+                                .save();
+            }
+            else {
+                var genre = new genre(arguments.genreId);
+            }
+            
+            review
+                .addGenre(genre)
+                .save();
+            
+            return genre.getGenreId();
         }
         else {
-            var genre = new genre(arguments.genreId);
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this review");
         }
-        
-        review
-            .addGenre(genre)
-            .save();
-        
-        return genre.getGenreId();
     }
     
     remote boolean function removeGenre(required numeric reviewId,
                                         required numeric genreId) {
         var review = new review(arguments.reviewId);
         
-        review
-            .removeGenreById(arguments.genreId)
-            .save();
-        
-        return true;
+        if(review.isEditable(request.user.getUserID())) {
+            review
+                .removeGenreById(arguments.genreId)
+                .save();
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this review");
+        }
     }
     
     // genre and their details
@@ -269,6 +270,26 @@ component {
         return {
             'userId'   = arguments._user.getUserId(),
             'userName' = arguments._user.getUserName()
+        };
+    }
+    
+    private struct function prepareReviewData(required review review) {
+        return {
+                "reviewId"     = arguments.review.getReviewId(),
+                "typeId"       = arguments.review.getTypeId(),
+                "typeName"     = arguments.review.getType().getName(),
+                "rating"       = arguments.review.getRating(),
+                "description"  = arguments.review.getDescription(),
+                "headline"     = arguments.review.getHeadline(),
+                "introduction" = arguments.review.getIntroduction(),
+                "reviewText"   = arguments.review.getReviewText(),
+                "imagePath"    = arguments.review.getImagePath(),
+                "link"         = arguments.review.getLink(),
+                "viewCounter"  = arguments.review.getViewCounter(),
+                "private"      = arguments.review.getPrivate(),
+                "isEditable"   = arguments.review.isEditable(request.user.getUserId()),
+                "creator"      = getUserInformation(arguments.review.getCreator()),
+                "lastEditor"   = getUserInformation(arguments.review.getLastEditor())
         };
     }
 }

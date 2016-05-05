@@ -84,6 +84,12 @@ component {
         
         return this;
     }
+    public blogpost function setPrivate(required boolean private) {
+        variables.private = arguments.private;
+        variables.attributesChanged = true;
+        
+        return this;
+    }
     
     public blogpost function addCategory(required category _category) {
         variables.categories.append(duplicate(arguments._category));
@@ -211,6 +217,18 @@ component {
     public numeric function getViewCounter() {
         return variables.viewCounter;
     }
+    public boolean function getPrivate() {
+        return variables.private == 1;
+    }
+    
+    public boolean function isEditable(required numeric userId) {
+        if(variables.private) {
+            return variables.creatorUserId == arguments.userId;
+        }
+        else {
+            return true;
+        }
+    }
     
     // C R U D
     public blogpost function save() {
@@ -230,6 +248,7 @@ component {
                                                                        commentsActivated,
                                                                        anonymousCommentAllowed,
                                                                        commentsNeedToGetPublished,
+                                                                       private,
                                                                        creatorUserId,
                                                                        lastEditorUserId,
                                                                        lastEditDate
@@ -244,6 +263,7 @@ component {
                                                                        :commentsActivated,
                                                                        :anonymousCommentAllowed,
                                                                        :commentsNeedToGetPublished,
+                                                                       :private,
                                                                        :creatorUserId,
                                                                        :lastEditorUserId,
                                                                        now()
@@ -258,6 +278,7 @@ component {
                                               .addParam(name = "commentsActivated",          value = variables.commentsActivated,          cfsqltype = "cf_sql_bit")
                                               .addParam(name = "anonymousCommentAllowed",    value = variables.anonymousCommentAllowed,    cfsqltype = "cf_sql_bit")
                                               .addParam(name = "commentsNeedToGetPublished", value = variables.commentsNeedToGetPublished, cfsqltype = "cf_sql_bit")
+                                              .addParam(name = "private",                    value = variables.private,                    cfsqltype = "cf_sql_bit")
                                               .addParam(name = "creatorUserId",              value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
                                               .addParam(name = "lastEditorUserId",           value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
                                               .execute()
@@ -278,6 +299,7 @@ component {
                                            commentsActivated          = :commentsActivated,
                                            anonymousCommentAllowed    = :anonymousCommentAllowed,
                                            commentsNeedToGetPublished = :commentsNeedToGetPublished,
+                                           private                    = :private,
                                            lastEditorUserId           = :lastEditorUserId,
                                            lastEditDate               = now()
                                      WHERE blogpostId = :blogpostId")
@@ -291,6 +313,7 @@ component {
                            .addParam(name = "commentsActivated",          value = variables.commentsActivated,          cfsqltype = "cf_sql_bit")
                            .addParam(name = "anonymousCommentAllowed",    value = variables.anonymousCommentAllowed,    cfsqltype = "cf_sql_bit")
                            .addParam(name = "commentsNeedToGetPublished", value = variables.commentsNeedToGetPublished, cfsqltype = "cf_sql_bit")
+                           .addParam(name = "private",                    value = variables.private,                    cfsqltype = "cf_sql_bit")
                            .addParam(name = "creatorUserId",              value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
                            .addParam(name = "lastEditorUserId",           value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
                            .execute();
@@ -383,6 +406,7 @@ component {
                 variables.comments                   = [];
                 variables.categories                 = [];
                 variables.viewCounter                = qBlogpost.viewCounter[1];
+                variables.private                    = qBlogpost.private[1];
                 
                 loadComments();
                 loadCategories();
@@ -410,6 +434,7 @@ component {
             variables.comments                   = [];
             variables.folderName                 = createUUID();
             variables.viewCounter                = 0;
+            variables.private                    = false;
         }
     }
     

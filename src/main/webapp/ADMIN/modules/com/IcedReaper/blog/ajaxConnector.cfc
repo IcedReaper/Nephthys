@@ -51,103 +51,146 @@ component {
                                 required numeric commentsActivated,
                                 required numeric anonymousCommentAllowed,
                                 required numeric commentsNeedToGetPublished,
+                                required boolean private,
                                 required string  fileNames) {
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
-        if(arguments.releaseDate != "") {
-            // format: 2015-11-27T00:00
-            var y  = arguments.releaseDate.left(4);
-            var m  = arguments.releaseDate.mid(6, 2);
-            var d  = arguments.releaseDate.mid(9, 2);
-            var h  = arguments.releaseDate.mid(12, 2);
-            var mi = arguments.releaseDate.mid(15, 2);
-            var _releaseDate = createDateTime(y, m, d, h, mi, 0);
+        
+        if(blogpost.isEditable(request.user.getUserID())) {
+            if(arguments.releaseDate != "") {
+                // format: 2015-11-27T00:00
+                var y  = arguments.releaseDate.left(4);
+                var m  = arguments.releaseDate.mid(6, 2);
+                var d  = arguments.releaseDate.mid(9, 2);
+                var h  = arguments.releaseDate.mid(12, 2);
+                var mi = arguments.releaseDate.mid(15, 2);
+                var _releaseDate = createDateTime(y, m, d, h, mi, 0);
+                
+                blogpost.setReleaseDate(_releaseDate);
+            }
+            else {
+                blogpost.clearReleaseDate();
+            }
             
-            blogpost.setReleaseDate(_releaseDate);
+            blogpost.setHeadline(arguments.headline)
+                    .setLink(arguments.link)
+                    .setReleased(arguments.released)
+                    .setFolderName(arguments.folderName)
+                    .setStory(arguments.story, deserializeJSON(arguments.fileNames))
+                    .setCommentsActivated(arguments.commentsActivated)
+                    .setAnonymousCommentAllowed(arguments.anonymousCommentAllowed)
+                    .setCommentsNeedToGetPublished(arguments.commentsNeedToGetPublished)
+                    .setPrivate(arguments.private)
+                    .save();
+            
+            return prepareDetailStruct(blogpost);
         }
         else {
-            blogpost.clearReleaseDate();
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
         }
-        
-        blogpost.setHeadline(arguments.headline)
-                .setLink(arguments.link)
-                .setReleased(arguments.released)
-                .setFolderName(arguments.folderName)
-                .setStory(arguments.story, deserializeJSON(arguments.fileNames))
-                .setCommentsActivated(arguments.commentsActivated)
-                .setAnonymousCommentAllowed(arguments.anonymousCommentAllowed)
-                .setCommentsNeedToGetPublished(arguments.commentsNeedToGetPublished)
-                .save();
-        
-        return prepareDetailStruct(blogpost);
     }
     
     remote struct function uploadImages(required string blogpostId,
                                         required string imageSizes) { // jsonString
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
-        var _is = deserializeJSON(arguments.imageSizes);
-        var imageEditor = application.system.settings.getValueOfKey("imageEditLibrary");
         
-        var files = fileUploadAll(blogpost.getAbsolutePath(), "*", "Overwrite");
-        
-        for(var i = 1; i <= files.len(); i++) {
-            if(_is.keyExists("is" & i)) {
-                imageEditor.resize(source = blogpost.getAbsolutePath() & "/" & files[i].serverFile,
-                                   width  = _is["is" & i].width,
-                                   height = _is["is" & i].height);
+        if(blogpost.isEditable(request.user.getUserID())) {
+            var _is = deserializeJSON(arguments.imageSizes);
+            var imageEditor = application.system.settings.getValueOfKey("imageEditLibrary");
+            
+            var files = fileUploadAll(blogpost.getAbsolutePath(), "*", "Overwrite");
+            
+            for(var i = 1; i <= files.len(); i++) {
+                if(_is.keyExists("is" & i)) {
+                    imageEditor.resize(source = blogpost.getAbsolutePath() & "/" & files[i].serverFile,
+                                       width  = _is["is" & i].width,
+                                       height = _is["is" & i].height);
+                }
             }
+            
+            return {
+                "files"      = files,
+                "imageSizes" = _is
+            };
         }
-        
-        return {
-            "files"      = files,
-            "imageSizes" = _is
-        };
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function delete(required numeric blogpostId) {
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
-        blogpost.delete();
         
-        return true;
+        if(blogpost.isEditable(request.user.getUserID())) {
+            blogpost.delete();
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function activate(required numeric blogpostId) {
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
-        blogpost.setReleased(1)
-                .save();
         
-        return true;
+        if(blogpost.isEditable(request.user.getUserID())) {
+            blogpost.setReleased(1)
+                    .save();
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function deactivate(required numeric blogpostId) {
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
-        blogpost.setReleased(0)
-                .save();
         
-        return true;
+        if(blogpost.isEditable(request.user.getUserID())) {
+            blogpost.setReleased(0)
+                    .save();
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function addCategory(required numeric blogpostId,
                                        required numeric categoryId,
                                        required string  categoryName) {
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
-        var newCategory = createObject("component", "API.modules.com.IcedReaper.blog.category").init(arguments.categoryId);
-        if(arguments.categoryId == 0) {
-            newCategory.setName(arguments.categoryName)
-                       .save();
-        }
-        blogpost.addCategory(newCategory)
-                .save();
         
-        return true;
+        if(blogpost.isEditable(request.user.getUserID())) {
+            var newCategory = createObject("component", "API.modules.com.IcedReaper.blog.category").init(arguments.categoryId);
+            if(arguments.categoryId == 0) {
+                newCategory.setName(arguments.categoryName)
+                           .save();
+            }
+            blogpost.addCategory(newCategory)
+                    .save();
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function removeCategory(required numeric blogpostId,
                                           required numeric categoryId) {
         var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
         
-        blogpost.removeCategory(arguments.categoryId);
-        
-        return true;
+        if(blogpost.isEditable(request.user.getUserID())) {
+            blogpost.removeCategory(arguments.categoryId);
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     // categories and their details
@@ -285,7 +328,9 @@ component {
             "anonymousCommentAllowed"    = toString(arguments.blogpost.getAnonymousCommentAllowed()),
             "commentsNeedToGetPublished" = toString(arguments.blogpost.getCommentsNeedToGetPublished()),
             "creatorUserId"              = arguments.blogpost.getCreatorUserId(),
-            "categories"                 = categories
+            "categories"                 = categories,
+            "private"                    = arguments.blogpost.getPrivate(),
+            "isEditable"                 = arguments.blogpost.isEditable(request.user.getUserId())
         };
     }
     

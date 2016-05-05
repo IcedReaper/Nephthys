@@ -29,6 +29,8 @@
                 <tr ng-repeat="review in reviews">
                     <td>{{review.reviewId}}</td>
                     <td>
+                        <i class="fa fa-star" ng-if="review.private"></i>
+                        <i class="fa fa-lock" ng-if="! review.isEditable"></i>
                         <a href="#/{{review.reviewId}}">{{review.description}}</a>
                     </td>
                     <td>{{review.link}}</td>
@@ -43,7 +45,8 @@
                         
                         <button class="btn btn-danger"
                                 ng-click="delete(review.reviewId)"
-                                title="Review löschen">
+                                title="Review löschen"
+                                ng-disabled="! review.isEditable">
                             <i class="fa fa-trash-o"></i>
                         </button>
                     </td>

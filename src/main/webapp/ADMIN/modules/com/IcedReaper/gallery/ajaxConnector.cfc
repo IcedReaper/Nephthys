@@ -55,103 +55,156 @@ component {
                                 required string  foldername,
                                 required string  introduction,
                                 required string  story,
-                                required numeric active) {
+                                required numeric active,
+                                required boolean private) {
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         
-        if(arguments.galleryId == 0) {
-            gallery.setFoldername(attributes.foldername);
+        if(gallery.isEditable(request.user.getUserID())) {
+            if(arguments.galleryId == 0) {
+                gallery.setFoldername(attributes.foldername);
+            }
+            
+            gallery.setHeadline(arguments.headline)
+                   .setDescription(arguments.description)
+                   .setLink(arguments.link)
+                   .setIntroduction(arguments.introduction)
+                   .setStory(arguments.story)
+                   .setActiveStatus(arguments.active)
+                   .setPrivate(arguments.private)
+                   .save();
+            
+            return prepareDetailStruct(gallery);
         }
-        
-        gallery.setHeadline(arguments.headline)
-               .setDescription(arguments.description)
-               .setLink(arguments.link)
-               .setIntroduction(arguments.introduction)
-               .setStory(arguments.story)
-               .setActiveStatus(arguments.active)
-               .save();
-        
-        return prepareDetailStruct(gallery);
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function delete(required numeric galleryId) {
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
-        gallery.delete();
         
-        return true;
+        if(gallery.isEditable(request.user.getUserID())) {
+            gallery.delete();
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function activate(required numeric galleryId) {
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
-        gallery.setActiveStatus(1)
-               .save();
         
-        return true;
+        if(gallery.isEditable(request.user.getUserID())) {
+            gallery.setActiveStatus(1)
+                   .save();
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function deactivate(required numeric galleryId) {
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
-        gallery.setActiveStatus(0)
-               .save();
         
-        return true;
+        if(gallery.isEditable(request.user.getUserID())) {
+            gallery.setActiveStatus(0)
+                   .save();
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function addCategory(required numeric galleryId,
                                        required numeric categoryId,
                                        required string  categoryName) {
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
-        var newCategory = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
-        if(arguments.categoryId == 0) {
-            newCategory.setName(arguments.categoryName)
-                       .save();
-        }
-        gallery.addCategory(newCategory)
-               .save();
         
-        return true;
+        if(gallery.isEditable(request.user.getUserID())) {
+            var newCategory = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
+            if(arguments.categoryId == 0) {
+                newCategory.setName(arguments.categoryName)
+                           .save();
+            }
+            gallery.addCategory(newCategory)
+                   .save();
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function removeCategory(required numeric galleryId,
                                           required numeric categoryId) {
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         
-        gallery.removeCategory(arguments.categoryId);
-        
-        return true;
+        if(gallery.isEditable(request.user.getUserID())) {
+            gallery.removeCategory(arguments.categoryId);
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function uploadPictures(required numeric galleryId) {
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
         
-        var newPicture = createObject("component", "API.modules.com.IcedReaper.gallery.picture").init(0);
-        newPicture.setGalleryId(arguments.galleryId)
-                  .upload();
-        
-        gallery.addPicture(newPicture);
-        
-        return true;
+        if(gallery.isEditable(request.user.getUserID())) {
+            var newPicture = createObject("component", "API.modules.com.IcedReaper.gallery.picture").init(0);
+            newPicture.setGalleryId(arguments.galleryId)
+                      .upload();
+            
+            gallery.addPicture(newPicture);
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function updatePicture(required numeric pictureId,
-                                         required string  caption,
-                                         required string  alt,
-                                         required string  title) {
+                                          required string  caption,
+                                          required string  alt,
+                                          required string  title) {
         var picture = createObject("component", "API.modules.com.IcedReaper.gallery.picture").init(arguments.pictureId);
+        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(picture.getGalleryId());
         
-        picture.setCaption(arguments.caption)
-               .setAlt(arguments.alt)
-               .setTitle(arguments.title)
-               .save();
-        
-        return true;
+        if(gallery.isEditable(request.user.getUserID())) {
+            picture.setCaption(arguments.caption)
+                   .setAlt(arguments.alt)
+                   .setTitle(arguments.title)
+                   .save();
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote array function deletePicture(required numeric pictureId) {
         var picture = createObject("component", "API.modules.com.IcedReaper.gallery.picture").init(arguments.pictureId);
         var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(picture.getGalleryId());
-        gallery.removePicture(arguments.pictureId);
         
-        return preparePictureStruct(gallery.getPictures(), gallery.getRelativePath() & "/");
+        if(gallery.isEditable(request.user.getUserID())) {
+            gallery.removePicture(arguments.pictureId);
+            
+            return preparePictureStruct(gallery.getPictures(), gallery.getRelativePath() & "/");
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     // categories and their details
@@ -170,6 +223,7 @@ component {
     remote boolean function saveCategory(required numeric categoryId,
                                         required string  name) {
         var category = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
+        
         category.setName(arguments.name)
                 .save();
         
@@ -229,7 +283,9 @@ component {
             //"releaseDate"  = formatCtrl.formatDate(arguments.gallery.getReleaseDate(), false),
             "active"       = toString(arguments.gallery.getActiveStatus()),
             "pictureCount" = arguments.gallery.getPictureCount(),
-            "categories"   = categories
+            "categories"   = categories,
+            "private"      = arguments.gallery.getPrivate(),
+            "isEditable"   = arguments.gallery.isEditable(request.user.getUserId())
         };
     }
     

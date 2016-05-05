@@ -31,27 +31,36 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="description">Beschreibung</label>
-                                    <input type="text" class="form-control" id="description" placeholder="Beschreibung" ng-model="review.description">
+                                    <input type="text" class="form-control" id="description" placeholder="Beschreibung" ng-model="review.description" ng-disabled="! review.isEditable">
                                 </div>
                                 <div class="form-group">
                                     <label for="headline">Überschrift</label>
-                                    <input type="text" class="form-control" id="headline" placeholder="Überschrift" ng-model="review.headline">
+                                    <input type="text" class="form-control" id="headline" placeholder="Überschrift" ng-model="review.headline" ng-disabled="! review.isEditable">
                                 </div>
                                 <div class="form-group">
                                     <label for="rating">Reviewart</label>
-                                    <select class="form-control" id="rating" placeholder="Reviewart" ng-model="review.typeId">
+                                    <select class="form-control" id="rating" placeholder="Reviewart" ng-model="review.typeId" ng-disabled="! review.isEditable">
                                         <option ng-repeat="type in types" value="{{type.typeId}}">{{type.name}}</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
                                     <label for="rating">Bewertung</label>
-                                    <select class="form-control" id="rating" placeholder="Bewertung" ng-model="review.rating">
+                                    <select class="form-control" id="rating" placeholder="Bewertung" ng-model="review.rating" ng-disabled="! review.isEditable">
                                         <option value="0">0/5</option>
                                         <option value="1">1/5</option>
                                         <option value="2">2/5</option>
                                         <option value="3">3/5</option>
                                         <option value="4">4/5</option>
                                         <option value="5">5/5</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="active">
+                                        Privat<br>
+                                        <span class="text text-info">Diese Bewertung kann nur von Ihnen bearbeitet werden</span>
+                                    </label>
+                                    <select class="form-control" ng-model="review.private"
+                                            ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]" ng-disabled="! review.isEditable">
                                     </select>
                                 </div>
                                 <div class="form-group">
@@ -65,22 +74,22 @@
                                         Verlinkung<br>
                                         <span class="text text-danger" ng-if="review.reviewId !== 0">Achtung! Alte Links sind nach einem Abändern nicht mehr erreichbar!</span>
                                     </label>
-                                    <input type="text" class="form-control" id="link" placeholder="Verlinkung" ng-model="review.link">
+                                    <input type="text" class="form-control" id="link" placeholder="Verlinkung" ng-model="review.link" ng-disabled="! review.isEditable">
                                 </div>
                                 
-                                <div class="form-group" ng-if="review.imagePath || newImage">
+                                <div class="form-group" ng-if="review.isEditable && (review.imagePath || newImage)">
                                     <img alt="neues user avatar" class="img-fluid" ngf-src="imageSelect()">
                                 </div>
                                 
                                 <div class="form-group">
-                                    <input type="file" ngf-select required accept="image/*" ng-model="newImage" ngf-fix-orientation="false" class="form-control">
+                                    <input type="file" ngf-select required accept="image/*" ng-model="newImage" ngf-fix-orientation="false" class="form-control" ng-if="review.isEditable">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-12 icedreaper-review-introduction">
                                 <h4>Einleitung</h4>
-                                <div text-angular ng-model="review.introduction" ta-toolbar="[['bold','italics','underline','strikeThrough'],['insertLink']]"></div>
+                                <div text-angular ng-model="review.introduction" ta-toolbar="[['bold','italics','underline','strikeThrough'],['insertLink']]" ta-disabled="! review.isEditable"></div>
                             </div>
                         </div>
                         <div class="row m-t">
@@ -89,13 +98,14 @@
                                 <div text-angular ng-model="review.reviewText" ta-toolbar="[
                                     ['h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
                                     ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
-                                    ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],['insertLink']]"></div>
+                                    ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent'],['insertLink']]"
+                                    ta-disabled="! review.isEditable"></div>
                             </div>
                         </div>
                         
                         <div class="row">
                             <div class="col-md-12 m-t">
-                                <button class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+                                <button class="btn btn-success" ng-click="save()" ng-disabled="! review.isEditable"><i class="fa fa-floppy-o"></i> Speichern</button>
                             </div>
                         </div>
                     </form>
@@ -115,7 +125,7 @@
                     <div class="card card-block">
                         <h3>Genres</h3>
                         
-                        <tags-input ng-model="genres" on-tag-removing="delete($tag)" on-tag-added="add($tag)" add-on-blur="false">
+                        <tags-input ng-model="genres" on-tag-removing="delete($tag)" on-tag-added="add($tag)" add-on-blur="false" ng-disabled="! review.isEditable">
                             <auto-complete source="loadAutoCompleteGenres($query)"></auto-complete>
                         </tags-input>
                     </div>
