@@ -5,37 +5,35 @@
         1. Mehr Validierungsregeln implementieren
     2. Tableprefix variabel gestalten
     3. Styling des Errortemplates
-    4. loginHandler checken ob Name und location passt. => controller.user.userList
-    5. Formbuilder
-    6. getUserInformation zentral ablegen | Aktuell mehrfach identisch vorhanden ?
+    4. Formbuilder
+    5. getUserInformation zentral ablegen | Aktuell mehrfach identisch vorhanden ?
         * user informationen für den ajax JSON Rückweg vorbereiten
-    7. Installationssystem
+    6. Installationssystem
         * Datasources bei der Installation in einer JSON Datei ablegen und in den Applications auslesen
-    8. Updatesystem
-    9. repair modus ?
-    10. Pfade in DB speichern / Controller what else | aktuell hard-coded an mehreren Stellen
+    7. Updatesystem
+    8. repair modus ?
+    9. Pfade in DB speichern / Controller what else | aktuell hard-coded an mehreren Stellen
         * Avatar
-    11. Lizenzen von Assets und Plugins überprüfen
-    12. Mehrsprachigkeit/Internationalisierung
+    10. Lizenzen von Assets und Plugins überprüfen
+    11. Mehrsprachigkeit/Internationalisierung
         * i18n
         * i10n
-    13. filter.cfc auf gleichen Nenner bringen. (Aktuell gibt die Methode mal arrays, mal queries zurück) !!!
-    14. user => username überprüfen
-    15. user => blacklist erstellen | Innerhalb des Username überprüfen
-    16. F5-Raids bei Formularen unterbinden
-    17. Beim anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
-    18. FileUpload, etc in eine Extra-Component aus dem Model auslagern
-    19. page filter erweitern
-    20. Pakete
+    12. filter.cfc auf gleichen Nenner bringen. (Aktuell gibt die Methode mal arrays, mal queries zurück) !!!
+    13. user => username überprüfen
+    14. user => blacklist erstellen | Innerhalb des Username überprüfen
+    15. F5-Raids bei Formularen unterbinden
+    16. Beim anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
+    17. FileUpload, etc in eine Extra-Component aus dem Model auslagern
+    18. page filter erweitern
+    29. Pakete
         * Alles
         * Blog
         * Gallerie
         * Marketing/Produkt
-    21. QueryBuilder zur Unterstützung verschiedener DB-Systeme
+    20. QueryBuilder zur Unterstützung verschiedener DB-Systeme
     22. Zusätzliche Optionen
         * Berechtigungssystem auf Menüpunkte ausweiten
-    13. Erweiterte Sicherheit in Modulen
-        * Private Option => Nur der Autor kann editieren
+    23. Erweiterte Sicherheit in Modulen
         * Personen freischalten => Nur normales Editieren
         * 
 
@@ -203,8 +201,8 @@
     5. Tabellenprefix in Application verankern. Aus Datei auslesen.
     6. Datasources aus Datei auslesen.
     7. Serversettings in Applikation verankern
-    8. Querybuilder oder Ähnliches implementieren um die Tabellenprefixes sicher händeln zu können. Serversettings?
-    9. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
-    10. Prüfen ob D3 besser ist als Chart.js | Chart.js V2 ausprobieren
-    11. Verwendung von nicht Klassenattributen (z.B. request.user) aus den Klassen entfernen und als Parameter erwarten
-    12. Berechtigungen in Module einbauen
+    8. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
+    9. Prüfen ob D3 besser ist als Chart.js | Chart.js V2 ausprobieren
+    10. Verwendung von nicht Klassenattributen (z.B. request.user) aus den Klassen entfernen und als Parameter erwarten
+    11. Berechtigungen (Admin, Editor, User) in Module einbauen
+    12. Alle Statistiken in einer Tabelle zusammenfassen
