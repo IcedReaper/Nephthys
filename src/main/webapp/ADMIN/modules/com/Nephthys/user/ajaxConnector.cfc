@@ -111,14 +111,14 @@ component {
         
         transaction {
             for(var i = 1; i <= arguments.permissions.len(); i++) {
-                if(arguments.permissions[i].roleId != 0) {
+                if(arguments.permissions[i].roleId != 0 && arguments.permissions[i].roleId != null) {
                     permissionHandlerCtrl.setPermission(arguments.permissions[i].permissionId,
                                                         arguments.userId,
                                                         arguments.permissions[i].roleId,
                                                         arguments.permissions[i].moduleId);
                 }
                 else {
-                    if(arguments.permissions[i].permissionId != 0) {
+                    if(arguments.permissions[i].permissionId != 0 && arguments.permissions[i].roleId == null) {
                         permissionHandlerCtrl.removePermission(arguments.permissions[i].permissionId);
                     }
                     else {
