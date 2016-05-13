@@ -11,7 +11,7 @@
     6. Installationssystem
         * Datasources bei der Installation in einer JSON Datei ablegen und in den Applications auslesen
     7. Updatesystem
-    8. repair modus ?
+    8. Repairmodus ?
     9. Pfade in DB speichern / Controller what else | aktuell hard-coded an mehreren Stellen
         * Avatar
     10. Lizenzen von Assets und Plugins überprüfen
@@ -31,6 +31,7 @@
         * Gallerie
         * Marketing/Produkt
     20. QueryBuilder zur Unterstützung verschiedener DB-Systeme
+        * Idee und erste Doku unter QueryBuilder-idea-notes.md
     22. Zusätzliche Optionen
         * Berechtigungssystem auf Menüpunkte ausweiten
     23. Erweiterte Sicherheit in Modulen
@@ -57,24 +58,24 @@
         1. Contentbearbeitung
             * Version fertig - noch sehr abstrakt
         2. Seitenversionierung
-        3. Mehrsprachigkeit des Contents
-        4. Seitenhierarchie
-        5. Möglichkeit für unterschiedlichen Content bei Übersicht / Detailansicht ?
+        3. Workflow - benötigt Versionierung
+        4. Mehrsprachigkeit des Contents
+        5. Seitenhierarchie
+        6. Möglichkeit für unterschiedlichen Content bei Übersicht / Detailansicht ?
     3. Thememanagement
         1. Themeinstallation per git repository
             * Check ob alle Module in dem Theme vorhanden sind. Sonst Warnung
     4. Modul-Theme-Management
         1. Was tun, wenn das Modul in einem Theme nicht vorhanden ist.
-    5. Workflow - benötigt versionierung
-    6. DB Dump anbieten
-    7. Vorschau
+    5. DB Dump anbieten
+    6. Vorschau
         * Template in ADMIN, welches ein Template in WWW inkludiert, wo dann die richtigen Sachen angezeigt werden; dann halt nur auch schon nicht veröffentlichte Sachen.
-    8. Errorlog - WORK ON HOLD
-    9. Implement "loading screen" into http interceptor
-    10. Sidebar auf Icons reduzieren
+    7. Errorlog - WORK ON HOLD
+    8. Implement "loading screen" into http interceptor
+    9. Sidebar auf Icons reduzieren
+    10. Assets weiter optimieren
     11. Dashboard untermodule in andere Dateien verschieben ggf mehr übersicht schaffen
-    12. Assets weiter optimieren
-    13. Overview pro User variabel gestaltbar machen
+    12. Overview pro User variabel gestaltbar machen
         * Anordnung
         * Module
 
@@ -206,3 +207,4 @@
     10. Verwendung von nicht Klassenattributen (z.B. request.user) aus den Klassen entfernen und als Parameter erwarten
     11. Berechtigungen (Admin, Editor, User) in Module einbauen
     12. Alle Statistiken in einer Tabelle zusammenfassen
+    13. CreateObject gegen import und new ersetzen, außer bei den dynamischen

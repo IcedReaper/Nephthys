@@ -2,18 +2,22 @@
 
 Die Idee ist es eine Komponente / ein Satz an Komponenten zu installieren/implementieren, die einem Anhand von Parametern eine Query zusammenbauen und zur Verfügung stellen, ohne, dass man als Nutzer dieser auf die Datenbank speziell eingehen muss.
 Die Query wird immer gleich aufgerufen. Die Subkomponenten bauen dann die Query im richtigen DB-Dialekt zusammen.
+Jeder QueryBuilder wird die DB Eigenschaften selber handeln.
+
 
 ## QueryInitializer:
     public QueryInitializer init()
-    public QueryBuilder setDatabase() // if not set will be read from an application variable | tobe defined how it's read | prob from json file | Postgres, Oracle, etc pp
+    public QueryInitializer setDatabase() // if not set will be read from an application variable | tobe defined how it's read | prob from json file | Postgres, Oracle, etc pp
     public QueryBuilder for(module ?, subModule?)
     public QueryInitializer setDatasource(datasource) // if not set will be read from an application variable | tobe defined how it's read | prob from json file
 
 ## QueryBuilder:
     public QueryBuilder init()
     
+    public queryBuilder setResultType(required string resultType);
     public QueryBuilder setTable()
     
+    public queryBuilder setColumns(required string columns);
     public QueryBuilder addColumns(columns)
     
     public QueryBuilder addCondition(column, name, value, type, conditionType = 'AND') // conditionType == AND | OR
@@ -22,24 +26,27 @@ Die Query wird immer gleich aufgerufen. Die Subkomponenten bauen dann die Query 
     public QueryBuilder addParam(name, value, type)
     
     public QueryBuilder execute()
-    public queryResult getResult()
+    public array getResult()
+    
+    
+    public boolean isDatabaseSupported(dbType) // for install purposes
 
 
 # Anwendungsbeispiel:
 ## Normaler Anwendungsfall
     var userList = new QueryInitializer()
-                           .for("com.Nephthys.user")
+                           .for("com.Nephthys.user")    // returns QueryBuilder
+                               .setResultType("compact")
                                .setTable("user")
-                               .addColumn("userId, userName")
                                .addCondition("userName", "userName", "IcedReaper", "cf_sql_varchar")
                                .execute()
                                .getResult();
 
 ## Inner join Anwendungsfall
     var userList = new QueryInitializer()
-                           .for("com.Nephthys.user")
+                           .for("com.Nephthys.user")    // returns QueryBuilder
+                               .setResultType("detailed")
                                .setTable("user, extProperties")
-                               .addColumn("user.userId, user.userName, extProperties.value")
                                .addCondition("user.userName", "userName", "IcedReaper", "cf_sql_varchar")
                                .addCondition("extProperties.keyName", "keyName", "Email", "cf_sql_varchar")
                                .execute()
@@ -50,24 +57,24 @@ Die Query wird immer gleich aufgerufen. Die Subkomponenten bauen dann die Query 
         interfaces
             QueryBuilder.cfc
         
-        QueryBuilder
-            QueryInitializer.cfc
-            
-            Postgres9               (Databasetype)
-                com
-                    IcedReaper
-                        blog    - Implements API.interfaces.QueryBuilder
-                    Nephthys
-                        user    - Implements API.interfaces.QueryBuilder
-                        ...
-            Oracle 11g              (Databasetype)
-                com
-                    IcedReaper
-                        blog    - Implements API.interfaces.QueryBuilder
-                    Nephthys
-                        user    - Implements API.interfaces.QueryBuilder
-                        ...
+        modules
+            com
+                IcedReaper
+                    blog
+                        QueryBuilder    - Implements API.interfaces.QueryBuilder
+                    ...
+                Nephthys
+                    user
+                        QueryBuilder    - Implements API.interfaces.QueryBuilder
+                    ...
+                ...
+        
+        tools
+            com
+                Nepthyhs
+                    QueryBuilder
+                        QueryInitializer.cfc
 
 # Offene Fragen
-    * INNER JOINS
-    *
+    - CUD Queries
+    - Innerer Aufbau
