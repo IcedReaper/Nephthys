@@ -15,7 +15,8 @@ component interface="ADMIN.interfaces.connector" {
                                          .getResult();
         
         for(var i = 1; i <= installedModules.len(); i++) {
-            if(! installedModules[i].getActiveStatus()) {
+            var moduleConnector = createObject("component", "ADMIN.modules." & installedModules[i].getModuleName() & ".connector").init();
+            if(! installedModules[i].getActiveStatus() || ! moduleConnector.checkPermission(request.user)) {
                 installedModules.deleteAt(i);
                 i--;
             }

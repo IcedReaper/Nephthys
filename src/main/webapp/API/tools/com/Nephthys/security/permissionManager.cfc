@@ -201,8 +201,9 @@ component interface="APi.interface.permissionManager" {
     public boolean function hasPermission(required numeric userId, required string moduleName, required string roleName) {
         if(arguments.userId     == 0  || arguments.userId     == null ||
            arguments.moduleName == "" || arguments.moduleName == null ||
-           arguments.roleName   == "" || arguments.roleName   == null)
+           arguments.roleName   == "" || arguments.roleName   == null) {
             return false;
+        }
         
         return new Query().setSQL("    SELECT p.permissionId
                                          FROM nephthys_permission p
