@@ -62,6 +62,7 @@
         4. Mehrsprachigkeit des Contents
         5. Seitenhierarchie
         6. Möglichkeit für unterschiedlichen Content bei Übersicht / Detailansicht ?
+        7. Autospeichern (Setzt Versionierung voraus)
     3. Thememanagement
         1. Themeinstallation per git repository
             * Check ob alle Module in dem Theme vorhanden sind. Sonst Warnung
@@ -83,6 +84,7 @@
     1. Gallery
         1. Weitere Möglichkeiten
             * Suche
+            * Auslesen der EXIF Daten zum Initialen setzen der Bildinformationen
             * Kommentarmöglichkeit
             * teilen einer Gallerie oder eines Bilder per Soziale Medien
                 * Per Option ein oder ausschaltbar (jeweils)
@@ -208,3 +210,16 @@
     11. Berechtigungen (Admin, Editor, User) in Module einbauen
     12. Alle Statistiken in einer Tabelle zusammenfassen
     13. CreateObject gegen import und new ersetzen, außer bei den dynamischen
+    14. Move Module settings to server settings
+
+
+
+
+
+
+NULL checks
+
+return type date => return null
+set array == null
+
+method caching of object
