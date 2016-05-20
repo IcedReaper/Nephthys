@@ -159,7 +159,7 @@ component {
         return variables.pageStatusId;
     }
     public boolean function isOnline() {
-        return variables.pageStatus.getOfflineStatus();
+        return ! variables.pageStatus.getOfflineStatus();
     }
     public boolean function isOffline() {
         return variables.pageStatus.getOfflineStatus();

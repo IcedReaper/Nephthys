@@ -73,12 +73,26 @@ body {
             color: $highlight-color;
         }
     }
-
+    
+    .font-light {
+        color: #FFFFFF;
+        
+    }
+    
+    a.btn-link.font-light:hover,
+    a.btn-link.font-light:active {
+        color: #FFFFFF;
+    }
+    
     .card {
         .card-img-top {
             min-width: 100%;
             max-width: 100%;
             width: 100%;
+        }
+        
+        .card-header {
+            color: $highlight-font-color;
         }
     }
     
@@ -93,6 +107,16 @@ body {
             font-size: 1rem;
         }
     }
+    
+    .overlay-lower-right {
+        position: absolute;
+        font-size: 90% !important;
+        bottom: -8px;
+        right: -6px;
+        left: auto;
+    }
+    
+    
 
     .container,
     .container-fluid {

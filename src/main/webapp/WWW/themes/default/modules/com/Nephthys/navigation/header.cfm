@@ -15,34 +15,8 @@
         </ul>
         
         <cfif application.system.settings.getValueOfKey("wwwLoginAvailable")>
-            <cfif request.user.getUserId() EQ 0>
-                <div class="btn-group pull-right m-l">
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Login
-                    </button>
-                    <div class="dropdown-menu p-r p-l p-b">
-                        <form action="?" method="POST" class="form-inline" auto-complete="off">
-                            <fieldset class="form-group">
-                                <label for="username">Username</label>
-                                <input type="text" name="Username" id="username" class="form-control">
-                            </fieldset>
-                            <fieldset class="form-group">
-                                <label for="password">Passwort</label>
-                                <input type="password" name="Password" id="password" class="form-control">
-                            </fieldset>
-                            <button type="submit" class="btn btn-success m-t"><i class="fa fa-sign-in"></i> Einloggen</button>
-                        </form>
-                    </div>
-                </div>
-            <cfelse>
-                <div class="btn-group pull-right m-l">
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        #request.user.getUsername()#
-                    </button>
-                    <div class="dropdown-menu p-r p-l p-b">
-                        <a href="?logout" class="btn btn-secondary"><i class="fa fa-sign-out"></i> Ausloggen</a>
-                    </div>
-                </div>
+            <cfif application.system.settings.getValueOfKey("userModule") NEQ null>
+                #createObject("WWW.modules." & application.system.settings.getValueOfKey("userModule") & ".connector").init().renderUserMenu()#
             </cfif>
         </cfif>
         
