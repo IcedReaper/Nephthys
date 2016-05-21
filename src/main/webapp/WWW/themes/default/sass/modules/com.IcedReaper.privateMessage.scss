@@ -1,0 +1,19 @@
+.com-IcedReaper-privateMessage {
+    .card-footer {
+        background-color: none;
+    }
+    
+    .myMessage {
+        [class^="card-"] {
+            background-color: rgba($highlight-color, 0.2);
+            color: $body-color;
+        }
+    }
+    
+    .response {
+        [class^="card-"] {
+            background-color: rgba($body-color, 0.95);
+            color: $highlight-color;
+        }
+    }
+}

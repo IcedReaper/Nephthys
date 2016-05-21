@@ -123,6 +123,21 @@ component {
     }
     
     
+    public boolean function isParticipant(required user user) {
+        if(isNull(variables.participants)) {
+            loadParticipants();
+        }
+        
+        for(var i = 1; i <= variables.participants.len(); ++i) {
+            if(variables.participants[i].getUserId() == arguments.user.getUserId()) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    
     public conversation function save() {
         if(variables.conversationId == 0 || variables.conversationId == null) {
             variables.conversationId = new Query().setSQL("INSERT INTO IcedReaper_privateMessage_conversation
