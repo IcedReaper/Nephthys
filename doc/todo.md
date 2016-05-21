@@ -169,10 +169,6 @@
         * Private Chats/Channel
     
     14. Private Nachrichten
-        (ggf ins Usermodul implementieren)
-        * Ein oder mehrere Empfänger
-        * Betreff
-        * Nachricht
         * Anzeige neuer Nachrichten im Menüicon (Infos per Websockets am besten)
     
     15. Admintaskliste (Aufgabenverwaltung)
@@ -211,7 +207,7 @@
     12. Alle Statistiken in einer Tabelle zusammenfassen
     13. CreateObject gegen import und new ersetzen, außer bei den dynamischen
     14. Move Module settings to server settings
-
+    15. Controller zum Erstellen von Links (z.B. User) erstellen
 
 
 
