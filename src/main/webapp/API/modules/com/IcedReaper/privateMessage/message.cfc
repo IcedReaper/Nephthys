@@ -77,7 +77,7 @@ component {
     }
     
     public conversation function getConversation() {
-        if(variables.conversation == null) {
+        if(isNull(variables.conversation)) {
             variables.conversation = new conversation(variables.conversationId);
         }
         
@@ -89,19 +89,90 @@ component {
     }
     
     public boolean function isRead(required user user) {
-        // TODO
+        for(var i = 1; i <= variables.read.len(); ++i) {
+            if(variables.read[i].read && variables.read[i].user.getUserId() == arguments.user.getUserId()) {
+                return true;
+            }
+        }
+        
         return false;
+    }
+    
+    public any function getReadDate(required user user) {
+        for(var i = 1; i <= variables.read.len(); ++i) {
+            if(variables.read[i].read && variables.read[i].user.getUserId() == arguments.user.getUserId()) {
+                return variables.read[i].readDate;
+            }
+        }
+        
+        return null;
     }
     
     public boolean function isReadByAll() {
-        // TODO
-        return false;
+        var readByAll = true;
+        
+        for(participant in getConversation().getParticipants()) {
+            if(! isRead(participant)) {
+                readByAll = false;
+                break;
+            }
+        }
+        
+        return readByAll;
     }
     
     public boolean function isReadByOther(required user user) {
-        // TODO
+        var readByOther = false;
+        
+        for(participant in getConversation().getParticipants()) {
+            if(participant.getUserId() != arguments.user.getUserId()) {
+                if(isRead(participant)) {
+                    readByOther = true;
+                    break;
+                }
+            }
+        }
+        
+        return readByOther;
+    }
+    
+    public array function getOtherReadData(required user user) {
+        var tmpRead = variables.read;
+        
+        for(var i = 1; i <= tmpRead.len(); ++i) {
+            if(tmpRead[i].user.getUserId() == arguments.user.getUserId()) {
+                tmpRead.deleteAt(i);
+                break;
+            }
+        }
+        
+        return tmpRead;
+    }
+    
+    public boolean function getReadData(required user user) {
+        for(var i = 1; i <= variables.read.len(); ++i) {
+            if(variables.read[i].read && variables.read[i].user.getUserId() == arguments.user.getUserId()) {
+                return duplicate(variables.read[i]);
+            }
+        }
+        
         return false;
     }
+    
+    public array function getAllReadData() {
+        return variables.read;
+    }
+    
+    public struct function getLastRead(required user user) {
+        for(var i = 1; i <= variables.read.len(); ++i) {
+            if(variables.read[i].user.getUserId() != arguments.user.getUserId()) {
+                return duplicate(variables.read[i]);
+            }
+        }
+        
+        return null;
+    }
+    
     
     public message function send() {
         if(variables.messageId == 0 || variables.messageId == null) {
@@ -143,7 +214,20 @@ component {
     }
     public message function read(required user user) {
         if(variables.messageId != 0 && variables.messageId != null) {
-            // TODO
+            if(! isRead(arguments.user)) {
+                new Query().setSQL("INSERT INTO IcedReaper_privateMessage_read
+                                                (
+                                                    messageId,
+                                                    userId
+                                                )
+                                         VALUES (
+                                                    :messageId,
+                                                    :userId
+                                                )")
+                           .addParam(name = "messageId", value = variables.messageId,        cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "userId",    value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                           .execute();
+            }
         }
         
         return this;
@@ -164,7 +248,7 @@ component {
                 variables.userId         = qMessage.userId[1];
                 variables.sendDate       = qMessage.sendDate[1];
                 variables.deleteDate     = qMessage.deleteDate[1];
-                variables.message           = qMessage.message[1];
+                variables.message        = qMessage.message[1];
             }
             else {
                 throw(type = "nephthys.notFound.general", message = "Message could not be found");
@@ -180,6 +264,41 @@ component {
         
         variables.user = new user(variables.userId);
         variables.conversation = null;
+        
+        loadRead();
     }
-    // read has to be changed per user...
+    
+    private void function loadRead() {
+        variables.read = [];
+        
+        var readInfo = new Query().setSQL("  SELECT readDate, userId
+                                               FROM IcedReaper_privateMessage_read
+                                              WHERE messageId = :messageId
+                                           ORDER BY readDate DESC")
+                                  .addParam(name = "messageId", value = variables.messageId, cfsqltype = "cf_sql_numeric")
+                                  .execute()
+                                  .getResult();
+        
+        for(var i = 1; i <= readInfo.getRecordCount(); ++i) {
+            variables.read[i] = {
+                read     = true,
+                user     = new user(readInfo.userId[i]),
+                readDate = readInfo.readDate[i]
+            };
+        }
+        
+        for(participant in getConversation().getParticipants()) {
+            for(i = 1; i <= variables.read.len(); ++i) {
+                if(variables.read[i].user.getUserId() == participant.getUserId()) {
+                    variables.read.append({
+                        read     = false,
+                        user     = participant,
+                        readDate = null
+                    });
+                    
+                    break;
+                }
+            }
+        }
+    }
 }

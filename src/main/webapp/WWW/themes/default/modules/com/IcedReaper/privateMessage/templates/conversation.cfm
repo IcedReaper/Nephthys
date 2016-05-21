@@ -63,6 +63,11 @@
                             Gesendet von <a href="/user/#messages[messageIndex].getUser().getUserName()#">#messages[messageIndex].getUser().getUserName()#</a>
                             am #dateFormat(messages[messageIndex].getSendDate(), "DD.MMM YYYY")#
                             um #timeFormat(messages[messageIndex].getSendDate(), "HH:MM")#
+                            
+                            <cfif messages[messageIndex].isReadByOther(request.user)>
+                                <i class="fa fa-check <cfif messages[messageIndex].isReadByAll()>text-success<cfelse>text-info</cfif>"
+                                   title="Nachricht wurde <cfif messages[messageIndex].isReadByAll()>von allen </cfif>gelesen, zuletzt von #messages[messageIndex].getLastRead(request.user).user.getUserName()# am #dateFormat(messages[messageIndex].getLastRead(request.user).readDate, 'DD.MMM YYYY')# um #timeFormat(messages[messageIndex].getLastRead(request.user).readDate, 'HH:MM:SS')#"></i>
+                            </cfif>
                         </div>
                     </div>
                 </div>

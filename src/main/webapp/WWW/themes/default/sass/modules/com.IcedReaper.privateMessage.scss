@@ -10,22 +10,26 @@
         }
         
         &.deleted {
-            opacity: 0.4;
+            display: none;
         }
     }
     
     .response {
-        &.unread {
+        &.read {
             [class^="card-"] {
                 background-color: rgba($body-color, 0.95);
                 color: $highlight-color;
             }
         }
         
-        &.read {
+        &.unread {
             [class^="card-"] {
-                background-color: rgba($body-color, 0.2);
-                color: $highlight-color;
+                background-color: rgba($brand-success, 0.5); // green
+                color: $body-color;
+                
+                a, a:hover, a:active, a:visited {
+                    color: darken($body-color, 20%);
+                }
             }
         }
     }

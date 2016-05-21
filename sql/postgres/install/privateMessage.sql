@@ -70,7 +70,7 @@ ALTER SEQUENCE seq_IcedReaper_privateMessage_messageId OWNER TO nephthys_admin;
 
 CREATE TABLE public.IcedReaper_privateMessage_message
 (
-  messageId  integer NOT NULL DEFAULT nextval('seq_IcedReaper_privateMessage_messageId'::regclass),
+  messageId      integer NOT NULL DEFAULT nextval('seq_IcedReaper_privateMessage_messageId'::regclass),
   conversationId integer NOT NULL,
   userId         integer NOT NULL,
   sendDate       timestamp with time zone NOT NULL DEFAULT now(),
@@ -90,3 +90,38 @@ CREATE INDEX FKI_IcedReaper_privateMessage_message_userId         ON IcedReaper_
 
 GRANT SELECT, UPDATE ON SEQUENCE seq_IcedReaper_privateMessage_messageId TO nephthys_user;
 GRANT SELECT, INSERT, UPDATE ON TABLE IcedReaper_privateMessage_message TO nephthys_user;
+
+
+
+CREATE SEQUENCE seq_IcedReaper_privateMessage_readId
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+ALTER SEQUENCE seq_IcedReaper_privateMessage_readId OWNER TO nephthys_admin;
+
+CREATE TABLE public.IcedReaper_privateMessage_read
+(
+  readId    integer NOT NULL DEFAULT nextval('seq_IcedReaper_privateMessage_readId'::regclass),
+  messageId integer NOT NULL,
+  userId    integer NOT NULL,
+  readDate  timestamp with time zone NOT NULL DEFAULT now(),
+  
+  CONSTRAINT PK_IcedReaper_privateMessage_readId PRIMARY KEY (readId),
+  CONSTRAINT FK_icedreaper_privateMessage_read_messageId FOREIGN KEY (messageId) REFERENCES IcedReaper_privateMessage_message (messageId) ON UPDATE NO ACTION ON DELETE CASCADE,
+  CONSTRAINT FK_IcedReaper_privateMessage_read_userId    FOREIGN KEY (userId)    REFERENCES nephthys_user (userid) ON UPDATE NO ACTION ON DELETE CASCADE,
+  
+  CONSTRAINT UK_IcedReaper_privateMessage_read_entry UNIQUE (messageId, userId)
+)
+WITH (
+  OIDS=FALSE
+);
+
+CREATE INDEX FKI_IcedReaper_privateMessage_read_messageId ON IcedReaper_privateMessage_read(messageId);
+CREATE INDEX FKI_IcedReaper_privateMessage_read_userId    ON IcedReaper_privateMessage_read(userId);
+
+CREATE INDEX IDX_IcedReaper_privateMessage_read_entry ON IcedReaper_privateMessage_read(messageId, userId);
+
+GRANT SELECT, UPDATE ON SEQUENCE seq_IcedReaper_privateMessage_readId TO nephthys_user;
+GRANT SELECT, INSERT ON TABLE IcedReaper_privateMessage_read TO nephthys_user;

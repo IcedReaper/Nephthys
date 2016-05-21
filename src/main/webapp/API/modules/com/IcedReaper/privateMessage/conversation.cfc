@@ -52,7 +52,7 @@ component {
     
     public function removeParticipant(required user user) {
         if(arguments.user.arguments.user.isActive()) {
-            if(variables.participants == null) {
+            if(isNull(variables.participants)) {
                 loadParticipants();
             }
             
@@ -82,7 +82,7 @@ component {
     }
     
     public conversation function addMessage(required message message) {
-        if(variables.messages == null) {
+        if(isNull(variables.messages)) {
             loadMessages();
         }
         
@@ -98,7 +98,7 @@ component {
         return variables.initiator;
     }
     public array function getParticipants() {
-        if(variables.participants == null) {
+        if(isNull(variables.participants)) {
             loadParticipants();
         }
         
