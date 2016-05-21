@@ -50,6 +50,9 @@ component {
     }
     
     
+    public numeric function getMessageId() {
+        return variables.messageId;
+    }
     public numeric function getConversationId() {
         return variables.conversationId;
     }
@@ -65,9 +68,6 @@ component {
     public boolean function getRead() {
         return variables.read;
     }
-    /*public any function getReadDate() {
-        return variables.readDate;
-    }*/
     public string function getMessage() {
         return variables.message;
     }
@@ -88,6 +88,20 @@ component {
         return variables.deleteDate != null;
     }
     
+    public boolean function isRead(required user user) {
+        // TODO
+        return false;
+    }
+    
+    public boolean function isReadByAll() {
+        // TODO
+        return false;
+    }
+    
+    public boolean function isReadByOther(required user user) {
+        // TODO
+        return false;
+    }
     
     public message function send() {
         if(variables.messageId == 0 || variables.messageId == null) {
@@ -115,14 +129,25 @@ component {
     }
     public message function delete() {
         if(variables.messageId != 0 && variables.messageId != null) {
-            // TODO
+            new Query().setSQL("UPDATE IcedReaper_privateMessage_message
+                                   SET deleteDate = now()
+                                 WHERE messageId = :messageId")
+                       .addParam(name = "messageId", value = variables.messageId, cfsqltype = "cf_sql_numeric")
+                       .execute();
         }
+        else {
+            throw(type = "nephthys.application.notAllowed", message = "Cannot mark a non existing message as deleted");
+        }
+        
+        return this;
     }
-    /*public message function read() {
+    public message function read(required user user) {
         if(variables.messageId != 0 && variables.messageId != null) {
             // TODO
         }
-    }*/
+        
+        return this;
+    }
     
     
     private void function load() {
@@ -139,8 +164,6 @@ component {
                 variables.userId         = qMessage.userId[1];
                 variables.sendDate       = qMessage.sendDate[1];
                 variables.deleteDate     = qMessage.deleteDate[1];
-                /*variables.read           = qMessage.read[1];
-                variables.readDate       = qMessage.readDate[1];*/
                 variables.message           = qMessage.message[1];
             }
             else {
@@ -152,8 +175,6 @@ component {
             variables.userId         = null;
             variables.sendDate       = null;
             variables.deleteDate     = null;
-            /*variables.read           = false;
-            variables.readDate       = null;*/
             variables.message           = "";
         }
         

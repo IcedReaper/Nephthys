@@ -2,6 +2,7 @@
 <div class="com-IcedReaper-privateMessage">
     <div class="row">
         <div class="col-sm-12">
+            <a href="overview" class="btn btn-primary pull-right"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
             <h3>
                 Unterhaltung zwischen
                 <span class="small">
@@ -18,25 +19,7 @@
             </h3>
         </div>
     </div>
-    <cfset messages = attributes.conversation.getMessages()>
-    <cfloop from="1" to="#messages.len()#" index="messageIndex">
-        <div class="row">
-            <div class="col-sm-8<cfif messages[messageIndex].getUser().getUserId() EQ request.user.getUserId()> col-sm-offset-4 myMessage<cfelse> response</cfif>">
-                <div class="card m-t">
-                    <div class="card-block">
-                        <p>#messages[messageIndex].getMessage().replace(chr(10), "<br>", "ALL")#</p>
-                    </div>
-                    <div class="card-footer text-muted">
-                        Gesendet von <a href="/user/#messages[messageIndex].getUser().getUserName()#">#messages[messageIndex].getUser().getUserName()#</a>
-                        am #dateFormat(messages[messageIndex].getSendDate(), "DD.MMM YYYY")#
-                        um #timeFormat(messages[messageIndex].getSendDate(), "HH:MM")#
-                    </div>
-                </div>
-            </div>
-        </div>
-    </cfloop>
-
-    <a name="reply"></a>
+    
     <form method="POST" autocomplete="off" class="m-t" action="/user/#request.user.getUserName()#/privateMessages/conversation/#attributes.conversation.getConversationId()#">
         <div class="row">
             <div class="col-sm-12">
@@ -50,5 +33,41 @@
         
         <button type="submit" class="btn btn-success"><i class="fa fa-comment-o"></i> Antwort abschicken</button>
     </form>
+    
+    <cfset messages = attributes.conversation.getMessages()>
+    <cfloop from="1" to="#messages.len()#" index="messageIndex">
+        <cfif messages[messageIndex].isDeleted() EQ false OR messages[messageIndex].getUser().getUserId() EQ request.user.getUserId()>
+            <div class="row">
+                <div class="col-sm-8
+                            <cfif messages[messageIndex].getUser().getUserId() EQ request.user.getUserId()>
+                                col-sm-offset-4 myMessage
+                                <cfif messages[messageIndex].isDeleted()>
+                                    deleted
+                                </cfif>
+                            <cfelse>
+                                response
+                                <cfif messages[messageIndex].isRead(request.user)>
+                                    read
+                                <cfelse>
+                                    unread
+                                </cfif>
+                            </cfif>">
+                    <div class="card m-t">
+                        <div class="card-block">
+                            <cfif messages[messageIndex].getUser().getUserId() EQ request.user.getUserId() AND messages[messageIndex].isReadByOther(request.user) EQ false AND messages[messageIndex].isDeleted() EQ false>
+                                <a href="/user/#request.user.getUserName()#/privateMessages/conversation/#attributes.conversation.getConversationId()#?delete&messageId=#messages[messageIndex].getMessageId()#" class="close" title="Nachricht löschen">&times;</a>
+                            </cfif>
+                            <p>#messages[messageIndex].getMessage().replace(chr(10), "<br>", "ALL")#</p>
+                        </div>
+                        <div class="card-footer text-muted">
+                            Gesendet von <a href="/user/#messages[messageIndex].getUser().getUserName()#">#messages[messageIndex].getUser().getUserName()#</a>
+                            am #dateFormat(messages[messageIndex].getSendDate(), "DD.MMM YYYY")#
+                            um #timeFormat(messages[messageIndex].getSendDate(), "HH:MM")#
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </cfif>
+    </cfloop>
 </div>
 </cfoutput>

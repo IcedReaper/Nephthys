@@ -119,7 +119,12 @@ component {
             loadMessages();
         }
         
-        return variables.messages[1];
+        for(var i = 1; i <= variables.messages.len(); ++i) {
+            if(! variables.messages[i].isDeleted()) {
+                return variables.messages[i];
+            }
+        }
+        return null;
     }
     
     

@@ -74,9 +74,25 @@ component implements="WWW.interfaces.connector" {
                             }
                         }
                         
-                        if(arguments.options.otherParameter.len() == 2) {
-                            // TODO: save readingä
+                        if(url.keyExists("delete") && url.keyExists("messageId")) {
+                            var message = new message(url.messageId);
                             
+                            if(message.getUser().getUserId() == request.user.getUserId()) {
+                                if(! message.isReadByOther(request.user)) {
+                                    message.delete();
+                                    
+                                    location(addtoken = false, statuscode = "302", url = "/user/" & request.user.getUserName() & "/privateMessages/conversation/" & message.getConversation().getConversationId());
+                                }
+                                else {
+                                    throw(type = "nephthys.application.notAllowed", message = "The reply couldn't be deleted. It was already read by someone");
+                                }
+                            }
+                            else {
+                                throw(type = "nephthys.application.notAllowed", message = "You have not written the reply, so you cannot delete it!");
+                            }
+                        }
+                        
+                        if(arguments.options.otherParameter.len() == 2) {
                             if(isNumeric(arguments.options.otherParameter[2])) {
                                 var conversation = new filter().setParticipantId(request.user.getUserId())
                                                                .setConversationId(arguments.options.otherParameter[2])
@@ -87,6 +103,16 @@ component implements="WWW.interfaces.connector" {
                                     saveContent variable="renderedContent" {
                                         module template     = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/privateMessage/templates/conversation.cfm"
                                                conversation = conversation[1];
+                                    }
+                                    
+                                    for(var message in conversation[1].getMessages()) {
+                                        if(! message.isRead(request.user)) {
+                                            message.read(request.user);
+                                        }
+                                        else {
+                                            // The previous messages were shown once so we don't have to check further and mark as read.
+                                            break;
+                                        }
                                     }
                                 }
                                 else {
