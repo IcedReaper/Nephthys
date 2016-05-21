@@ -2,7 +2,7 @@
 <div class="com-IcedReaper-privateMessage">
     <div class="row">
         <div class="col-sm-12">
-            <a href="overview" class="btn btn-primary pull-right"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
+            <a href="overview" class="btn btn-primary pull-right" href="/user/#request.user.getUserName()#/privateMessages"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
             <h3>
                 Unterhaltung zwischen
                 <span class="small">

@@ -26,7 +26,12 @@
         <div class="dropdown-menu p-r p-l p-b">
             <a href="/user/#request.user.getUsername()#" class="btn btn-secondary btn-link btn-sm font-light"><i class="fa fa-cog"></i> Mein Profil</a>
             <cfif application.system.settings.getValueOfKey("privateMessageModule") NEQ null>
-                <a href="/user/#request.user.getUsername()#/privateMessages" class="btn btn-secondary btn-link btn-sm font-light"><i class="fa fa-commenting-o"></i> Private Nachrichten</a>
+                <a href="/user/#request.user.getUsername()#/privateMessages" class="btn btn-secondary btn-link btn-sm font-light">
+                    <i class="fa fa-commenting-o"></i> Private Nachrichten
+                    <cfif attributes.privateMessages.len() GT 0>
+                        <span class="label label-danger" title="Du hast #attributes.privateMessages.len()# neue Private Nachrichten">#attributes.privateMessages.len()#</span>
+                    </cfif>
+                </a>
             </cfif>
             <div class="dropdown-divider"></div>
             <a href="?logout" class="btn btn-secondary btn-link btn-sm font-light"><i class="fa fa-sign-out"></i> Ausloggen</a>

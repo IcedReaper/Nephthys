@@ -121,8 +121,21 @@ component implements="WWW.interfaces.connector" {
     public string function renderUserMenu() {
         var renderedContent = "";
         
+        var privateMessagesModule = application.system.settings.getValueOfKey("privateMessageModule");
+        
+        var privateMessages = [];
+        if(privateMessagesModule != null) {
+            privateMessages = createObject("API.modules." & privateMessagesModule & ".filter")
+                                  .init()
+                                  .setParticipantId(request.user.getUserId())
+                                  .setUnreadOnly(true)
+                                  .execute()
+                                  .getResult();
+        }
+        
         saveContent variable="renderedContent" {
-            module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/user/templates/userMenu.cfm";
+            module template        = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/user/templates/userMenu.cfm"
+                   privateMessages = privateMessages;
         }
         
         return renderedContent;

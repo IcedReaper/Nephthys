@@ -3,7 +3,7 @@ component implements="API.interfaces.filter" {
         variables.participantId = null;
         
         variables.conversationId = null;
-        variables.messageID      = null;
+        variables.unreadOnly     = false;
         
         variables.offset        = 0;
         variables.count         = 0;
@@ -28,8 +28,8 @@ component implements="API.interfaces.filter" {
         return this;
     }
     
-    public filter function setMessageId(required numeric messageId) {
-        variables.messageId = arguments.messageId;
+    public filter function setUnreadOnly(required boolean unread) {
+        variables.unreadOnly = arguments.unread;
         
         return this;
     }
@@ -85,42 +85,55 @@ component implements="API.interfaces.filter" {
         
         var qryFilter = new Query();
         
-        var sortColumn = "";
+        var sql = "";
         
-        switch(lCase(variables.sortBy)) {
-            case 'conversationstartdate': {
-                sortColumn = "c.startDate";
-                break;
+        if(! variables.unreadOnly) {
+            var sortColumn = "";
+            
+            switch(lCase(variables.sortBy)) {
+                case 'conversationstartdate': {
+                    sortColumn = "c.startDate";
+                    break;
+                }
+                default: {
+                    sortColumn = "MAX(m.sendDate)";
+                }
             }
-            default: {
-                sortColumn = "MAX(m.sendDate)";
-            }
-        }
-        
-        var sql = "    SELECT c.conversationId
+            
+            sql = "    SELECT c.conversationId
                          FROM IcedReaper_privateMessage_conversation c
-                   INNER JOIN IcedReaper_privateMessage_message m ON c.conversationId = m.conversationId 
+                   INNER JOIN IcedReaper_privateMessage_message m ON c.conversationId = m.conversationId
                    INNER JOIN (SELECT participant.conversationId
                                  FROM IcedReaper_privateMessage_participant participant
                                 WHERE participant.userId = :participantId) p ON c.conversationId = p.conversationId";
-        var where = "";
-        var orderBy = " GROUP BY c.conversationId
-                        ORDER BY " & sortColumn & " " & variables.sortDirection;
-        
-        qryFilter.addParam(name = "participantId", value = variables.participantId, cfsqltype = "cf_sql_numeric");
-        
-        if(variables.conversationId != 0 && variables.conversationId != null) {
-            where &= ((where != "") ? " AND " : " WHERE ") & " c.conversationId = :conversationId ";
-            qryFilter.addParam(name = "conversationId", value = variables.conversationId, cfsqltype = "cf_sql_numeric");
+            var where = "";
+            var orderBy = " GROUP BY c.conversationId
+                            ORDER BY " & sortColumn & " " & variables.sortDirection;
+            
+            qryFilter.addParam(name = "participantId", value = variables.participantId, cfsqltype = "cf_sql_numeric");
+            
+            if(variables.conversationId != 0 && variables.conversationId != null) {
+                where &= (where != "" ? " WHERE " : " AND ") & " c.conversationId = :conversationId ";
+                qryFilter.addParam(name = "conversationId", value = variables.conversationId, cfsqltype = "cf_sql_numeric");
+            }
+            
+            sql &= where & orderBy;
         }
-        
-        if(variables.messageId != 0 && variables.messageId != null) {
-            where &= ((where != "") ? " AND " : " WHERE ") & " m.messageId = :messageId ";
-            qryFilter.addParam(name = "messageId", value = variables.messageId, cfsqltype = "cf_sql_numeric");
+        else {
+            sql = "SELECT m.messageId
+                     FROM IcedReaper_privateMessage_message m
+                    WHERE m.messageId NOT IN (SELECT r.messageId
+                                                FROM IcedReaper_privateMessage_read r
+                                               WHERE r.userId = :participantId)
+                      AND m.conversationId IN (    SELECT c.conversationId
+                                                     FROM IcedReaper_privateMessage_conversation c
+                                               INNER JOIN (SELECT participant.conversationId
+                                                             FROM IcedReaper_privateMessage_participant participant
+                                                            WHERE participant.userId = :participantId) p ON c.conversationId = p.conversationId)
+                   ORDER BY m.sendDate DESC";
+            
+            qryFilter.addParam(name = "participantId", value = variables.participantId, cfsqltype = "cf_sql_numeric");
         }
-        
-        sql &= where & orderBy;
-        
         variables.qRes = qryFilter.setSQL(sql)
                                   .execute()
                                   .getResult();
@@ -141,7 +154,12 @@ component implements="API.interfaces.filter" {
         }
         
         for(var i = variables.offset + 1; i <= to; i++) {
-            variables.results.append(new conversation(variables.qRes.conversationId[i]));
+            if(! variables.unreadOnly) {
+                variables.results.append(new conversation(variables.qRes.conversationId[i]));
+            }
+            else {
+                variables.results.append(new message(variables.qRes.messageId[i]));
+            }
         }
         return variables.results;
     }
