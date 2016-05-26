@@ -1,7 +1,5 @@
 component {
-    import "API.modules.com.Nephthys.user.*";
-    
-    public pageRequest function init(required string link, required string version = "actual") {
+    public pageRequest function init(required string link) {
         variables.resources = {
             "css" = [],
             "js"  = []
@@ -16,7 +14,6 @@ component {
             "footer" = ""
         };
         
-        variables.version = arguments.version;
         loadPage(arguments.link);
         
         return this;
@@ -146,75 +143,74 @@ component {
     public numeric function getPageId() {
         return variables.page.getPageId();
     }
-    public numeric function getPageVersionId() {
-        return variables.pageVersion.getPageVersionId();
-    }
     public numeric function getParentId() {
-        return variables.pageVersion.getParentId();
+        return variables.page.getParentId();
     }
     public string function getLinkText() {
-        return variables.pageVersion.getLinkText();
+        return variables.page.getLinkText();
     }
     public string function getLink() {
-        return variables.pageVersion.getLink();
+        return variables.page.getLink();
     }
     public string function getTitle() {
-        return variables.title != "" ? variables.title & " - " & variables.pageVersion.getTitle() : variables.pageVersion.getTitle();
+        return variables.title != "" ? variables.title & " - " & variables.page.getTitle() : variables.page.getTitle();
     }
     public string function getDescription() {
-        return variables.description != "" ? variables.description : variables.pageVersion.getDescription();
+        return variables.description != "" ? variables.description : variables.page.getDescription();
     }
     public array function getContent() {
-        return variables.pageVersion.getContent();
+        return variables.page.getContent();
     }
     public numeric function getSortOrder() {
-        return variables.pageVersion.getSortOrder();
+        return variables.page.getSortOrder();
     }
     public boolean function getUseDynamicSuffixes() {
-        return variables.pageVersion.getUseDynamicSuffixes();
+        return variables.page.getUseDynamicSuffixes();
     }
     public numeric function getCreatorUserId() {
-        return variables.pageVersion.getCreator().getUserId();
+        return variables.page.getCreatorUserId();
     }
     public date function getCreationDate() {
-        return variables.pageVersion.getCreationDate();
+        return variables.page.getCreationDate();
     }
     public numeric function getLastEditorUserId() {
-        return variables.pageVersion.getLastEditor().getUserId();
+        return variables.page.getLastEditorUserId();
     }
     public date function getLastEditDate() {
-        return variables.pageVersion.getLastEditDate();
+        return variables.page.getLastEditDate();
+    }
+    public numeric function getActiveStatus() {
+        return variables.page.getActiveStatus();
     }
     public page function getParentPage() {
-        return variables.pageVersion.getParentPage();
+        return variables.page.getParentPage();
     }
-    /*public array function getChildPages() {
-        return variables.page.getChildPages();
-    }*/
+    public array function getChildPages() {
+        return page.getChildPages();
+    }
     public user function getCreator() {
-        return variables.pageVersion.getCreator();
+        return variables.page.getCreator();
     }
     public user function getLastEditor() {
-        return variables.pageVersion.getLastEditor();
+        return variables.page.getLastEditor();
     }
     public string function getRegion() {
-        return variables.pageVersion.getRegion();
+        return variables.page.getRegion();
     }
     public numeric function getPageStatusId() {
-        return variables.pageVersion.getPageStatusId();
+        return variables.page.getPageStatusId();
     }
     public boolean function isOnline() {
-        return variables.pageVersion.isOnline();
+        return variables.page.isOnline();
     }
     public boolean function isOffline() {
-        return ! variables.pageVersion.isOnline();
+        return variables.page.isOffline();
     }
-    /*public struct function getPageStatus() {
-        return variables.pageVersion.getPageStatus();
-    }*/
+    public struct function getPageStatus() {
+        return variables.page.getPageStatus();
+    }
     
     public pageRequest function saveToStatistics() {
-        // TODO: Move to separate statistics component
         new Query().setSQL("INSERT INTO nephthys_statistics
                                         (
                                             link,
@@ -224,8 +220,8 @@ component {
                                             :link,
                                             :referrer
                                         )")
-                   .addParam(name = "link",     value = getLink() & variables.parameter, cfsqltype = "cf_sql_varchar")
-                   .addParam(name = "referrer", value = cgi.REFERRER,                    cfsqltype = "cf_sql_varchar")
+                   .addParam(name = "link",     value = variables.page.getLink() & variables.parameter, cfsqltype = "cf_sql_varchar")
+                   .addParam(name = "referrer", value = cgi.REFERRER,                                   cfsqltype = "cf_sql_varchar")
                    .execute();
         
         return this;
@@ -248,7 +244,9 @@ component {
                                                          FROM nephthys_page p
                                                    INNER JOIN nephthys_pageVersion pv ON p.pageId = pv.pageId
                                                    INNER JOIN nephthys_pageStatus ps ON pv.pageStatusId = ps.pageStatusId
-                                                        WHERE ps.offline = :online) page")
+                                                        WHERE pv.active = :active
+                                                          AND ps.offline = :online
+                                                          AND ps.active  = :active) page")
                                   .addParam(name = "link",   value = arguments.link, cfsqltype = "cf_sql_varchar")
                                   .addParam(name = "active", value = 1,              cfsqltype = "cf_sql_bit")
                                   .addParam(name = "online", value = 0,              cfsqltype = "cf_sql_bit")
@@ -267,19 +265,8 @@ component {
                 variables.parameter = reReplaceNoCase(arguments.link, qGetPage.preparredLink[1], "");
             }
             
-            variables.page = new page(qGetPage.pageId[1]);
-            
-            if(variables.version == "actual") {
-                variables.pageVersion = variables.page.getActualPageVersion();
-            }
-            else {
-                if(variables.page.versionExists(variables.version)) {
-                    variables.pageVersion = variables.page.getPageVersion(variables.version);
-                }
-                else {
-                    throw(type = "nephthys.notFound.page", message = "The version of the page could not be found.", detail = variables.version);
-                }
-            }
+            // TODO: version handling
+            variables.page = new page(qGetPage.pageId[1], 'actual');
         }
         else {
             throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = arguments.link);

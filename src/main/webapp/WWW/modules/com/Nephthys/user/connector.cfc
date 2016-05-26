@@ -124,7 +124,7 @@ component implements="WWW.interfaces.connector" {
         var privateMessagesModule = application.system.settings.getValueOfKey("privateMessageModule");
         
         var privateMessages = [];
-        if(privateMessagesModule != null) {
+        if(privateMessagesModule != null && request.user.isActive()) {
             privateMessages = createObject("API.modules." & privateMessagesModule & ".filter")
                                   .init()
                                   .setParticipantId(request.user.getUserId())

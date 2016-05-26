@@ -1,5 +1,12 @@
 # TODO List
 
+Actual Task TODO - Reminder:
+~~~~~~~~~~~~~~~~~~
+- Check if actualVersion in page should be it's id or not...
+
+
+
+
 ## Allgemein
     1. Validierungen
         1. Mehr Validierungsregeln implementieren
@@ -41,7 +48,7 @@
 ## Website
     1. Codeoptimierung
     2. Userverwaltung ?
-        * User darf nur sich selber bearbeiten können => Keine Ajax-Request
+        * User darf nur sich selber bearbeiten können
     3. Was passiert, wenn eine View in einem Theme für ein Modul nicht vorhanden ist?
         * Check im Admin einbauen
             * Weitere Views (für neue Themes) nachinstallieren?
@@ -55,28 +62,28 @@
         2. Installation per git-repository
         3. Module-Modul überarbeiten: Neues Modul => Installation
     2. Seitenmanagement
-        1. Contentbearbeitung
+        1. Seitenhierarchie
+        2. Contentbearbeitung
             * Version fertig - noch sehr abstrakt
-        2. Seitenversionierung
-        3. Workflow - benötigt Versionierung
-        4. Mehrsprachigkeit des Contents
-        5. Seitenhierarchie
+        3. Seitenversionierung
+        4. Workflow - benötigt Versionierung
+        5. Mehrsprachigkeit des Contents
         6. Möglichkeit für unterschiedlichen Content bei Übersicht / Detailansicht ?
         7. Autospeichern (Setzt Versionierung voraus)
+        8. Vorschau
+            * Template in ADMIN, welches ein Template in WWW inkludiert, wo dann die richtigen Sachen angezeigt werden; dann halt nur auch schon nicht veröffentlichte Sachen.
     3. Thememanagement
         1. Themeinstallation per git repository
             * Check ob alle Module in dem Theme vorhanden sind. Sonst Warnung
     4. Modul-Theme-Management
         1. Was tun, wenn das Modul in einem Theme nicht vorhanden ist.
     5. DB Dump anbieten
-    6. Vorschau
-        * Template in ADMIN, welches ein Template in WWW inkludiert, wo dann die richtigen Sachen angezeigt werden; dann halt nur auch schon nicht veröffentlichte Sachen.
-    7. Errorlog - WORK ON HOLD
-    8. Implement "loading screen" into http interceptor
-    9. Sidebar auf Icons reduzieren
-    10. Assets weiter optimieren
-    11. Dashboard untermodule in andere Dateien verschieben ggf mehr übersicht schaffen
-    12. Overview pro User variabel gestaltbar machen
+    6. Errorlog - WORK ON HOLD
+    7. Implement "loading screen" into http interceptor
+    8. Sidebar auf Icons reduzieren
+    9. Assets weiter optimieren/reduzieren
+    10. Dashboard untermodule in andere Dateien verschieben ggf mehr übersicht schaffen
+    11. Dashboard pro User variabel gestaltbar machen
         * Anordnung
         * Module
 
@@ -169,7 +176,7 @@
         * Private Chats/Channel
     
     14. Private Nachrichten
-        * Anzeige neuer Nachrichten im Menüicon (Infos per Websockets am besten)
+        * Infos zu neuen Nachrichten per Websockets melden
     
     15. Admintaskliste (Aufgabenverwaltung)
          * private / globale tasks
@@ -208,8 +215,6 @@
     13. CreateObject gegen import und new ersetzen, außer bei den dynamischen
     14. Move Module settings to server settings
     15. Controller zum Erstellen von Links (z.B. User) erstellen
-
-
 
 
 

@@ -1,10 +1,12 @@
 <cfoutput>
+    <!--- TODO - Check if should be shown etc --->
     &copy; IcedReaper und das Nephthys Team 2014 - #year(now())#
     <div class="footerLinks">
+        <!--- TODO - Check if should be shown etc --->
         <a href="https://www.nephthys.com">Aktuelle Version: V#application.system.settings.getValueOfKey('nephthysVersion')#</a>
         <cfloop from="1" to="#attributes.sitemap.len()#" index="pageIndex">
-            <a href="#attributes.sitemap[pageIndex].getLink()#"
-               title="#attributes.sitemap[pageIndex].getTitle()#">#attributes.sitemap[pageIndex].getLinkText()#</a>
+            <a href="#attributes.sitemap[pageIndex].getActualPageVersion().getLink()#"
+               title="#attributes.sitemap[pageIndex].getActualPageVersion().getTitle()#">#attributes.sitemap[pageIndex].getActualPageVersion().getLinkText()#</a>
         </cfloop>
     </div>
     

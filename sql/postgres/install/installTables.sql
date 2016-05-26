@@ -6,9 +6,9 @@ CREATE SEQUENCE seq_nephthys_theme_id
   MAXVALUE 65535
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_theme_id OWNER TO nephthys_admin;
+
   
-CREATE TABLE public.nephthys_theme
+CREATE TABLE nephthys_theme
 (
   themeid numeric NOT NULL DEFAULT nextval('seq_nephthys_theme_id'::regclass), 
   name character varying NOT NULL, 
@@ -26,7 +26,7 @@ WITH (
 
 CREATE INDEX IDX_nephthys_theme_active ON nephthys_theme(active);
 
-ALTER TABLE nephthys_theme OWNER TO nephthys_admin;
+
 
 GRANT ALL    ON TABLE nephthys_theme TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_theme TO nephthys_user;
@@ -53,7 +53,7 @@ CREATE SEQUENCE seq_nephthys_user_id
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_user_id OWNER TO nephthys_admin;
+
 
 CREATE TABLE nephthys_user
 (
@@ -80,7 +80,7 @@ CREATE        INDEX IDX_nephthys_user_usernamePassword ON nephthys_user(username
 CREATE UNIQUE INDEX UK_nephthys_user_email             ON nephthys_user(lower(email));
 CREATE UNIQUE INDEX UK_nephthys_user_userName          ON nephthys_user(lower(username));
   
-ALTER TABLE nephthys_user OWNER TO nephthys_admin;
+
 
 GRANT ALL    ON TABLE nephthys_user TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_user TO nephthys_user;
@@ -108,7 +108,7 @@ CREATE SEQUENCE seq_nephthys_user_extPropertyKey_id
   MAXVALUE 65535
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_user_extPropertyKey_id OWNER TO nephthys_admin;
+
 
 CREATE TABLE nephthys_user_extPropertyKey
 (
@@ -130,7 +130,7 @@ WITH (
 
 CREATE UNIQUE INDEX UK_nephthys_user_extPropertyKey_name ON nephthys_user_extPropertyKey(lower(keyName));
   
-ALTER TABLE nephthys_user_extPropertyKey OWNER TO nephthys_admin;
+
 
 GRANT ALL    ON TABLE nephthys_user_extPropertyKey TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_user_extPropertyKey TO nephthys_user;
@@ -141,7 +141,7 @@ CREATE SEQUENCE seq_nephthys_user_extProperty_id
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_user_extProperty_id OWNER TO nephthys_admin;
+
 
 CREATE TABLE nephthys_user_extProperty
 (
@@ -162,7 +162,7 @@ WITH (
 CREATE        INDEX FKI_nephthys_user_extProperty_userId ON nephthys_user_extProperty(userId);
 CREATE UNIQUE INDEX UK_nephthys_user_extProperty_userKey ON nephthys_user_extProperty(userId, extPropertyKeyId);
   
-ALTER TABLE nephthys_user_extProperty OWNER TO nephthys_admin;
+
 
 GRANT ALL    ON TABLE nephthys_user_extProperty TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_user_extProperty TO nephthys_user;
@@ -177,7 +177,7 @@ CREATE SEQUENCE seq_nephthys_encryptionMethod_id
   START 1
   CACHE 1;
 ALTER SEQUENCE seq_nephthys_encryptionMethod_id
-  OWNER TO nephthys_admin;
+
 
 CREATE TABLE nephthys_encryptionMethod
 (
@@ -194,7 +194,7 @@ WITH (
 
 CREATE INDEX IDX_nephthys_encryptionMethod_active ON nephthys_encryptionMethod(active);
   
-ALTER TABLE nephthys_encryptionMethod OWNER TO nephthys_admin;
+
 
 GRANT ALL    ON TABLE nephthys_encryptionMethod TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_encryptionMethod TO nephthys_user;
@@ -251,7 +251,7 @@ CREATE SEQUENCE seq_nephthys_serverSetting_id
   MAXVALUE 65535
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_serverSetting_id OWNER TO nephthys_admin;
+
 
 CREATE TYPE settingType AS ENUM ('bit', 'number', 'string', 'boolean', 'date', 'datetime', 'foreignKey', 'enum', 'component');
 
@@ -284,7 +284,7 @@ WITH (
 
 CREATE UNIQUE INDEX UK_nephthys_serverSetting_name ON nephthys_serverSetting(lower(key));
   
-ALTER TABLE nephthys_serverSetting OWNER TO nephthys_admin;
+
 
 GRANT ALL    ON TABLE nephthys_serverSetting TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_serverSetting TO nephthys_user;
@@ -298,9 +298,9 @@ CREATE SEQUENCE seq_nephthys_module_id
   MAXVALUE 65535
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_module_id OWNER TO nephthys_admin;
 
-CREATE TABLE public.nephthys_module
+
+CREATE TABLE nephthys_module
 (
   moduleid integer NOT NULL DEFAULT nextval('seq_nephthys_module_id'::regclass),
   modulename character varying(100) NOT NULL,
@@ -322,7 +322,7 @@ CREATE        INDEX IDX_nephthys_module_active         ON nephthys_module(active
 CREATE        INDEX IDX_nephthys_module_availableWWW   ON nephthys_module(availableWWW);
 CREATE        INDEX IDX_nephthys_module_availableADMIN ON nephthys_module(availableADMIN);
   
-ALTER TABLE nephthys_module OWNER TO nephthys_admin;
+
 
 GRANT ALL    ON TABLE nephthys_module TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_module TO nephthys_user;
@@ -334,9 +334,9 @@ CREATE SEQUENCE seq_nephthys_module_subModule_id
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_module_subModule_id OWNER TO nephthys_admin;
 
-CREATE TABLE public.nephthys_module_subModule
+
+CREATE TABLE nephthys_module_subModule
 (
   module_subId integer NOT NULL DEFAULT nextval('seq_nephthys_module_subModule_id'::regclass),
   moduleId integer NOT NULL,
@@ -353,7 +353,7 @@ WITH (
 
 CREATE INDEX IDX_nephthys_module_subModule_moduleId ON nephthys_module_subModule(moduleId);
 
-ALTER TABLE nephthys_module_subModule OWNER TO nephthys_admin;
+
 
 GRANT ALL    ON TABLE nephthys_module_subModule TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_module_subModule TO nephthys_user;
@@ -367,9 +367,9 @@ CREATE SEQUENCE seq_nephthys_module_option_id
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_module_option_id OWNER TO nephthys_admin;
 
-CREATE TABLE public.nephthys_module_option
+
+CREATE TABLE nephthys_module_option
 (
   optionId integer NOT NULL DEFAULT nextval('seq_nephthys_module_option_id'::regclass),
   moduleId integer NOT NULL,
@@ -390,7 +390,7 @@ WITH (
 
 CREATE INDEX IDX_nephthys_module_option_optionName ON nephthys_module_option(optionName);
 
-ALTER TABLE nephthys_module_option OWNER TO nephthys_admin;
+
 
 GRANT ALL    ON TABLE nephthys_module_option TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_module_option TO nephthys_user;
@@ -403,9 +403,9 @@ CREATE SEQUENCE seq_nephthys_page_status_id
   MAXVALUE 65534
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_page_status_id OWNER TO nephthys_admin;
 
-CREATE TABLE public.nephthys_pageStatus
+
+CREATE TABLE nephthys_pageStatus
 (
   pageStatusId integer NOT NULL DEFAULT nextval('seq_nephthys_page_status_id'::regclass),
   name character varying(100),
@@ -428,7 +428,7 @@ CREATE        INDEX IDX_nephthys_pageStatus_active   ON nephthys_pageStatus(acti
 CREATE        INDEX IDX_nephthys_pageStatus_offlinee ON nephthys_pageStatus(offline);
 CREATE UNIQUE INDEX UK_nephthys_pageStatus_name      ON nephthys_pageStatus(lower(name));
 
-ALTER TABLE nephthys_pageStatus OWNER TO nephthys_admin;
+
 
 GRANT ALL    ON TABLE nephthys_pageStatus TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_pageStatus TO nephthys_user;
@@ -439,9 +439,9 @@ CREATE SEQUENCE seq_nephthys_page_id
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_page_id OWNER TO nephthys_admin;
 
-CREATE TABLE public.nephthys_page
+
+CREATE TABLE nephthys_page
 (
   pageid integer NOT NULL DEFAULT nextval('seq_nephthys_page_id'::regclass),
   parentid integer,
@@ -478,8 +478,6 @@ CREATE        INDEX IDX_nephthys_page_active           ON nephthys_page(active);
 CREATE        INDEX IDX_nephthys_page_sortOrder        ON nephthys_page(sortOrder);
 CREATE        INDEX IDX_nephthys_page_defaultParam     ON nephthys_page(parentId, region, active, sortOrder);
 
-ALTER TABLE nephthys_page OWNER TO nephthys_admin;
-
 GRANT ALL    ON TABLE nephthys_page TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_page TO nephthys_user;
 
@@ -492,9 +490,9 @@ CREATE SEQUENCE seq_nephthys_errorSettings_id
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_errorSettings_id OWNER TO nephthys_admin;
 
-CREATE TABLE public.nephthys_errorSettings
+
+CREATE TABLE nephthys_errorSettings
 (
   errorSettingsId integer NULL NULL DEFAULT nextval('seq_nephthys_errorSettings_id'::regclass),
   errorCode character varying(75) NOT NULL,
@@ -511,7 +509,7 @@ WITH (
 CREATE        INDEX IDX_nephthys_errorSettings_errorCode ON nephthys_errorSettings(errorCode);
 CREATE UNIQUE INDEX UK_nephthys_errorSettings_errorCode  ON nephthys_errorSettings(lower(errorCode));
 
-ALTER TABLE nephthys_errorSettings OWNER TO nephthys_admin;
+
 
 GRANT ALL            ON TABLE nephthys_errorSettings TO nephthys_admin;
 GRANT SELECT, INSERT ON TABLE nephthys_errorSettings TO nephthys_user;
@@ -523,9 +521,9 @@ CREATE SEQUENCE seq_nephthys_error_id
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_error_id OWNER TO nephthys_admin;
 
-CREATE TABLE public.nephthys_error
+
+CREATE TABLE nephthys_error
 (
   errorId integer NOT NULL DEFAULT nextval('seq_nephthys_error_id'::regclass),
   errorCode character varying(75) NOT NULL,
@@ -551,7 +549,7 @@ CREATE INDEX IDX_nephthys_error_errorCode ON nephthys_error(errorCode);
 CREATE INDEX IDX_nephthys_error_errorDate ON nephthys_error(errorDate);
 CREATE INDEX IDX_nephthys_error_link      ON nephthys_error(link);
 
-ALTER TABLE nephthys_error OWNER TO nephthys_admin;
+
 
 GRANT ALL            ON TABLE nephthys_error TO nephthys_admin;
 GRANT SELECT, INSERT ON TABLE nephthys_error TO nephthys_user;
@@ -565,9 +563,9 @@ CREATE SEQUENCE seq_nephthys_role_id
   MAXVALUE 65535
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_role_id OWNER TO nephthys_admin;
 
-CREATE TABLE public.nephthys_role
+
+CREATE TABLE nephthys_role
 (
   roleId integer NOT NULL DEFAULT nextval('seq_nephthys_role_id'::regclass),
   name character varying(50) NOT NULL,
@@ -583,7 +581,7 @@ WITH (
 
 CREATE INDEX IDX_nephthys_role_nameValue ON nephthys_role(name, value);
 
-ALTER TABLE nephthys_role OWNER TO nephthys_admin;
+
 
 GRANT ALL    ON TABLE nephthys_role TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_role TO nephthys_user;
@@ -594,9 +592,9 @@ CREATE SEQUENCE seq_nephthys_permission_id
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_permission_id OWNER TO nephthys_admin;
 
-CREATE TABLE public.nephthys_permission
+
+CREATE TABLE nephthys_permission
 (
   permissionId integer NOT NULL DEFAULT nextval('seq_nephthys_permission_id'::regclass),
   userId integer NOT NULL,
@@ -621,7 +619,7 @@ WITH (
 CREATE        INDEX IDX_nephthys_permission_roleUserModule ON nephthys_permission(roleId, userId, moduleId);
 CREATE UNIQUE INDEX UK_nephthys_permission_userIdModuleId  ON nephthys_permission(userId, moduleId);
 
-ALTER TABLE nephthys_permission OWNER TO nephthys_admin;
+
 
 GRANT ALL    ON TABLE nephthys_permission TO nephthys_admin;
 GRANT SELECT ON TABLE nephthys_permission TO nephthys_user;

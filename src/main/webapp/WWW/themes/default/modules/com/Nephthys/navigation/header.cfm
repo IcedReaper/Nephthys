@@ -8,8 +8,8 @@
             <!--- From 2 as we don't want to have the starting page here too, as it's already inserted by the brand --->
             <cfloop from="2" to="#attributes.sitemap.len()#" index="pageIndex">
                 <li class="nav-item <cfif attributes.sitemap[pageIndex].getPageId() EQ request.page.getPageId()>active</cfif>">
-                    <a href="#attributes.sitemap[pageIndex].getLink()#" class="nav-link"
-                       title="#attributes.sitemap[pageIndex].getTitle()#">#attributes.sitemap[pageIndex].getLinkText()#</a>
+                    <a href="#attributes.sitemap[pageIndex].getActualPageVersion().getLink()#" class="nav-link"
+                       title="#attributes.sitemap[pageIndex].getActualPageVersion().getTitle()#">#attributes.sitemap[pageIndex].getActualPageVersion().getLinkText()#</a>
                 </li>
             </cfloop>
         </ul>

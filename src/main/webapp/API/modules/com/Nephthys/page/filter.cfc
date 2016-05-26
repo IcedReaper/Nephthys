@@ -6,6 +6,9 @@ component implements="API.interfaces.filter" {
         variables.active   = null;
         variables.parentId = null;
         variables.region   = null;
+        variables.version  = null;
+        
+        variables.for = "page"; // page | pageVersion | pageHierarchy
         
         variables.qRes = null;
         variables.results = null;
@@ -37,46 +40,76 @@ component implements="API.interfaces.filter" {
         variables.active = arguments.active;
         return this;
     }
+    public filter function setVersion(required string version) {
+        variables.version = arguments.version;
+        return this;
+    }
+    public filter function setFor(required string for) {
+        switch(arguments.for) {
+            case "page":
+            case "pageVersion":
+            case "pageHierarchy": {
+                variables.for = arguments.for;
+                break;
+            }
+        }
+        
+        return this;
+    }
     
     public filter function execute() {
         var qryFilter = new Query();
-        var sql = "SELECT pageId
-                     FROM nephthys_page ";
         
-        var where = "";
-        if(variables.pageId != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "pageId = :pageId";
-            qryFilter.addParam(name = "pageId", value = variables.pageId, cfsqltype = "cf_sql_numeric");
-        }
-        if(variables.parentId != null) {
-            if(variables.parentId != 0) {
-                where &= (where == "" ? " WHERE " : " AND ") & "parentId = :parentId";
-                qryFilter.addParam(name = "parentId", value = variables.parentId, cfsqltype = "cf_sql_numeric");
+        var sql     = "";
+        var where   = "";
+        var orderBy = "";
+        
+        switch(variables.for) {
+            case "page": {
+                sql = "    SELECT p.pageId
+                             FROM nephthys_page p 
+                       INNER JOIN nephthys_pageVersion pv ON p.pageId = pv.pageId
+                       INNER JOIN nephthys_pageHierarchy ph ON p.pageId = ph.pageId 
+                       INNER JOIN nephthys_pageStatus ps ON pv.pageStatusId = ps.pageStatusId ";
+                
+                if(variables.pageId != null) {
+                    where &= (where == "" ? " WHERE " : " AND ") & "p.pageId = :pageId";
+                    qryFilter.addParam(name = "pageId", value = variables.pageId, cfsqltype = "cf_sql_numeric");
+                }
+                if(variables.linkText != null) {
+                    where &= (where == "" ? " WHERE " : " AND ") & "lower(pv.linkText) = :linkText";
+                    qryFilter.addParam(name = "linkText", value = lCase(variables.linkText), cfsqltype = "cf_sql_varchar");
+                }
+                if(variables.link != null) {
+                    // TODO: regEx | parameter check
+                    where &= (where == "" ? " WHERE " : " AND ") & "lower(pv.link) = :link";
+                    qryFilter.addParam(name = "link", value = lCase(variables.link), cfsqltype = "cf_sql_varchar");
+                }
+                if(variables.region != null) {
+                    where &= (where == "" ? " WHERE " : " AND ") & "ph.region = :region";
+                    qryFilter.addParam(name = "region", value = lCase(variables.region), cfsqltype = "cf_sql_varchar");
+                }
+                if(variables.version != null) {
+                    if(variables.version == "actual") {
+                        where &= (where == "" ? " WHERE " : " AND ") & "p.actualVersion = pv.version";
+                    }
+                    else {
+                        where &= (where == "" ? " WHERE " : " AND ") & "pv.version = :version";
+                        qryFilter.addParam(name = "version", value = variables.version, cfsqltype = "cf_sql_varchar");
+                    }
+                }
+                orderBy = " ORDER BY ph.sortOrder ASC";
+                break;
             }
-            else {
-                where &= (where == "" ? " WHERE " : " AND ") & "parentId IS NULL";
+            case "pageVersion": {
+                break;
+            }
+            case "pageHierarchy": {
+                break;
             }
         }
-        if(variables.linkText != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "lower(linkText) = :linkText";
-            qryFilter.addParam(name = "linkText", value = lCase(variables.linkText), cfsqltype = "cf_sql_varchar");
-        }
-        if(variables.link != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "lower(link) = :link";
-            qryFilter.addParam(name = "link", value = lCase(variables.link), cfsqltype = "cf_sql_varchar");
-        }
-        if(variables.region != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "lower(region) = :region";
-            qryFilter.addParam(name = "region", value = lCase(variables.region), cfsqltype = "cf_sql_varchar");
-        }
-        if(variables.active != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "active = :active";
-            qryFilter.addParam(name = "active", value = variables.active, cfsqltype = "cf_sql_bit");
-        }
         
-        sql &= where & " ORDER BY sortOrder ASC";
-        
-        variables.qRes = qryFilter.setSQL(sql)
+        variables.qRes = qryFilter.setSQL(sql & where & orderBy)
                                   .execute()
                                   .getResult();
         
@@ -91,7 +124,18 @@ component implements="API.interfaces.filter" {
         if(variables.results == null) {
             variables.results = [];
             for(var i = 1; i <= variables.qRes.getRecordCount(); i++) {
-                variables.results.append(new page(variables.qRes.pageId[i]));
+                switch(variables.for) {
+                    case "page": {
+                        variables.results.append(new page(variables.qRes.pageId[i]));
+                        break;
+                    }
+                    case "pageVersion": {
+                        break;
+                    }
+                    case "pageHierarchy": {
+                        break;
+                    }
+                }
             }
         }
         return variables.results;
