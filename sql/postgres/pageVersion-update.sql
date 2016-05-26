@@ -4,7 +4,6 @@ CREATE SEQUENCE seq_nephthys_pageVersion_id
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_page_id OWNER TO nephthys_admin;
 
 CREATE TABLE nephthys_pageVersion
 (
@@ -55,7 +54,6 @@ CREATE SEQUENCE seq_nephthys_pageHierarchy_id
   MAXVALUE 9223372036854775807
   START 1
   CACHE 1;
-ALTER SEQUENCE seq_nephthys_pageHierarchy_id OWNER TO nephthys_admin;
 
 CREATE TABLE nephthys_pageHierarchy
 (
@@ -147,3 +145,93 @@ CREATE INDEX IDX_nephthys_page_version ON nephthys_page(actualVersion);
 ALTER TABLE nephthys_pageStatus ADD COLUMN sortOrder integer NOT NULL;
 ALTER TABLE nephthys_pageStatus ADD CONSTRAINT UK_nephthys_pageStatus_sortOrder UNIQUE (sortOrder);
 ALTER TABLE nephthys_pageStatus ADD COLUMN editable boolean NOT NULL DEFAULT FALSE;
+
+
+
+----------------------------------
+-- WORKFLOW
+----------------------------------
+
+CREATE SEQUENCE seq_nephthys_pageStatusFlow_id
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 65535
+  START 1
+  CACHE 1;
+
+CREATE TABLE nephthys_pageStatusFlow
+(
+    pageStatusFlowId integer NOT NULL DEFAULT nextval('seq_nephthys_pageStatusFlow_id'::regclass),
+    pageStatusId integer NOT NULL,
+    nextPageStatusId integer DEFAULT NULL,
+    active boolean NOT NULL DEFAULT true,
+    
+    CONSTRAINT PK_nephthys_pageStatusFlow_Id PRIMARY KEY (pageStatusFlowId),
+    CONSTRAINT FK_nephthys_pageStatusFlow_pageStatusId     FOREIGN KEY (pageStatusId)     REFERENCES nephthys_pageStatus (pageStatusId) ON UPDATE NO ACTION ON DELETE CASCADE,
+    CONSTRAINT FK_nephthys_pageStatusFlow_nextPageStatusId FOREIGN KEY (nextPageStatusId) REFERENCES nephthys_pageStatus (pageStatusId) ON UPDATE NO ACTION ON DELETE CASCADE,
+    CONSTRAINT UK_nephthys_pageStatusFlow_statusCombination UNIQUE (pageStatusId, nextPageStatusId)
+)
+WITH
+(
+    OIDS = FALSE
+);
+
+CREATE INDEX FKI_nephthys_pageStatusFlow_pageStatusId ON nephthys_pageStatusFlow(pageStatusId);
+CREATE INDEX FKI_nephthys_pageStatusFlow_nextPageStatusId ON nephthys_pageStatusFlow(nextPageStatusId);
+
+ALTER TABLE nephthys_pageStatus DROP COLUMN sortOrder;
+
+/* TODO...
+CREATE SEQUENCE seq_nephthys_pageRequiredApproval
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 65535
+  START 1
+  CACHE 1;
+
+CREATE TABLE nephthys_pageRequiredApproval
+(
+    pageRequiredApprovalId integer NOT NULL DEFAULT nextval('seq_nephthys_pageRequiredApproval'::regclass),
+    pageWorkflowId integer NOT NULL
+)
+WITH
+(
+    OIDS = FALSE
+);
+*/
+
+
+/*
+Status:
+1   "In Erstellung"
+3   "In Bearbeitung"
+4   "Online"
+5   "Offline"
+6   "In Rewiew"
+7   "Gelöscht"
+
+
+flow
+1 1 3 1 true
+2 1 6 1 true
+3 1 7 1 true
+4 3 6 1 true
+5 3 7 1 true
+6 6 4 1 true
+7 6 7 1 true
+8 4 5 1 true
+9 5 7 1 true
+*/
+
+/*
+
+SELECT 
+flow.pageStatusFlowId, actual.name von, flow.name nach
+FROM nephthys_pageStatus actual
+LEFT OUTER JOIN 
+(SELECT f.pageStatusFlowid, f.pageStatusId, n.name 
+   FROM nephthys_pageStatusFlow f
+   INNER JOIN nephthys_pageStatus n ON f.nextPageStatusId = n.pageStatusId) flow ON actual.pageStatusId = flow.pageStatusId
+ WHERE actual.pageStatusId = 3
+ 
+ */
