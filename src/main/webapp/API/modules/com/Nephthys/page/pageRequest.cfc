@@ -203,15 +203,15 @@ component {
     public numeric function getPageStatusId() {
         return variables.pageVersion.getPageStatusId();
     }
+    public pageStatus function getPageStatus() {
+        return new pageStatus(variables.pageVersion.getPageStatusId());
+    }
     public boolean function isOnline() {
         return variables.pageVersion.isOnline();
     }
     public boolean function isOffline() {
-        return ! variables.pageVersion.isOnline();
+        return ! isOnline();
     }
-    /*public struct function getPageStatus() {
-        return variables.pageVersion.getPageStatus();
-    }*/
     
     public pageRequest function saveToStatistics() {
         // TODO: Move to separate statistics component

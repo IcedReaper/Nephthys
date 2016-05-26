@@ -12,6 +12,9 @@ nephthysAdminApp
                 $scope.pageStatus          = pageStatus;
                 $scope.availableSubModules = availableSubModules;
                 $scope.availableOptions    = availableOptions;
+                
+                $scope.page.versions["1.1"].content = [{"type": "com.Nephthys.container"}];
+                $scope.selectedVersion = pageDetails.actualVersion;
             }));
         };
         
@@ -105,6 +108,37 @@ nephthysAdminApp
             
             searchSub($scope.page.content);
         };
+        
+        $scope.addMajorVersion = function () {
+            var newVersion = getNextMajorVersion() + ".0";
+            
+            $scope.page.versions[newVersion] = [];
+            
+            $scope.selectedVersion = newVersion;
+        };
+        
+        $scope.addMinorVersion = function () {
+            var v = $scope.page.actualVersion.split(".");
+            
+            var newVersion = v[0] + "." + (parseInt(v[1], 10) + 1);
+            
+            // json way is a try to deep copy the struct | structs are pointers and therefore changed.
+            $scope.page.versions[newVersion] = JSON.parse(JSON.stringify($scope.page.versions[$scope.page.actualVersion]));
+            $scope.page.versions[newVersion].pageStatus = JSON.parse(JSON.stringify($scope.pageStatus[0]));
+            
+            $scope.selectedVersion = newVersion;
+        };
+        
+        var getNextMajorVersion = function () {
+            var lastVersion = 0;
+            for(var v in $scope.page.versions) {
+                if(lastVersion < Math.ceil(parseInt(v, 10))) {
+                    lastVersion = Math.ceil(parseInt(v, 10));
+                }
+            }
+            
+            return lastVersion + 1;
+        }
         
         $scope.load();
     }]);

@@ -146,3 +146,4 @@ CREATE INDEX IDX_nephthys_page_version ON nephthys_page(actualVersion);
 
 ALTER TABLE nephthys_pageStatus ADD COLUMN sortOrder integer NOT NULL;
 ALTER TABLE nephthys_pageStatus ADD CONSTRAINT UK_nephthys_pageStatus_sortOrder UNIQUE (sortOrder);
+ALTER TABLE nephthys_pageStatus ADD COLUMN editable boolean NOT NULL DEFAULT FALSE;

@@ -1,31 +1,45 @@
 component {
     remote array function getList() {
-        return getSubPages(0, 'header').append(getSubPages(0, 'footer'), true);
+        return getSubPages(null, 'header').append(getSubPages(null, 'footer'), true);
     }
     
     remote struct function getDetails(required numeric pageId) {
         var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
+        var pageVersions = {};
+        for(var pageVersion in page.getPageVersions()) {
+            var pageStatus = pageVersion.getPageStatus();
+            
+            pageVersions[pageVersion.getVersion()] = {
+                "parentPageId"       = pageVersion.getParentPageId(),
+                "linktext"           = pageVersion.getLinktext(),
+                "link"               = pageVersion.getLink(),
+                "title"              = pageVersion.getTitle(),
+                "description"        = pageVersion.getDescription(),
+                "content"            = pageVersion.getContent(),
+                "sortOrder"          = pageVersion.getSortOrder(),
+                "useDynamicSuffixes" = pageVersion.getUseDynamicSuffixes(),
+                "region"             = pageVersion.getRegion(),
+                "isOnline"           = pageVersion.isOnline(),
+                "creator"            = getUserInformation(pageVersion.getCreator()),
+                "creationDate"       = formatCtrl.formatDate(pageVersion.getCreationDate()),
+                "lastEditor"         = getUserInformation(pageVersion.getLastEditor()),
+                "lastEditDate"       = formatCtrl.formatDate(pageVersion.getLastEditDate()),
+                "subPages"           = getSubPages(pageVersion.getPageId(), pageVersion.getRegion()),
+                "pageStatus"         = {
+                    "pageStatusId" = pageStatus.getPageStatusId(),
+                    "name"         = pageStatus.getName(),
+                    "online"       = ! pageStatus.getOfflineStatus(),
+                    "editbale"     = pageStatus.isEditable()
+                }
+            };
+        }
+        
         return {
-            "pageId"             = page.getPageId(),
-            "parentId"           = page.getParentId(),
-            "linktext"           = page.getLinktext(),
-            "link"               = page.getLink(),
-            "title"              = page.getTitle(),
-            "description"        = page.getDescription(),
-            "content"            = page.getContent(),
-            "sortOrder"          = page.getSortOrder(),
-            "useDynamicSuffixes" = page.getUseDynamicSuffixes(),
-            "region"             = page.getRegion(),
-            "active"             = page.getActiveStatus(),
-            "creator"            = getUserInformation(page.getCreator()),
-            "creationDate"       = formatCtrl.formatDate(page.getCreationDate()),
-            "lastEditor"         = getUserInformation(page.getLastEditor()),
-            "lastEditDate"       = formatCtrl.formatDate(page.getLastEditDate()),
-            "subPages"           = getSubPages(page.getPageId(), page.getRegion()),
-            "pageStatusId"       = page.getPageStatusId(),
-            "pageStatusName"     = page.getPageStatus().getName()
+            "pageId"        = page.getPageId(),
+            "actualVersion" = page.getActualVersion(),
+            "versions"      = pageVersions
         };
     }
     
@@ -116,7 +130,8 @@ component {
                 "pageStatusId" = pageStatus.getPageStatusId(),
                 "name"         = pageStatus.getName(),
                 "active"       = pageStatus.getActiveStatus(),
-                "offline"      = pageStatus.getOfflineStatus()
+                "offline"      = pageStatus.getOfflineStatus(),
+                "editable"     = pageStatus.isEditable()
             });
         }
         
@@ -130,19 +145,22 @@ component {
             "pageStatusId" = pageStatus.getPageStatusId(),
             "name"         = pageStatus.getName(),
             "active"       = pageStatus.getActiveStatus(),
-            "offline"      = pageStatus.getOfflineStatus()
+            "offline"      = pageStatus.getOfflineStatus(),
+            "editable"     = pageStatus.isEditable()
         };
     }
     
     remote boolean function saveStatus(required numeric pageStatusId,
-                                      required string  name,
-                                      required numeric active,
-                                      required numeric offline) {
+                                       required string  name,
+                                       required numeric active,
+                                       required numeric offline,
+                                       required boolean editable) {
         var pageStatus = createObject("component", "API.modules.com.Nephthys.page.pageStatus").init(arguments.pageStatusId);
         
         pageStatus.setName(arguments.name)
                   .setActiveStatus(arguments.active)
                   .setOfflineStatus(arguments.offline)
+                  .setEditable(arguments.editable)
                   .save();
         
         return true;
@@ -226,32 +244,34 @@ component {
         var pageFilterCtrl = createObject("component", "API.modules.com.Nephthys.page.filter").init();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
-        var pageArray = pageFilterCtrl.setParentId(arguments.parentId)
-                                      .setRegion(arguments.region)
-                                      .execute()
-                                      .getResult();
+        pageFilterCtrl.setParentId(arguments.parentId)
+                      .setRegion(arguments.region)
+                      .setVersion("actual")
+                      .execute();
         
         var pageData = [];
-        for(var i = 1; i <= pageArray.len(); i++) {
+        for(var page in pageFilterCtrl.getResult()) {
+            var pageVersion = page.getActualPageVersion();
             pageData.append({
-                'pageId'             = pageArray[i].getPageId(),
-                'parentId'           = pageArray[i].getParentId(),
-                'linktext'           = pageArray[i].getLinktext(),
-                'link'               = pageArray[i].getLink(),
-                'title'              = pageArray[i].getTitle(),
-                'description'        = pageArray[i].getDescription(),
-                'content'            = serializeJSON(pageArray[i].getContent()),
-                'sortOrder'          = pageArray[i].getSortOrder(),
-                'region'             = pageArray[i].getRegion(),
-                'useDynamicSuffixes' = pageArray[i].getUseDynamicSuffixes(),
-                'creator'            = getUserInformation(pageArray[i].getCreator()),
-                'creationDate'       = formatCtrl.formatDate(pageArray[i].getCreationDate()),
-                'lastEditor'         = getUserInformation(pageArray[i].getLastEditor()),
-                'lastEditDate'       = formatCtrl.formatDate(pageArray[i].getLastEditDate()),
-                'subPages'           = getSubPages(pageArray[i].getPageId(), pageArray[i].getRegion()),
-                'active'             = pageArray[i].getActiveStatus(),
-                "pageStatusId"       = pageArray[i].getPageStatusId(),
-                "pageStatusName"     = pageArray[i].getPageStatus().getName()
+                'pageId'             = page.getPageId(),
+                'parentId'           = pageVersion.getParentPageId(),
+                'linktext'           = pageVersion.getLinktext(),
+                'link'               = pageVersion.getLink(),
+                'title'              = pageVersion.getTitle(),
+                'description'        = pageVersion.getDescription(),
+                'content'            = serializeJSON(pageVersion.getContent()),
+                'sortOrder'          = pageVersion.getSortOrder(),
+                'region'             = pageVersion.getRegion(),
+                'useDynamicSuffixes' = pageVersion.getUseDynamicSuffixes(),
+                'creator'            = getUserInformation(pageVersion.getCreator()),
+                'creationDate'       = formatCtrl.formatDate(pageVersion.getCreationDate()),
+                'lastEditor'         = getUserInformation(pageVersion.getLastEditor()),
+                'lastEditDate'       = formatCtrl.formatDate(pageVersion.getLastEditDate()),
+                'subPages'           = getSubPages(pageVersion.getPageId(), pageVersion.getRegion()),
+                'isOnline'           = pageVersion.isOnline(),
+                "pageStatusId"       = pageVersion.getPageStatusId(),
+                "pageStatusName"     = pageVersion.getPageStatus().getName(),
+                "version"            = page.getActualVersion()
             });
         }
         

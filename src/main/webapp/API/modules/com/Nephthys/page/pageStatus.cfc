@@ -25,6 +25,12 @@ component {
         return this;
     }
     
+    public pageStatus function setEditable(required boolean editable) {
+        variables.editable = arguments.editable;
+        
+        return this;
+    }
+    
     public numeric function getPageStatusId() {
         return variables.pageStatusId;
     }
@@ -71,6 +77,10 @@ component {
         return variables.lastEditor;
     }
     
+    public boolean function isEditable() {
+        return variables.editable == 1;
+    }
+    
     
     public pageStatus function save() {
         if(variables.pageStatusId == 0 || variables.pageStatusId == null) {
@@ -79,6 +89,7 @@ component {
                                                                          name,
                                                                          active,
                                                                          offline,
+                                                                         editable,
                                                                          creatorEditorUserId,
                                                                          creationEditDate,
                                                                          lastEditorUserId,
@@ -88,6 +99,7 @@ component {
                                                                          :name,
                                                                          :active,
                                                                          :offline,
+                                                                         :editable,
                                                                          :creatorEditorUserId,
                                                                          now(),
                                                                          :lastEditorUserId,
@@ -97,6 +109,7 @@ component {
                                                .addParam(name = "name",                value = variables.name,           cfsqltype = "cf_sql_varchar")
                                                .addParam(name = "active",              value = variables.active,         cfsqltype = "cf_sql_bit")
                                                .addParam(name = "offline",             value = variables.offline,        cfsqltype = "cf_sql_bit")
+                                               .addParam(name = "editable",            value = variables.editable,       cfsqltype = "cf_sql_bit")
                                                .addParam(name = "creatorEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                                .addParam(name = "lastEditorUserId",    value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                                .execute()
@@ -108,6 +121,7 @@ component {
                                    SET name             = :name,
                                        active           = :active,
                                        offline          = :offline,
+                                       editable         = :editable
                                        lastEditorUserId = :lastEditorUserId,
                                        lastEditDate     = now()
                                  WHERE pageStatusId = :pageStatusId")
@@ -115,6 +129,7 @@ component {
                        .addParam(name = "name",             value = variables.name,           cfsqltype = "cf_sql_varchar")
                        .addParam(name = "active",           value = variables.active,         cfsqltype = "cf_sql_bit")
                        .addParam(name = "offline",          value = variables.offline,        cfsqltype = "cf_sql_bit")
+                       .addParam(name = "editable",            value = variables.editable,       cfsqltype = "cf_sql_bit")
                        .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                        .execute();
         }
@@ -144,6 +159,7 @@ component {
                 variables.name             = qPageStatus.name[1];
                 variables.active           = qPageStatus.active[1];
                 variables.offline          = qPageStatus.offline[1];
+                variables.editable         = qPageStatus.editable[1];
                 variables.creatorUserId    = qPageStatus.creatorUserId[1];
                 variables.creationDate     = qPageStatus.creationDate[1];
                 variables.lastEditorUserId = qPageStatus.lastEditorUserId[1];
@@ -157,6 +173,7 @@ component {
             variables.name             = "";
             variables.active           = false;
             variables.offline          = true;
+            variables.editable         = true;
             variables.creatorUserId    = null;
             variables.creationDate     = null;
             variables.lastEditorUserId = null;

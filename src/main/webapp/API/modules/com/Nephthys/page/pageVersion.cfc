@@ -164,14 +164,16 @@ component {
     }
     
     public boolean function isOnline() {
-        // TODO: check pageStatus for online / offline
-        return true;
+        return ! new pageStatus(variables.pageStatusId).getOfflineStatus();
     }
     
     public page function getParentPage() {
         return new page(variables.parentPageId);
     }
     
+    public pageStatus function getPageStatus() {
+        return new pageStatus(variables.pageStatusId);
+    }
     
     
     public pageVersion function save() {

@@ -76,6 +76,10 @@ component implements="API.interfaces.filter" {
                     where &= (where == "" ? " WHERE " : " AND ") & "p.pageId = :pageId";
                     qryFilter.addParam(name = "pageId", value = variables.pageId, cfsqltype = "cf_sql_numeric");
                 }
+                if(variables.parentId != null) {
+                    where &= (where == "" ? " WHERE " : " AND ") & "pv.parentPageId = :parentId";
+                    qryFilter.addParam(name = "parentId", value = variables.parentId, cfsqltype = "cf_sql_numeric");
+                }
                 if(variables.linkText != null) {
                     where &= (where == "" ? " WHERE " : " AND ") & "lower(pv.linkText) = :linkText";
                     qryFilter.addParam(name = "linkText", value = lCase(variables.linkText), cfsqltype = "cf_sql_varchar");

@@ -89,12 +89,17 @@ component {
         }
     }
     
-    public struct function getPageVersions() {
+    public array function getPageVersions() {
         if(! variables.pageVersionsLoaded) {
             loadPageVersions();
         }
         
-        return duplicate(variables.pageVersions);
+        var tmpPageVersions = [];
+        for(var version in variables.pageVersions) {
+            tmpPageVersions.append(duplicate(variables.pageVersions[version]));
+        }
+        
+        return tmpPageVersions;
     }
     
     public string function getNextVersion() {
@@ -201,7 +206,21 @@ component {
     }
     
     private void function loadPageVersions() {
-        // TODO: implement filter here to load versions
         variables.pageVersionsLoaded = true;
+        
+        var qGetVersions = new Query().setSQL("SELECT pageVersionId, version
+                                                 FROM nephthys_pageVersion
+                                                WHERE pageId = :pageId
+                                                  AND Version != :actualVersion")
+                                      .addParam(name = "pageId", value = variables.pageId, cfsqltype = "cf_sql_numeric")
+                                      .addParam(name = "actualVersion", value = variables.actualVersion, cfsqltype = "cf_sql_varchar")
+                                      .execute()
+                                      .getResult();
+        
+        for(var i = 1; i <= qGetVersions.getRecordCount(); ++i) {
+            if(! variables.pageVersions.keyExists(qGetVersions.version[i])) {
+                variables.pageVersions[qGetVersions.version[i]] = new pageVersion(qGetVersions.pageVersionId[i]);
+            }
+        }
     }
 }

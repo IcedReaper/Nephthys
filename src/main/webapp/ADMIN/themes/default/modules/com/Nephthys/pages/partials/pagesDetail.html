@@ -12,6 +12,23 @@
     </div>
 </div>
 <div class="row">
+    <div class="col-xl-12">
+        <div class="card card-block">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="versionSelection">Version</label>
+                    <select ng-model="selectedVersion" class="form-control" id="versionSelection">
+                        <option ng-repeat="(version, pageVersion) in page.versions" value="{{version}}">Version {{version}}</option>
+                    </select>
+                    <button class="btn btn-primary" ng-click="addMajorVersion()" title="Major Version hinzufügen"><i class="fa fa-plus"></i></button>
+                    <button class="btn btn-primary" ng-click="addMinorVersion()" title="Minor Version hinzufügen"><i class="fa fa-plus"></i></button>
+                </div>
+            </form>
+            <!-- Add custom version -->
+        </div>
+    </div>
+</div>
+<div class="row">
     <div class="col-md-12">
         <div class="card card-block">
             <h3>Seitenoptionen und - details</h3>
@@ -20,52 +37,56 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="parentId">Übergeordnete Seite</label>
-                            <input type="text" class="form-control" id="parentId" disabled readonly="readonly" ng-model="page.parentId" title="Not yet implemented">
+                            <input type="text" class="form-control" id="parentId" disabled readonly="readonly" ng-model="page.versions[selectedVersion].parentPageId" title="Not yet implemented">
                         </div>
                         <div class="form-group">
                             <label for="link">Link</label>
-                            <input type="text" class="form-control" id="link" ng-model="page.link">
+                            <input type="text" class="form-control" id="link" ng-model="page.versions[selectedVersion].link" ng-readonly="! page.versions[selectedVersion].pageStatus.editable">
                         </div>
                         <div class="form-group">
                             <label for="linktext">Text des Links</label>
-                            <input type="text" class="form-control" id="linktext" ng-model="page.linktext">
+                            <input type="text" class="form-control" id="linktext" ng-model="page.versions[selectedVersion].linktext" ng-readonly="! page.versions[selectedVersion].pageStatus.editable">
                         </div>
                         <div class="form-group">
                             <label for="title">Titel der Seite / des Links</label>
-                            <input type="text" class="form-control" id="title" ng-model="page.title">
+                            <input type="text" class="form-control" id="title" ng-model="page.versions[selectedVersion].title" ng-readonly="! page.versions[selectedVersion].pageStatus.editable">
                         </div>
                         <div class="form-group">
                             <label for="description">Beschreibung der Seite</label>
-                            <input type="text" class="form-control" id="description" ng-model="page.description">
+                            <input type="text" class="form-control" id="description" ng-model="page.versions[selectedVersion].description" ng-readonly="! page.versions[selectedVersion].pageStatus.editable">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="sortOrder">Sortierung</label>
-                            <input type="text" class="form-control" id="sortOrder" ng-model="page.sortOrder">
+                            <input type="text" class="form-control" id="sortOrder" ng-model="page.versions[selectedVersion].sortOrder" ng-readonly="! page.versions[selectedVersion].pageStatus.editable">
                         </div>
                         <div class="form-group">
                             <label for="useDynamicSuffixes" title="Dynamische Seiten Suffixe sind Erweiterungen der Url, über welche sich Datensätze eines Moduls laden lassen">Dynamische Seiten Suffixe verwenden *</label>
-                            <select class="form-control" ng-model="page.useDynamicSuffixes"
-                                    ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]">
+                            <select class="form-control" ng-model="page.versions[selectedVersion].useDynamicSuffixes"
+                                    ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]"
+                                    ng-readonly="! page.versions[selectedVersion].pageStatus.editable">
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="region" title="Eine Navigationsregion ist zum Beispiel die Kopfnavigation am oberen Rand der Webseite">Region *</label>
-                            <select class="form-control" ng-model="page.region">
-                                <option value="header">Kopfnavigation</option>
-                                <option value="footer">Fußnavigation</option>
+                            <select class="form-control" ng-model="page.versions[selectedVersion].region"
+                                    ng-options="o.v as o.n for o in [{ n: 'Kopfnavigation', v: 'header' }, { n: 'Fußnavigation', v: 'footer' }]"
+                                    ng-readonly="! page.versions[selectedVersion].pageStatus.editable">
                             </select>
                         </div>
-                        <div class="form-group">
+                        <!--<div class="form-group">
                             <label for="active">Aktiv</label>
                             <select class="form-control" ng-model="page.active"
                                     ng-options="o.v as o.n for o in [{ n: 'Aktiv', v: true }, { n: 'Inaktiv', v: false }]">
                             </select>
-                        </div>
+                        </div>-->
+                        <!-- todo: remove with workflow -->
                         <div class="form-group">
                             <label for="active">Status</label>
-                            <select class="form-control" ng-model="page.pageStatusId" ng-options="o.pageStatusId as o.name for o in pageStatus">
+                            <select class="form-control"
+                                    ng-model="page.versions[selectedVersion].pageStatus.pageStatusId"
+                                    ng-options="o.pageStatusId as o.name for o in pageStatus">
                             </select>
                         </div>
                     </div>
@@ -85,26 +106,47 @@
 
 <script type="text/ng-template" id="contentChild">
     <form>
-        <button class="btn btn-danger pull-right" ng-click="deleteElement(child)"><i class="fa fa-trash"></i></button>
-        <button class="btn btn-secondary pull-right" ng-if="! $first" ng-click="moveUp(child)"><i class="fa fa-arrow-up"></i></button>
-        <button class="btn btn-secondary pull-right" ng-if="! $last" ng-click="moveDown(child)"><i class="fa fa-arrow-down"></i></button>
+        <button class="btn btn-danger pull-right"
+                ng-click="deleteElement(child)"
+                ng-disabled="! page.versions[selectedVersion].pageStatus.editable"><i class="fa fa-trash"></i></button>
+        <button class="btn btn-secondary pull-right"
+                ng-if="! $first"
+                ng-click="moveUp(child)"
+                ng-disabled="! page.versions[selectedVersion].pageStatus.editable"><i class="fa fa-arrow-up"></i></button>
+        <button class="btn btn-secondary pull-right"
+                ng-if="! $last"
+                ng-click="moveDown(child)"
+                ng-disabled="! page.versions[selectedVersion].pageStatus.editable"><i class="fa fa-arrow-down"></i></button>
         <h2>{{child.type}}</h2>
         
         <div class="form-group row" ng-repeat="option in availableOptions[child.type]">
             <label class="col-sm-2">{{option.description}}</label>
             <div class="col-sm-10">
-                <input ng-model="child.options[option.dbName]" class="form-control" ng-if="option.type == 'text'" ng-change="checkOption(child, option.dbName, child.options[option.dbName])">
+                <input ng-model="child.options[option.dbName]"
+                       class="form-control"
+                       ng-if="option.type == 'text'"
+                       ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
+                       ng-readonly="! page.versions[selectedVersion].pageStatus.editable">
                 <select class="form-control"
                         ng-model="child.options[option.dbName]"
                         ng-if="option.type == 'boolean'"
                         ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
-                        ng-options="o.v as o.n for o in [{ n: 'Option entfernen/Nicht gesetzt', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]">
+                        ng-options="o.v as o.n for o in [{ n: 'Option entfernen/Nicht gesetzt', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]"
+                        ng-readonly="! page.versions[selectedVersion].pageStatus.editable">
                 </select>
-                <select ng-model="child.options[option.dbName]" class="form-control" ng-if="option.type == 'select' || option.type == 'query'" ng-change="checkOption(child, option.dbName, child.options[option.dbName])">
+                <select ng-model="child.options[option.dbName]"
+                        class="form-control"
+                        ng-if="option.type == 'select' || option.type == 'query'"
+                        ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
+                        ng-readonly="! page.versions[selectedVersion].pageStatus.editable"
+                        ng-options="o.value as o.description for o in option.selectOptions">
                     <option value="">Option entfernen/Nicht gesetzt</option>
-                    <option value="{{selectOption.value}}" ng-repeat="selectOption in option.selectOptions">{{selectOption.description}}</option>
                 </select>
-                <div ng-model="child.options[option.dbName]" class="form-control" ng-if="option.type == 'wysiwyg'" text-angular ta-toolbar="[['h1', 'h2', 'h3', 'h4', 'h5', 'h6'], ['p', 'pre', 'quote'], ['ul', 'ol'], ['bold','italics','underline','strikeThrough'], ['justifyLeft','justifyCenter','justifyRight','justifyFull'], ['insertLink'], ['undo', 'redo'],['wordcount','charcount']]"></div><!-- todo: implement insertImage | insertVideo -->
+                <div ng-model="child.options[option.dbName]"
+                     class="form-control"
+                     ng-if="option.type == 'wysiwyg'"
+                     text-angular ta-toolbar="[['h1', 'h2', 'h3', 'h4', 'h5', 'h6'], ['p', 'pre', 'quote'], ['ul', 'ol'], ['bold','italics','underline','strikeThrough'], ['justifyLeft','justifyCenter','justifyRight','justifyFull'], ['insertLink'], ['undo', 'redo'],['wordcount','charcount']]"
+                     ta-readonly="! page.versions[selectedVersion].pageStatus.editable"></div><!-- todo: implement insertImage | insertVideo -->
             </div>
         </div>
         
@@ -116,9 +158,12 @@
         <div ng-if="availableSubModules[child.type].length > 0">
             <h4>Weiteres Unterelement hinzufügen</h4>
             
-            <select class="form-control" ng-change="appendChild(child, newChildren)" ng-model="newChildren">
+            <select class="form-control"
+                    ng-change="appendChild(child, newChildren)"
+                    ng-model="newChildren"
+                    ng-options="o.type as o.type for o in availableSubModules[child.type]"
+                    ng-readonly="! page.versions[selectedVersion].pageStatus.editable">
                 <option value="" selected="selected"></option>
-                <option ng-repeat="type in availableSubModules[child.type]" value="{{type}}">{{type}}</option>
             </select>
         </div>
     </form>
@@ -126,9 +171,14 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="card card-block" ng-repeat="child in page.content" ng-include="'contentChild'"></div>
+        <div class="card card-block" ng-repeat="child in page.versions[selectedVersion].content" ng-include="'contentChild'"></div>
         
-        <button class="btn btn-primary" ng-click="appendChild(page.content, 'com.Nephthys.container');"><i class="fa fa-plus"></i> Neuen Container hinzufügen</button>
-        <button class="btn btn-primary" ng-click="appendChild(page.content, 'com.IcedReaper.startpage');" ng-if="page.content.length === 0"><i class="fa fa-plus"></i> Nur Startseite verwenden</button>
+        <button class="btn btn-primary"
+                ng-click="appendChild(page.versions[selectedVersion].content, 'com.Nephthys.container');"
+                ng-disabled="! page.versions[selectedVersion].pageStatus.editable"><i class="fa fa-plus"></i> Neuen Container hinzufügen</button>
+        <button class="btn btn-primary"
+                ng-click="appendChild(page.versions[selectedVersion].content, 'com.IcedReaper.startpage');"
+                ng-if="page.versions[selectedVersion].content.length === 0"
+                ng-disabled="! page.versions[selectedVersion].pageStatus.editable"><i class="fa fa-plus"></i> Nur Startseite verwenden</button>
     </div>
 </div>

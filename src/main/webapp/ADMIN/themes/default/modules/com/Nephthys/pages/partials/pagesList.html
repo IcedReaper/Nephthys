@@ -18,9 +18,9 @@
     <div class="row">
         <div class="col-sm-6">
             <div class="form-group">
-                <label for="filterActiveStatus" class="col-sm-3 control-label">Aktiv</label>
+                <label for="filterOnlineStatus" class="col-sm-3 control-label">Online</label>
                 <div class="col-sm-6">
-                    <select class="form-control" name="filterActiveStatus" ng-model="search.active"
+                    <select class="form-control" name="filterOnlineStatus" ng-model="search.active"
                             ng-options="o.v as o.n for o in [{ n: 'Alle', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]">
                     </select>
                 </div>
@@ -61,13 +61,13 @@
                 
                 <button class="btn btn-warning"
                         ng-click="activate(page.pageId)"
-                        ng-show="page.active == 0"
+                        ng-show="! page.isOnline"
                         title="Seite aktivieren">
                     <span class="fa fa-toggle-off"></span>
                 </button>
                 <button class="btn btn-success"
                         ng-click="deactivate(page.pageId)"
-                        ng-show="page.active == 1"
+                        ng-show="page.isOnline"
                         title="Seite deaktivieren">
                     <span class="fa fa-toggle-on"></span>
                 </button>
