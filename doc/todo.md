@@ -3,7 +3,8 @@
 Actual Task TODO - Reminder:
 ~~~~~~~~~~~~~~~~~~
 - Check if actualVersion in page should be it's id or not...
-
+- Page Statistics
+- 
 
 
 
@@ -215,6 +216,7 @@ Actual Task TODO - Reminder:
     13. CreateObject gegen import und new ersetzen, außer bei den dynamischen
     14. Move Module settings to server settings
     15. Controller zum Erstellen von Links (z.B. User) erstellen
+    16. Creator und lastEditor direkt als Objekte in Objekten erstellen
 
 
 
