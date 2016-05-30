@@ -1,10 +1,11 @@
 component {
     import "API.modules.com.Nephthys.user.*";
     
-    public pageVersion function init(required numeric pageVersionId = null, required numeric pageId = null, required string version = null) {
+    public pageVersion function init(required numeric pageVersionId = null, required numeric pageId = null, required numeric majorVersion = null, required numeric minorVersion = null) {
         variables.pageVersionId = arguments.pageVersionId;
         variables.pageId        = arguments.pageId;
-        variables.version       = trim(arguments.version);
+        variables.majorVersion  = arguments.majorVersion;
+        variables.minorVersion  = arguments.minorVersion;
         
         load();
         
@@ -181,6 +182,9 @@ component {
     public pageStatus function getPageStatus() {
         return new pageStatus(variables.pageStatusId);
     }
+    public string function getVersion() {
+        return variables.majorVersion & "." & variables.minorVersion;
+    }
     
     
     public pageVersion function save() {
@@ -301,9 +305,9 @@ component {
     public void function delete() {
         var page = new page(variables.pageId);
         
-        if(page.getActualVersion() == variables.version) {
+        /*if(page.getActualVersion() == variables.version) {
             // TODO: update version of page to last one!
-        }
+        }*/
         
         new Query().setSQL("DELETE
                               FROM nephthys_pageVersion
@@ -315,7 +319,9 @@ component {
     
     
     private void function load() {
-        if(isNewEntry() || (variables.pageId != 0 && variables.pageId != null && variables.version != null && variables.version != "")) {
+        if(! isNewEntry() || (variables.pageId       != 0 && variables.pageId       != null && 
+                              variables.majorVersion != 0 && variables.majorVersion != null && 
+                              variables.minorVersion != 0 && variables.minorVersion != null)) {
             var qryPageVersion = new Query();
             
             var sql = "SELECT * FROM nephthys_pageVersion ";
@@ -326,9 +332,10 @@ component {
                 qryPageVersion.addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric");
             }
             else {
-                where &= (where == "" ? " WHERE " : " AND ") & " pageId = :pageId AND version = :version";
-                qryPageVersion.addParam(name = "pageId", value = variables.pageId, cfsqltype = "cf_sql_numeric");
-                qryPageVersion.addParam(name = "version", value = variables.version, cfsqltype = "cf_sql_varchar");
+                where &= (where == "" ? " WHERE " : " AND ") & " pageId = :pageId AND majorVersion = :majorVersion AND minorVersion = :minorVersion";
+                qryPageVersion.addParam(name = "pageId",       value = variables.pageId,       cfsqltype = "cf_sql_numeric");
+                qryPageVersion.addParam(name = "majorVersion", value = variables.majorVersion, cfsqltype = "cf_sql_numeric");
+                qryPageVersion.addParam(name = "minorVersion", value = variables.minorVersion, cfsqltype = "cf_sql_numeric");
             }
             
             sql &= where;
@@ -360,37 +367,25 @@ component {
                 variables.lastEditDate       = qPageVersion.lastEditDate[1];
             }
             else {
-                throw(type = "nephthys.notFound.page",
-                      message = "The page version could not be found",
-                      details = {
-                         "id" = variables.pageVersionId,
-                         "pageId" = variables.pageId,
-                         "majorVersion" = variables.majorVersion,
-                         "minorVersion" = variables.minorVersion
-                     });
+                if(variables.pageId       != 0 && variables.pageId       != null && 
+                   variables.majorVersion != 0 && variables.majorVersion != null && 
+                   variables.minorVersion != 0 && variables.minorVersion != null) {
+                    initNew();
+                }
+                else {
+                    throw(type = "nephthys.notFound.page",
+                          message = "The page version could not be found",
+                          details = {
+                             "id" = variables.pageVersionId,
+                             "pageId" = variables.pageId,
+                             "majorVersion" = variables.majorVersion,
+                             "minorVersion" = variables.minorVersion
+                         });
+                }
             }
         }
         else {
-            variables.pageVersionId      = null;
-            variables.pageId             = null;
-            variables.parentPageId       = null;
-            variables.prevPageVersionId  = null;
-            variables.nextPageVersionId  = null;
-            variables.majorVersion       = 1;
-            variables.minorVersion       = 0;
-            variables.linktext           = "";
-            variables.link               = "";
-            variables.title              = "";
-            variables.description        = "";
-            variables.content            = [];
-            variables.sortOrder          = getNextSortOrder();
-            variables.useDynamicSuffixes = false;
-            variables.pageStatusId       = getFirstStatusId();
-            variables.region             = 'header';
-            variables.creator            = new user(request.user.getUserId());
-            variables.creationDate       = now();
-            variables.lastEditor         = new user(request.user.getUserId());
-            variables.lastEditDate       = now();
+            initNew();
         }
         
         variables.prevPageVersion = null;
@@ -414,7 +409,7 @@ component {
     }
     
     private boolean function isNewEntry() {
-        return (variables.pageVersionId != 0 && variables.pageVersionId != null);
+        return (variables.pageVersionId == 0 || variables.pageVersionId == null);
     }
     
     private boolean function isPageVersionOffline() {
@@ -424,5 +419,39 @@ component {
     
     private boolean function updateOnlineVersionAllowed() {
         return false;
+    }
+    
+    private void function initNew() {
+        if(isNull(variables.pageId)) {
+            throw(type = "nephthys.application.notAllowed", message = "You cannot create a new version of a page without a page");
+        }
+        
+        variables.pageVersionId      = null;
+        variables.parentPageId       = null;
+        variables.prevPageVersionId  = null;
+        variables.nextPageVersionId  = null;
+        variables.linktext           = "";
+        variables.link               = "";
+        variables.title              = "";
+        variables.description        = "";
+        variables.content            = [];
+        variables.sortOrder          = getNextSortOrder();
+        variables.useDynamicSuffixes = false;
+        variables.pageStatusId       = getFirstStatusId();
+        variables.region             = 'header';
+        variables.creator            = new user(request.user.getUserId());
+        variables.creationDate       = now();
+        variables.lastEditor         = new user(request.user.getUserId());
+        variables.lastEditDate       = now();
+        
+        if(isNull(variables.majorVersion)) {
+            variables.majorVersion = getNextMajorVersion();
+            variables.minorVersion = 0;
+        }
+        else {
+            if(isNull(variables.minorVersion)) {
+                variables.minorVersion = getNextMinorVersion();
+            }
+        }
     }
 }

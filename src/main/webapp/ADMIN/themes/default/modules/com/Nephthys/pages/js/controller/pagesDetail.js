@@ -13,8 +13,8 @@ nephthysAdminApp
                 $scope.availableSubModules = availableSubModules;
                 $scope.availableOptions    = availableOptions;
                 
-                $scope.page.versions["1.1"].content = [{"type": "com.Nephthys.container"}];
-                $scope.selectedVersion = pageDetails.actualVersion;
+                $scope.selectedVersion = pageDetails.actualVersion; // {major, minor}
+                $scope.selectedCompleteVersion = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
             }));
         };
         
@@ -110,34 +110,66 @@ nephthysAdminApp
         };
         
         $scope.addMajorVersion = function () {
-            var newVersion = getNextMajorVersion() + ".0";
+            var scv = $scope.selectedCompleteVersion.split(".");
             
-            $scope.page.versions[newVersion] = [];
-            
-            $scope.selectedVersion = newVersion;
-        };
-        
-        $scope.addMinorVersion = function () {
-            var v = $scope.page.actualVersion.split(".");
-            
-            var newVersion = v[0] + "." + (parseInt(v[1], 10) + 1);
-            
-            // json way is a try to deep copy the struct | structs are pointers and therefore changed.
-            $scope.page.versions[newVersion] = JSON.parse(JSON.stringify($scope.page.versions[$scope.page.actualVersion]));
-            $scope.page.versions[newVersion].pageStatus = JSON.parse(JSON.stringify($scope.pageStatus[0]));
-            
-            $scope.selectedVersion = newVersion;
-        };
-        
-        var getNextMajorVersion = function () {
-            var lastVersion = 0;
-            for(var v in $scope.page.versions) {
-                if(lastVersion < Math.ceil(parseInt(v, 10))) {
-                    lastVersion = Math.ceil(parseInt(v, 10));
+            var newMajorVersion = 0;
+            var newMinorVersion = 0;
+            for(var majorVersion in $scope.page.versions) {
+                if(majorVersion > newMajorVersion) {
+                    newMajorVersion = majorVersion;
                 }
             }
             
-            return lastVersion + 1;
+            ++newMajorVersion;
+            
+            $scope.selectedVersion.major = newMajorVersion;
+            $scope.selectedVersion.minor = newMinorVersion;
+            $scope.selectedCompleteVersion = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
+            
+            $scope.page.versions[newMajorVersion] = {};
+            $scope.page.versions[newMajorVersion][newMinorVersion] = JSON.parse(JSON.stringify($scope.page.versions[scv[0]][scv[1]]));
+            
+            // update all status variables
+            $scope.page.versions[newMajorVersion][newMinorVersion].pageStatus = JSON.parse(JSON.stringify($scope.pageStatus[0]));
+            $scope.page.versions[newMajorVersion][newMinorVersion].content = [];
+            // TODO:
+            $scope.page.versions[newMajorVersion][newMinorVersion].creator.userId = 0;
+            $scope.page.versions[newMajorVersion][newMinorVersion].creator.userName = "IcedReaper";
+            $scope.page.versions[newMajorVersion][newMinorVersion].lastEditor.userId = 0;
+            $scope.page.versions[newMajorVersion][newMinorVersion].lastEditor.userName = "IcedReaper";
+        };
+        
+        $scope.addMinorVersion = function () {
+            var scv = $scope.selectedCompleteVersion.split(".");
+            var majorVersion = scv[0];
+            
+            var newMinorVersion = 0;
+            for(var minorVersion in $scope.page.versions[majorVersion]) {
+                if(minorVersion > newMinorVersion) {
+                    newMinorVersion = minorVersion;
+                }
+            }
+            
+            ++newMinorVersion;
+            
+            $scope.selectedVersion.minor = newMinorVersion;
+            $scope.selectedCompleteVersion = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
+            
+            $scope.page.versions[majorVersion][newMinorVersion] = JSON.parse(JSON.stringify($scope.page.versions[scv[0]][scv[1]]));
+            
+            // update all status variables
+            $scope.page.versions[majorVersion][newMinorVersion].pageStatus = JSON.parse(JSON.stringify($scope.pageStatus[0]));
+            // TODO:
+            $scope.page.versions[majorVersion][newMinorVersion].creator.userId = 0;
+            $scope.page.versions[majorVersion][newMinorVersion].creator.userName = "IcedReaper";
+            $scope.page.versions[majorVersion][newMinorVersion].lastEditor.userId = 0;
+            $scope.page.versions[majorVersion][newMinorVersion].lastEditor.userName = "IcedReaper";
+        };
+        
+        $scope.setVersion = function () {
+            var scv = $scope.selectedCompleteVersion.split(".");
+            $scope.selectedVersion.major = scv[0];
+            $scope.selectedVersion.minor = scv[1];
         }
         
         $scope.load();

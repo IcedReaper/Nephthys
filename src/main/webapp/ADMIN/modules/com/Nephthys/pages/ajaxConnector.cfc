@@ -7,40 +7,47 @@ component {
         var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
-        var pageVersions = {};
-        for(var pageVersion in page.getPageVersions()) {
-            var pageStatus = pageVersion.getPageStatus();
-            
-            pageVersions[pageVersion.getVersion()] = {
-                "parentPageId"       = pageVersion.getParentPageId(),
-                "linktext"           = pageVersion.getLinktext(),
-                "link"               = pageVersion.getLink(),
-                "title"              = pageVersion.getTitle(),
-                "description"        = pageVersion.getDescription(),
-                "content"            = pageVersion.getContent(),
-                "sortOrder"          = pageVersion.getSortOrder(),
-                "useDynamicSuffixes" = pageVersion.getUseDynamicSuffixes(),
-                "region"             = pageVersion.getRegion(),
-                "isOnline"           = pageVersion.isOnline(),
-                "creator"            = getUserInformation(pageVersion.getCreator()),
-                "creationDate"       = formatCtrl.formatDate(pageVersion.getCreationDate()),
-                "lastEditor"         = getUserInformation(pageVersion.getLastEditor()),
-                "lastEditDate"       = formatCtrl.formatDate(pageVersion.getLastEditDate()),
-                "subPages"           = getSubPages(pageVersion.getPageId(), pageVersion.getRegion()),
-                "pageStatus"         = {
-                    "pageStatusId" = pageStatus.getPageStatusId(),
-                    "name"         = pageStatus.getName(),
-                    "online"       = ! pageStatus.getOfflineStatus(),
-                    "editbale"     = pageStatus.isEditable()
-                }
-            };
+        var returnValue = {
+            "pageId"        = page.getPageId(),
+            "versions"      = page.getStructuredPageVersions(),
+            "actualVersion" = {
+                "major" = page.getActualMajorVersion(),
+                "minor" = page.getActualMinorVersion()
+            }
+        };
+        
+        // prepare data
+        for(var majorVersion in returnValue["versions"]) {
+            for(var minorVersion in returnValue["versions"][majorVersion]) {
+                var pageStatus = returnValue["versions"][majorVersion][minorVersion].getPageStatus();
+                
+                returnValue["versions"][majorVersion][minorVersion] = {
+                    "parentPageId"       = returnValue["versions"][majorVersion][minorVersion].getParentPageId(),
+                    "linktext"           = returnValue["versions"][majorVersion][minorVersion].getLinktext(),
+                    "link"               = returnValue["versions"][majorVersion][minorVersion].getLink(),
+                    "title"              = returnValue["versions"][majorVersion][minorVersion].getTitle(),
+                    "description"        = returnValue["versions"][majorVersion][minorVersion].getDescription(),
+                    "content"            = returnValue["versions"][majorVersion][minorVersion].getContent(),
+                    "sortOrder"          = returnValue["versions"][majorVersion][minorVersion].getSortOrder(),
+                    "useDynamicSuffixes" = returnValue["versions"][majorVersion][minorVersion].getUseDynamicSuffixes(),
+                    "region"             = returnValue["versions"][majorVersion][minorVersion].getRegion(),
+                    "isOnline"           = returnValue["versions"][majorVersion][minorVersion].isOnline(),
+                    "creator"            = getUserInformation(returnValue["versions"][majorVersion][minorVersion].getCreator()),
+                    "creationDate"       = formatCtrl.formatDate(returnValue["versions"][majorVersion][minorVersion].getCreationDate()),
+                    "lastEditor"         = getUserInformation(returnValue["versions"][majorVersion][minorVersion].getLastEditor()),
+                    "lastEditDate"       = formatCtrl.formatDate(returnValue["versions"][majorVersion][minorVersion].getLastEditDate()),
+                    "subPages"           = getSubPages(returnValue["versions"][majorVersion][minorVersion].getPageId(), returnValue["versions"][majorVersion][minorVersion].getRegion()),
+                    "pageStatus"         = {
+                        "pageStatusId" = pageStatus.getPageStatusId(),
+                        "name"         = pageStatus.getName(),
+                        "online"       = ! pageStatus.getOfflineStatus(),
+                        "editbale"     = pageStatus.isEditable()
+                    }
+                };
+            }
         }
         
-        return {
-            "pageId"        = page.getPageId(),
-            "actualVersion" = page.getActualVersion(),
-            "versions"      = pageVersions
-        };
+        return returnValue;
     }
     
     remote boolean function save(required numeric pageId,

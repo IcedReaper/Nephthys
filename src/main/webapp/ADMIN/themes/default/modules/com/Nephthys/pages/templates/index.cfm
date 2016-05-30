@@ -1,7 +1,7 @@
 <script type="text/javascript" src="/themes/default/assets/ChartJS/Chart.min.js"></script>
 
 <script type="text/javascript" src="/themes/default/assets/angular-chart/angular-chart.min.js"></script>
-<link rel="stylesheet" href="/themes/default/assets/angular-chart/angular-chart.min.css"></script>
+<link rel="stylesheet" href="/themes/default/assets/angular-chart/angular-chart.min.css">
 
 <link rel='stylesheet' href='/themes/default/assets/angular-textAngular/textAngular.css'>
 <script src='/themes/default/assets/angular-textAngular/textAngular-rangy.min.js'></script>

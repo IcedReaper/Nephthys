@@ -31,24 +31,24 @@ component {
         return this;
     }
     
-    /*
-    public page function setActualVersion(required string version) {
-        variables.actualVersion = arguments.version;
+    
+    public page function setPageVersionId(required string pageVersionId) {
+        variables.pageVersionId = arguments.pageVersionId;
         return this;
-    }*/
+    }
     
     public page function setPageStatusId(required numeric pageStatusId) {
         variables.pageStatusId = arguments.pageStatusId;
         return this;
     }
-    /*
+    
     public page function addPageVersion(required pageVersion pageVersion) {
         if(! variables.pageVersions.keyExists(arguments.pageVersion.getVersion())) {
             variables.pageVersions[arguments.pageVersion.getVersion()] = arguments.pageVersion;
         }
         
         return this;
-    }*/
+    }
     
     
     
@@ -68,6 +68,9 @@ component {
         return variables.pageStatusId;
     }
     
+    public numeric function getPageVersionId() {
+        return variables.pageVersionId;
+    }
     
     public string function getActualVersion() {
         var actualPageVersion = new pageVersion(variables.pageVersionId);
@@ -77,18 +80,19 @@ component {
     public pageVersion function getActualPageVersion() {
         return new pageVersion(variables.pageVersionId);
     }
-    /*
-    public pageVersion function getPageVersion(required string pageVersion) {
+    
+    public pageVersion function getPageVersion(required numeric majorVersion, required numeric minorVersion) {
         if(! variables.pageVersionsLoaded) {
             loadPageVersions();
         }
         
-        if(variables.pageVersions.keyExists(arguments.pageVersion)) {
-            return variables.pageVersions[arguments.pageVersion];
+        if(variables.pageVersions.keyExists(arguments.majorVersion)) {
+            if(variables.pageVersions[arguments.majorVersion].keyExists(arguments.minorVersion)) {
+                return duplicate(variables.pageVersions[arguments.majorVersion][arguments.minorVersion]);
+            }
         }
-        else {
-            throw(type = "nephthys.notFound.page", message = "The page version could not be found", details = arguments.pageVersion);
-        }
+        
+        throw(type = "nephthys.notFound.page", message = "The page version could not be found", details = arguments.pageVersion);
     }
     
     public array function getPageVersions() {
@@ -97,11 +101,21 @@ component {
         }
         
         var tmpPageVersions = [];
-        for(var version in variables.pageVersions) {
-            tmpPageVersions.append(duplicate(variables.pageVersions[version]));
+        for(var majorVersion in variables.pageVersions) {
+            for(var minorVersion in variables.pageVersions[majorVersion]) {
+                tmpPageVersions.append(duplicate(variables.pageVersions[majorVersion][minorVersion]));
+            }
         }
         
         return tmpPageVersions;
+    }
+    
+    public struct function getStructuredPageVersions() {
+        if(! variables.pageVersionsLoaded) {
+            loadPageVersions();
+        }
+        
+        return duplicate(variables.pageVersions);
     }
     
     public string function getNextVersion() {
@@ -109,13 +123,23 @@ component {
         return "1.1";
     }
     
-    public boolean function versionExists(required string version) {
+    public boolean function versionExists(required numeric majorVersion, required numeric minorVersion) {
         if(! variables.pageVersionsLoaded) {
             loadPageVersions();
         }
         
-        return variables.pageVersions.keyExists(arguments.version);
-    }*/
+        return (variables.pageVersions.keyExists(arguments.majorVersion) && variables.pageVersions[arguments.majorVersion].keyExists(arguments.minorVersion));
+    }
+    
+    public numeric function getActualMajorVersion() {
+        var actualPageVersion = new pageVersion(variables.pageVersionId);
+        return actualPageVersion.getMajorVersion();
+    }
+    
+    public numeric function getActualMinorVersion() {
+        var actualPageVersion = new pageVersion(variables.pageVersionId);
+        return actualPageVersion.getMinorVersion();
+    }
     
     
     
@@ -209,6 +233,7 @@ component {
     
     private void function loadPageVersions() {
         variables.pageVersionsLoaded = true;
+        variables.pageVersions = {};
         
         var qGetVersions = new Query().setSQL("SELECT pageVersionId, majorVersion, minorVersion
                                                  FROM nephthys_pageVersion
@@ -219,9 +244,11 @@ component {
                                       .getResult();
         
         for(var i = 1; i <= qGetVersions.getRecordCount(); ++i) {
-            /*if(! variables.pageVersions.keyExists(qGetVersions.majorVersion[i])) {
-                variables.pageVersions[qGetVersions.version[i]] = new pageVersion(qGetVersions.pageVersionId[i]);
-            }*/
+            if(! variables.pageVersions.keyExists(qGetVersions.majorVersion[i])) {
+                variables.pageVersions[ qGetVersions.majorVersion[i] ] = {};
+            }
+            
+            variables.pageVersions[ qGetVersions.majorVersion[i] ][ qGetVersions.minorVersion[i] ] = new pageVersion(qGetVersions.pageVersionId[i]);
         }
     }
 }
