@@ -31,8 +31,12 @@ component {
         variables.nextPageVersionId = arguments.nextPageVersionId;
         return this;
     }
-    public pageVersion function setVersion(required string version) {
-        variables.version = arguments.version;
+    public pageVersion function setMajorVersion(required string majorVersion) {
+        variables.majorVersion = arguments.majorVersion;
+        return this;
+    }
+    public pageVersion function setMinorVersion(required string minorVersion) {
+        variables.minorVersion = arguments.minorVersion;
         return this;
     }
     public pageVersion function setLinktext(required string linktext) {
@@ -117,8 +121,11 @@ component {
     public numeric function getNextPageVersionId() {
         return variables.nextPageVersionId;
     }
-    public string function getVersion() {
-        return variables.version;
+    public string function getMajorVersion() {
+        return variables.majorVersion;
+    }
+    public string function getMinorVersion() {
+        return variables.minorVersion;
     }
     public string function getLinktext() {
         return variables.linktext;
@@ -184,7 +191,8 @@ component {
                                                                           parentPageId,
                                                                           prevPageVersionId,
                                                                           nextPageVersionId,
-                                                                          version,
+                                                                          majorVersion,
+                                                                          minorVersion,
                                                                           linktext,
                                                                           link,
                                                                           title,
@@ -224,7 +232,8 @@ component {
                                                  .addParam(name = "parentPageId",       value = variables.parentPageId,             cfsqltype = "cf_sql_numeric")
                                                  .addParam(name = "prevPageVersionId",  value = variables.prevPageVersionId,        cfsqltype = "cf_sql_numeric")
                                                  .addParam(name = "nextPageVersionId",  value = variables.nextPageVersionId,        cfsqltype = "cf_sql_numeric")
-                                                 .addParam(name = "version",            value = variables.version,                  cfsqltype = "cf_sql_varchar")
+                                                 .addParam(name = "majorVersion",       value = variables.majorVersion,             cfsqltype = "cf_sql_numeric")
+                                                 .addParam(name = "minorVersion",       value = variables.minorVersion,             cfsqltype = "cf_sql_numeric")
                                                  .addParam(name = "linktext",           value = variables.linktext,                 cfsqltype = "cf_sql_varchar")
                                                  .addParam(name = "link",               value = variables.link,                     cfsqltype = "cf_sql_varchar")
                                                  .addParam(name = "title",              value = variables.title,                    cfsqltype = "cf_sql_varchar")
@@ -248,7 +257,8 @@ component {
                                        SET parentPageId       = :parentPageId,
                                            prevPageVersionId  = :prevPageVersionId,
                                            nextPageVersionId  = :nextPageVersionId,
-                                           version            = :version,
+                                           majorVersion       = :majorVersion,
+                                           minorVersion       = :minorVersion,
                                            linktext           = :linktext,
                                            link               = :link,
                                            title              = :title,
@@ -265,7 +275,8 @@ component {
                            .addParam(name = "parentPageId",       value = variables.parentPageId,             cfsqltype = "cf_sql_numeric")
                            .addParam(name = "prevPageVersionId",  value = variables.prevPageVersionId,        cfsqltype = "cf_sql_numeric")
                            .addParam(name = "nextPageVersionId",  value = variables.nextPageVersionId,        cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "version",            value = variables.version,                  cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "majorVersion",       value = variables.majorVersion,             cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "minorVersion",       value = variables.minorVersion,             cfsqltype = "cf_sql_numeric")
                            .addParam(name = "linktext",           value = variables.linktext,                 cfsqltype = "cf_sql_varchar")
                            .addParam(name = "link",               value = variables.link,                     cfsqltype = "cf_sql_varchar")
                            .addParam(name = "title",              value = variables.title,                    cfsqltype = "cf_sql_varchar")
@@ -332,7 +343,8 @@ component {
                 variables.parentPageId       = qPageVersion.parentPageId[1];
                 variables.prevPageVersionId  = qPageVersion.prevPageVersionId[1];
                 variables.nextPageVersionId  = qPageVersion.nextPageVersionId[1];
-                variables.version            = qPageVersion.version[1];
+                variables.majorVersion       = qPageVersion.majorVersion[1];
+                variables.minorVersion       = qPageVersion.minorVersion[1];
                 variables.linktext           = qPageVersion.linktext[1];
                 variables.link               = qPageVersion.link[1];
                 variables.title              = qPageVersion.title[1];
@@ -353,7 +365,8 @@ component {
                       details = {
                          "id" = variables.pageVersionId,
                          "pageId" = variables.pageId,
-                         "version" = variables.version
+                         "majorVersion" = variables.majorVersion,
+                         "minorVersion" = variables.minorVersion
                      });
             }
         }
@@ -363,7 +376,8 @@ component {
             variables.parentPageId       = null;
             variables.prevPageVersionId  = null;
             variables.nextPageVersionId  = null;
-            variables.version            = "1.0";
+            variables.majorVersion       = 1;
+            variables.minorVersion       = 0;
             variables.linktext           = "";
             variables.link               = "";
             variables.title              = "";

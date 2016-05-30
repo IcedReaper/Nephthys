@@ -31,24 +31,24 @@ component {
         return this;
     }
     
-    
+    /*
     public page function setActualVersion(required string version) {
         variables.actualVersion = arguments.version;
         return this;
-    }
+    }*/
     
     public page function setPageStatusId(required numeric pageStatusId) {
         variables.pageStatusId = arguments.pageStatusId;
         return this;
     }
-    
+    /*
     public page function addPageVersion(required pageVersion pageVersion) {
         if(! variables.pageVersions.keyExists(arguments.pageVersion.getVersion())) {
             variables.pageVersions[arguments.pageVersion.getVersion()] = arguments.pageVersion;
         }
         
         return this;
-    }
+    }*/
     
     
     
@@ -68,14 +68,16 @@ component {
         return variables.pageStatusId;
     }
     
+    
     public string function getActualVersion() {
-        return variables.actualVersion;
+        var actualPageVersion = new pageVersion(variables.pageVersionId);
+        return actualPageVersion.getMajorVersion() & "." & actualPageVersion.getMinorVersion();
     }
     
     public pageVersion function getActualPageVersion() {
-        return variables.pageVersions[variables.actualVersion];
+        return new pageVersion(variables.pageVersionId);
     }
-    
+    /*
     public pageVersion function getPageVersion(required string pageVersion) {
         if(! variables.pageVersionsLoaded) {
             loadPageVersions();
@@ -113,7 +115,7 @@ component {
         }
         
         return variables.pageVersions.keyExists(arguments.version);
-    }
+    }*/
     
     
     
@@ -123,19 +125,19 @@ component {
                                                                (
                                                                    creatorUserIdv
                                                                    creationDate,
-                                                                   actualVersion,
+                                                                   pageVersionId,
                                                                    pageStatusId
                                                                )
                                                         VALUES (
                                                                    :creatorUserId,
                                                                    :creationDate,
-                                                                   :actualVersion,
+                                                                   :pageVersionId,
                                                                    :pageStatusId
                                                                );
                                                    SELECT currval('seq_nephthys_page_id' :: regclass) newPageId;")
                                           .addParam(name = "creatorUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
                                           .addParam(name = "creationDate",  value = variables.creationDate,        cfsqltype = "cf_sql_date")
-                                          .addParam(name = "actualVersion", value = variables.actualVersion,       cfsqltype = "cf_sql_varchar")
+                                          .addParam(name = "pageVersionId", value = variables.pageVersionId,       cfsqltype = "cf_sql_numeric")
                                           .addParam(name = "pageStatusId",  value = variables.pageStatusId,        cfsqltype = "cf_sql_numeric")
                                           .execute()
                                           .getResult()
@@ -143,11 +145,11 @@ component {
         }
         else {
             new Query().setSQL("UPDATE nephthys_page
-                                   SET actualVersion = :actualVersion,
+                                   SET pageVersionId = :pageVersionId,
                                        pageStatusId  = :pageStatusId
                                  WHERE pageId = :pageId")
                        .addParam(name = "pageId",        value = variables.pageId,        cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "actualVersion", value = variables.actualVersion, cfsqltype = "cf_sql_varchar")
+                       .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
                        .addParam(name = "pageStatusId",  value = variables.pageStatusId,  cfsqltype = "cf_sql_numeric")
                        .execute()
                        .getResult();
@@ -177,7 +179,7 @@ component {
             if(qGetPage.getRecordCount() == 1) {
                 variables.creator       = new user(qGetPage.creatorUserId[1]);
                 variables.creationDate  = qGetPage.creationDate[1];
-                variables.actualVersion = qGetPage.actualVersion[1];
+                variables.pageVersionId = qgetPage.pageVersionId[1];
                 variables.pageStatusId  = qGetPage.pageStatusId[1];
             }
             else {
@@ -187,11 +189,11 @@ component {
         else {
             variables.creator       = new user(request.user.getUserId());
             variables.creationDate  = now();
-            variables.actualVersion = "1.0";
+            variables.pageVersionId = null;
             variables.pageStatusId  = getFirstStatusId();
         }
         
-        variables.pageVersions[variables.actualVersion] = new pageVersion(pageId = variables.pageId, version = variables.actualVersion);
+        variables.pageVersions = null;
     }
     
     private numeric function getFirstStatusId() {
@@ -208,19 +210,18 @@ component {
     private void function loadPageVersions() {
         variables.pageVersionsLoaded = true;
         
-        var qGetVersions = new Query().setSQL("SELECT pageVersionId, version
+        var qGetVersions = new Query().setSQL("SELECT pageVersionId, majorVersion, minorVersion
                                                  FROM nephthys_pageVersion
                                                 WHERE pageId = :pageId
-                                                  AND Version != :actualVersion")
+                                               ORDER BY majorVersion, minorVersion")
                                       .addParam(name = "pageId", value = variables.pageId, cfsqltype = "cf_sql_numeric")
-                                      .addParam(name = "actualVersion", value = variables.actualVersion, cfsqltype = "cf_sql_varchar")
                                       .execute()
                                       .getResult();
         
         for(var i = 1; i <= qGetVersions.getRecordCount(); ++i) {
-            if(! variables.pageVersions.keyExists(qGetVersions.version[i])) {
+            /*if(! variables.pageVersions.keyExists(qGetVersions.majorVersion[i])) {
                 variables.pageVersions[qGetVersions.version[i]] = new pageVersion(qGetVersions.pageVersionId[i]);
-            }
+            }*/
         }
     }
 }

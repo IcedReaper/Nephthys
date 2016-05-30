@@ -24,8 +24,7 @@ component implements="WWW.interfaces.connector" {
     private array function getSitemap(required string region) {
         var pageFilterCtrl = createObject("component", "API.modules.com.Nephthys.page.filter").init();
         
-        return pageFilterCtrl.setParentId(0)
-                             .setRegion(arguments.region)
+        return pageFilterCtrl.setRegion(arguments.region)
                              .setVersion("actual")
                              .setActive(true)
                              .execute()

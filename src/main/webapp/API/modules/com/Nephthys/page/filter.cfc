@@ -95,7 +95,7 @@ component implements="API.interfaces.filter" {
                 }
                 if(variables.version != null) {
                     if(variables.version == "actual") {
-                        where &= (where == "" ? " WHERE " : " AND ") & "p.actualVersion = pv.version";
+                        where &= (where == "" ? " WHERE " : " AND ") & "p.pageVersionId = pv.pageversionId";
                     }
                     else {
                         where &= (where == "" ? " WHERE " : " AND ") & "pv.version = :version";
