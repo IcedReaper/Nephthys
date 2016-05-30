@@ -300,3 +300,8 @@ alter table nephthys_pageVersion drop column version;
 
 alter table nephthys_pageVersion alter column minorVersion SET NOT NULL;
 alter table nephthys_pageVersion alter column majorVersion SET NOT NULL;
+
+alter table nephthys_page add constraint FK_nephthys_page_pageVersionId foreign key (pageVersionId) references nephthys_pageVersion (pageVersionId) ON UPDATE NO ACTION ON DELETE CASCADE;
+create index fki_nephthys_page_pageVersionId ON nephthys_page (pageVersionId);
+
+alter table nephthys_pageVersion add constraint UK_nephthys_pageVersion_version UNIQUE (pageId, majorVersion, minorVersion);
