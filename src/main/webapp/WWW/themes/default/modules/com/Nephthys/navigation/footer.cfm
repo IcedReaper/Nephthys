@@ -12,7 +12,7 @@
     
     <cfif application.system.settings.getValueOfKey('showSocialLinksInFooter')>
         <div class="row">
-            <div class="col-sm-4 col-sm-offset-8">
+            <div class="col-sm-4 offset-sm-8">
                 Folge uns auf:<br />
                 <div class="btn-group" role="group" aria-label="Folge uns auf">
                     <cfif application.system.settings.getValueOfKey('facebook-page') NEQ "">
