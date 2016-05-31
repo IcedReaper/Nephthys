@@ -43,38 +43,38 @@
                         </div>
                         <div class="form-group">
                             <label for="link">Link</label>
-                            <input type="text" class="form-control" id="link" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].link" ng-readonly="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable">
+                            <input type="text" class="form-control" id="link" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].link" ng-readonly="isReadonly()">
                         </div>
                         <div class="form-group">
                             <label for="linktext">Text des Links</label>
-                            <input type="text" class="form-control" id="linktext" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].linktext" ng-readonly="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable">
+                            <input type="text" class="form-control" id="linktext" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].linktext" ng-readonly="isReadonly()">
                         </div>
                         <div class="form-group">
                             <label for="title">Titel der Seite / des Links</label>
-                            <input type="text" class="form-control" id="title" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].title" ng-readonly="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable">
+                            <input type="text" class="form-control" id="title" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].title" ng-readonly="isReadonly()">
                         </div>
                         <div class="form-group">
                             <label for="description">Beschreibung der Seite</label>
-                            <input type="text" class="form-control" id="description" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].description" ng-readonly="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable">
+                            <input type="text" class="form-control" id="description" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].description" ng-readonly="isReadonly()">
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="sortOrder">Sortierung</label>
-                            <input type="text" class="form-control" id="sortOrder" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].sortOrder" ng-readonly="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable">
+                            <input type="text" class="form-control" id="sortOrder" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].sortOrder" ng-readonly="isReadonly()">
                         </div>
                         <div class="form-group">
                             <label for="useDynamicSuffixes" title="Dynamische Seiten Suffixe sind Erweiterungen der Url, über welche sich Datensätze eines Moduls laden lassen">Dynamische Seiten Suffixe verwenden *</label>
                             <select class="form-control" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].useDynamicSuffixes"
                                     ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]"
-                                    ng-readonly="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable">
+                                    ng-readonly="isReadonly()">
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="region" title="Eine Navigationsregion ist zum Beispiel die Kopfnavigation am oberen Rand der Webseite">Region *</label>
                             <select class="form-control" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].region"
                                     ng-options="o.v as o.n for o in [{ n: 'Kopfnavigation', v: 'header' }, { n: 'Fußnavigation', v: 'footer' }]"
-                                    ng-readonly="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable">
+                                    ng-readonly="isReadonly()">
                             </select>
                         </div>
                         <!--<div class="form-group">
@@ -110,15 +110,15 @@
     <form>
         <button class="btn btn-danger pull-right"
                 ng-click="deleteElement(child)"
-                ng-disabled="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable"><i class="fa fa-trash"></i></button>
+                ng-disabled="isReadonly()"><i class="fa fa-trash"></i></button>
         <button class="btn btn-secondary pull-right"
                 ng-if="! $first"
                 ng-click="moveUp(child)"
-                ng-disabled="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable"><i class="fa fa-arrow-up"></i></button>
+                ng-disabled="isReadonly()"><i class="fa fa-arrow-up"></i></button>
         <button class="btn btn-secondary pull-right"
                 ng-if="! $last"
                 ng-click="moveDown(child)"
-                ng-disabled="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable"><i class="fa fa-arrow-down"></i></button>
+                ng-disabled="isReadonly()"><i class="fa fa-arrow-down"></i></button>
         
         <h2>{{child.type}}</h2>
         
@@ -129,19 +129,19 @@
                        class="form-control"
                        ng-if="option.type == 'text'"
                        ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
-                       ng-readonly="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable">
+                       ng-readonly="isReadonly()">
                 <select class="form-control"
                         ng-model="child.options[option.dbName]"
                         ng-if="option.type == 'boolean'"
                         ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
                         ng-options="o.v as o.n for o in [{ n: 'Option entfernen/Nicht gesetzt', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]"
-                        ng-readonly="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable">
+                        ng-readonly="isReadonly()">
                 </select>
                 <select ng-model="child.options[option.dbName]"
                         class="form-control"
                         ng-if="option.type == 'select' || option.type == 'query'"
                         ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
-                        ng-readonly="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable"
+                        ng-readonly="isReadonly()"
                         ng-options="o.value as o.description for o in option.selectOptions">
                     <option value="">Option entfernen/Nicht gesetzt</option>
                 </select>
@@ -149,7 +149,7 @@
                      class="form-control"
                      ng-if="option.type == 'wysiwyg'"
                      text-angular ta-toolbar="[['h1', 'h2', 'h3', 'h4', 'h5', 'h6'], ['p', 'pre', 'quote'], ['ul', 'ol'], ['bold','italics','underline','strikeThrough'], ['justifyLeft','justifyCenter','justifyRight','justifyFull'], ['insertLink'], ['undo', 'redo'],['wordcount','charcount']]"
-                     ta-readonly="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable"></div>
+                     ta-readonly="isReadonly()"></div>
             </div>
         </div>
         
@@ -162,10 +162,10 @@
             <h4>Weiteres Unterelement hinzufügen</h4>
             
             <select class="form-control"
-                    ng-change="appendChild(child, newChildren)"
-                    ng-model="newChildren"
-                    ng-options="o.type as o.type for o in availableSubModules[child.type]"
-                    ng-readonly="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable">
+                    ng-change="appendChild(child, child.newChildren)"
+                    ng-model="child.newChildren"
+                    ng-options="subModule as subModule for subModule in availableSubModules[child.type]"
+                    ng-readonly="isReadonly()">
                 <option value="" selected="selected"></option>
             </select>
         </div>
@@ -178,10 +178,10 @@
         
         <button class="btn btn-primary"
                 ng-click="appendChild(page.versions[selectedVersion.major][selectedVersion.minor].content, 'com.Nephthys.container');"
-                ng-disabled="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable"><i class="fa fa-plus"></i> Neuen Container hinzufügen</button>
+                ng-disabled="isReadonly()"><i class="fa fa-plus"></i> Neuen Container hinzufügen</button>
         <button class="btn btn-primary"
                 ng-click="appendChild(page.versions[selectedVersion.major][selectedVersion.minor].content, 'com.IcedReaper.startpage');"
                 ng-if="page.versions[selectedVersion.major][selectedVersion.minor].content.length === 0"
-                ng-disabled="! page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.editable"><i class="fa fa-plus"></i> Nur Startseite verwenden</button>
+                ng-disabled="isReadonly()"><i class="fa fa-plus"></i> Nur Startseite verwenden</button>
     </div>
 </div>

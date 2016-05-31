@@ -26,7 +26,7 @@ nephthysAdminApp
         
         $scope.appendChild = function (child, newChildren) {
             // todo: check when col if 100% is exceeded
-            if(newChildren != "") {
+            if(newChildren) {
                 if(child.children) {
                     child.children.push({
                         "type": newChildren,
@@ -43,6 +43,8 @@ nephthysAdminApp
                         "children": []
                     });
                 }
+                
+                delete child["newChildren"];
             }
         };
         
@@ -68,7 +70,7 @@ nephthysAdminApp
                 return false;
             };
             
-            searchSub($scope.page.content);
+            searchSub($scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].content);
         };
         
         $scope.moveDown = function(child) {
@@ -87,7 +89,7 @@ nephthysAdminApp
                 return false;
             };
             
-            searchSub($scope.page.content);
+            searchSub($scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].content);
         };
         
         $scope.deleteElement = function(child) {
@@ -106,7 +108,7 @@ nephthysAdminApp
                 return false;
             };
             
-            searchSub($scope.page.content);
+            searchSub($scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].content);
         };
         
         $scope.addMajorVersion = function () {
@@ -170,7 +172,25 @@ nephthysAdminApp
             var scv = $scope.selectedCompleteVersion.split(".");
             $scope.selectedVersion.major = scv[0];
             $scope.selectedVersion.minor = scv[1];
-        }
+        };
+        
+        $scope.isEditable = function () {
+            if($scope.page) {
+                return $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageStatus.editable;
+            }
+            else {
+                return false;
+            }
+        };
+        
+        $scope.isReadonly = function () {
+            if($scope.page) {
+                return ! $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageStatus.editable;
+            }
+            else {
+                return true;
+            }
+        };
         
         $scope.load();
     }]);
