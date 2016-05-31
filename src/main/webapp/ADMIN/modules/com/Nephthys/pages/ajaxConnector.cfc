@@ -127,19 +127,34 @@ component {
     
     // STATUS
     
-    remote array function getStatusList() {
+    remote struct function getStatusList() {
         var pageStatusLoader = createObject("component", "API.modules.com.Nephthys.page.pageStatusFilter").init();
         
-        var prepPageStatus = [];
+        var prepPageStatus = {};
         
         for(var pageStatus in pageStatusLoader.execute().getResult()) {
-            prepPageStatus.append({
+            var nextStatusList = {};
+            for(var nextStatus in pageStatus.getNextStatus()) {
+                if(nextStatus.getActiveStatus()) {
+                    nextStatusList[nextStatus.getPageStatusId()] = {
+                        "pageStatusId" = nextStatus.getPageStatusId(),
+                        "name"         = nextStatus.getName(),
+                        "active"       = nextStatus.getActiveStatus(),
+                        "offline"      = nextStatus.getOfflineStatus(),
+                        "editable"     = nextStatus.isEditable()
+                    };
+                }
+            }
+            
+            prepPageStatus[pageStatus.getPageStatusId()] = {
                 "pageStatusId" = pageStatus.getPageStatusId(),
                 "name"         = pageStatus.getName(),
                 "active"       = pageStatus.getActiveStatus(),
                 "offline"      = pageStatus.getOfflineStatus(),
-                "editable"     = pageStatus.isEditable()
-            });
+                "editable"     = pageStatus.isEditable(),
+                "startStatus"  = pageStatus.isStartStatus(),
+                "nextStatus"   = nextStatusList
+            };
         }
         
         return prepPageStatus;

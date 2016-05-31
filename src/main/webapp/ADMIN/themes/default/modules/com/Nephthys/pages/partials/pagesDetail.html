@@ -38,10 +38,6 @@
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="parentId">Übergeordnete Seite</label>
-                            <input type="text" class="form-control" id="parentId" disabled readonly="readonly" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].parentPageId" title="Not yet implemented">
-                        </div>
-                        <div class="form-group">
                             <label for="link">Link</label>
                             <input type="text" class="form-control" id="link" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].link" ng-readonly="isReadonly()">
                         </div>
@@ -60,6 +56,10 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
+                            <label for="parentId">Übergeordnete Seite</label>
+                            <input type="text" class="form-control" id="parentId" disabled readonly="readonly" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].parentPageId" title="Not yet implemented">
+                        </div>
+                        <div class="form-group">
                             <label for="sortOrder">Sortierung</label>
                             <input type="text" class="form-control" id="sortOrder" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].sortOrder" ng-readonly="isReadonly()">
                         </div>
@@ -77,24 +77,18 @@
                                     ng-readonly="isReadonly()">
                             </select>
                         </div>
-                        <!--<div class="form-group">
-                            <label for="active">Aktiv</label>
-                            <select class="form-control" ng-model="page.active"
-                                    ng-options="o.v as o.n for o in [{ n: 'Aktiv', v: true }, { n: 'Inaktiv', v: false }]">
-                            </select>
-                        </div>-->
-                        <!-- todo: remove with workflow -->
-                        <div class="form-group">
-                            <label for="active">Status</label>
-                            <select class="form-control"
-                                    ng-model="page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.pageStatusId"
-                                    ng-options="o.pageStatusId as o.name for o in pageStatus">
-                            </select>
-                        </div>
                     </div>
                 </div>
                 
-                <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+                <button type="submit" class="btn btn-success" ng-click="save()" ng-if="isEditable()"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
+                
+                <div ng-if="pageStatus[ page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.pageStatusId ].nextStatus">
+                    <h4>Status ändern in</h4>
+                    <button type="submit"
+                            class="btn btn-primary m-r-1"
+                            ng-click=""
+                            ng-repeat="ps in pageStatus[ page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.pageStatusId ].nextStatus">{{ps.name}}</button>
+                </div>
             </form>
         </div>
         

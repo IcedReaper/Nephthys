@@ -1,17 +1,35 @@
 component implements="API.interfaces.filter" {
     public filter function init() {
+        variables.startStatus = null;
+        
         variables.qRes = null;
         variables.results = null;
         
         return this;
     }
     
+    public filter function setStartStatus(required boolean startStatus) {
+        variables.startStatus = arguments.startStatus;
+        
+        return this;
+    }
+    
     public filter function execute() {
-        variables.qRes = new Query().setSQL("  SELECT pageStatusId
-                                                 FROM nephthys_pageStatus
-                                             ORDER BY pageStatusId")
-                                    .execute()
-                                    .getResult();
+        var qFilter = new Query();
+        var sql = "SELECT pageStatusId
+                     FROM nephthys_pageStatus ";
+        
+        var where = "";
+        if(variables.startStatus != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & " startStatus = :startStatus";
+            qFilter.addParam(name = "startStatus", value = variables.startStatus, cfsqltype = "cf_sql_bit");
+        }
+        
+        var orderBy = " ORDER BY pageStatusId";
+        
+        variables.qRes = qFilter.setSQL(sql & where & orderBy)
+                                .execute()
+                                .getResult();
         
         return this;
     }

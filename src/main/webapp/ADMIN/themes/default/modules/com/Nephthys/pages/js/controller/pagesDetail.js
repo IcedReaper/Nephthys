@@ -19,9 +19,10 @@ nephthysAdminApp
         };
         
         $scope.save = function () {
-            pagesService
+            // TODO: change to only save actual version...
+            /*pagesService
                 .save($scope.page)
-                .then($scope.load);
+                .then($scope.load);*/
         };
         
         $scope.appendChild = function (child, newChildren) {
@@ -132,7 +133,7 @@ nephthysAdminApp
             $scope.page.versions[newMajorVersion][newMinorVersion] = JSON.parse(JSON.stringify($scope.page.versions[scv[0]][scv[1]]));
             
             // update all status variables
-            $scope.page.versions[newMajorVersion][newMinorVersion].pageStatus = JSON.parse(JSON.stringify($scope.pageStatus[0]));
+            $scope.page.versions[newMajorVersion][newMinorVersion].pageStatus = JSON.parse(JSON.stringify(getStartStatus()));
             $scope.page.versions[newMajorVersion][newMinorVersion].content = [];
             // TODO:
             $scope.page.versions[newMajorVersion][newMinorVersion].creator.userId = 0;
@@ -189,6 +190,15 @@ nephthysAdminApp
             }
             else {
                 return true;
+            }
+        };
+        
+        
+        var getStartStatus = function () {
+            for(var status in $scope.pageStatus) {
+                if($scope.pageStatus[status].startStatus === true) {
+                    return $scope.pageStatus[status];
+                }
             }
         };
         

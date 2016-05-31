@@ -2,6 +2,8 @@ component {
     public pageStatus function init(required numeric pageStatusId) {
         variables.pageStatusId = arguments.pageStatusId;
         
+        variables.nextStatusLoaded = false;
+        
         loadDetails();
         
         return this;
@@ -30,6 +32,13 @@ component {
         
         return this;
     }
+    
+    public pageStatus function setStartStatus(required boolean startStatus) {
+        variables.startStatus = arguments.startStatus;
+        
+        return this;
+    }
+    
     
     public numeric function getPageStatusId() {
         return variables.pageStatusId;
@@ -63,6 +72,10 @@ component {
         return variables.lastEditDate;
     }
     
+    public boolean function isStartStatus() {
+        return variables.startStatus == 1;
+    }
+    
     public user function getCreator() {
         if(! vairables.keyExists("creator")) {
             variables.creator = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.creatorUserId);
@@ -79,6 +92,14 @@ component {
     
     public boolean function isEditable() {
         return variables.editable == 1;
+    }
+    
+    public array function getNextStatus() {
+        if(! variables.nextStatusLoaded) {
+            loadNextStatus();
+        }
+        
+        return variables.nextStatus;
     }
     
     
@@ -160,6 +181,7 @@ component {
                 variables.active           = qPageStatus.active[1];
                 variables.offline          = qPageStatus.offline[1];
                 variables.editable         = qPageStatus.editable[1];
+                variables.startStatus      = qPageStatus.startStatus[1];
                 variables.creatorUserId    = qPageStatus.creatorUserId[1];
                 variables.creationDate     = qPageStatus.creationDate[1];
                 variables.lastEditorUserId = qPageStatus.lastEditorUserId[1];
@@ -174,10 +196,26 @@ component {
             variables.active           = false;
             variables.offline          = true;
             variables.editable         = true;
+            variables.startStatus      = false;
             variables.creatorUserId    = null;
             variables.creationDate     = null;
             variables.lastEditorUserId = null;
             variables.lastEditDate     = null;
+        }
+    }
+    
+    private void function loadNextStatus() {
+        variables.nextStatus = [];
+        
+        var qGetNextStatus = new Query().setSQL("SELECT nextPageStatusId
+                                                   FROM nephthys_pageStatusFlow
+                                                  WHERE pageStatusId = :pageStatusId")
+                                        .addParam(name = "pageStatusId", value = variables.pageStatusId, cfsqltype = "cf_sql_numeric")
+                                        .execute()
+                                        .getResult();
+        
+        for(var i = 1; i <= qGetNextStatus.getRecordCount(); ++i) {
+            variables.nextStatus.append(new pageStatus(qGetNextStatus.nextPageStatusId[i]));
         }
     }
 }

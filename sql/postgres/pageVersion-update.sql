@@ -305,3 +305,5 @@ alter table nephthys_page add constraint FK_nephthys_page_pageVersionId foreign 
 create index fki_nephthys_page_pageVersionId ON nephthys_page (pageVersionId);
 
 alter table nephthys_pageVersion add constraint UK_nephthys_pageVersion_version UNIQUE (pageId, majorVersion, minorVersion);
+
+alter table nephthys_pageStatus add column startStatus boolean default false;
