@@ -72,6 +72,16 @@ nephthysAdminApp
             
             getActualUser: function() {
                 return $http.get("/ajax/com/Nephthys/pages/getActualUser");
+            },
+            
+            getDetailsForVersion: function (pageVersionId, majorVersion, minorVersion) {
+                return $http.get("/ajax/com/Nephthys/pages/getDetailsForVersion", {
+                    params: {
+                        pageVersionId: pageVersionId,
+                        majorVersion: majorVersion,
+                        minorVersion: minorVersion
+                    }
+                });
             }
         };
     });

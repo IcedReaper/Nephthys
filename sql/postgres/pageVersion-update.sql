@@ -214,7 +214,7 @@ ALTER TABLE nephthys_pageStatus DROP COLUMN sortOrder;
 
 
 
-
+/* TO BE DISCUSSED
 CREATE SEQUENCE seq_nephthys_pageRequiredApproval_id
   INCREMENT 1
   MINVALUE 1
@@ -245,7 +245,7 @@ WITH
 CREATE INDEX FKI_nephthys_pageRequiredApproval_pageStatusFlowId ON nephthys_pageRequiredApproval(pageStatusFlowId);
 CREATE INDEX FKI_nephthys_pageRequiredApproval_userId           ON nephthys_pageRequiredApproval(userId);
 CREATE INDEX IDX_nephthys_pageRequiredApproval_psfUserSo        ON nephthys_pageRequiredApproval(pageStatusFlowId, userId, sortOrder);
-
+*/
 
 
 CREATE SEQUENCE seq_nephthys_pageApproval_id
@@ -258,26 +258,26 @@ CREATE SEQUENCE seq_nephthys_pageApproval_id
 CREATE TABLE nephthys_pageApproval
 (
     pageApprovalId integer NOT NULL DEFAULT nextval('seq_nephthys_pageApproval_id'::regclass),
-    pageStatusFlowId integer NOT NULL,
+    pageVersionId integer NOT NULL,
+    oldPageStatusId integer, -- for the first the old is null
+    newPageStatusId integer NOT NULL,
     userId integer NOT NULL,
-    sortOrder integer NOT NULL DEFAULT 1,
-    approvalDate timestamp with time zone DEFAULT NULL,
+    approvalDate timestamp with time zone NOT NULL DEFAULT now(),
     
     CONSTRAINT PK_nephthys_pageApproval_Id     PRIMARY KEY (pageApprovalId),
-    CONSTRAINT FK_nephthys_pageApproval_psfId  FOREIGN KEY (pageStatusFlowId) REFERENCES nephthys_pageStatusFlow (pageStatusFlowId) ON UPDATE NO ACTION ON DELETE CASCADE,
-    CONSTRAINT FK_nephthys_pageApproval_userId FOREIGN KEY (userId)           REFERENCES nephthys_user (userId)                     ON UPDATE NO ACTION ON DELETE CASCADE,
-    
-    CONSTRAINT UK_nephthys_pageApproval_psfUser UNIQUE (pageStatusFlowId, userId),
-    CONSTRAINT UK_nephthys_pageApproval_psfSo   UNIQUE (pageStatusFlowId, sortOrder)
+    CONSTRAINT FK_nephthys_pageApproval_pvId   FOREIGN KEY (pageVersionId)   REFERENCES nephthys_pageVersion (pageVersionId) ON UPDATE NO ACTION ON DELETE CASCADE,
+    CONSTRAINT FK_nephthys_pageApproval_opsId  FOREIGN KEY (oldPageStatusId) REFERENCES nephthys_pageStatus (pageStatusId)   ON UPDATE NO ACTION ON DELETE CASCADE,
+    CONSTRAINT FK_nephthys_pageApproval_npsId  FOREIGN KEY (newPageStatusId) REFERENCES nephthys_pageStatus (pageStatusId)   ON UPDATE NO ACTION ON DELETE CASCADE,
+    CONSTRAINT FK_nephthys_pageApproval_userId FOREIGN KEY (userId)          REFERENCES nephthys_user (userId)               ON UPDATE NO ACTION ON DELETE CASCADE
 )
 WITH
 (
     OIDS = FALSE
 );
 
-CREATE INDEX FKI_nephthys_pageApproval_pageStatusFlowId ON nephthys_pageApproval(pageStatusFlowId);
-CREATE INDEX FKI_nephthys_pageApproval_userId           ON nephthys_pageApproval(userId);
-CREATE INDEX IDX_nephthys_pageApproval_psfUserSo        ON nephthys_pageApproval(pageStatusFlowId, userId, sortOrder);
+CREATE INDEX FKI_nephthys_pageApproval_oldPageStatusId ON nephthys_pageApproval(oldPageStatusId);
+CREATE INDEX FKI_nephthys_pageApproval_newPageStatusId ON nephthys_pageApproval(newPageStatusId);
+CREATE INDEX FKI_nephthys_pageApproval_userId          ON nephthys_pageApproval(userId);
 
 
 alter table nephthys_page rename column actualversion to av;
@@ -306,8 +306,6 @@ alter table nephthys_pageVersion add constraint UK_nephthys_pageVersion_version 
 
 alter table nephthys_pageStatus add column startStatus boolean default false;
 
-
-// 31.05.2016
 alter table nephthys_pageVersion drop column prevPageVersionId;
 alter table nephthys_pageVersion drop column nextPageVersionId;
 

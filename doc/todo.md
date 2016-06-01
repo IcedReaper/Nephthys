@@ -6,6 +6,7 @@ Actual Task TODO - Reminder:
 - Page Statistics
 - Sortierung
 - Status-Button stylen
+- required approvals
 
 
 

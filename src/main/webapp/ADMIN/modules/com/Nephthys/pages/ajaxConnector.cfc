@@ -14,7 +14,6 @@ component {
     
     remote struct function getDetails(required numeric pageId) {
         var page = new page(arguments.pageId);
-        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var returnValue = {
             "pageId"        = page.getPageId(),
@@ -29,28 +28,17 @@ component {
         // TODO: check if it's the best to always return all versions or only actual version and the other version numbers and request the version then on request to reduce bandwidth
         for(var majorVersion in returnValue["versions"]) {
             for(var minorVersion in returnValue["versions"][majorVersion]) {
-                returnValue["versions"][majorVersion][minorVersion] = {
-                    "pageVersionId"      = returnValue["versions"][majorVersion][minorVersion].getPageVersionId(),
-                    "parentPageId"       = returnValue["versions"][majorVersion][minorVersion].getParentPageId(),
-                    "linktext"           = returnValue["versions"][majorVersion][minorVersion].getLinktext(),
-                    "link"               = returnValue["versions"][majorVersion][minorVersion].getLink(),
-                    "title"              = returnValue["versions"][majorVersion][minorVersion].getTitle(),
-                    "description"        = returnValue["versions"][majorVersion][minorVersion].getDescription(),
-                    "content"            = returnValue["versions"][majorVersion][minorVersion].getContent(),
-                    "sortOrder"          = returnValue["versions"][majorVersion][minorVersion].getSortOrder(),
-                    "useDynamicSuffixes" = returnValue["versions"][majorVersion][minorVersion].getUseDynamicSuffixes(),
-                    "region"             = returnValue["versions"][majorVersion][minorVersion].getRegion(),
-                    "isOnline"           = returnValue["versions"][majorVersion][minorVersion].isOnline(),
-                    "creator"            = getUserInformation(returnValue["versions"][majorVersion][minorVersion].getCreator()),
-                    "creationDate"       = formatCtrl.formatDate(returnValue["versions"][majorVersion][minorVersion].getCreationDate()),
-                    "lastEditor"         = getUserInformation(returnValue["versions"][majorVersion][minorVersion].getLastEditor()),
-                    "lastEditDate"       = formatCtrl.formatDate(returnValue["versions"][majorVersion][minorVersion].getLastEditDate()),
-                    "pageStatusId"       = returnValue["versions"][majorVersion][minorVersion].getPageStatusId()
-                };
+                returnValue["versions"][majorVersion][minorVersion] = preparePageVersion(returnValue["versions"][majorVersion][minorVersion]);
             }
         }
         
         return returnValue;
+    }
+    
+    remote struct function getDetailsForVersion(required numeric pageId, required numeric majorVersion, required numeric minorVersion) {
+        var page = new page(arguments.pageId);
+        
+        return preparePageVersion(page.getPageVersion(arguments.majorVersion, arguments.minorVersion));
     }
     
     remote struct function save(required numeric pageId,
@@ -66,13 +54,13 @@ component {
             }
             
             var pageVersion = new pageVersion(arguments.pageVersion.pageVersionId);
-            if(arguments.pageVersion.pageVersionId == null) {
-                pageVersion.setPageId(arguments.pageId)
-                           .setMajorVersion(arguments.majorVersion)
-                           .setMinorVersion(arguments.minorVersion);
-            }
-            
             if(pageVersion.getPageStatus().isEditable()) {
+                if(arguments.pageVersion.pageVersionId == null) {
+                    pageVersion.setPageId(arguments.pageId)
+                               .setMajorVersion(arguments.majorVersion)
+                               .setMinorVersion(arguments.minorVersion);
+                }
+                
                 pageVersion.setParentPageId(arguments.pageVersion.parentPageId)
                            .setLinktext(arguments.pageVersion.linktext)
                            .setLink(arguments.pageVersion.link)
@@ -130,6 +118,10 @@ component {
                         
                         var actualPageVersion = page.getActualPageVersion();
                         if(actualPageVersion.getPageVersionId() != pageVersion.getPageVersionId()) {
+                            new pageApproval(actualPageVersion.getPageVersionId()).approve(actualPageVersion.getPageStatusId(),
+                                                                                           offlinePageStatusId,
+                                                                                           request.user.getUserId());
+                            
                             actualPageVersion.setPageStatusId(offlinePageStatusId)
                                              .save();
                         }
@@ -148,10 +140,13 @@ component {
                         }
                     }
                     
-                    // TODO: update approvals
+                    new pageApproval(arguments.pageVersionId).approve(actualPageStatus.getPageStatusId(),
+                                                                      newPageStatus.getPageStatusId(),
+                                                                      request.user.getUserId());
                     
                     transactionCommit();
                 }
+                
                 return true;
             }
         }
@@ -475,6 +470,40 @@ component {
             "labels" = labels,
             "series" = series,
             "data"   = data
+        };
+    }
+    
+    private struct function preparePageVersion(required pageVersion pageVersion) {
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
+        
+        var approvalList = new pageApproval(arguments.pageVersion.getPageVersionId()).getApprovalList();
+        
+        var preparedApprovalList = [];
+        for(var approval in approvalList) {
+            preparedApprovalList.append({
+                "user" = getUserInformation(approval.user),
+                "approvalDate" = formatCtrl.formatDate(approval.approvalDate)
+            });
+        }
+        
+        return  {
+            "pageVersionId"      = arguments.pageVersion.getPageVersionId(),
+            "parentPageId"       = arguments.pageVersion.getParentPageId(),
+            "linktext"           = arguments.pageVersion.getLinktext(),
+            "link"               = arguments.pageVersion.getLink(),
+            "title"              = arguments.pageVersion.getTitle(),
+            "description"        = arguments.pageVersion.getDescription(),
+            "content"            = arguments.pageVersion.getContent(),
+            "sortOrder"          = arguments.pageVersion.getSortOrder(),
+            "useDynamicSuffixes" = arguments.pageVersion.getUseDynamicSuffixes(),
+            "region"             = arguments.pageVersion.getRegion(),
+            "isOnline"           = arguments.pageVersion.isOnline(),
+            "creator"            = getUserInformation(arguments.pageVersion.getCreator()),
+            "creationDate"       = formatCtrl.formatDate(arguments.pageVersion.getCreationDate()),
+            "lastEditor"         = getUserInformation(arguments.pageVersion.getLastEditor()),
+            "lastEditDate"       = formatCtrl.formatDate(arguments.pageVersion.getLastEditDate()),
+            "pageStatusId"       = arguments.pageVersion.getPageStatusId(),
+            "approvalList"       = preparedApprovalList
         };
     }
 }

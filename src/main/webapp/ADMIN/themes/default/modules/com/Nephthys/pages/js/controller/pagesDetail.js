@@ -63,8 +63,12 @@ nephthysAdminApp
                     .pushToStatus($routeParams.pageId,
                                   $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageVersionId,
                                   newPageStatusId)
-                    .then(function () {
-                        $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageStatusId = newPageStatusId;
+                    .then(pagesService.getDetailsForVersion($scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageVersionId,
+                                                            $scope.selectedVersion.major,
+                                                            $scope.selectedVersion.minor))
+                    .then(function (pageVersion) {
+                        // update everything
+                        $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor] = pageVersion;
                     });
             }
         };

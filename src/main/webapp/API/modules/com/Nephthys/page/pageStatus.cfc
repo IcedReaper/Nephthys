@@ -76,6 +76,10 @@ component {
         return variables.startStatus == 1;
     }
     
+    public boolean function isEndStatus() {
+        return variables.endStatus == 1;
+    }
+    
     public user function getCreator() {
         if(! vairables.keyExists("creator")) {
             variables.creator = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.creatorUserId);
