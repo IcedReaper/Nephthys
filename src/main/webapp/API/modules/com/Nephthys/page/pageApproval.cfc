@@ -8,10 +8,10 @@ component {
     }
     
     public array function getApprovalList() {
-        var qApprovalList = new Query().setSQL("  SELECT pa.userId, pa.approvalDate
-                                                    FROM nephthys_pageApproval pa
-                                                   WHERE pa.pageVersionId = :pageVersionId
-                                                ORDER BY pa.approvalDate DESC")
+        var qApprovalList = new Query().setSQL("  SELECT *
+                                                    FROM nephthys_pageApproval
+                                                   WHERE pageVersionId = :pageVersionId
+                                                ORDER BY approvalDate DESC")
                                        .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
                                        .execute()
                                        .getResult();
@@ -19,8 +19,10 @@ component {
         var approvalList = [];
         for(var i = 1; i <= qApprovalList.getRecordCount(); ++i) {
             approvalList.append({
-                user         = new user(qApprovalList.userId[i]),
-                approvalDate = qApprovalList.approvalDate[i]
+                user          = new user(qApprovalList.userId[i]),
+                approvalDate  = qApprovalList.approvalDate[i],
+                oldPageStatus = new pageStatus(qApprovalList.oldPageStatusId[i]),
+                newPageStatus = new pageStatus(qApprovalList.newPageStatusId[i])
             });
         }
         

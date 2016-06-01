@@ -18,8 +18,8 @@
                 <div class="form-group">
                     <label for="versionSelection">Version</label>
                     <select class="form-control" id="versionSelection" ng-model="selectedCompleteVersion" ng-change="setVersion()">
-                        <optgroup ng-repeat="(majorVersion, mvs) in page.versions" label="Majorversion: {{majorVersion}}">
-                            <option ng-repeat="(minorVersion, mnvs) in page.versions[majorVersion]" value="{{majorVersion}}.{{minorVersion}}">Version {{majorVersion}}.{{minorVersion}}</option>
+                        <optgroup ng-repeat="(majorVersion, mvs) in page.availableVersions" label="Majorversion: {{majorVersion}}">
+                            <option ng-repeat="(minorVersion, mnvs) in page.availableVersions[majorVersion]" value="{{majorVersion}}.{{minorVersion}}">Version {{majorVersion}}.{{minorVersion}}</option>
                         </optgroup>
                     </select>
                     <button class="btn btn-primary" ng-click="addMajorVersion()" title="Major Version hinzufügen"><i class="fa fa-plus"></i></button>
@@ -102,8 +102,6 @@
     </div>
 </div>
 
-<!-- TODO: Approval historie -->
-
 <script type="text/ng-template" id="contentChild">
     <form>
         <button class="btn btn-danger pull-right"
@@ -172,14 +170,40 @@
 
 <div class="row">
     <div class="col-md-12">
-        <div class="card card-block" ng-repeat="child in page.versions[selectedVersion.major][selectedVersion.minor].content" ng-include="'contentChild'"></div>
+        <div class="card card-block">
+            <div class="m-b-1">
+                <div ng-repeat="child in page.versions[selectedVersion.major][selectedVersion.minor].content" ng-include="'contentChild'"></div>
+            </div>
         
-        <button class="btn btn-primary"
-                ng-click="appendChild(page.versions[selectedVersion.major][selectedVersion.minor].content, 'com.Nephthys.container');"
-                ng-disabled="isReadonly()"><i class="fa fa-plus"></i> Neuen Container hinzufügen</button>
-        <button class="btn btn-primary"
-                ng-click="appendChild(page.versions[selectedVersion.major][selectedVersion.minor].content, 'com.IcedReaper.startpage');"
-                ng-if="page.versions[selectedVersion.major][selectedVersion.minor].content.length === 0"
-                ng-disabled="isReadonly()"><i class="fa fa-plus"></i> Nur Startseite verwenden</button>
+            <button class="btn btn-primary"
+                    ng-click="appendChild(page.versions[selectedVersion.major][selectedVersion.minor].content, 'com.Nephthys.container');"
+                    ng-disabled="isReadonly()"><i class="fa fa-plus"></i> Neuen Container hinzufügen</button>
+            <button class="btn btn-primary"
+                    ng-click="appendChild(page.versions[selectedVersion.major][selectedVersion.minor].content, 'com.IcedReaper.startpage');"
+                    ng-if="page.versions[selectedVersion.major][selectedVersion.minor].content.length === 0"
+                    ng-disabled="isReadonly()"><i class="fa fa-plus"></i> Nur Startseite verwenden</button>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-if="page.pageId && page.versions[selectedVersion.major][selectedVersion.minor].pageVersionId">
+    <div class="col-sm-12">
+        <div class="card card-block">
+            <h3>Statusänderungshistorie</h3>
+            <table class="table table-striped">
+                <thead>
+                    <th>User</th>
+                    <th>Alter Status</th>
+                    <th>Neuer Status</th>
+                    <th>Datum</th>
+                </thead>
+                <tbody ng-repeat="approval in page.versions[selectedVersion.major][selectedVersion.minor].approvalList">
+                    <td><a href="/com.Nephthys.user#/{{approval.user.userId}}" target="_blank">{{approval.user.userName}}</a></td>
+                    <td>{{approval.oldPageStatusName}}</td>
+                    <td>{{approval.newPageStatusName}}</td>
+                    <td>{{approval.approvalDate}}</td>
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>

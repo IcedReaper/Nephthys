@@ -1,12 +1,13 @@
 # TODO List
 
-Actual Task TODO - Reminder:
-~~~~~~~~~~~~~~~~~~
-- Check if actualVersion in page should be it's id or not...
+## Actual Task TODO - Reminder:
 - Page Statistics
 - Sortierung
 - Status-Button stylen
 - required approvals
+- Overview over all page versions not online
+    - Submodule for dashboard
+        - show when permitted
 
 
 

@@ -63,7 +63,7 @@ nephthysAdminApp
                     .pushToStatus($routeParams.pageId,
                                   $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageVersionId,
                                   newPageStatusId)
-                    .then(pagesService.getDetailsForVersion($scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageVersionId,
+                    .then(pagesService.getDetailsForVersion($routeParams.pageId,
                                                             $scope.selectedVersion.major,
                                                             $scope.selectedVersion.minor))
                     .then(function (pageVersion) {
@@ -176,6 +176,8 @@ nephthysAdminApp
             $scope.selectedVersion.major = newMajorVersion;
             $scope.selectedVersion.minor = newMinorVersion;
             $scope.selectedCompleteVersion = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
+            $scope.page.availableVersions[newMajorVersion] = [];
+            $scope.page.availableVersions[newMajorVersion][0] = newMinorVersion;
             
             $scope.page.versions[newMajorVersion] = {};
             $scope.page.versions[newMajorVersion][newMinorVersion] = structDeepCopy($scope.page.versions[ scv[0] ][ scv[1] ]);
@@ -199,6 +201,7 @@ nephthysAdminApp
             
             $scope.selectedVersion.minor = newMinorVersion;
             $scope.selectedCompleteVersion = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
+            $scope.page.availableVersions[majorVersion].push(newMinorVersion);
             
             $scope.page.versions[majorVersion][newMinorVersion] = structDeepCopy($scope.page.versions[ scv[0] ][ scv[1] ]);
             
@@ -208,8 +211,29 @@ nephthysAdminApp
         
         $scope.setVersion = function () {
             var scv = $scope.selectedCompleteVersion.split(".");
-            $scope.selectedVersion.major = scv[0];
-            $scope.selectedVersion.minor = scv[1];
+            var major = scv[0];
+            var minor = scv[1];
+            
+            if(! $scope.page.versions[major] || ! $scope.page.versions[major][minor]) {
+                pagesService
+                    .getDetailsForVersion($routeParams.pageId,
+                                          major,
+                                          minor)
+                    .then(function (pageVersion) {
+                        if(! $scope.page.versions[major]) {
+                            $scope.page.versions[major] = {};
+                        }
+                        
+                        $scope.page.versions[major][minor] = pageVersion;
+                        
+                        $scope.selectedVersion.major = major;
+                        $scope.selectedVersion.minor = minor;
+                    });
+            }
+            else {
+                $scope.selectedVersion.major = major;
+                $scope.selectedVersion.minor = minor;
+            }
         };
         
         $scope.isEditable = function () {

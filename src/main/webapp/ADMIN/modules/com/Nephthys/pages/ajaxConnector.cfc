@@ -17,18 +17,27 @@ component {
         
         var returnValue = {
             "pageId"        = page.getPageId(),
-            "versions"      = page.getStructuredPageVersions(),
+            "versions"      = {},
             "actualVersion" = {
                 "major" = page.getActualMajorVersion(),
                 "minor" = page.getActualMinorVersion()
-            }
+            },
+            "availableVersions" = {}
         };
         
-        // prepare data
-        // TODO: check if it's the best to always return all versions or only actual version and the other version numbers and request the version then on request to reduce bandwidth
-        for(var majorVersion in returnValue["versions"]) {
-            for(var minorVersion in returnValue["versions"][majorVersion]) {
-                returnValue["versions"][majorVersion][minorVersion] = preparePageVersion(returnValue["versions"][majorVersion][minorVersion]);
+        var actualPageVersion = page.getActualPageVersion();
+        
+        returnValue.versions[actualPageVersion.getMajorVersion()] = {};
+        returnValue.versions[actualPageVersion.getMajorVersion()][actualPageVersion.getMinorVersion()] = preparePageVersion(actualPageVersion);;
+        
+        var versions = page.getStructuredPageVersions();
+        for(var majorVersion in versions) {
+            for(var minorVersion in versions[majorVersion]) {
+                if(! returnValue["availableVersions"].keyExists(majorVersion)) {
+                    returnValue["availableVersions"][majorVersion] = [];
+                }
+                
+                returnValue["availableVersions"][majorVersion].append(minorVersion);
             }
         }
         
@@ -304,6 +313,8 @@ component {
         return false;
     }
     
+    // TODO: Workflow
+    
     remote struct function getAvailableSubModules() {
         var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
         
@@ -482,7 +493,9 @@ component {
         for(var approval in approvalList) {
             preparedApprovalList.append({
                 "user" = getUserInformation(approval.user),
-                "approvalDate" = formatCtrl.formatDate(approval.approvalDate)
+                "approvalDate" = formatCtrl.formatDate(approval.approvalDate),
+                "oldPageStatusName" = approval.oldPageStatus.getName(),
+                "newPageStatusName" = approval.newPageStatus.getName()
             });
         }
         
