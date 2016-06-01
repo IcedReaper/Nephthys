@@ -118,9 +118,14 @@ component {
         return duplicate(variables.pageVersions);
     }
     
-    public string function getNextVersion() {
+    public numeric function getNextMajorVersion() {
         // TODO
-        return "1.1";
+        return 0;
+    }
+    
+    public numeric function getNextMinorVersion(required numeric majorVersion) {
+        // TODO
+        return 0;
     }
     
     public boolean function versionExists(required numeric majorVersion, required numeric minorVersion) {
@@ -178,6 +183,7 @@ component {
                        .execute()
                        .getResult();
         }
+        
         return this;
     }
     

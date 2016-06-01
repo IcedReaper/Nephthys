@@ -82,12 +82,14 @@
                 
                 <button type="submit" class="btn btn-success" ng-click="save()" ng-if="isEditable()"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
                 
-                <div ng-if="pageStatus[ page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.pageStatusId ].nextStatus">
+                <h4>Aktueller Status: <small>{{pageStatus[ page.versions[selectedVersion.major][selectedVersion.minor].pageStatusId ].name}}</small></h4>
+                
+                <div ng-if="pageStatus[ page.versions[selectedVersion.major][selectedVersion.minor].pageStatusId ].nextStatus && page.pageId && page.versions[selectedVersion.major][selectedVersion.minor].pageVersionId">
                     <h4>Status ändern in</h4>
                     <button type="submit"
                             class="btn btn-primary m-r-1"
-                            ng-click=""
-                            ng-repeat="ps in pageStatus[ page.versions[selectedVersion.major][selectedVersion.minor].pageStatus.pageStatusId ].nextStatus">{{ps.name}}</button>
+                            ng-repeat="ps in pageStatus[ page.versions[selectedVersion.major][selectedVersion.minor].pageStatusId ].nextStatus"
+                            ng-click="pushToStatus(ps.pageStatusId);">{{ps.name}}</button>
                 </div>
             </form>
         </div>
@@ -99,6 +101,8 @@
         </div>
     </div>
 </div>
+
+<!-- TODO: Approval historie -->
 
 <script type="text/ng-template" id="contentChild">
     <form>

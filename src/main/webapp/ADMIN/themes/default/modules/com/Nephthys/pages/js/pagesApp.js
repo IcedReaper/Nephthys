@@ -44,3 +44,7 @@ Array.prototype.move = function (old_index, new_index) {
     this.splice(new_index, 0, this.splice(old_index, 1)[0]);
     return this;
 };
+
+structDeepCopy = function (struct) {
+    return JSON.parse(JSON.stringify(struct));
+};

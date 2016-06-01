@@ -3,7 +3,7 @@ component implements="API.interfaces.filter" {
         variables.pageId   = null;
         variables.linkText = null;
         variables.link     = null;
-        variables.active   = null;
+        variables.online   = null;
         variables.parentId = null;
         variables.region   = null;
         variables.version  = null;
@@ -36,8 +36,8 @@ component implements="API.interfaces.filter" {
         variables.region = arguments.region;
         return this;
     }
-    public filter function setActive(required boolean active) {
-        variables.active = arguments.active;
+    public filter function setOnline(required boolean online) {
+        variables.online = arguments.online;
         return this;
     }
     public filter function setVersion(required string version) {
@@ -92,6 +92,10 @@ component implements="API.interfaces.filter" {
                 if(variables.region != null) {
                     where &= (where == "" ? " WHERE " : " AND ") & "ph.region = :region";
                     qryFilter.addParam(name = "region", value = lCase(variables.region), cfsqltype = "cf_sql_varchar");
+                }
+                if(variables.online != null) {
+                    where &= (where == "" ? " WHERE " : " AND ") & "ps.offline = :online";
+                    qryFilter.addParam(name = "online", value = 0, cfsqltype = "cf_sql_bit");
                 }
                 if(variables.version != null) {
                     if(variables.version == "actual") {

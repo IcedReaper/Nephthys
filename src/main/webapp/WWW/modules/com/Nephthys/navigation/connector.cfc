@@ -26,7 +26,7 @@ component implements="WWW.interfaces.connector" {
         
         return pageFilterCtrl.setRegion(arguments.region)
                              .setVersion("actual")
-                             .setActive(true)
+                             .setOnline(true)
                              .execute()
                              .getResult();
     }

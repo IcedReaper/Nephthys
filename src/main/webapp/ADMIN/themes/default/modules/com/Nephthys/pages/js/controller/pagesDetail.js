@@ -1,13 +1,37 @@
 nephthysAdminApp
     .controller('pagesDetailCtrl', ["$scope", "$routeParams", "$q", "pagesService", function ($scope, $routeParams, $q, pagesService) {
+        var _actualUser,
+            
+            getStartStatus = function () {
+                for(var status in $scope.pageStatus) {
+                    if($scope.pageStatus[status].startStatus === true) {
+                        return $scope.pageStatus[status].pageStatusId;
+                    }
+                }
+            },
+            updateNewVersionVariables = function (majorVersion, minorVersion) {
+                if(! isNaN(majorVersion) && ! isNaN(minorVersion)) {
+                    $scope.page.versions[majorVersion][minorVersion].pageVersionId = null;
+                    $scope.page.versions[majorVersion][minorVersion].pageStatusId  = getStartStatus();
+                    
+                    $scope.page.versions[majorVersion][minorVersion].creationDate = new Date();
+                    $scope.page.versions[majorVersion][minorVersion].lastEditDate = new Date();
+                    $scope.page.versions[majorVersion][minorVersion].creator.userId      = _actualUser.userId;
+                    $scope.page.versions[majorVersion][minorVersion].creator.userName    = _actualUser.userName;
+                    $scope.page.versions[majorVersion][minorVersion].lastEditor.userId   = _actualUser.userId;
+                    $scope.page.versions[majorVersion][minorVersion].lastEditor.userName = _actualUser.userName;
+                }
+            };
+        
         $scope.load = function () {
             $q.all([
                 pagesService.getDetails($routeParams.pageId),
                 pagesService.getStatus(),
                 pagesService.getAvailableSubModules(),
-                pagesService.getAvailableOptions()
+                pagesService.getAvailableOptions(),
+                pagesService.getActualUser()
             ])
-            .then($q.spread(function (pageDetails, pageStatus, availableSubModules, availableOptions) {
+            .then($q.spread(function (pageDetails, pageStatus, availableSubModules, availableOptions, actualUser) {
                 $scope.page                = pageDetails;
                 $scope.pageStatus          = pageStatus;
                 $scope.availableSubModules = availableSubModules;
@@ -15,14 +39,34 @@ nephthysAdminApp
                 
                 $scope.selectedVersion = pageDetails.actualVersion; // {major, minor}
                 $scope.selectedCompleteVersion = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
+                
+                _actualUser = actualUser;
             }));
         };
         
         $scope.save = function () {
-            // TODO: change to only save actual version...
-            /*pagesService
-                .save($scope.page)
-                .then($scope.load);*/
+            pagesService
+                .save($scope.page.pageId,
+                      $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor],
+                      $scope.selectedVersion.major,
+                      $scope.selectedVersion.minor)
+                .then(function (newIds) {
+                    $scope.page.pageId = newIds.pageId;
+                    $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageId        = newIds.pageId;
+                    $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageVersionId = newIds.pageVersionId;
+                });
+        };
+        
+        $scope.pushToStatus = function (newPageStatusId) {
+            if(newPageStatusId) {
+                pagesService
+                    .pushToStatus($routeParams.pageId,
+                                  $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageVersionId,
+                                  newPageStatusId)
+                    .then(function () {
+                        $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageStatusId = newPageStatusId;
+                    });
+            }
         };
         
         $scope.appendChild = function (child, newChildren) {
@@ -118,8 +162,8 @@ nephthysAdminApp
             var newMajorVersion = 0;
             var newMinorVersion = 0;
             for(var majorVersion in $scope.page.versions) {
-                if(majorVersion > newMajorVersion) {
-                    newMajorVersion = majorVersion;
+                if(parseInt(majorVersion, 10) > newMajorVersion) {
+                    newMajorVersion = parseInt(majorVersion, 10);
                 }
             }
             
@@ -130,16 +174,10 @@ nephthysAdminApp
             $scope.selectedCompleteVersion = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
             
             $scope.page.versions[newMajorVersion] = {};
-            $scope.page.versions[newMajorVersion][newMinorVersion] = JSON.parse(JSON.stringify($scope.page.versions[scv[0]][scv[1]]));
+            $scope.page.versions[newMajorVersion][newMinorVersion] = structDeepCopy($scope.page.versions[ scv[0] ][ scv[1] ]);
+            $scope.page.versions[newMajorVersion][newMinorVersion].content = []; // when we have a new major version we probably want to start from scratch
             
-            // update all status variables
-            $scope.page.versions[newMajorVersion][newMinorVersion].pageStatus = JSON.parse(JSON.stringify(getStartStatus()));
-            $scope.page.versions[newMajorVersion][newMinorVersion].content = [];
-            // TODO:
-            $scope.page.versions[newMajorVersion][newMinorVersion].creator.userId = 0;
-            $scope.page.versions[newMajorVersion][newMinorVersion].creator.userName = "IcedReaper";
-            $scope.page.versions[newMajorVersion][newMinorVersion].lastEditor.userId = 0;
-            $scope.page.versions[newMajorVersion][newMinorVersion].lastEditor.userName = "IcedReaper";
+            updateNewVersionVariables(newMajorVersion, newMinorVersion);
         };
         
         $scope.addMinorVersion = function () {
@@ -148,8 +186,8 @@ nephthysAdminApp
             
             var newMinorVersion = 0;
             for(var minorVersion in $scope.page.versions[majorVersion]) {
-                if(minorVersion > newMinorVersion) {
-                    newMinorVersion = minorVersion;
+                if(parseInt(minorVersion, 10) > newMinorVersion) {
+                    newMinorVersion = parseInt(minorVersion, 10);
                 }
             }
             
@@ -158,15 +196,10 @@ nephthysAdminApp
             $scope.selectedVersion.minor = newMinorVersion;
             $scope.selectedCompleteVersion = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
             
-            $scope.page.versions[majorVersion][newMinorVersion] = JSON.parse(JSON.stringify($scope.page.versions[scv[0]][scv[1]]));
+            $scope.page.versions[majorVersion][newMinorVersion] = structDeepCopy($scope.page.versions[ scv[0] ][ scv[1] ]);
             
             // update all status variables
-            $scope.page.versions[majorVersion][newMinorVersion].pageStatus = JSON.parse(JSON.stringify($scope.pageStatus[0]));
-            // TODO:
-            $scope.page.versions[majorVersion][newMinorVersion].creator.userId = 0;
-            $scope.page.versions[majorVersion][newMinorVersion].creator.userName = "IcedReaper";
-            $scope.page.versions[majorVersion][newMinorVersion].lastEditor.userId = 0;
-            $scope.page.versions[majorVersion][newMinorVersion].lastEditor.userName = "IcedReaper";
+            updateNewVersionVariables(majorVersion, newMinorVersion);
         };
         
         $scope.setVersion = function () {
@@ -177,7 +210,7 @@ nephthysAdminApp
         
         $scope.isEditable = function () {
             if($scope.page) {
-                return $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageStatus.editable;
+                return $scope.pageStatus[$scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageStatusId].editable;
             }
             else {
                 return false;
@@ -186,19 +219,10 @@ nephthysAdminApp
         
         $scope.isReadonly = function () {
             if($scope.page) {
-                return ! $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageStatus.editable;
+                return ! $scope.pageStatus[$scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageStatusId].editable;
             }
             else {
                 return true;
-            }
-        };
-        
-        
-        var getStartStatus = function () {
-            for(var status in $scope.pageStatus) {
-                if($scope.pageStatus[status].startStatus === true) {
-                    return $scope.pageStatus[status];
-                }
             }
         };
         

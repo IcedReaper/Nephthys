@@ -28,7 +28,7 @@
 <body<cfif request.user.getUserId() NEQ 0> ng-app="nephthysAdminApp"</cfif>>
     <nav class="navbar navbar-dark navbar-fixed-top bg-inverse">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/dashboard/">Adminpanel - IcedReaper's CMS "Nephthys"</a>
+            <a class="navbar-brand" href="/com.Nephthys.dashboard/">Adminpanel - Nephthys</a>
             
             <cfif request.user.getUserId() NEQ 0>
                 <div class="btn-group pull-right">
@@ -69,7 +69,7 @@
         </div>
     </main>
     <footer>
-        &copy; IcedReaper 2014-#year(now())#
+        &copy; IcedReaper und das Nephthys Team 2014 - #year(now())#
     </footer>
     
     <cfif request.user.getUserId() NEQ 0>

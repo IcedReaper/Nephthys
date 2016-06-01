@@ -1,10 +1,19 @@
 component {
+    import "API.modules.com.Nephthys.page.*";
+    
     remote array function getList() {
         return getSubPages(null, 'header').append(getSubPages(null, 'footer'), true);
     }
     
+    remote struct function getActualUser() {
+        return {
+            "userId" = request.user.getUserId(),
+            "userName" = request.user.getUserName()
+        };
+    }
+    
     remote struct function getDetails(required numeric pageId) {
-        var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
+        var page = new page(arguments.pageId);
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var returnValue = {
@@ -17,11 +26,11 @@ component {
         };
         
         // prepare data
+        // TODO: check if it's the best to always return all versions or only actual version and the other version numbers and request the version then on request to reduce bandwidth
         for(var majorVersion in returnValue["versions"]) {
             for(var minorVersion in returnValue["versions"][majorVersion]) {
-                var pageStatus = returnValue["versions"][majorVersion][minorVersion].getPageStatus();
-                
                 returnValue["versions"][majorVersion][minorVersion] = {
+                    "pageVersionId"      = returnValue["versions"][majorVersion][minorVersion].getPageVersionId(),
                     "parentPageId"       = returnValue["versions"][majorVersion][minorVersion].getParentPageId(),
                     "linktext"           = returnValue["versions"][majorVersion][minorVersion].getLinktext(),
                     "link"               = returnValue["versions"][majorVersion][minorVersion].getLink(),
@@ -36,13 +45,7 @@ component {
                     "creationDate"       = formatCtrl.formatDate(returnValue["versions"][majorVersion][minorVersion].getCreationDate()),
                     "lastEditor"         = getUserInformation(returnValue["versions"][majorVersion][minorVersion].getLastEditor()),
                     "lastEditDate"       = formatCtrl.formatDate(returnValue["versions"][majorVersion][minorVersion].getLastEditDate()),
-                    "subPages"           = getSubPages(returnValue["versions"][majorVersion][minorVersion].getPageId(), returnValue["versions"][majorVersion][minorVersion].getRegion()),
-                    "pageStatus"         = {
-                        "pageStatusId" = pageStatus.getPageStatusId(),
-                        "name"         = pageStatus.getName(),
-                        "online"       = ! pageStatus.getOfflineStatus(),
-                        "editbale"     = pageStatus.isEditable()
-                    }
+                    "pageStatusId"       = returnValue["versions"][majorVersion][minorVersion].getPageStatusId()
                 };
             }
         }
@@ -50,68 +53,149 @@ component {
         return returnValue;
     }
     
-    remote boolean function save(required numeric pageId,
-                                 required numeric parentId,
-                                 required string  linkText,
-                                 required string  link,
-                                 required string  title,
-                                 required string  description,
-                                 required array   content,
-                                 required numeric sortOrder,
-                                 required string  region,
-                                 required numeric useDynamicSuffixes,
-                                 required boolean active,
-                                 required numeric pageStatusId) {
-        var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
+    remote struct function save(required numeric pageId,
+                                required struct  pageVersion,
+                                required numeric majorVersion,
+                                required numeric minorVersion) {
+        transaction {
+            var page = new page(arguments.pageId);
+            if(arguments.pageId == null) {
+                page.save();
+                
+                arguments.pageId = page.getPageId();
+            }
+            
+            var pageVersion = new pageVersion(arguments.pageVersion.pageVersionId);
+            if(arguments.pageVersion.pageVersionId == null) {
+                pageVersion.setPageId(arguments.pageId)
+                           .setMajorVersion(arguments.majorVersion)
+                           .setMinorVersion(arguments.minorVersion);
+            }
+            
+            if(pageVersion.getPageStatus().isEditable()) {
+                pageVersion.setParentPageId(arguments.pageVersion.parentPageId)
+                           .setLinktext(arguments.pageVersion.linktext)
+                           .setLink(arguments.pageVersion.link)
+                           .setTitle(arguments.pageVersion.title)
+                           .setDescription(arguments.pageVersion.description)
+                           .setContent(arguments.pageVersion.content)
+                           .setSortOrder(arguments.pageVersion.sortOrder)
+                           .setUseDynamicSuffixes(arguments.pageVersion.useDynamicSuffixes)
+                           .setRegion(arguments.pageVersion.region)
+                           .setLastEditorById(request.user.getUserId())
+                           .setLastEditDate(now())
+                           .setPageStatusId(arguments.pageVersion.pageStatusId);
+                
+                pageVersion.save();
+                
+                transactionCommit();
+                
+                return {
+                    pageId = arguments.pageId,
+                    pageVersionId = pageVersion.getPageVersionId()
+                };
+            }
+            else {
+                transactionRollback();
+                throw(type = "nephthys.application.notAllowed", message = "The page version is in an non editable status.");
+            }
+        }
+    }
+    
+    remote boolean function pushToStatus(required numeric pageVersionId, required numeric pageStatusId) {
+        var newPageStatus    = new pageStatus(arguments.pageStatusId);
+        var pageVersion      = new pageVersion(arguments.pageVersionId);
+        var actualPageStatus = pageVersion.getPageStatus();
         
-        page.setParentId(arguments.parentId)
-            .setLinkText(arguments.linkText)
-            .setLink(arguments.link)
-            .setTitle(arguments.title)
-            .setDescription(arguments.description)
-            .setContent(arguments.content)
-            .setSortOrder(arguments.sortOrder)
-            .setRegion(arguments.region)
-            .setUseDynamicSuffixes(arguments.useDynamicSuffixes)
-            .setActiveStatus(arguments.active)
-            .setLastEditorUserId(request.user.getUserId())
-            .setPageStatusId(arguments.pageStatusId);
-        
-        if(arguments.pageId == 0) {
-            page.setCreatorUserId(request.user.getUserId());
+        var newPageStatusOK = false;
+        for(var nextPageStatus in actualPageStatus.getNextStatus()) {
+            if(nextPageStatus.getPageStatusId() == newPageStatus.getPageStatusId()) {
+                newPageStatusOk = true;
+            }
         }
         
-        page.save();
-        
-        return true;
+        if(newPageStatusOk) {
+            if(newPageStatus.isApprovalValid(request.user.getUserId())) {
+                transaction {
+                    pageVersion.setPageStatusId(newPageStatus.getPageStatusId())
+                               .save();
+                    
+                    var page = new page(pageVersion.getPageId());
+                    
+                    if(newPageStatus.isOnline()) {
+                        // update last page Status
+                        var offlinePageStatusId = new pageStatusFilter().setEndStatus(true)
+                                                                        .execute()
+                                                                        .getResult()[1].getPageStatusId();
+                        
+                        var actualPageVersion = page.getActualPageVersion();
+                        if(actualPageVersion.getPageVersionId() != pageVersion.getPageVersionId()) {
+                            actualPageVersion.setPageStatusId(offlinePageStatusId)
+                                             .save();
+                        }
+                        
+                        // TODO: update hierarchy...
+                        
+                        
+                        page.setPageVersionId(pageVersion.getPageVersionId())
+                            .save();
+                    }
+                    else {
+                        // if the actual status is online the new status is not online we have to update the page. // TODO: check if required.
+                        if(actualPageStatus.isOnline() && ! newPageStatus.isOnline()) {
+                            page.setPageStatusId(newPageStatus.getPageStatusId())
+                                .save();
+                        }
+                    }
+                    
+                    // TODO: update approvals
+                    
+                    transactionCommit();
+                }
+                return true;
+            }
+        }
+        else {
+            return false;
+        }
     }
     
     remote boolean function delete(required numeric pageId) {
+        /* TODO: IMplement
         var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         page.delete();
         
         return true;
+        */
+        return false;
     }
     
     remote boolean function activate(required numeric pageId) {
+        /* TODO: IMplement
         var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         page.setActiveStatus(1)
             .setLastEditorUserId(request.user.getUserId())
             .save();
         
         return true;
+        */
+        return false;
     }
     
     remote boolean function deactivate(required numeric pageId) {
+        /* TODO: IMplement
         var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         page.setActiveStatus(0)
             .setLastEditorUserId(request.user.getUserId())
             .save();
         
         return true;
+        */
+        return false;
     }
     
     remote struct function loadStatistics(required numeric pageId) {
+        /* TODO: IMplement
         var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
         
         var pageStatistics = createObject("component", "API.modules.com.Nephthys.statistics.pageVisit").init();
@@ -123,12 +207,14 @@ component {
             "chart"              = chartData,
             "chartWithParameter" = chartWithParameterData
         };
+        */
+        return {};
     }
     
     // STATUS
     
     remote struct function getStatusList() {
-        var pageStatusLoader = createObject("component", "API.modules.com.Nephthys.page.pageStatusFilter").init();
+        var pageStatusLoader = new pageStatusFilter();
         
         var prepPageStatus = {};
         
@@ -161,7 +247,7 @@ component {
     }
     
     remote struct function getStatusDetails(required numeric pageStatusId) {
-        var pageStatus = createObject("component", "API.modules.com.Nephthys.page.pageStatus").init(arguments.pageStatusId);
+        var pageStatus = new pageStatus(arguments.pageStatusId);
         
         return {
             "pageStatusId" = pageStatus.getPageStatusId(),
@@ -177,7 +263,7 @@ component {
                                        required numeric active,
                                        required numeric offline,
                                        required boolean editable) {
-        var pageStatus = createObject("component", "API.modules.com.Nephthys.page.pageStatus").init(arguments.pageStatusId);
+        /*var pageStatus = pageStatus(arguments.pageStatusId);
         
         pageStatus.setName(arguments.name)
                   .setActiveStatus(arguments.active)
@@ -185,33 +271,42 @@ component {
                   .setEditable(arguments.editable)
                   .save();
         
-        return true;
+        return true;*/
     }
     
     remote boolean function deleteStatus(required numeric pageStatusId) {
-        var pageStatus = createObject("component", "API.modules.com.Nephthys.page.pageStatus").init(arguments.pageStatusId);
+        /* TODO: IMplement
+        var pageStatus = new pageStatus(arguments.pageStatusId);
         
         pageStatus.delete();
         
         return true;
+        */
+        return false;
     }
     
     remote boolean function activateStatus(required numeric pageStatusId) {
-        var pageStatus = createObject("component", "API.modules.com.Nephthys.page.pageStatus").init(arguments.pageStatusId);
+        /* TODO: IMplement
+        var pageStatus = new pageStatus(arguments.pageStatusId);
         
         pageStatus.setActiveStatus(true)
                   .save();
         
         return true;
+        */
+        return false;
     }
     
     remote boolean function deactivateStatus(required numeric pageStatusId) {
-        var pageStatus = createObject("component", "API.modules.com.Nephthys.page.pageStatus").init(arguments.pageStatusId);
+        /* TODO: IMplement
+        var pageStatus = new pageStatus(arguments.pageStatusId);
         
         pageStatus.setActiveStatus(false)
                   .save();
         
         return true;
+        */
+        return false;
     }
     
     remote struct function getAvailableSubModules() {
@@ -263,7 +358,7 @@ component {
     
     // P R I V A T E
     private array function getSubPages(required numeric parentId, required string region) {
-        var pageFilterCtrl = createObject("component", "API.modules.com.Nephthys.page.filter").init();
+        var pageFilterCtrl = new filter();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         pageFilterCtrl.setParentId(arguments.parentId)

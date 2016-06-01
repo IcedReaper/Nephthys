@@ -1,6 +1,7 @@
 component implements="API.interfaces.filter" {
     public filter function init() {
         variables.startStatus = null;
+        variables.endStatus   = null;
         
         variables.qRes = null;
         variables.results = null;
@@ -14,6 +15,12 @@ component implements="API.interfaces.filter" {
         return this;
     }
     
+    public filter function setEndStatus(required boolean endStatus) {
+        variables.endStatus = arguments.endStatus;
+        
+        return this;
+    }
+    
     public filter function execute() {
         var qFilter = new Query();
         var sql = "SELECT pageStatusId
@@ -23,6 +30,10 @@ component implements="API.interfaces.filter" {
         if(variables.startStatus != null) {
             where &= (where == "" ? " WHERE " : " AND ") & " startStatus = :startStatus";
             qFilter.addParam(name = "startStatus", value = variables.startStatus, cfsqltype = "cf_sql_bit");
+        }
+        if(variables.endStatus != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & " endStatus = :endStatus";
+            qFilter.addParam(name = "endStatus", value = variables.endStatus, cfsqltype = "cf_sql_bit");
         }
         
         var orderBy = " ORDER BY pageStatusId";

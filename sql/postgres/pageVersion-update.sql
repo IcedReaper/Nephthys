@@ -10,8 +10,6 @@ CREATE TABLE nephthys_pageVersion
   pageVersionid integer NOT NULL DEFAULT nextval('seq_nephthys_pageVersion_id'::regclass),
   pageId integer NOT NULL,
   parentPageId integer DEFAULT NULL,
-  prevPageVersionId integer DEFAULT NULL,
-  nextPageVersionId integer DEFAULT NULL,
   version character varying(25),
   linkText character varying(30) NOT NULL,
   link character varying(100) NOT NULL,
@@ -307,3 +305,10 @@ create index fki_nephthys_page_pageVersionId ON nephthys_page (pageVersionId);
 alter table nephthys_pageVersion add constraint UK_nephthys_pageVersion_version UNIQUE (pageId, majorVersion, minorVersion);
 
 alter table nephthys_pageStatus add column startStatus boolean default false;
+
+
+// 31.05.2016
+alter table nephthys_pageVersion drop column prevPageVersionId;
+alter table nephthys_pageVersion drop column nextPageVersionId;
+
+alter table nephthys_pageStatus add column endStatus boolean default false;

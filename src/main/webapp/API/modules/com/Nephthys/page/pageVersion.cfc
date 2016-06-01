@@ -1,11 +1,10 @@
 component {
     import "API.modules.com.Nephthys.user.*";
     
-    public pageVersion function init(required numeric pageVersionId = null, required numeric pageId = null, required numeric majorVersion = null, required numeric minorVersion = null) {
+    public pageVersion function init(required numeric pageVersionId = null) {
         variables.pageVersionId = arguments.pageVersionId;
-        variables.pageId        = arguments.pageId;
-        variables.majorVersion  = arguments.majorVersion;
-        variables.minorVersion  = arguments.minorVersion;
+        
+        variables.pageStatusChanged = false;
         
         load();
         
@@ -19,21 +18,15 @@ component {
         return this;
     }
     public pageVersion function setParentPageId(required numeric parentPageId) {
-        variables.parentPageId = arguments.parentPageId;
-        return this;
-    }
-    public pageVersion function setPrevPageVersionId(required numeric prevPageVersionId) {
         if(isNewEntry()) {
-            variables.prevPageVersionId = arguments.prevPageVersionId;
+            variables.parentPageId = arguments.parentPageId;
         }
         return this;
     }
-    public pageVersion function setNextPageVersionId(required numeric nextPageVersionId) {
-        variables.nextPageVersionId = arguments.nextPageVersionId;
-        return this;
-    }
     public pageVersion function setMajorVersion(required string majorVersion) {
-        variables.majorVersion = arguments.majorVersion;
+        if(isNewEntry()) {
+            variables.majorVersion = arguments.majorVersion;
+        }
         return this;
     }
     public pageVersion function setMinorVersion(required string minorVersion) {
@@ -74,6 +67,7 @@ component {
     }
     public pageVersion function setPageStatusId(required numeric pageStatusId) {
         variables.pageStatusId = arguments.pageStatusId;
+        variables.pageStatusChanged = true;
         return this;
     }
     public pageVersion function setRegion(required string region) {
@@ -116,12 +110,6 @@ component {
     public numeric function getParentPageId() {
         return variables.parentPageId;
     }
-    public numeric function getPrevPageVersionId() {
-        return variables.prevPageVersionId;
-    }
-    public numeric function getNextPageVersionId() {
-        return variables.nextPageVersionId;
-    }
     public string function getMajorVersion() {
         return variables.majorVersion;
     }
@@ -150,7 +138,7 @@ component {
         return variables.sortOrder;
     }
     public boolean function getUseDynamicSuffixes() {
-        return variables.useDynamicSuffixes;
+        return variables.useDynamicSuffixes == 1;
     }
     public numeric function getPageStatusId() {
         return variables.pageStatusId;
@@ -189,78 +177,82 @@ component {
     
     public pageVersion function save() {
         if(isNewEntry()) {
-            variables.pageVersionId = new Query().setSQL("INSERT INTO nephthys_pageVersion
-                                                                      (
-                                                                          pageId,
-                                                                          parentPageId,
-                                                                          prevPageVersionId,
-                                                                          nextPageVersionId,
-                                                                          majorVersion,
-                                                                          minorVersion,
-                                                                          linktext,
-                                                                          link,
-                                                                          title,
-                                                                          description,
-                                                                          content,
-                                                                          sortOrder,
-                                                                          useDynamicSuffixes,
-                                                                          pageStatusId,
-                                                                          region,
-                                                                          creator,
-                                                                          creationDate,
-                                                                          lastEditor,
-                                                                          lastEditDate
-                                                                      )
-                                                               VALUES (
-                                                                          :pageId,
-                                                                          :parentPageId,
-                                                                          :prevPageVersionId,
-                                                                          :nextPageVersionId,
-                                                                          :version,
-                                                                          :linktext,
-                                                                          :link,
-                                                                          :title,
-                                                                          :description,
-                                                                          :content,
-                                                                          :sortOrder,
-                                                                          :useDynamicSuffixes,
-                                                                          :pageStatusId,
-                                                                          :region,
-                                                                          :creatorUserId,
-                                                                          :creationDate,
-                                                                          :lastEditorUserId,
-                                                                          :lastEditDate
-                                                                      );
-                                                          SELECT currval('seq_nephthys_pageVersion_id' :: regclass) newPageVersionId;")
-                                                 .addParam(name = "pageId",             value = variables.pageId,                   cfsqltype = "cf_sql_numeric")
-                                                 .addParam(name = "parentPageId",       value = variables.parentPageId,             cfsqltype = "cf_sql_numeric")
-                                                 .addParam(name = "prevPageVersionId",  value = variables.prevPageVersionId,        cfsqltype = "cf_sql_numeric")
-                                                 .addParam(name = "nextPageVersionId",  value = variables.nextPageVersionId,        cfsqltype = "cf_sql_numeric")
-                                                 .addParam(name = "majorVersion",       value = variables.majorVersion,             cfsqltype = "cf_sql_numeric")
-                                                 .addParam(name = "minorVersion",       value = variables.minorVersion,             cfsqltype = "cf_sql_numeric")
-                                                 .addParam(name = "linktext",           value = variables.linktext,                 cfsqltype = "cf_sql_varchar")
-                                                 .addParam(name = "link",               value = variables.link,                     cfsqltype = "cf_sql_varchar")
-                                                 .addParam(name = "title",              value = variables.title,                    cfsqltype = "cf_sql_varchar")
-                                                 .addParam(name = "description",        value = variables.description,              cfsqltype = "cf_sql_varchar")
-                                                 .addParam(name = "content",            value = deserializeJSON(variables.content), cfsqltype = "cf_sql_varchar")
-                                                 .addParam(name = "sortOrder",          value = variables.sortOrder,                cfsqltype = "cf_sql_numeric")
-                                                 .addParam(name = "useDynamicSuffixes", value = variables.useDynamicSuffixes,       cfsqltype = "cf_sql_bit")
-                                                 .addParam(name = "pageStatusId",       value = variables.pageStatusId,             cfsqltype = "cf_sql_numeric")
-                                                 .addParam(name = "region",             value = variables.region,                   cfsqltype = "cf_sql_varchar")
-                                                 .addParam(name = "creator",            value = variables.creator.getUserId(),      cfsqltype = "cf_sql_numeric")
-                                                 .addParam(name = "creationDate",       value = variables.creationDate,             cfsqltype = "cf_sql_date")
-                                                 .addParam(name = "lastEditor",         value = variables.lastEditor.getUserId(),   cfsqltype = "cf_sql_numeric")
-                                                 .addParam(name = "lastEditDate",       value = variables.lastEditDate,             cfsqltype = "cf_sql_date")
-                                                 .execute()
-                                                 .getResult()
-                                                 .newPageVersionId[1];
+            if(variables.pageId != null && variables.pageId != 0 && variables.majorVersion != null && variables.majorVersion != 0 && variables.minorVersion != null) {
+                variables.pageVersionId = new Query().setSQL("INSERT INTO nephthys_pageVersion
+                                                                          (
+                                                                              pageId,
+                                                                              parentPageId,
+                                                                              majorVersion,
+                                                                              minorVersion,
+                                                                              linktext,
+                                                                              link,
+                                                                              title,
+                                                                              description,
+                                                                              content,
+                                                                              sortOrder,
+                                                                              useDynamicSuffixes,
+                                                                              pageStatusId,
+                                                                              region,
+                                                                              creatorUserId,
+                                                                              creationDate,
+                                                                              lastEditorUserId,
+                                                                              lastEditDate
+                                                                          )
+                                                                   VALUES (
+                                                                              :pageId,
+                                                                              :parentPageId,
+                                                                              :majorVersion,
+                                                                              :minorVersion,
+                                                                              :linktext,
+                                                                              :link,
+                                                                              :title,
+                                                                              :description,
+                                                                              :content,
+                                                                              :sortOrder,
+                                                                              :useDynamicSuffixes,
+                                                                              :pageStatusId,
+                                                                              :region,
+                                                                              :creatorUserId,
+                                                                              :creationDate,
+                                                                              :lastEditorUserId,
+                                                                              :lastEditDate
+                                                                          );
+                                                              SELECT currval('seq_nephthys_pageVersion_id' :: regclass) newPageVersionId;")
+                                                     .addParam(name = "pageId",             value = variables.pageId,                 cfsqltype = "cf_sql_numeric")
+                                                     .addParam(name = "parentPageId",       value = variables.parentPageId,           cfsqltype = "cf_sql_numeric", null = variables.parentPageId == null)
+                                                     .addParam(name = "majorVersion",       value = variables.majorVersion,           cfsqltype = "cf_sql_numeric")
+                                                     .addParam(name = "minorVersion",       value = variables.minorVersion,           cfsqltype = "cf_sql_numeric")
+                                                     .addParam(name = "linktext",           value = variables.linktext,               cfsqltype = "cf_sql_varchar")
+                                                     .addParam(name = "link",               value = variables.link,                   cfsqltype = "cf_sql_varchar")
+                                                     .addParam(name = "title",              value = variables.title,                  cfsqltype = "cf_sql_varchar")
+                                                     .addParam(name = "description",        value = variables.description,            cfsqltype = "cf_sql_varchar")
+                                                     .addParam(name = "content",            value = serializeJSON(variables.content), cfsqltype = "cf_sql_varchar")
+                                                     .addParam(name = "sortOrder",          value = variables.sortOrder,              cfsqltype = "cf_sql_numeric")
+                                                     .addParam(name = "useDynamicSuffixes", value = variables.useDynamicSuffixes,     cfsqltype = "cf_sql_bit")
+                                                     .addParam(name = "pageStatusId",       value = variables.pageStatusId,           cfsqltype = "cf_sql_numeric")
+                                                     .addParam(name = "region",             value = variables.region,                 cfsqltype = "cf_sql_varchar")
+                                                     .addParam(name = "creatorUserId",      value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
+                                                     .addParam(name = "creationDate",       value = variables.creationDate,           cfsqltype = "cf_sql_date")
+                                                     .addParam(name = "lastEditorUserId",   value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
+                                                     .addParam(name = "lastEditDate",       value = variables.lastEditDate,           cfsqltype = "cf_sql_timestamp")
+                                                     .execute()
+                                                     .getResult()
+                                                     .newPageVersionId[1];
+            }
+            else {
+                throw(type = "nephthys.application.notAllowed",
+                      message = "You are not allowed to save a page version without a pageId and a version",
+                      detail = serializeJSON({
+                        pageId       = variables.pageId,
+                        majorVersion = variables.majorVersion,
+                        minorVersion = variables.minorVersion
+                    }));
+            }
         }
         else {
-            if(isPageVersionOffline() && ! updateOnlineVersionAllowed()) {
+            if(getPageStatus().isEditable()) {
                 new Query().setSQL("UPDATE nephthys_pageVersion
                                        SET parentPageId       = :parentPageId,
-                                           prevPageVersionId  = :prevPageVersionId,
-                                           nextPageVersionId  = :nextPageVersionId,
                                            majorVersion       = :majorVersion,
                                            minorVersion       = :minorVersion,
                                            linktext           = :linktext,
@@ -272,30 +264,38 @@ component {
                                            useDynamicSuffixes = :useDynamicSuffixes,
                                            pageStatusId       = :pageStatusId,
                                            region             = :region,
-                                           lastEditorUserId   = :lastEditor,
+                                           lastEditorUserId   = :lastEditorUserId,
                                            lastEditDate       = :lastEditDate
                                      WHERE pageVersionId = :pageVersionId")
-                           .addParam(name = "pageVersionId",      value = variables.pageVersionId,            cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "parentPageId",       value = variables.parentPageId,             cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "prevPageVersionId",  value = variables.prevPageVersionId,        cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "nextPageVersionId",  value = variables.nextPageVersionId,        cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "majorVersion",       value = variables.majorVersion,             cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "minorVersion",       value = variables.minorVersion,             cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "linktext",           value = variables.linktext,                 cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "link",               value = variables.link,                     cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "title",              value = variables.title,                    cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "description",        value = variables.description,              cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "content",            value = deserializeJSON(variables.content), cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "sortOrder",          value = variables.sortOrder,                cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "useDynamicSuffixes", value = variables.useDynamicSuffixes,       cfsqltype = "cf_sql_bit")
-                           .addParam(name = "pageStatusId",       value = variables.pageStatusId,             cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "region",             value = variables.region,                   cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "lastEditor",         value = variables.lastEditor.getUserId(),   cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "lastEditDate",       value = variables.lastEditDate,             cfsqltype = "cf_sql_date")
+                           .addParam(name = "pageVersionId",      value = variables.pageVersionId,          cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "parentPageId",       value = variables.parentPageId,           cfsqltype = "cf_sql_numeric", null = variables.parentPageId == null)
+                           .addParam(name = "majorVersion",       value = variables.majorVersion,           cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "minorVersion",       value = variables.minorVersion,           cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "linktext",           value = variables.linktext,               cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "link",               value = variables.link,                   cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "title",              value = variables.title,                  cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "description",        value = variables.description,            cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "content",            value = serializeJSON(variables.content), cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "sortOrder",          value = variables.sortOrder,              cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "useDynamicSuffixes", value = variables.useDynamicSuffixes,     cfsqltype = "cf_sql_bit")
+                           .addParam(name = "pageStatusId",       value = variables.pageStatusId,           cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "region",             value = variables.region,                 cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "lastEditorUserId",   value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "lastEditDate",       value = variables.lastEditDate,           cfsqltype = "cf_sql_timestamp")
                            .execute();
             }
             else {
-                throw(type = "nephthys.application.notAllowed", message = "You're not allowed to update the version that is online");
+                if(variables.pageStatusChanged) {
+                    new Query().setSQL("UPDATE nephthys_pageVersion
+                                           SET pageStatusId = :pageStatusId
+                                         WHERE pageVersionId = :pageVersionId")
+                               .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "pageStatusId",  value = variables.pageStatusId,  cfsqltype = "cf_sql_numeric")
+                               .execute();
+                }
+                else {
+                    throw(type = "nephthys.application.notAllowed", message = "You're not allowed to update the version that is online");
+                }
             }
         }
         
@@ -318,10 +318,15 @@ component {
     
     
     
+    
+    public struct function dumpMyAttributes() {
+        return duplicate(variables);
+    }
+    
+    
     private void function load() {
-        if(! isNewEntry() || (variables.pageId       != 0 && variables.pageId       != null && 
-                              variables.majorVersion != 0 && variables.majorVersion != null && 
-                              variables.minorVersion != 0 && variables.minorVersion != null)) {
+        // TODO: Check für pageId, minor & major version to filter | not here
+        if(! isNewEntry()) {
             var qryPageVersion = new Query();
             
             var sql = "SELECT * FROM nephthys_pageVersion ";
@@ -345,11 +350,8 @@ component {
                                              .getResult();
             
             if(qPageVersion.getRecordCount() == 1) {
-                variables.pageVersionId      = qPageVersion.pageVersionId[1];
                 variables.pageId             = qPageVersion.pageId[1];
                 variables.parentPageId       = qPageVersion.parentPageId[1];
-                variables.prevPageVersionId  = qPageVersion.prevPageVersionId[1];
-                variables.nextPageVersionId  = qPageVersion.nextPageVersionId[1];
                 variables.majorVersion       = qPageVersion.majorVersion[1];
                 variables.minorVersion       = qPageVersion.minorVersion[1];
                 variables.linktext           = qPageVersion.linktext[1];
@@ -367,25 +369,34 @@ component {
                 variables.lastEditDate       = qPageVersion.lastEditDate[1];
             }
             else {
-                if(variables.pageId       != 0 && variables.pageId       != null && 
-                   variables.majorVersion != 0 && variables.majorVersion != null && 
-                   variables.minorVersion != 0 && variables.minorVersion != null) {
-                    initNew();
-                }
-                else {
-                    throw(type = "nephthys.notFound.page",
-                          message = "The page version could not be found",
-                          details = {
-                             "id" = variables.pageVersionId,
-                             "pageId" = variables.pageId,
-                             "majorVersion" = variables.majorVersion,
-                             "minorVersion" = variables.minorVersion
-                         });
-                }
+                throw(type = "nephthys.notFound.page",
+                      message = "The page version could not be found",
+                      details = {
+                         "id" = variables.pageVersionId,
+                         "pageId" = variables.pageId,
+                         "majorVersion" = variables.majorVersion,
+                         "minorVersion" = variables.minorVersion
+                     });
             }
         }
         else {
-            initNew();
+            variables.pageId             = null;
+            variables.parentPageId       = null;
+            variables.linktext           = "";
+            variables.link               = "";
+            variables.title              = "";
+            variables.description        = "";
+            variables.content            = [];
+            variables.sortOrder          = getNextSortOrder();
+            variables.useDynamicSuffixes = false;
+            variables.pageStatusId       = getFirstStatusId();
+            variables.region             = 'header';
+            variables.creator            = new user(request.user.getUserId());
+            variables.creationDate       = now();
+            variables.lastEditor         = new user(request.user.getUserId());
+            variables.lastEditDate       = now();
+            variables.majorVersion       = 0;
+            variables.minorVersion       = 0;
         }
         
         variables.prevPageVersion = null;
@@ -398,17 +409,12 @@ component {
     }
     
     private numeric function getFirstStatusId() {
-        // TODO: implement filter here...
-        return new Query().setSQL("  SELECT pageStatusId
-                                       FROM nephthys_pageStatus
-                                   ORDER BY sortOrder ASC
-                                      LIMIT 1")
-                         .execute()
-                         .getResult()
-                         .pageStatusId[1];
+        return new pageStatusFilter().setStartStatus(true)
+                                     .execute()
+                                     .getResult()[1].getPageStatusId();
     }
     
-    private boolean function isNewEntry() {
+    public boolean function isNewEntry() {
         return (variables.pageVersionId == 0 || variables.pageVersionId == null);
     }
     
@@ -419,39 +425,5 @@ component {
     
     private boolean function updateOnlineVersionAllowed() {
         return false;
-    }
-    
-    private void function initNew() {
-        if(isNull(variables.pageId)) {
-            throw(type = "nephthys.application.notAllowed", message = "You cannot create a new version of a page without a page");
-        }
-        
-        variables.pageVersionId      = null;
-        variables.parentPageId       = null;
-        variables.prevPageVersionId  = null;
-        variables.nextPageVersionId  = null;
-        variables.linktext           = "";
-        variables.link               = "";
-        variables.title              = "";
-        variables.description        = "";
-        variables.content            = [];
-        variables.sortOrder          = getNextSortOrder();
-        variables.useDynamicSuffixes = false;
-        variables.pageStatusId       = getFirstStatusId();
-        variables.region             = 'header';
-        variables.creator            = new user(request.user.getUserId());
-        variables.creationDate       = now();
-        variables.lastEditor         = new user(request.user.getUserId());
-        variables.lastEditDate       = now();
-        
-        if(isNull(variables.majorVersion)) {
-            variables.majorVersion = getNextMajorVersion();
-            variables.minorVersion = 0;
-        }
-        else {
-            if(isNull(variables.minorVersion)) {
-                variables.minorVersion = getNextMinorVersion();
-            }
-        }
     }
 }

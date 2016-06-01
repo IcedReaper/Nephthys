@@ -102,6 +102,24 @@ component {
         return variables.nextStatus;
     }
     
+    public boolean function isOnline() {
+        return variables.offline == 0;
+    }
+    
+    
+    public boolean function isApprovalValid(required numeric userId) {
+        // TODO
+        /*
+            Check for required approvals
+            if required approvals set
+                if required approvals userId = arguments.userId
+                     ok if user hasn't approved yet
+            else
+                ok if user hasn't approved yet
+        */
+        return true;
+    }
+    
     
     public pageStatus function save() {
         if(variables.pageStatusId == 0 || variables.pageStatusId == null) {

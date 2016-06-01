@@ -2,92 +2,102 @@ body {
     background: #2c3644 url("../img/pattern_hexagon_dark_2x.png") repeat scroll 0px -1px / 46px 26px;
     color: #EEEEEE;
     padding-top: 50px;
-}
-
-.sidebar {
-    position: fixed;
-    top: 54px;
-    bottom: 0px;
-    left: 0px;
-    z-index: 1000;
-    display: block;
-    padding: 20px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    background-color: #1A1A1A;
-    border-right: 1px solid #EEE;
-    font-weight: bold;
-}
-
-.main {
-    padding: 20px 40px;
-}
-
-.container-fluid {
-    & .margin-top {
-        margin-top: 3%;
-    }
-
-    & .margin-bottom {
-        margin-bottom: 3%;
-    }
-}
-
-.container {
-    & .margin-top {
-        margin-top: 15px;
-    }
-
-    & .margin-bottom {
-        margin-bottom: 15px;
-    }
-}
-
-.card {
-    color: #000000;
-}
-
-.icedreaper-gallery-introduction > .ta-root > .ta-editor {
-    max-height: 120px;
-    min-height: 120px;
-}
-
-.clickable {
-    cursor: pointer;
-}
-
-.nav-tabs .nav-link {
-    color: #FFFFFF;
-}
-
-.tab-content .tab-pane {
-    .card {
-        border-top: 0;
-    }
-    &.active:first-child .card {
-        border-top-left-radius: 0;
-    }
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.loadingWheel {
-    animation-name: spin; 
-    animation-duration: 3s; /* 3 seconds */
-    animation-iteration-count: infinite; 
-    animation-timing-function: linear;
     
-    width: 50px;
-}
+    
+    & > footer {
+        border-top: 1px solid #e5e5e5;
+        color: #767676;
+        padding-bottom: 40px;
+        padding-top: 40px;
+        text-align: center;
+    }
 
-.modal-title,
-.modal-body {
-    color: #000000;
-}
+    .sidebar {
+        position: fixed;
+        top: 54px;
+        bottom: 0px;
+        left: 0px;
+        z-index: 1000;
+        display: block;
+        padding: 20px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background-color: rgba(#1A1A1A, 0.7);
+        border-right: 1px solid #EEE;
+        font-weight: bold;
+    }
 
-.form-group select {
-    margin: 2px 0 1px;
+    .main {
+        padding: 20px 40px;
+    }
+
+    .container-fluid {
+        & .margin-top {
+            margin-top: 3%;
+        }
+
+        & .margin-bottom {
+            margin-bottom: 3%;
+        }
+    }
+
+    .container {
+        & .margin-top {
+            margin-top: 15px;
+        }
+
+        & .margin-bottom {
+            margin-bottom: 15px;
+        }
+    }
+
+    .card {
+        color: #000000;
+    }
+
+    .icedreaper-gallery-introduction > .ta-root > .ta-editor {
+        max-height: 120px;
+        min-height: 120px;
+    }
+
+    .clickable {
+        cursor: pointer;
+    }
+
+    .nav-tabs .nav-link {
+        color: #FFFFFF;
+    }
+
+    .tab-content .tab-pane {
+        .card {
+            border-top: 0;
+        }
+        &.active:first-child .card {
+            border-top-left-radius: 0;
+        }
+    }
+
+    /* TODO: implement */
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .loadingWheel {
+        animation-name: spin; 
+        animation-duration: 3s; /* 3 seconds */
+        animation-iteration-count: infinite; 
+        animation-timing-function: linear;
+        
+        width: 50px;
+    }
+
+    .modal-title,
+    .modal-body {
+        color: #000000;
+    }
+
+    .form-group select {
+        margin: 2px 0 1px;
+    }
 }
