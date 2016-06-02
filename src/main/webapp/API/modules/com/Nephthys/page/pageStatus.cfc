@@ -39,6 +39,12 @@ component {
         return this;
     }
     
+    public pageStatus function setEndStatus(required boolean endStatus) {
+        variables.endStatus = arguments.endStatus;
+        
+        return this;
+    }
+    
     
     public numeric function getPageStatusId() {
         return variables.pageStatusId;
@@ -126,57 +132,57 @@ component {
     
     
     public pageStatus function save() {
-        /*TODO
+        var qUpdate = new Query().addParam(name = "name",        value = variables.name,           cfsqltype = "cf_sql_varchar")
+                                 .addParam(name = "active",      value = variables.active,         cfsqltype = "cf_sql_bit")
+                                 .addParam(name = "offline",     value = variables.offline,        cfsqltype = "cf_sql_bit")
+                                 .addParam(name = "editable",    value = variables.editable,       cfsqltype = "cf_sql_bit")
+                                 .addParam(name = "startStatus", value = variables.startStatus,    cfsqltype = "cf_sql_bit")
+                                 .addParam(name = "endStatus",   value = variables.endStatus,      cfsqltype = "cf_sql_bit")
+                                 .addParam(name = "userId",      value = request.user.getUserId(), cfsqltype = "cf_sql_numeric");
+        
         if(variables.pageStatusId == 0 || variables.pageStatusId == null) {
-            variables.pageStatusId = new Query().setSQL("INSERT INTO nephthys_pageStatus
-                                                                     (
-                                                                         name,
-                                                                         active,
-                                                                         offline,
-                                                                         editable,
-                                                                         creatorEditorUserId,
-                                                                         creationEditDate,
-                                                                         lastEditorUserId,
-                                                                         lastEditDate
-                                                                     )
-                                                              VALUES (
-                                                                         :name,
-                                                                         :active,
-                                                                         :offline,
-                                                                         :editable,
-                                                                         :creatorEditorUserId,
-                                                                         now(),
-                                                                         :lastEditorUserId,
-                                                                         now()
-                                                                     );
-                                                   SELECT currval('seq_nephthys_pagestatus_id' :: regclass) newPageStatusId;")
-                                               .addParam(name = "name",                value = variables.name,           cfsqltype = "cf_sql_varchar")
-                                               .addParam(name = "active",              value = variables.active,         cfsqltype = "cf_sql_bit")
-                                               .addParam(name = "offline",             value = variables.offline,        cfsqltype = "cf_sql_bit")
-                                               .addParam(name = "editable",            value = variables.editable,       cfsqltype = "cf_sql_bit")
-                                               .addParam(name = "creatorEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                                               .addParam(name = "lastEditorUserId",    value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                                               .execute()
-                                               .getResult()
-                                               .newPageStatusId[1];
+            variables.pageStatusId = qUpdate.setSQL("INSERT INTO nephthys_pageStatus
+                                                                 (
+                                                                     name,
+                                                                     active,
+                                                                     offline,
+                                                                     editable,
+                                                                     startStatus,
+                                                                     endStatus,
+                                                                     creatorUserId,
+                                                                     lastEditorUserId
+                                                                 )
+                                                          VALUES (
+                                                                     :name,
+                                                                     :active,
+                                                                     :offline,
+                                                                     :editable,
+                                                                     :startStatus,
+                                                                     :endStatus,
+                                                                     :userId,
+                                                                     :userId
+                                                                 );
+                                                     SELECT currval('seq_nephthys_pagestatus_id' :: regclass) newPageStatusId;")
+                                            .execute()
+                                            .getResult()
+                                            .newPageStatusId[1];
         }
         else {
-            new Query().setSQL("UPDATE nephthys_pageStatus
+            qUpdate.setSQL("UPDATE nephthys_pageStatus
                                    SET name             = :name,
                                        active           = :active,
                                        offline          = :offline,
-                                       editable         = :editable
-                                       lastEditorUserId = :lastEditorUserId,
+                                       editable         = :editable,
+                                       startStatus      = :startStatus,
+                                       endStatus        = :endStatus,
+                                       lastEditorUserId = :userId,
                                        lastEditDate     = now()
                                  WHERE pageStatusId = :pageStatusId")
-                       .addParam(name = "pageStatusId",     value = variables.pageStatusId,   cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "name",             value = variables.name,           cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "active",           value = variables.active,         cfsqltype = "cf_sql_bit")
-                       .addParam(name = "offline",          value = variables.offline,        cfsqltype = "cf_sql_bit")
-                       .addParam(name = "editable",            value = variables.editable,       cfsqltype = "cf_sql_bit")
-                       .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "pageStatusId", value = variables.pageStatusId,   cfsqltype = "cf_sql_numeric")
                        .execute();
-        }*/
+        }
+        
+        // todo: next status altualisierung...
         
         return this;
     }

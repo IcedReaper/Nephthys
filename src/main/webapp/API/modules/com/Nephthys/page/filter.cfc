@@ -1,12 +1,13 @@
 component implements="API.interfaces.filter" {
     public filter function init() {
-        variables.pageId   = null;
-        variables.linkText = null;
-        variables.link     = null;
-        variables.online   = null;
-        variables.parentId = null;
-        variables.region   = null;
-        variables.version  = null;
+        variables.pageId       = null;
+        variables.linkText     = null;
+        variables.link         = null;
+        variables.online       = null;
+        variables.parentId     = null;
+        variables.region       = null;
+        variables.version      = null;
+        variables.pageStatusId = null;
         
         variables.for = "page"; // page | pageVersion | pageHierarchy
         
@@ -54,6 +55,10 @@ component implements="API.interfaces.filter" {
             }
         }
         
+        return this;
+    }
+    public filter function setPageStatusId(requred numeric pageStatusId) {
+        variables.pageStatusId = arguments.pageStatusId;
         return this;
     }
     
@@ -106,6 +111,11 @@ component implements="API.interfaces.filter" {
                         qryFilter.addParam(name = "version", value = variables.version, cfsqltype = "cf_sql_varchar");
                     }
                 }
+                if(variables.pageStatusId != null) {
+                    where &= (where == "" ? " WHERE " : " AND ") & "pv.pageStatusId = :pageStatusId";
+                    qryFilter.addParam(name = "pageStatusId", value = variables.pageStatusId, cfsqltype = "cf_sql_numeric");
+                }
+                
                 orderBy = " ORDER BY ph.sortOrder ASC";
                 break;
             }

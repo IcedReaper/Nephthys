@@ -3,7 +3,7 @@
         <a href="#/status" class="btn btn-secondary"><i class="fa fa-tags"></i> Statusübersicht</a>
         <a href="#/statusflow" class="btn btn-secondary"><i class="fa fa-tags"></i> Statusflow</a>
     </div>
-    <div class="col-md-2 col-sm-4">
+    <div class="col-md-2 col-sm-4 pull-right">
         <a href="#/0" class="btn btn-primary">Neue Seite anlegen</a>
     </div>
 </div>
@@ -47,7 +47,7 @@
                     </td>
                     <td>{{page.link}}</td>
                     <td>{{page.region}}</td>
-                    <td>{{page.pageStatusName}}</td>
+                    <td ng-class="(page.isOnline ? 'text-success' : 'text-danger')">{{page.pageStatusName}}</td>
                     <td>{{page.version}}</td>
                     <td>
                         <a href="#/{{page.pageId}}"
@@ -68,7 +68,7 @@
                             <div class="dropdown-menu">
                                 <button class="dropdown-item"
                                         ng-repeat="ps in pageStatus[ page.pageStatusId ].nextStatus"
-                                        ng-click="pushToStatus(page.pageId, page.pageVersionId, ps.pageStatusId);">{{ps.name}}</button>
+                                        ng-click="pushToStatus(page.pageId, page.pageVersionId, ps.pageStatusId);">{{ps.offline}} - {{ps.name}}</button>
                             </div>
                         </div>
                     </td>

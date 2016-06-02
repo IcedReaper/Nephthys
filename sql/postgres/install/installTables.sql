@@ -397,7 +397,7 @@ GRANT SELECT ON TABLE nephthys_module_option TO nephthys_user;
 
 /* ~~~~~~~~~~~~~~~~~~ P A G E S ~~~~~~~~~~~~~~~~~~ */
 
-CREATE SEQUENCE seq_nephthys_page_status_id
+CREATE SEQUENCE seq_nephthys_pagestatus_id
   INCREMENT 1
   MINVALUE 1
   MAXVALUE 65534
@@ -407,7 +407,7 @@ CREATE SEQUENCE seq_nephthys_page_status_id
 
 CREATE TABLE nephthys_pageStatus
 (
-  pageStatusId integer NOT NULL DEFAULT nextval('seq_nephthys_page_status_id'::regclass),
+  pageStatusId integer NOT NULL DEFAULT nextval('seq_nephthys_pagestatus_id'::regclass),
   name character varying(100),
   active boolean NOT NULL DEFAULT true,
   offline boolean NOT NULL DEFAULT false,

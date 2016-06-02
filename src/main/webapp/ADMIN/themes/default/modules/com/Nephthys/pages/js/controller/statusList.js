@@ -1,6 +1,6 @@
 nephthysAdminApp
     .controller('statusListCtrl', ["$scope", "pageStatusService", function ($scope, pageStatusService) {
-        /*$scope.activate = function (pageStatusId) {
+        $scope.activate = function (pageStatusId) {
             pageStatusService
                 .activate(pageStatusId)
                 .then($scope.refresh);
@@ -15,7 +15,7 @@ nephthysAdminApp
             pageStatusService
                 .delete(pageStatusId)
                 .then($scope.refresh);
-        };*/
+        };
         
         $scope.refresh = function() {
             pageStatusService

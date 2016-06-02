@@ -279,31 +279,59 @@ component {
         };
     }
     
-    remote boolean function saveStatus(required numeric pageStatusId,
-                                       required string  name,
-                                       required numeric active,
-                                       required numeric offline,
-                                       required boolean editable) {
-        /*var pageStatus = pageStatus(arguments.pageStatusId);
-        
-        pageStatus.setName(arguments.name)
-                  .setActiveStatus(arguments.active)
-                  .setOfflineStatus(arguments.offline)
-                  .setEditable(arguments.editable)
-                  .save();
-        
-        return true;*/
+    remote boolean function saveStatus(required struct status) {
+        transaction {
+            var pageStatus = new pageStatus(arguments.status.pageStatusId);
+            
+            if(pageStatus.isStartStatus() && ! arguments.status.startStatus) {
+                throw(type = "nephthys.application.notAllowed", message = "You cannot remove the start status flag from the start status. Please set another status as start status to remove the start status flag from this status.");
+            }
+            
+            if(pageStatus.isEndStatus() && ! arguments.status.endStatus) {
+                throw(type = "nephthys.application.notAllowed", message = "You cannot remove the end status flag from the end status. Please set another status as end status to remove the end status flag from this status.");
+            }
+            
+            if(! pageStatus.isStartStatus() && arguments.status.startStatus) {
+                new pageStatusFilter()
+                    .setStartStatus(true)
+                    .execute()
+                    .getResult()[1].setStartStatus(false)
+                                   .save();
+            }
+            
+            if(! pageStatus.isEndStatus() && arguments.status.endStatus) {
+                new pageStatusFilter()
+                    .setEndStatus(true)
+                    .execute()
+                    .getResult()[1].setEndStatus(false)
+                                   .save();
+            }
+            
+            pageStatus.setActiveStatus(arguments.status.active)
+                      .setEditable(arguments.status.editable)
+                      .setEndStatus(arguments.status.endStatus)
+                      .setName(arguments.status.name)
+                      .setOfflineStatus(arguments.status.offline)
+                      .setStartStatus(arguments.status.startStatus)
+                      .save();
+            
+            // update next status
+            
+            transactionCommit();
+            return true;
+        }
     }
     
     remote boolean function deleteStatus(required numeric pageStatusId) {
-        /* TODO: IMplement
-        var pageStatus = new pageStatus(arguments.pageStatusId);
-        
-        pageStatus.delete();
-        
-        return true;
-        */
-        return false;
+        var pageFilterCtrl = new filter().setPageStatusId(arguments.pageStatusId).execute();
+        if(pageFilterCtrl.getRecordCount() == 0) {
+            new pageStatus(arguments.pageStatusId).delete();
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.application.notAllowed", message = "You cannot delete a status that is still used. There are still " & pageFilterCtrl.getRecordCount() & " pages on this status.");
+        }
     }
     
     remote boolean function activateStatus(required numeric pageStatusId) {
