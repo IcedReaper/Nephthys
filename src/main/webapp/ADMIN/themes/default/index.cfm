@@ -63,7 +63,9 @@
                         #request.moduleController.render()#
                     </div>
                 <cfelse>
-                    #request.moduleController.render()#
+                    <div class="col-sm-12 main">
+                        #request.moduleController.render()#
+                    </div>
                 </cfif>
             </div>
         </div>
