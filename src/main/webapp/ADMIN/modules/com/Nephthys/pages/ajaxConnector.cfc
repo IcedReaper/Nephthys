@@ -335,30 +335,26 @@ component {
     }
     
     remote boolean function activateStatus(required numeric pageStatusId) {
-        /* TODO: IMplement
         var pageStatus = new pageStatus(arguments.pageStatusId);
         
         pageStatus.setActiveStatus(true)
                   .save();
         
         return true;
-        */
-        return false;
     }
     
     remote boolean function deactivateStatus(required numeric pageStatusId) {
-        /* TODO: IMplement
         var pageStatus = new pageStatus(arguments.pageStatusId);
         
         pageStatus.setActiveStatus(false)
                   .save();
         
         return true;
-        */
-        return false;
     }
     
     // TODO: Workflow
+    
+    
     
     remote struct function getAvailableSubModules() {
         var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
