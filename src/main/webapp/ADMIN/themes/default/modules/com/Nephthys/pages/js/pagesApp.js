@@ -18,6 +18,10 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/statusDetail.html",
                     controller:  "statusDetailCtrl"
                 })
+                /*.when("/statusflow", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/statusFlow.html",
+                    controller:  "statusFlowCtrl"
+                })*/
                 .when("/:pageId", {
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/pagesDetail.html",
                     controller:  "pagesDetailCtrl"

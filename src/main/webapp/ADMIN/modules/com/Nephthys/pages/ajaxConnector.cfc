@@ -243,6 +243,7 @@ component {
                 "offline"      = pageStatus.getOfflineStatus(),
                 "editable"     = pageStatus.isEditable(),
                 "startStatus"  = pageStatus.isStartStatus(),
+                "endStatus"    = pageStatus.isEndStatus(),
                 "nextStatus"   = nextStatusList
             };
         }
@@ -253,12 +254,28 @@ component {
     remote struct function getStatusDetails(required numeric pageStatusId) {
         var pageStatus = new pageStatus(arguments.pageStatusId);
         
+        var nextStatusList = {};
+        for(var nextStatus in pageStatus.getNextStatus()) {
+            if(nextStatus.getActiveStatus()) {
+                nextStatusList[nextStatus.getPageStatusId()] = {
+                    "pageStatusId" = nextStatus.getPageStatusId(),
+                    "name"         = nextStatus.getName(),
+                    "active"       = nextStatus.getActiveStatus(),
+                    "offline"      = nextStatus.getOfflineStatus(),
+                    "editable"     = nextStatus.isEditable()
+                };
+            }
+        }
+        
         return {
             "pageStatusId" = pageStatus.getPageStatusId(),
             "name"         = pageStatus.getName(),
             "active"       = pageStatus.getActiveStatus(),
             "offline"      = pageStatus.getOfflineStatus(),
-            "editable"     = pageStatus.isEditable()
+            "editable"     = pageStatus.isEditable(),
+            "startStatus"  = pageStatus.isStartStatus(),
+            "endStatus"    = pageStatus.isEndStatus(),
+            "nextStatus"   = nextStatusList
         };
     }
     

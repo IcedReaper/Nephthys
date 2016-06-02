@@ -126,6 +126,7 @@ component {
     
     
     public pageStatus function save() {
+        /*TODO
         if(variables.pageStatusId == 0 || variables.pageStatusId == null) {
             variables.pageStatusId = new Query().setSQL("INSERT INTO nephthys_pageStatus
                                                                      (
@@ -175,7 +176,7 @@ component {
                        .addParam(name = "editable",            value = variables.editable,       cfsqltype = "cf_sql_bit")
                        .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                        .execute();
-        }
+        }*/
         
         return this;
     }
@@ -204,6 +205,7 @@ component {
                 variables.offline          = qPageStatus.offline[1];
                 variables.editable         = qPageStatus.editable[1];
                 variables.startStatus      = qPageStatus.startStatus[1];
+                variables.endStatus        = qPageStatus.endStatus[1];
                 variables.creatorUserId    = qPageStatus.creatorUserId[1];
                 variables.creationDate     = qPageStatus.creationDate[1];
                 variables.lastEditorUserId = qPageStatus.lastEditorUserId[1];
@@ -219,6 +221,7 @@ component {
             variables.offline          = true;
             variables.editable         = true;
             variables.startStatus      = false;
+            variables.endStatus        = false;
             variables.creatorUserId    = null;
             variables.creationDate     = null;
             variables.lastEditorUserId = null;

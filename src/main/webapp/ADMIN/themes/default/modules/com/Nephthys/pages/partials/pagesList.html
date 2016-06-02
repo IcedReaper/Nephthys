@@ -1,78 +1,79 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="pull-right">
-            <a href="#/status" class="btn btn-secondary"><i class="fa fa-tags"></i> Statusübersicht</a>
-            <a href="#/0" class="btn btn-primary">Neue Seite anlegen</a>
-        </div>
+<div class="row m-b-2">
+    <div class="col-md-10 col-sm-8">
+        <a href="#/status" class="btn btn-secondary"><i class="fa fa-tags"></i> Statusübersicht</a>
+        <a href="#/statusflow" class="btn btn-secondary"><i class="fa fa-tags"></i> Statusflow</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
+        <a href="#/0" class="btn btn-primary">Neue Seite anlegen</a>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
         <h1>Seitenübersicht</h1>
-    </div>
-</div>
-
-<h3>Filtern</h3>
-<form class="form-horizontal">
-    <div class="row">
-        <div class="col-sm-6">
-            <div class="form-group">
-                <label for="pageStatusName" class="col-sm-3 control-label">Status</label>
+        
+        <h3>Filtern</h3>
+        <form class="form-horizontal m-b-1">
+            <div class="row">
                 <div class="col-sm-6">
-                    <select class="form-control" name="pageStatusName" ng-model="search.pageStatusName">
-                        <option value="!!">Alle</option>
-                        <option ng-repeat="ps in pageStatus" value="{{ps.name}}">{{ps.name}}</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
-
-<table class="table table-inverse m-t">
-    <thead>
-        <th>ID</th>
-        <th>Beschribung</th>
-        <th>Link</th>
-        <th>Region</th>
-        <th>Status</th>
-        <th>Aktuelle Version</th>
-        <th>Aktionen</th>
-    </thead>
-    <tbody>
-        <tr ng-repeat="page in pages | filter:search">
-            <td>{{page.pageId}}</td>
-            <td>
-                <a href="#/{{page.pageId}}">{{page.linktext}}</a>
-            </td>
-            <td>{{page.link}}</td>
-            <td>{{page.region}}</td>
-            <td>{{page.pageStatusName}}</td>
-            <td>{{page.version}}</td>
-            <td>
-                <a href="#/{{page.pageId}}"
-                   class="btn btn-primary"
-                   title="Seitendetails">
-                    <span class="fa fa-cog"></span>
-                </a>
-                <a href="#/{{page.pageId}}/statistics"
-                   class="btn btn-secondary"
-                   title="Statistiken">
-                    <span class="fa fa-line-chart"></span>
-                </a>
-                
-                <div class="btn-group">
-                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Status ändern
-                    </button>
-                    <div class="dropdown-menu">
-                        <button class="dropdown-item"
-                                ng-repeat="ps in pageStatus[ page.pageStatusId ].nextStatus"
-                                ng-click="pushToStatus(page.pageId, page.pageVersionId, ps.pageStatusId);">{{ps.name}}</button>
+                    <div class="form-group">
+                        <label for="pageStatusName" class="col-sm-3 control-label">Status</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" name="pageStatusName" ng-model="search.pageStatusName">
+                                <option value="!!">Alle</option>
+                                <option ng-repeat="ps in pageStatus" value="{{ps.name}}">{{ps.name}}</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </td>
-        </tr>
-    </tbody>
-</table>
+            </div>
+        </form>
+
+        <table class="table table-inverse m-t">
+            <thead>
+                <th>ID</th>
+                <th>Beschribung</th>
+                <th>Link</th>
+                <th>Region</th>
+                <th>Status</th>
+                <th>Aktuelle Version</th>
+                <th>Aktionen</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="page in pages | filter:search">
+                    <td>{{page.pageId}}</td>
+                    <td>
+                        <a href="#/{{page.pageId}}">{{page.linktext}}</a>
+                    </td>
+                    <td>{{page.link}}</td>
+                    <td>{{page.region}}</td>
+                    <td>{{page.pageStatusName}}</td>
+                    <td>{{page.version}}</td>
+                    <td>
+                        <a href="#/{{page.pageId}}"
+                           class="btn btn-primary"
+                           title="Seitendetails">
+                            <span class="fa fa-cog"></span>
+                        </a>
+                        <a href="#/{{page.pageId}}/statistics"
+                           class="btn btn-secondary"
+                           title="Statistiken">
+                            <span class="fa fa-line-chart"></span>
+                        </a>
+                        
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Status ändern
+                            </button>
+                            <div class="dropdown-menu">
+                                <button class="dropdown-item"
+                                        ng-repeat="ps in pageStatus[ page.pageStatusId ].nextStatus"
+                                        ng-click="pushToStatus(page.pageId, page.pageVersionId, ps.pageStatusId);">{{ps.name}}</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

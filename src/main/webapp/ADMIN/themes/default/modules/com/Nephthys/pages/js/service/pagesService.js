@@ -28,7 +28,7 @@ nephthysAdminApp
                     pageVersionId: pageVersionId,
                     pageStatusId:  pageStatusId
                 });
-            },
+            }/*,
             
             delete: function (pageId) {
                 return $http.delete('/ajax/com/Nephthys/pages/delete', {
@@ -56,7 +56,7 @@ nephthysAdminApp
                         pageId: pageId
                     }
                 });
-            },
+            }*/,
             
             getStatus: function () {
                 return $http.get("/ajax/com/Nephthys/pages/getStatusList");

@@ -1,16 +1,19 @@
 nephthysAdminApp
     .controller('statusDetailCtrl', ["$scope", "$routeParams", "$q", "pageStatusService", function ($scope, $routeParams, $q, pageStatusService) {
         $scope.load = function () {
-            pageStatusService
-                .getDetails($routeParams.pageStatusId)
-                .then(function (pageStatus) {
-                    $scope.pageStatus = pageStatus;
-                });
+            $q.all([
+                pageStatusService.getDetails($routeParams.pageStatusId),
+                pageStatusService.getList()
+            ])
+            .then($q.spread(function (status, availableStatus) {
+                $scope.status          = status;
+                $scope.availableStatus = availableStatus;
+            }));
         };
         
         $scope.save = function () {
             pageStatusService
-                .save($scope.pageStatus)
+                .save($scope.status)
                 .then($scope.load);
         };
         

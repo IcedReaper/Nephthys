@@ -15,7 +15,7 @@ nephthysAdminApp
             
             save: function (pageStatus) {
                 return $http.post('/ajax/com/Nephthys/pages/saveStatus', pageStatus);
-            },
+            }/*,
             
             delete: function (pageStatusId) {
                 return $http.delete('/ajax/com/Nephthys/pages/deleteStatus', {
@@ -35,6 +35,6 @@ nephthysAdminApp
                 return $http.post('/ajax/com/Nephthys/pages/deactivateStatus', {
                     pageStatusId: pageStatusId
                 });
-            }
+            }*/
         };
     });
