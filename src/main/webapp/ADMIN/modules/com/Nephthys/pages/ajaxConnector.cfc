@@ -2,7 +2,7 @@ component {
     import "API.modules.com.Nephthys.page.*";
     
     remote array function getList() {
-        return getSubPages(null, 'header').append(getSubPages(null, 'footer'), true);
+        return getSubPages(null, "header").append(getSubPages(null, "footer"), true);
     }
     
     remote struct function getActualUser() {
@@ -376,22 +376,23 @@ component {
         for(var page in pageFilterCtrl.getResult()) {
             var pageVersion = page.getActualPageVersion();
             pageData.append({
-                'pageId'             = page.getPageId(),
-                'parentId'           = pageVersion.getParentPageId(),
-                'linktext'           = pageVersion.getLinktext(),
-                'link'               = pageVersion.getLink(),
-                'title'              = pageVersion.getTitle(),
-                'description'        = pageVersion.getDescription(),
-                'content'            = serializeJSON(pageVersion.getContent()),
-                'sortOrder'          = pageVersion.getSortOrder(),
-                'region'             = pageVersion.getRegion(),
-                'useDynamicSuffixes' = pageVersion.getUseDynamicSuffixes(),
-                'creator'            = getUserInformation(pageVersion.getCreator()),
-                'creationDate'       = formatCtrl.formatDate(pageVersion.getCreationDate()),
-                'lastEditor'         = getUserInformation(pageVersion.getLastEditor()),
-                'lastEditDate'       = formatCtrl.formatDate(pageVersion.getLastEditDate()),
-                'subPages'           = getSubPages(pageVersion.getPageId(), pageVersion.getRegion()),
-                'isOnline'           = pageVersion.isOnline(),
+                "pageId"             = page.getPageId(),
+                "pageVersionId"      = pageVersion.getPageVersionId(),
+                "parentId"           = pageVersion.getParentPageId(),
+                "linktext"           = pageVersion.getLinktext(),
+                "link"               = pageVersion.getLink(),
+                "title"              = pageVersion.getTitle(),
+                "description"        = pageVersion.getDescription(),
+                "content"            = serializeJSON(pageVersion.getContent()),
+                "sortOrder"          = pageVersion.getSortOrder(),
+                "region"             = pageVersion.getRegion(),
+                "useDynamicSuffixes" = pageVersion.getUseDynamicSuffixes(),
+                "creator"            = getUserInformation(pageVersion.getCreator()),
+                "creationDate"       = formatCtrl.formatDate(pageVersion.getCreationDate()),
+                "lastEditor"         = getUserInformation(pageVersion.getLastEditor()),
+                "lastEditDate"       = formatCtrl.formatDate(pageVersion.getLastEditDate()),
+                "subPages"           = getSubPages(pageVersion.getPageId(), pageVersion.getRegion()),
+                "isOnline"           = pageVersion.isOnline(),
                 "pageStatusId"       = pageVersion.getPageStatusId(),
                 "pageStatusName"     = pageVersion.getPageStatus().getName(),
                 "version"            = page.getActualVersion()
@@ -403,8 +404,8 @@ component {
     
     private struct function getUserInformation(required user _user) {
         return {
-            'userId'   = arguments._user.getUserId(),
-            'userName' = arguments._user.getUserName()
+            "userId"   = arguments._user.getUserId(),
+            "userName" = arguments._user.getUserName()
         };
     }
     
