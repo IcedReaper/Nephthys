@@ -310,3 +310,6 @@ alter table nephthys_pageVersion drop column prevPageVersionId;
 alter table nephthys_pageVersion drop column nextPageVersionId;
 
 alter table nephthys_pageStatus add column endStatus boolean default false;
+
+alter table nephthys_pageStatus add column deleteable boolean default false;
+comment on column nephthys_pageStatus.deleteable is 'If this is true, pages within this status can be permanently deleted';

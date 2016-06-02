@@ -31,6 +31,12 @@
                                     ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]">
                             </select>
                         </div>
+                        <div class="form-group">
+                            <label for="active" title="Seiten, die diesen Status haben, können permanent gelöscht werden.">Löschbar</label>
+                            <select class="form-control" ng-model="status.deleteable"
+                                    ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]">
+                            </select>
+                        </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">

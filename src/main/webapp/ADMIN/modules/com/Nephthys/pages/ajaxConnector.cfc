@@ -185,7 +185,10 @@ component {
     }
     
     remote boolean function delete(required numeric pageId) {
-        new page(arguments.pageId).delete();
+        var page = new page(arguments.pageId);
+        if(page.getPageStatus().isDeleteable()) {
+            page.delete();
+        }
         
         return true;
     }
@@ -215,60 +218,14 @@ component {
         var prepPageStatus = {};
         
         for(var pageStatus in pageStatusLoader.execute().getResult()) {
-            var nextStatusList = {};
-            for(var nextStatus in pageStatus.getNextStatus()) {
-                if(nextStatus.getActiveStatus()) {
-                    nextStatusList[nextStatus.getPageStatusId()] = {
-                        "pageStatusId" = nextStatus.getPageStatusId(),
-                        "name"         = nextStatus.getName(),
-                        "active"       = nextStatus.getActiveStatus(),
-                        "offline"      = nextStatus.getOfflineStatus(),
-                        "editable"     = nextStatus.isEditable()
-                    };
-                }
-            }
-            
-            prepPageStatus[pageStatus.getPageStatusId()] = {
-                "pageStatusId" = pageStatus.getPageStatusId(),
-                "name"         = pageStatus.getName(),
-                "active"       = pageStatus.getActiveStatus(),
-                "offline"      = pageStatus.getOfflineStatus(),
-                "editable"     = pageStatus.isEditable(),
-                "startStatus"  = pageStatus.isStartStatus(),
-                "endStatus"    = pageStatus.isEndStatus(),
-                "nextStatus"   = nextStatusList
-            };
+            prepPageStatus[pageStatus.getPageStatusId()] = preparePageStatus(pageStatus);
         }
         
         return prepPageStatus;
     }
     
     remote struct function getStatusDetails(required numeric pageStatusId) {
-        var pageStatus = new pageStatus(arguments.pageStatusId);
-        
-        var nextStatusList = {};
-        for(var nextStatus in pageStatus.getNextStatus()) {
-            if(nextStatus.getActiveStatus()) {
-                nextStatusList[nextStatus.getPageStatusId()] = {
-                    "pageStatusId" = nextStatus.getPageStatusId(),
-                    "name"         = nextStatus.getName(),
-                    "active"       = nextStatus.getActiveStatus(),
-                    "offline"      = nextStatus.getOfflineStatus(),
-                    "editable"     = nextStatus.isEditable()
-                };
-            }
-        }
-        
-        return {
-            "pageStatusId" = pageStatus.getPageStatusId(),
-            "name"         = pageStatus.getName(),
-            "active"       = pageStatus.getActiveStatus(),
-            "offline"      = pageStatus.getOfflineStatus(),
-            "editable"     = pageStatus.isEditable(),
-            "startStatus"  = pageStatus.isStartStatus(),
-            "endStatus"    = pageStatus.isEndStatus(),
-            "nextStatus"   = nextStatusList
-        };
+        return preparePageStatus(new pageStatus(arguments.pageStatusId));
     }
     
     remote boolean function saveStatus(required struct status) {
@@ -305,6 +262,7 @@ component {
                       .setName(arguments.status.name)
                       .setOfflineStatus(arguments.status.offline)
                       .setStartStatus(arguments.status.startStatus)
+                      .setDeleteable(arguments.status.deleteable)
                       .save();
             
             // update next status
@@ -551,6 +509,33 @@ component {
             "lastEditDate"       = formatCtrl.formatDate(arguments.pageVersion.getLastEditDate()),
             "pageStatusId"       = arguments.pageVersion.getPageStatusId(),
             "approvalList"       = preparedApprovalList
+        };
+    }
+    
+    private struct function preparePageStatus(required pageStatus pageStatus) {
+        var nextStatusList = {};
+        for(var nextStatus in arguments.pageStatus.getNextStatus()) {
+            if(nextStatus.getActiveStatus()) {
+                nextStatusList[nextStatus.getPageStatusId()] = {
+                    "pageStatusId" = nextStatus.getPageStatusId(),
+                    "name"         = nextStatus.getName(),
+                    "active"       = nextStatus.getActiveStatus(),
+                    "offline"      = nextStatus.getOfflineStatus(),
+                    "editable"     = nextStatus.isEditable()
+                };
+            }
+        }
+        
+        return {
+            "pageStatusId" = arguments.pageStatus.getPageStatusId(),
+            "name"         = arguments.pageStatus.getName(),
+            "active"       = arguments.pageStatus.getActiveStatus(),
+            "offline"      = arguments.pageStatus.getOfflineStatus(),
+            "editable"     = arguments.pageStatus.isEditable(),
+            "startStatus"  = arguments.pageStatus.isStartStatus(),
+            "endStatus"    = arguments.pageStatus.isEndStatus(),
+            "deleteable"   = arguments.pageStatus.isDeleteable(),
+            "nextStatus"   = nextStatusList
         };
     }
 }

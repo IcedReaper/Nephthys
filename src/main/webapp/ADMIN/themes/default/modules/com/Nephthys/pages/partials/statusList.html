@@ -54,7 +54,8 @@
                 <th>Online</th>
                 <th>Mögliche Folgestatus</th>
                 <th></th>
-                <th title="Editierbar"><i class="fa fa-pencil"></i></th>
+                <th title="Seiten mit diesem Status sind editierbar"><i class="fa fa-pencil"></i></th>
+                <th title="Seiten mit diesem Status sind permanent löschbar"><i class="fa fa-trash"></i></th>
                 <th>&nbsp;</th>
             </thead>
             <tbody>
@@ -80,6 +81,10 @@
                     <td>
                         <i ng-if="status.editable" class="fa fa-pencil text-success" title="In diesem Status bearbeitbar"></i>
                         <i ng-if="! status.editable" class="fa fa-pencil text-danger" title="In diesem Status nicht bearbeitbar"></i>
+                    </td>
+                    <td>
+                        <i ng-if="status.deleteable" class="fa fa-trash text-success" title="In diesem Status permanent löschbar"></i>
+                        <i ng-if="! status.deleteable" class="fa fa-trash text-danger" title="In diesem Status nicht permanent löschbar"></i>
                     </td>
                     <td>
                         <a href="#/status/{{status.pageStatusId}}"

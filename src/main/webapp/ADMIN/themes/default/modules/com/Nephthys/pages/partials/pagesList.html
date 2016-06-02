@@ -72,7 +72,7 @@
                         <button class="btn btn-danger"
                                 title="Die Seite wird unwiederruflich gelöscht! - Nur mit Vorsicht benutzen! - Lieber den gelöscht Status verwenden!"
                                 ng-click="deletePage(page.pageId)"
-                                ><!--ng-if="pageStatus[page.pageStatusId].deletable"-->
+                                ng-disabled="! pageStatus[page.pageStatusId].deleteable">
                             <i class="fa fa-trash"></i>
                         </button>
                         

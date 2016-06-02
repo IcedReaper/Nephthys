@@ -68,6 +68,10 @@ component {
         return variables.pageStatusId;
     }
     
+    public pageStatus function getPageStatus() {
+        return new pageStatus(variables.pageStatusId);
+    }
+    
     public numeric function getPageVersionId() {
         return variables.pageVersionId;
     }

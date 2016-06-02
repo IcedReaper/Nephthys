@@ -22,7 +22,14 @@ nephthysAdminApp
         $scope.deletePage = function (pageId) {
             pagesService
                 .delete(pageId)
-                .then($scope.load());
+                .then(function () {
+                    for(var i = 0; i < $scope.pages.length; ++i) {
+                        if($scope.pages[i].pageId === pageId) {
+                            $scope.pages.splice(i, 1);
+                            break;
+                        }
+                    }
+                });
         };
         
         $scope.load = function() {

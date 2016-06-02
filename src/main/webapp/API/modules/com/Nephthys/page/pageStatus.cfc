@@ -45,6 +45,12 @@ component {
         return this;
     }
     
+    public pageStatus function setDeleteable(required boolean deleteable) {
+        variables.deleteable = arguments.deleteable;
+        
+        return this;
+    }
+    
     
     public numeric function getPageStatusId() {
         return variables.pageStatusId;
@@ -116,6 +122,10 @@ component {
         return variables.offline == 0;
     }
     
+    public boolean function isDeleteable() {
+        return variables.deleteable == 1;
+    }
+    
     
     public boolean function isApprovalValid(required numeric userId) {
         // TODO
@@ -138,6 +148,7 @@ component {
                                  .addParam(name = "editable",    value = variables.editable,       cfsqltype = "cf_sql_bit")
                                  .addParam(name = "startStatus", value = variables.startStatus,    cfsqltype = "cf_sql_bit")
                                  .addParam(name = "endStatus",   value = variables.endStatus,      cfsqltype = "cf_sql_bit")
+                                 .addParam(name = "deleteable",  value = variables.deleteable,     cfsqltype = "cf_sql_bit")
                                  .addParam(name = "userId",      value = request.user.getUserId(), cfsqltype = "cf_sql_numeric");
         
         if(variables.pageStatusId == 0 || variables.pageStatusId == null) {
@@ -149,6 +160,7 @@ component {
                                                                      editable,
                                                                      startStatus,
                                                                      endStatus,
+                                                                     deleteable,
                                                                      creatorUserId,
                                                                      lastEditorUserId
                                                                  )
@@ -159,6 +171,7 @@ component {
                                                                      :editable,
                                                                      :startStatus,
                                                                      :endStatus,
+                                                                     :deleteable,
                                                                      :userId,
                                                                      :userId
                                                                  );
@@ -175,6 +188,7 @@ component {
                                        editable         = :editable,
                                        startStatus      = :startStatus,
                                        endStatus        = :endStatus,
+                                       deleteable       = :deleteable,
                                        lastEditorUserId = :userId,
                                        lastEditDate     = now()
                                  WHERE pageStatusId = :pageStatusId")
@@ -212,6 +226,7 @@ component {
                 variables.editable         = qPageStatus.editable[1];
                 variables.startStatus      = qPageStatus.startStatus[1];
                 variables.endStatus        = qPageStatus.endStatus[1];
+                variables.deleteable       = qPageStatus.deleteable[1];
                 variables.creatorUserId    = qPageStatus.creatorUserId[1];
                 variables.creationDate     = qPageStatus.creationDate[1];
                 variables.lastEditorUserId = qPageStatus.lastEditorUserId[1];
@@ -228,6 +243,7 @@ component {
             variables.editable         = true;
             variables.startStatus      = false;
             variables.endStatus        = false;
+            variables.deleteable       = false;
             variables.creatorUserId    = null;
             variables.creationDate     = null;
             variables.lastEditorUserId = null;
