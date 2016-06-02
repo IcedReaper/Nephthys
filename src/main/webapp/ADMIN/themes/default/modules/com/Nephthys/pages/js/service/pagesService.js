@@ -28,7 +28,7 @@ nephthysAdminApp
                     pageVersionId: pageVersionId,
                     pageStatusId:  pageStatusId
                 });
-            }/*,
+            },
             
             delete: function (pageId) {
                 return $http.delete('/ajax/com/Nephthys/pages/delete', {
@@ -36,19 +36,7 @@ nephthysAdminApp
                         pageId: pageId
                     }
                 });
-            },
-            
-            activate: function (pageId) {
-                return $http.post('/ajax/com/Nephthys/pages/activate', {
-                    pageId: pageId
-                });
-            },
-            
-            deactivate: function (pageId) {
-                return $http.post('/ajax/com/Nephthys/pages/deactivate', {
-                    pageId: pageId
-                });
-            },
+            }/*,
             
             loadStatistics: function (pageId) {
                 return $http.get('/ajax/com/Nephthys/pages/loadStatistics', {

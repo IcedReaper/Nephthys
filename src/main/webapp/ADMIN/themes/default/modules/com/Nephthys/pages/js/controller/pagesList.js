@@ -6,21 +6,26 @@ nephthysAdminApp
                 .then(function (pageStatus) {
                     $scope.pageStatus = pageStatus;
                 })
-                .then($scope.refresh());
+                .then($scope.load());
         };
         
         $scope.pushToStatus = function (pageId, pageVersionId, newPageStatusId) {
-            console.log(pageId, pageVersionId, newPageStatusId);
             if(pageId && pageVersionId && newPageStatusId) {
                 pagesService
                     .pushToStatus(pageId,
                                   pageVersionId,
                                   newPageStatusId)
-                    .then($scope.refresh());
+                    .then($scope.load());
             }
         };
         
-        $scope.refresh = function() {
+        $scope.deletePage = function (pageId) {
+            pagesService
+                .delete(pageId)
+                .then($scope.load());
+        };
+        
+        $scope.load = function() {
             pagesService
                 .getList()
                 .then(function (pagesList) {

@@ -73,49 +73,74 @@ component {
     }
     
     public string function getActualVersion() {
-        var actualPageVersion = new pageVersion(variables.pageVersionId);
-        return actualPageVersion.getMajorVersion() & "." & actualPageVersion.getMinorVersion();
+        if(variables.pageId != null && variables.pageId != 0) {
+            var actualPageVersion = new pageVersion(variables.pageVersionId);
+            return actualPageVersion.getMajorVersion() & "." & actualPageVersion.getMinorVersion();
+        }
+        else {
+            return "1.0";
+        }
     }
     
     public pageVersion function getActualPageVersion() {
-        return new pageVersion(variables.pageVersionId);
+        if(variables.pageId != null && variables.pageId != 0) {
+            return new pageVersion(variables.pageVersionId);
+        }
+        else {
+            return null;
+        }
     }
     
     public pageVersion function getPageVersion(required numeric majorVersion, required numeric minorVersion) {
-        if(! variables.pageVersionsLoaded) {
-            loadPageVersions();
-        }
-        
-        if(variables.pageVersions.keyExists(arguments.majorVersion)) {
-            if(variables.pageVersions[arguments.majorVersion].keyExists(arguments.minorVersion)) {
-                return duplicate(variables.pageVersions[arguments.majorVersion][arguments.minorVersion]);
+        if(variables.pageId != null && variables.pageId != 0) {
+            if(! variables.pageVersionsLoaded) {
+                loadPageVersions();
             }
+            
+            if(variables.pageVersions.keyExists(arguments.majorVersion)) {
+                if(variables.pageVersions[arguments.majorVersion].keyExists(arguments.minorVersion)) {
+                    return duplicate(variables.pageVersions[arguments.majorVersion][arguments.minorVersion]);
+                }
+            }
+            
+            throw(type = "nephthys.notFound.page", message = "The page version could not be found", details = arguments.pageVersion);
         }
-        
-        throw(type = "nephthys.notFound.page", message = "The page version could not be found", details = arguments.pageVersion);
+        else {
+            return null;
+        }
     }
     
     public array function getPageVersions() {
-        if(! variables.pageVersionsLoaded) {
-            loadPageVersions();
-        }
-        
-        var tmpPageVersions = [];
-        for(var majorVersion in variables.pageVersions) {
-            for(var minorVersion in variables.pageVersions[majorVersion]) {
-                tmpPageVersions.append(duplicate(variables.pageVersions[majorVersion][minorVersion]));
+        if(variables.pageId != null && variables.pageId != 0) {
+            if(! variables.pageVersionsLoaded) {
+                loadPageVersions();
             }
+            
+            var tmpPageVersions = [];
+            for(var majorVersion in variables.pageVersions) {
+                for(var minorVersion in variables.pageVersions[majorVersion]) {
+                    tmpPageVersions.append(duplicate(variables.pageVersions[majorVersion][minorVersion]));
+                }
+            }
+            
+            return tmpPageVersions;
         }
-        
-        return tmpPageVersions;
+        else {
+            return [];
+        }
     }
     
     public struct function getStructuredPageVersions() {
-        if(! variables.pageVersionsLoaded) {
-            loadPageVersions();
+        if(variables.pageId != null && variables.pageId != 0) {
+            if(! variables.pageVersionsLoaded) {
+                loadPageVersions();
+            }
+            
+            return duplicate(variables.pageVersions);
         }
-        
-        return duplicate(variables.pageVersions);
+        else {
+            return {};
+        }
     }
     
     public numeric function getNextMajorVersion() {
@@ -129,21 +154,36 @@ component {
     }
     
     public boolean function versionExists(required numeric majorVersion, required numeric minorVersion) {
-        if(! variables.pageVersionsLoaded) {
-            loadPageVersions();
+        if(variables.pageId != null && variables.pageId != 0) {
+            if(! variables.pageVersionsLoaded) {
+                loadPageVersions();
+            }
+            
+            return (variables.pageVersions.keyExists(arguments.majorVersion) && variables.pageVersions[arguments.majorVersion].keyExists(arguments.minorVersion));
         }
-        
-        return (variables.pageVersions.keyExists(arguments.majorVersion) && variables.pageVersions[arguments.majorVersion].keyExists(arguments.minorVersion));
+        else {
+            return false;
+        }
     }
     
     public numeric function getActualMajorVersion() {
-        var actualPageVersion = new pageVersion(variables.pageVersionId);
-        return actualPageVersion.getMajorVersion();
+        if(variables.pageId != null && variables.pageId != 0) {
+            var actualPageVersion = new pageVersion(variables.pageVersionId);
+            return actualPageVersion.getMajorVersion();
+        }
+        else {
+            return 1;
+        }
     }
     
     public numeric function getActualMinorVersion() {
-        var actualPageVersion = new pageVersion(variables.pageVersionId);
-        return actualPageVersion.getMinorVersion();
+        if(variables.pageId != null && variables.pageId != 0) {
+            var actualPageVersion = new pageVersion(variables.pageVersionId);
+            return actualPageVersion.getMinorVersion();
+        }
+        else {
+            return 0;
+        }
     }
     
     
@@ -152,22 +192,16 @@ component {
         if(variables.pageId == 0) {
             variables.pageId = new Query().setSQL("INSERT INTO nephthys_page
                                                                (
-                                                                   creatorUserIdv
-                                                                   creationDate,
-                                                                   pageVersionId,
+                                                                   creatorUserId,
                                                                    pageStatusId
                                                                )
                                                         VALUES (
-                                                                   :creatorUserId,
-                                                                   :creationDate,
-                                                                   :pageVersionId,
+                                                                   :userId,
                                                                    :pageStatusId
                                                                );
                                                    SELECT currval('seq_nephthys_page_id' :: regclass) newPageId;")
-                                          .addParam(name = "creatorUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
-                                          .addParam(name = "creationDate",  value = variables.creationDate,        cfsqltype = "cf_sql_date")
-                                          .addParam(name = "pageVersionId", value = variables.pageVersionId,       cfsqltype = "cf_sql_numeric")
-                                          .addParam(name = "pageStatusId",  value = variables.pageStatusId,        cfsqltype = "cf_sql_numeric")
+                                          .addParam(name = "userId",       value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
+                                          .addParam(name = "pageStatusId", value = variables.pageStatusId,        cfsqltype = "cf_sql_numeric")
                                           .execute()
                                           .getResult()
                                           .newPageId[1];
@@ -213,7 +247,7 @@ component {
                 variables.pageStatusId  = qGetPage.pageStatusId[1];
             }
             else {
-                throw(type = "nephthys.notFound.page", message = "The page could not be found", details = variables.pageId);
+                throw(type = "nephthys.notFound.page", message = "The page could not be found", detail = variables.pageId);
             }
         }
         else {
@@ -227,14 +261,9 @@ component {
     }
     
     private numeric function getFirstStatusId() {
-        // TODO: implement filter here...
-        return new Query().setSQL("  SELECT pageStatusId
-                                       FROM nephthys_pageStatus
-                                   ORDER BY sortOrder ASC
-                                      LIMIT 1")
-                         .execute()
-                         .getResult()
-                         .pageStatusId[1];
+        return new pageStatusFilter().setStartStatus(true)
+                                     .execute()
+                                     .getResult()[1].getPageStatusId();
     }
     
     private void function loadPageVersions() {

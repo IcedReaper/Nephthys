@@ -57,7 +57,7 @@ component implements="API.interfaces.filter" {
         
         return this;
     }
-    public filter function setPageStatusId(requred numeric pageStatusId) {
+    public filter function setPageStatusId(required numeric pageStatusId) {
         variables.pageStatusId = arguments.pageStatusId;
         return this;
     }
@@ -71,11 +71,11 @@ component implements="API.interfaces.filter" {
         
         switch(variables.for) {
             case "page": {
-                sql = "    SELECT p.pageId
-                             FROM nephthys_page p 
-                       INNER JOIN nephthys_pageVersion pv ON p.pageId = pv.pageId
-                       INNER JOIN nephthys_pageHierarchy ph ON p.pageId = ph.pageId 
-                       INNER JOIN nephthys_pageStatus ps ON pv.pageStatusId = ps.pageStatusId ";
+                sql = "         SELECT p.pageId
+                                  FROM nephthys_page p 
+                            INNER JOIN nephthys_pageVersion pv ON p.pageId = pv.pageId
+                       LEFT OUTER JOIN nephthys_pageHierarchy ph ON p.pageId = ph.pageId
+                            INNER JOIN nephthys_pageStatus ps ON pv.pageStatusId = ps.pageStatusId ";
                 
                 if(variables.pageId != null) {
                     where &= (where == "" ? " WHERE " : " AND ") & "p.pageId = :pageId";
@@ -95,7 +95,7 @@ component implements="API.interfaces.filter" {
                     qryFilter.addParam(name = "link", value = lCase(variables.link), cfsqltype = "cf_sql_varchar");
                 }
                 if(variables.region != null) {
-                    where &= (where == "" ? " WHERE " : " AND ") & "ph.region = :region";
+                    where &= (where == "" ? " WHERE " : " AND ") & "( ph.region = :region OR pv.region = :region )";
                     qryFilter.addParam(name = "region", value = lCase(variables.region), cfsqltype = "cf_sql_varchar");
                 }
                 if(variables.online != null) {

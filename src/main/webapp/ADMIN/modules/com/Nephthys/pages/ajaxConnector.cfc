@@ -25,20 +25,33 @@ component {
             "availableVersions" = {}
         };
         
-        var actualPageVersion = page.getActualPageVersion();
-        
-        returnValue.versions[actualPageVersion.getMajorVersion()] = {};
-        returnValue.versions[actualPageVersion.getMajorVersion()][actualPageVersion.getMinorVersion()] = preparePageVersion(actualPageVersion);;
-        
-        var versions = page.getStructuredPageVersions();
-        for(var majorVersion in versions) {
-            for(var minorVersion in versions[majorVersion]) {
-                if(! returnValue["availableVersions"].keyExists(majorVersion)) {
-                    returnValue["availableVersions"][majorVersion] = [];
+        // if it's not a new page and we have at least a version
+        if((arguments.pageId != null && arguments.pageId != 0) || (page.getPageVersionId() != null && page.getPageVersionId() != 0)) {
+            var actualPageVersion = page.getActualPageVersion();
+            
+            returnValue.versions[actualPageVersion.getMajorVersion()] = {};
+            returnValue.versions[actualPageVersion.getMajorVersion()][actualPageVersion.getMinorVersion()] = preparePageVersion(actualPageVersion);;
+            
+            var versions = page.getStructuredPageVersions();
+            for(var majorVersion in versions) {
+                for(var minorVersion in versions[majorVersion]) {
+                    if(! returnValue["availableVersions"].keyExists(majorVersion)) {
+                        returnValue["availableVersions"][majorVersion] = [];
+                    }
+                    
+                    returnValue["availableVersions"][majorVersion].append(minorVersion);
                 }
-                
-                returnValue["availableVersions"][majorVersion].append(minorVersion);
             }
+        }
+        // otherwise we "create" a new blank one
+        else {
+            returnValue.versions[1] = {
+                0 = preparePageVersion(new pageVersion(null))
+            };
+            
+            returnValue["availableVersions"] = {
+                1 = [0]
+            };
         }
         
         return returnValue;
@@ -56,9 +69,11 @@ component {
                                 required numeric minorVersion) {
         transaction {
             var page = new page(arguments.pageId);
-            if(arguments.pageId == null) {
+            var newPage = false;
+            if(arguments.pageId == null || arguments.pageId == 0) {
                 page.save();
                 
+                newPage = true;
                 arguments.pageId = page.getPageId();
             }
             
@@ -84,6 +99,11 @@ component {
                            .setPageStatusId(arguments.pageVersion.pageStatusId);
                 
                 pageVersion.save();
+                
+                if(newPage) {
+                    page.setPageVersionId(pageVersion.getPageVersionId())
+                        .save();
+                }
                 
                 transactionCommit();
                 
@@ -165,37 +185,9 @@ component {
     }
     
     remote boolean function delete(required numeric pageId) {
-        /* TODO: IMplement
-        var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
-        page.delete();
+        new page(arguments.pageId).delete();
         
         return true;
-        */
-        return false;
-    }
-    
-    remote boolean function activate(required numeric pageId) {
-        /* TODO: IMplement
-        var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
-        page.setActiveStatus(1)
-            .setLastEditorUserId(request.user.getUserId())
-            .save();
-        
-        return true;
-        */
-        return false;
-    }
-    
-    remote boolean function deactivate(required numeric pageId) {
-        /* TODO: IMplement
-        var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
-        page.setActiveStatus(0)
-            .setLastEditorUserId(request.user.getUserId())
-            .save();
-        
-        return true;
-        */
-        return false;
     }
     
     remote struct function loadStatistics(required numeric pageId) {
@@ -324,13 +316,13 @@ component {
     
     remote boolean function deleteStatus(required numeric pageStatusId) {
         var pageFilterCtrl = new filter().setPageStatusId(arguments.pageStatusId).execute();
-        if(pageFilterCtrl.getRecordCount() == 0) {
+        if(pageFilterCtrl.getResultCount() == 0) {
             new pageStatus(arguments.pageStatusId).delete();
             
             return true;
         }
         else {
-            throw(type = "nephthys.application.notAllowed", message = "You cannot delete a status that is still used. There are still " & pageFilterCtrl.getRecordCount() & " pages on this status.");
+            throw(type = "nephthys.application.notAllowed", message = "You cannot delete a status that is still used. There are still " & pageFilterCtrl.getResultCount() & " pages on this status.");
         }
     }
     

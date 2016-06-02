@@ -14,6 +14,12 @@
     <div class="col-md-12">
         <h1>Statusübersicht</h1>
         
+        <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
+            <h3>{{message.headline}}</h3>
+            <p>{{message.text}}</p>
+            <p>{{message.errorMessage}}</p>
+        </div>
+        
         <h3>Filtern</h3>
         <form class="form-horizontal m-b-1">
             <div class="row">

@@ -3,14 +3,22 @@
         <a href="#/status" class="btn btn-secondary"><i class="fa fa-tags"></i> Statusübersicht</a>
         <a href="#/statusflow" class="btn btn-secondary"><i class="fa fa-tags"></i> Statusflow</a>
     </div>
-    <div class="col-md-2 col-sm-4 pull-right">
-        <a href="#/0" class="btn btn-primary">Neue Seite anlegen</a>
+    <div class="col-md-2 col-sm-4">
+        <div class="pull-right">
+            <a href="#/0" class="btn btn-primary">Neue Seite anlegen</a>
+        </div>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
         <h1>Seitenübersicht</h1>
+        
+        <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
+            <h3>{{message.headline}}</h3>
+            <p>{{message.text}}</p>
+            <p>{{message.errorMessage}}</p>
+        </div>
         
         <h3>Filtern</h3>
         <form class="form-horizontal m-b-1">
@@ -61,6 +69,13 @@
                             <span class="fa fa-line-chart"></span>
                         </a>
                         
+                        <button class="btn btn-danger"
+                                title="Die Seite wird unwiederruflich gelöscht! - Nur mit Vorsicht benutzen! - Lieber den gelöscht Status verwenden!"
+                                ng-click="deletePage(page.pageId)"
+                                ><!--ng-if="pageStatus[page.pageStatusId].deletable"-->
+                            <i class="fa fa-trash"></i>
+                        </button>
+                        
                         <div class="btn-group">
                             <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Status ändern
@@ -68,7 +83,7 @@
                             <div class="dropdown-menu">
                                 <button class="dropdown-item"
                                         ng-repeat="ps in pageStatus[ page.pageStatusId ].nextStatus"
-                                        ng-click="pushToStatus(page.pageId, page.pageVersionId, ps.pageStatusId);">{{ps.offline}} - {{ps.name}}</button>
+                                        ng-click="pushToStatus(page.pageId, page.pageVersionId, ps.pageStatusId);">{{ps.name}}</button>
                             </div>
                         </div>
                     </td>

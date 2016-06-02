@@ -8,25 +8,30 @@ component {
     }
     
     public array function getApprovalList() {
-        var qApprovalList = new Query().setSQL("  SELECT *
-                                                    FROM nephthys_pageApproval
-                                                   WHERE pageVersionId = :pageVersionId
-                                                ORDER BY approvalDate DESC")
-                                       .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
-                                       .execute()
-                                       .getResult();
-        
-        var approvalList = [];
-        for(var i = 1; i <= qApprovalList.getRecordCount(); ++i) {
-            approvalList.append({
-                user          = new user(qApprovalList.userId[i]),
-                approvalDate  = qApprovalList.approvalDate[i],
-                oldPageStatus = new pageStatus(qApprovalList.oldPageStatusId[i]),
-                newPageStatus = new pageStatus(qApprovalList.newPageStatusId[i])
-            });
+        if(variables.pageVersionId != null && variables.pageVersionId != 0) {
+            var qApprovalList = new Query().setSQL("  SELECT *
+                                                        FROM nephthys_pageApproval
+                                                       WHERE pageVersionId = :pageVersionId
+                                                    ORDER BY approvalDate DESC")
+                                           .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
+                                           .execute()
+                                           .getResult();
+            
+            var approvalList = [];
+            for(var i = 1; i <= qApprovalList.getRecordCount(); ++i) {
+                approvalList.append({
+                    user          = new user(qApprovalList.userId[i]),
+                    approvalDate  = qApprovalList.approvalDate[i],
+                    oldPageStatus = new pageStatus(qApprovalList.oldPageStatusId[i]),
+                    newPageStatus = new pageStatus(qApprovalList.newPageStatusId[i])
+                });
+            }
+            
+            return approvalList;
         }
-        
-        return approvalList;
+        else {
+            return [];
+        }
     }
     
     public boolean function approve(required numeric oldPageStatusId, required numeric newPageStatusId, required numeric userId) {

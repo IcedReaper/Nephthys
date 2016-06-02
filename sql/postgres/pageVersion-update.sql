@@ -286,7 +286,7 @@ alter table nephthys_page add column pageVersionId integer;
 update nephthys_page p set pageVersionId = (SELECT pv.pageVersionId FROM nephthys_pageVersion pv WHERE p.av = pv.version AND p.pageId = pv.pageId);
 
 alter table nephthys_page drop column av;
-alter table nephthys_page alter column pageVersionId SET NOT NULL;
+alter table nephthys_page alter column pageVersionId DROP NOT NULL; -- when the page is saved for the first time the pageVersion will not exist as the pageVersion needs an pageId which otherwise will not exist
 
 alter table nephthys_pageVersion add column majorVersion integer;
 alter table nephthys_pageVersion add column minorVersion integer;

@@ -325,7 +325,6 @@ component {
     
     
     private void function load() {
-        // TODO: Check für pageId, minor & major version to filter | not here
         if(! isNewEntry()) {
             var qryPageVersion = new Query();
             
@@ -404,7 +403,6 @@ component {
     }
     
     private numeric function getNextSortOrder() {
-        // TODO: implement
         return 1;
     }
     
