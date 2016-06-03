@@ -20,7 +20,7 @@
         </div>
     </div>
     
-    <form method="POST" autocomplete="off" class="m-t" action="/user/#request.user.getUserName()#/privateMessages/conversation/#attributes.conversation.getConversationId()#">
+    <form method="POST" autocomplete="off" class="m-t-1" action="/user/#request.user.getUserName()#/privateMessages/conversation/#attributes.conversation.getConversationId()#">
         <div class="row">
             <div class="col-sm-12">
                 <h4>Antworten</h4>
@@ -52,7 +52,7 @@
                                     unread
                                 </cfif>
                             </cfif>">
-                    <div class="card m-t">
+                    <div class="card m-t-1">
                         <div class="card-block">
                             <cfif messages[messageIndex].getUser().getUserId() EQ request.user.getUserId() AND messages[messageIndex].isReadByOther(request.user) EQ false AND messages[messageIndex].isDeleted() EQ false>
                                 <a href="/user/#request.user.getUserName()#/privateMessages/conversation/#attributes.conversation.getConversationId()#?delete&messageId=#messages[messageIndex].getMessageId()#" class="close" title="Nachricht löschen">&times;</a>

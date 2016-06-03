@@ -29,7 +29,7 @@
         </cfif>
         
         <cfloop from="1" to="#attributes.reviews.len()#" index="reviewIndex">
-            <article<cfif reviewIndex GT 1> class="m-t-lg"</cfif>>
+            <article<cfif reviewIndex GT 1> class="m-t-2"</cfif>>
                 <header>
                     <!-- todo optimize -->
                     <p class="pull-right">

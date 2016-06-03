@@ -25,7 +25,7 @@
                         <cfset rowPictureCount = 12 - rowPictureCount>
                     </cfif>
                     
-                    <div class="row pictures<cfif pictureRowIndex GT 1> m-t</cfif>">
+                    <div class="row pictures<cfif pictureRowIndex GT 1> m-t-1</cfif>">
                         <cfloop from="1" to="#colMax#" index="colIndex">
                             <div class="col-md-#(12 / colMax)#">
                                 <cfloop from="1" to="4" index="pictureTmpIndex">
@@ -46,7 +46,7 @@
                                             </div>
                                         <cfelse>
                                             </div>
-                                            <div class="row m-t">
+                                            <div class="row m-t-1">
                                                 <div class="col-md-12">
                                                     <a href="#attributes.gallery.getRelativePath()#/#pictures[pictureIndex].getPictureFileName()#" class="thumbnail" data-gallery title="#pictures[pictureIndex].getCaption()#">
                                                         <img src="#attributes.gallery.getRelativePath()#/#pictures[pictureIndex].getThumbnailFileName()#" title="#pictures[pictureIndex].getTitle()#" class="img-fluid">
@@ -63,7 +63,7 @@
                                                     </a>
                                                 </div>
                                             </div>
-                                            <div class="row m-t">
+                                            <div class="row m-t-1">
                                         <cfelse>
                                             <div class="col-sm-4 col-md-4">
                                                 <a href="#attributes.gallery.getRelativePath()#/#pictures[pictureIndex].getPictureFileName()#" class="thumbnail" data-gallery title="#pictures[pictureIndex].getCaption()#">
@@ -81,7 +81,7 @@
                     </div>
                 </cfif>
                 <cfif rowPictureCount LTE 4> <!--- Only for the last 4 --->
-                    <div class="row<cfif pictureRowIndex GT 1> m-t</cfif>">
+                    <div class="row<cfif pictureRowIndex GT 1> m-t-1</cfif>">
                         <cfloop from="1" to="#rowPictureCount#" index="pictureTmpIndex">
                             <cfset ++pictureIndex>
                             <div class="col-sm-#(12 / rowPictureCount)# col-md-#(12 / rowPictureCount)#">

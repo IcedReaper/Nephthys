@@ -92,7 +92,7 @@
                                 <div text-angular ng-model="review.introduction" ta-toolbar="[['bold','italics','underline','strikeThrough'],['insertLink']]" ta-disabled="! review.isEditable"></div>
                             </div>
                         </div>
-                        <div class="row m-t">
+                        <div class="row m-t-1">
                             <div class="col-md-12">
                                 <h4>Reviewtext</h4>
                                 <div text-angular ng-model="review.reviewText" ta-toolbar="[
@@ -104,13 +104,13 @@
                         </div>
                         
                         <div class="row">
-                            <div class="col-md-12 m-t">
+                            <div class="col-md-12 m-t-1">
                                 <button class="btn btn-success" ng-click="save()" ng-disabled="! review.isEditable"><i class="fa fa-floppy-o"></i> Speichern</button>
                             </div>
                         </div>
                     </form>
                     
-                    <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
+                    <div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
                         <h3>{{message.headline}}</h3>
                         <p>{{message.text}}</p>
                         <p>{{message.errorMessage}}</p>

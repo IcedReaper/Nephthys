@@ -27,7 +27,7 @@
         </fieldset>
     </form>
     
-    <table class="table table-inverse m-t">
+    <table class="table table-inverse m-t-1">
         <thead>
             <tr>
                 <th>User</th>

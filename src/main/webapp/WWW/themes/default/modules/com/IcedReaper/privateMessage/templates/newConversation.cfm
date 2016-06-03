@@ -4,7 +4,7 @@
             <a href="overview" class="btn btn-primary pull-right"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
             <h2>Neue Konversation</h2>
             
-            <form method="POST" autocomplete="off" action="/user/#request.user.getUserName()#/privateMessages/conversation/new" class="m-t">
+            <form method="POST" autocomplete="off" action="/user/#request.user.getUserName()#/privateMessages/conversation/new" class="m-t-1">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">

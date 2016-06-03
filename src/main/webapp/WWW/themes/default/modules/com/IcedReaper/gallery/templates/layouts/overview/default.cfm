@@ -1,5 +1,5 @@
 <cfoutput>
-    <article<cfif galleryIndex GT 1> class="m-t-lg"</cfif>>
+    <article<cfif galleryIndex GT 1> class="m-t-2"</cfif>>
         <header>
             <h2><a href="#request.page.getLink()##attributes.galleries[galleryIndex].getLink()#">#attributes.galleries[galleryIndex].getHeadline()#</a></h2>
             <p><small>Diese Gallerie enthält #attributes.galleries[galleryIndex].getPictureCount()# Bilder</small></p>

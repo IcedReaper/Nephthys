@@ -101,13 +101,13 @@
                         </div>
                         
                         <div class="row">
-                            <div class="col-md-12 m-t">
+                            <div class="col-md-12 m-t-1">
                                 <button class="btn btn-success" ng-click="save()" ng-disabled="! blogpost.isEditable"><i class="fa fa-floppy-o"></i> Speichern</button>
                             </div>
                         </div>
                     </form>
                     
-                    <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
+                    <div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
                         <h3>{{message.headline}}</h3>
                         <p>{{message.text}}</p>
                         <p>{{message.errorMessage}}</p>
@@ -136,7 +136,7 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-block">
-                        <div class="row m-b">
+                        <div class="row m-b-1">
                             <div class="col-md-12 text-right">
                                 <button class="btn btn-primary" ng-click="load()"><i class="fa fa-refresh"></i> Aktualisieren</button>
                             </div>

@@ -94,7 +94,7 @@
                                 <h3>Heutige Aufrufe <small>Top 20</small></h3>
                                 <canvas chart-options="todayVisitChart.options" chart-series="todayVisitChart.series" chart-labels="todayVisitChart.labels" chart-data="todayVisitChart.data" class="chart chart-bar ng-isolate-scope"></canvas>
                                 
-                                <ul class="m-b container-fluid">
+                                <ul class="m-b-1 container-fluid">
                                     <li ng-repeat="legend in todayVisitChartLegend" class="col-md-6"><a href="{{legend.link}}" target="_blank">{{legend.label}}</a></li>
                                 </ul>
                             </div>

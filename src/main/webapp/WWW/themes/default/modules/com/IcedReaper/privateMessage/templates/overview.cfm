@@ -13,7 +13,7 @@
             
             <cfif attributes.conversations.len() GT 0>
                 <cfloop from="1" to="#attributes.conversations.len()#" index="conversationIndex">
-                    <div class="row m-t">
+                    <div class="row m-t-1">
                         <div class="col-sm-12">
                             <div class="card">
                                 <div class="card-block">

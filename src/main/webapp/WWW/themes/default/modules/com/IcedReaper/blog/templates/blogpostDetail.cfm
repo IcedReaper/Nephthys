@@ -62,7 +62,7 @@
                             <cfif request.user.getUserId() != 0 || attributes.blogpost.getAnonymousCommentAllowed()>
                                 <h5>Kommentieren</h5>
                                 <form method="POST" action="?">
-                                    <div class="row m-t">
+                                    <div class="row m-t-1">
                                         <cfif request.user.getUserId() == 0>
                                             <div class="col-md-6">
                                                 <fieldset class="form-group">

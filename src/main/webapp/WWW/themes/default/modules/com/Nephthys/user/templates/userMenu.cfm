@@ -1,10 +1,10 @@
 <cfoutput>
 <cfif request.user.getUserId() EQ 0>
-    <div class="btn-group pull-right m-l">
+    <div class="btn-group pull-right m-l-1">
         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Login
         </button>
-        <div class="dropdown-menu p-r p-l p-b">
+        <div class="dropdown-menu p-r-1 p-l-1 p-b-1">
             <form action="?" method="POST" class="form-inline" auto-complete="off">
                 <fieldset class="form-group">
                     <label for="username">Username</label>
@@ -14,16 +14,16 @@
                     <label for="password">Passwort</label>
                     <input type="password" name="Password" id="password" class="form-control">
                 </fieldset>
-                <button type="submit" class="btn btn-success m-t"><i class="fa fa-sign-in"></i> Einloggen</button>
+                <button type="submit" class="btn btn-success m-t-1"><i class="fa fa-sign-in"></i> Einloggen</button>
             </form>
         </div>
     </div>
 <cfelse>
-    <div class="btn-group pull-right m-l">
+    <div class="btn-group pull-right m-l-1">
         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             #request.user.getUsername()#
         </button>
-        <div class="dropdown-menu p-r p-l p-b">
+        <div class="dropdown-menu p-r-1 p-l-1 p-b-1">
             <a href="/user/#request.user.getUsername()#" class="btn btn-secondary btn-link btn-sm font-light"><i class="fa fa-cog"></i> Mein Profil</a>
             <cfif application.system.settings.getValueOfKey("privateMessageModule") NEQ null>
                 <a href="/user/#request.user.getUsername()#/privateMessages" class="btn btn-secondary btn-link btn-sm font-light">

@@ -33,7 +33,7 @@
         <strong>#attributes.review.getIntroduction()#</strong>
         <h5><small>Diese Bewertung wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.review.getCreationDate())# von <a href="/User/#attributes.review.getCreator().getUsername()#">#attributes.review.getCreator().getUsername()#</a> in der Kategorie <a href="#request.page.getLink()#/Kategorie/#attributes.review.getType().getName()#">#attributes.review.getType().getName()#</a> erstellt.</small></h5>
     </header>
-    <section class="m-t">
+    <section class="m-t-1">
         <h1>#attributes.review.getHeadline()#</h1>
         
         <cfif attributes.review.getImagePath() NEQ "">

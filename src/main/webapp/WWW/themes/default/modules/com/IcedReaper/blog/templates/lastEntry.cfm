@@ -3,7 +3,7 @@
         <div class="row">
             <div class="col-sm-12">
                 <cfloop from="1" to="#attributes.blogposts.len()#" index="blogpostIndex">
-                    <article<cfif blogpostIndex GT 1> class="m-t-lg"</cfif>>
+                    <article<cfif blogpostIndex GT 1> class="m-t-2"</cfif>>
                         <header>
                             <h3><a href="#request.page.getLink()##attributes.blogposts[blogpostIndex].getLink()#">#attributes.blogposts[blogpostIndex].getHeadline()#</a></h3>
                         </header>

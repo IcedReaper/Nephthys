@@ -6,8 +6,8 @@
 
     <cfif attributes.results.len() GT 0>
         <cfloop from="1" to="#attributes.results.len()#" index="userIndex">
-            <section class="m-t">
-                <div class="card userDetails p-a">
+            <section class="m-t-1">
+                <div class="card userDetails p-a-1">
                     <div class="card-block">
                         <h4 class="card-title"><a href="/user/#attributes.results[userIndex].getUsername()#">#attributes.results[userIndex].getUsername()#</a></h4>
                     </div>
