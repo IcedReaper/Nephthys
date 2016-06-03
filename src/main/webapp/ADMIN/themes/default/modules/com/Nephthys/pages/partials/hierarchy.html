@@ -28,12 +28,27 @@
                                 <button class="btn btn-primary" ng-click="addVersion()" title="Neue Version hinzufügen"><i class="fa fa-plus"></i></button>
                             </div>
                         </div>
+                        <div class="form-group row">
+                            <div class="col-md-6">
+                                <div ng-if="pageStatus[ hierarchy.versions[selectedVersion].pageStatusId ].nextStatus && ! hierarchy.versions[selectedVersion].new">
+                                    <h4>Status ändern in</h4>
+                                    <button type="submit"
+                                            class="btn btn-primary m-r-1"
+                                            ng-repeat="ps in pageStatus[ hierarchy.versions[selectedVersion].pageStatusId ].nextStatus"
+                                            ng-click="pushToStatus(ps.pageStatusId);">{{ps.name}}</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6" ng-if="hierarchy.versions[selectedVersion].editable">
+                                <div class="pull-right">
+                                    <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </div>
             </div>
         </div>
         
-        <!-- speichern | status -->
         
         <div class="row m-t-3">
             <div class="col-xl-12">
@@ -51,20 +66,20 @@
     <h4>{{region.name}}</h4>
     <div ui-tree id="ui-tree-{{region}}" data-nodrag="{{! hierarchy.versions[selectedVersion].editable}}" data-nodrop="{{! region.editable}}" data-clone-enabled="false">
         <ol ui-tree-nodes ng-model="region.pages">
-            <li ng-repeat="node in region.pages" ui-tree-node ng-include="'tree_nodes_renderer.html'"></li>
+            <li ng-repeat="page in region.pages" ui-tree-node ng-include="'tree_nodes_renderer.html'"></li>
         </ol>
     </div>
 </script>
 
 <script type="text/ng-template" id="tree_nodes_renderer.html">
     <div ui-tree-handle class="tree-node tree-node-content">
-        <a class="btn btn-success btn-sm" ng-if="node.nodes && node.nodes.length > 0" data-nodrag ng-click="toggle(this)"><span
+        <a class="btn btn-success btn-sm" ng-if="page.pages && page.pages.length > 0" data-nodrag ng-click="toggle(this)"><span
             class="fa"
             ng-class="{
               'fa-chevron-right': collapsed,
               'fa-chevron-down': !collapsed
             }"></span></a>
-        <span class="title">{{node.title}}</span>
+        <span class="title">{{page.title}}</span>
         <!--
         <a class="pull-right btn btn-danger btn-sm" data-nodrag ng-click="remove(this)"><span
             class="fa fa-remove"></span></a>
@@ -72,7 +87,7 @@
             class="fa fa-plus"></span></a>
         -->
     </div>
-    <ol ui-tree-nodes="" ng-model="node.nodes" ng-class="{hidden: collapsed}">
-        <li ng-repeat="node in node.nodes" ui-tree-node ng-include="'tree_nodes_renderer.html'"></li>
+    <ol ui-tree-nodes="" ng-model="page.pages" ng-class="{hidden: collapsed}">
+        <li ng-repeat="page in page.pages" ui-tree-node ng-include="'tree_nodes_renderer.html'"></li>
     </ol>
 </script>

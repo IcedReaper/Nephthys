@@ -366,8 +366,10 @@ component {
             hierarchy["versions"][hierarchyVersion.hierarchyVersionId] = {};
             
             hierarchy["versions"][hierarchyVersion.hierarchyVersionId] = {
-                "editable" = false,
-                "regions"  = []
+                "editable"     = false,
+                "pageStatusId" = hierarchyVersion.pageStatusId,
+                "new"          = false,
+                "regions"      = []
             };
             
             for(region in regions) {
@@ -391,9 +393,16 @@ component {
         }
         index++;
         
+        
+        var pageStatusId = new pageStatusFilter().setStartStatus(true)
+                                                 .execute()
+                                                 .getResult()[1].getPageStatusId();
+        
         hierarchy["versions"][index] = {
-            "editable" = true,
-            "regions"  = []
+            "editable"     = true,
+            "pageStatusId" = pageStatusId,
+            "new"          = true,
+            "regions"      = []
         };
         
         hierarchy["versions"][index]["regions"] = duplicate(hierarchy["versions"][version].regions);
@@ -402,6 +411,85 @@ component {
             "newVersion" = index,
             "hierarchy"  = hierarchy
         };
+    }
+    
+    remote numeric function saveHierarchy(required numeric hierarchyId, required struct hierarchy) {
+        var hierarchyVersionId = arguments.hierarchyId;
+        if(arguments.hierarchy.new) {
+            hierarchyVersionId = new Query().setSQL("INSERT INTO nephthys_pageHierarchyVersion
+                                                                 (
+                                                                     pageStatusId,
+                                                                     creatorUserId
+                                                                 )
+                                                          VALUES (
+                                                                     :pageStatusId,
+                                                                     :userId
+                                                                 );
+                                                     SELECT currval('seq_nephthys_pageHierarchyVersion_id' :: regclass) newId;")
+                                            .addParam(name = "pageStatusId", value = arguments.hierarchy.pageStatusId, cfsqltype = "cf_sql_numeric")
+                                            .addParam(name = "userId",       value = request.user.getUserId(),         cfsqltype = "cf_sql_numeric")
+                                            .execute()
+                                            .getResult()
+                                            .newId[1];
+        }
+        
+        new query().setSQL("DELETE FROM nephthys_pageHierarchy
+                                  WHERE pageHierarchyVersionId = :hierarchyVersionId")
+                   .addParam(name = "hierarchyVersionId", value = hierarchyVersionId, cfsqltype = "cf_sql_numeric")
+                   .execute();
+        
+        for(var region in arguments.hierarchy.regions) {
+            if(region.region != "null") {
+                saveHierarchyLevel(hierarchyVersionId, region.region, null, region.pages);
+            }
+        }
+        
+        return hierarchyVersionId;
+    }
+    
+    private boolean function saveHierarchyLevel(required numeric hierarchyVersionId, required string region, required numeric parentPageId, required array pages) {
+        for(var i = 1; i <= arguments.pages.len(); i++) {
+            new Query().setSQL("INSERT INTO nephthys_pageHierarchy
+                                            (
+                                                pageHierarchyVersionId,
+                                                region,
+                                                pageId,
+                                                parentPageId,
+                                                sortOrder
+                                            )
+                                     VALUES (
+                                                :pageHierarchyVersionId,
+                                                :region,
+                                                :pageId,
+                                                :parentPageId,
+                                                :sortOrder
+                                            )")
+                       .addParam(name = "pageHierarchyVersionId", value = arguments.hierarchyVersionId, cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "region",                 value = arguments.region,             cfsqltype = "cf_sql_varchar")
+                       .addParam(name = "pageId",                 value = arguments.pages[i].id,        cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "parentPageId",           value = arguments.parentPageId,       cfsqltype = "cf_sql_numeric", null = arguments.parentPageId == null)
+                       .addParam(name = "sortOrder",              value = i,                            cfsqltype = "cf_sql_numeric")
+                       .execute();
+            
+            if(arguments.pages[i].pages.len() > 0) {
+                saveHierarchyLevel(arguments.hierarchyVersionId, arguments.region, arguments.pages[i].id, arguments.pages[i].pages);
+            }
+        }
+        
+        return true;
+    }
+    
+    remote boolean function pushHierarchyToStatus(required numeric hierarchyVersionId, required numeric pageStatusId) {
+        /*
+        TODO: implement
+        update hierarchy version
+        if new status is online update old hierarchy version
+        
+        add approval
+        
+        */
+        
+        return false;
     }
     
     
@@ -456,7 +544,7 @@ component {
             pageData.append({
                 "id"    = page.getPageId(),
                 "title" = pageVersion.getLinktext(),
-                "nodes" = getSubPagesForHierarchy(page.getPageId(), arguments.region, arguments.hierarchyVersionId)
+                "pages" = arguments.region != "null" ? getSubPagesForHierarchy(page.getPageId(), arguments.region, arguments.hierarchyVersionId) : []
             });
         }
         
