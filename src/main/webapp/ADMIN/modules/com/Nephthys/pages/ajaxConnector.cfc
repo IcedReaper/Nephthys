@@ -2,7 +2,9 @@ component {
     import "API.modules.com.Nephthys.page.*";
     
     remote array function getList() {
-        return getSubPages(null, "header").append(getSubPages(null, "footer"), true);
+        return getSubPages(null, "header")
+                   .append(getSubPages(null, "footer"), true)
+                   .append(getSubPages(null, "system"), true);
     }
     
     remote struct function getActualUser() {
@@ -119,7 +121,7 @@ component {
         }
     }
     
-    remote boolean function pushToStatus(required numeric pageVersionId, required numeric pageStatusId) {
+    remote string function pushToStatus(required numeric pageVersionId, required numeric pageStatusId) {
         var newPageStatus    = new pageStatus(arguments.pageStatusId);
         var pageVersion      = new pageVersion(arguments.pageVersionId);
         var actualPageStatus = pageVersion.getPageStatus();
@@ -145,21 +147,101 @@ component {
                                                                         .execute()
                                                                         .getResult()[1].getPageStatusId();
                         
-                        var actualPageVersion = page.getActualPageVersion();
-                        if(actualPageVersion.getPageVersionId() != pageVersion.getPageVersionId()) {
-                            new pageApproval(actualPageVersion.getPageVersionId()).approve(actualPageVersion.getPageStatusId(),
+                        var oldPageVersion = page.getActualPageVersion();
+                        if(oldPageVersion.getPageVersionId() != pageVersion.getPageVersionId()) {
+                            new pageApproval(oldPageVersion.getPageVersionId()).approve(oldPageVersion.getPageStatusId(),
                                                                                            offlinePageStatusId,
                                                                                            request.user.getUserId());
                             
-                            actualPageVersion.setPageStatusId(offlinePageStatusId)
+                            oldPageVersion.setPageStatusId(offlinePageStatusId)
                                              .save();
                         }
                         
-                        // TODO: update hierarchy...
-                        
-                        
                         page.setPageVersionId(pageVersion.getPageVersionId())
                             .save();
+                        
+                        // If required we also have to update the hierarchy...
+                        if(oldPageVersion.getSortOrder() != pageVersion.getSortOrder()) {
+                            // TODO: check were to move this stuff...
+                            var hierarchyEntryMoved = false;
+                            if(oldPageVersion.getParentPageId() != pageVersion.getParentPageId() ||
+                               oldPageVersion.getRegion() != pageVersion.getRegion()) {
+                                new Query().setSQL("UPDATE nephthys_pageHierarchy
+                                                       SET region       = :region,
+                                                           parentPageId = :parentPageId,
+                                                           sortOrder    = :sortOrder
+                                                     WHERE pageId = :pageId;")
+                                           .addParam(name = "pageId",       value = pageVersion.getPageId(),       cfsqltype = "cf_sql_numeric")
+                                           .addParam(name = "region",       value = pageVersion.getRegion(),       cfsqltype = "cf_sql_varchar")
+                                           .addParam(name = "parentPageId", value = pageVersion.getParentPageId(), cfsqltype = "cf_sql_numeric", null = oldPageVersion.getParentPageId() == null)
+                                           .addParam(name = "sortOrder",    value = pageVersion.getSortOrder(),    cfsqltype = "cf_sql_numeric")
+                                           .execute();
+                                
+                                if(oldPageVersion.getParentPageId() == null) {
+                                    new Query().setSQL("UPDATE nephthys_pageHierarchy
+                                                           SET sortOrder = sortOrder - 1
+                                                         WHERE region       = :region
+                                                           AND parentPageId IS NULL
+                                                           AND sortOrder    > :sortOrder")
+                                               .addParam(name = "region",       value = oldPageVersion.getRegion(),       cfsqltype = "cf_sql_varchar")
+                                               .addParam(name = "parentPageId", value = oldPageVersion.getParentPageId(), cfsqltype = "cf_sql_numeric")
+                                               .addParam(name = "sortOrder",    value = oldPageVersion.getSortOrder(),    cfsqltype = "cf_sql_numeric")
+                                               .execute();
+                                }
+                                else {
+                                    new Query().setSQL("UPDATE nephthys_pageHierarchy
+                                                           SET sortOrder = sortOrder - 1
+                                                         WHERE region       = :region
+                                                           AND parentPageId = :parentPageId
+                                                           AND sortOrder    > :sortOrder")
+                                               .addParam(name = "region",       value = oldPageVersion.getRegion(),       cfsqltype = "cf_sql_varchar")
+                                               .addParam(name = "parentPageId", value = oldPageVersion.getParentPageId(), cfsqltype = "cf_sql_numeric")
+                                               .addParam(name = "sortOrder",    value = oldPageVersion.getSortOrder(),    cfsqltype = "cf_sql_numeric")
+                                               .execute();
+                                }
+                                hierarchyEntryMoved = true;
+                            }
+                            
+                            if(pageVersion.getRegion() != "system") {
+                                var pageFilterCtrl = new filter().setParentId(pageVersion.getParentPageId())
+                                                                 .setRegion(pageVersion.getRegion())
+                                                                 .setOnline(true)
+                                                                 .execute();
+                                
+                                for(var tmpPage in pageFilterCtrl.getResult()) {
+                                    if(tmpPage.getPageId() != page.getPageId()) {
+                                        var tmpActualPageVersion = page.getActualPageVersion();
+                                        var newSortOrder = 0;
+                                        
+                                        if(tmpActualPageVersion.getSortOrder() >= pageVersion.getSortOrder() && tmpActualPageVersion.getSortOrder() <= oldPageVersion.getSortOrder()) {
+                                            newSortOrder = tmpActualPageVersion.getSortOrder() + 1;
+                                        }
+                                        else if(tmpActualPageVersion.getSortOrder() >= oldPageVersion.getSortOrder() && tmpActualPageVersion.getSortOrder() <= pageVersion.getSortOrder()) {
+                                            newSortOrder = tmpActualPageVersion.getSortOrder() - 1;
+                                        }
+                                        
+                                        if(newSortOrder != 0) {
+                                            new Query().setSQL("UPDATE nephthys_pageHierarchy
+                                                                   SET sortOrder = :sortOrder
+                                                                 WHERE pageId       = :pageId")
+                                                       .addParam(name = "pageId",    value = tmpPage.getPageId(), cfsqltype = "cf_sql_numeric")
+                                                       .addParam(name = "sortOrder", value = newSortOrder,        cfsqltype = "cf_sql_numeric")
+                                                       .execute();
+                                        }
+                                    }
+                                    else {
+                                        if(! hierarchyEntryMoved) {
+                                            new Query().setSQL("UPDATE nephthys_pageHierarchy
+                                                                   SET sortOrder = :sortOrder
+                                                                 WHERE pageId       = :pageId")
+                                                       .addParam(name = "pageId",    value = pageVersion.getPageId(),    cfsqltype = "cf_sql_numeric")
+                                                       .addParam(name = "sortOrder", value = pageVersion.getSortOrder(), cfsqltype = "cf_sql_numeric")
+                                                       .execute();
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                     else {
                         // if the actual status is online the new status is not online we have to update the page. // TODO: check if required.

@@ -2,13 +2,21 @@
 
 ## Actual Task TODO - Reminder:
 - Page Statistics
+- Dashboard Statistics
 - Sortierung
 - Status-Button stylen
 - required approvals
-- Overview over all page versions not online
-    - Submodule for dashboard
-        - show when permitted
-
+- Übersicht über die Seitenversionen, die noch nicht online sind/waren
+- sortierung auch ohne neue version möglich
+    - Hierarchie "Chart"
+- Statusflow
+    - https://github.com/marceljuenemann/angular-drag-and-drop-lists
+        - http://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/#/simple
+        - http://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/#/nested
+    - http://bl.ocks.org/mbostock/1093025
+    - https://github.com/codef0rmer/angular-dragdrop
+- revalidate the sortOrder within the pageVersion table
+- offene todos
 
 
 ## Allgemein

@@ -73,7 +73,7 @@
                         <div class="form-group">
                             <label for="region" title="Eine Navigationsregion ist zum Beispiel die Kopfnavigation am oberen Rand der Webseite">Region *</label>
                             <select class="form-control" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].region"
-                                    ng-options="o.v as o.n for o in [{ n: 'Kopfnavigation', v: 'header' }, { n: 'Fußnavigation', v: 'footer' }]"
+                                    ng-options="o.v as o.n for o in [{ n: 'Kopfnavigation', v: 'header' }, { n: 'Fußnavigation', v: 'footer' }, { n: 'Systemlink', v: 'system'}]"
                                     ng-readonly="isReadonly()">
                             </select>
                         </div>

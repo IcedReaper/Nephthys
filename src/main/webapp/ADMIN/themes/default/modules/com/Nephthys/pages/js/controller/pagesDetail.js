@@ -20,6 +20,8 @@ nephthysAdminApp
                     $scope.page.versions[majorVersion][minorVersion].creator.userName    = _actualUser.userName;
                     $scope.page.versions[majorVersion][minorVersion].lastEditor.userId   = _actualUser.userId;
                     $scope.page.versions[majorVersion][minorVersion].lastEditor.userName = _actualUser.userName;
+                    
+                    //TODO: sortOrder = get actual sortOrder from hierarchy as the versions sortOrder isn't as reliable.
                 }
             };
         
@@ -63,9 +65,11 @@ nephthysAdminApp
                     .pushToStatus($routeParams.pageId,
                                   $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageVersionId,
                                   newPageStatusId)
-                    .then(pagesService.getDetailsForVersion($routeParams.pageId,
-                                                            $scope.selectedVersion.major,
-                                                            $scope.selectedVersion.minor))
+                    .then(function() {
+                        return pagesService.getDetailsForVersion($routeParams.pageId,
+                                                                 $scope.selectedVersion.major,
+                                                                 $scope.selectedVersion.minor);
+                    })
                     .then(function (pageVersion) {
                         // update everything
                         $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor] = pageVersion;

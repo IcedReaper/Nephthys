@@ -313,3 +313,8 @@ alter table nephthys_pageStatus add column endStatus boolean default false;
 
 alter table nephthys_pageStatus add column deleteable boolean default false;
 comment on column nephthys_pageStatus.deleteable is 'If this is true, pages within this status can be permanently deleted';
+
+
+alter table nephthys_pageHierarchy add column parentPageId integer DEFAULT NULL;
+alter table nephthys_pageHierarchy add constraint FK_nephthys_pageHierarchy_parentPageId foreign key (parentPageId) references nephthys_page (pageId) ON UPDATE NO ACTION ON DELETE CASCADE;
+create index fki_nephthys_page_pageHierarchy_parentPageId ON nephthys_pageHierarchy (parentPageId);
