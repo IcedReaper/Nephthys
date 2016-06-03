@@ -25,7 +25,6 @@ component implements="WWW.interfaces.connector" {
         var pageFilterCtrl = createObject("component", "API.modules.com.Nephthys.page.filter").init();
         
         return pageFilterCtrl.setRegion(arguments.region)
-                             .setVersion("actual")
                              .setOnline(true)
                              .execute()
                              .getResult();

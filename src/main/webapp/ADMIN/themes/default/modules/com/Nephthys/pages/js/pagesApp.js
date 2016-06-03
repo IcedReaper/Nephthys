@@ -1,5 +1,6 @@
 var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute", 
                                                            "chart.js",
+                                                           "ui.tree",
                                                            "textAngular"]);
 
 nephthysAdminApp
@@ -21,6 +22,10 @@ nephthysAdminApp
                 .when("/statusflow", {
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/statusFlow.html",
                     controller:  "statusFlowCtrl"
+                })
+                .when("/hierarchy", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/hierarchy.html",
+                    controller: "hierarchyCtrl"
                 })
                 .when("/:pageId", {
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/pagesDetail.html",

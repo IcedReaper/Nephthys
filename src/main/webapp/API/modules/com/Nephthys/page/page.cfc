@@ -37,11 +37,6 @@ component {
         return this;
     }
     
-    public page function setPageStatusId(required numeric pageStatusId) {
-        variables.pageStatusId = arguments.pageStatusId;
-        return this;
-    }
-    
     public page function addPageVersion(required pageVersion pageVersion) {
         if(! variables.pageVersions.keyExists(arguments.pageVersion.getVersion())) {
             variables.pageVersions[arguments.pageVersion.getVersion()] = arguments.pageVersion;
@@ -62,14 +57,6 @@ component {
     
     public date function getCreationDate() {
         return variables.creationDate;
-    }
-    
-    public numeric function getPageStatusId() {
-        return variables.pageStatusId;
-    }
-    
-    public pageStatus function getPageStatus() {
-        return new pageStatus(variables.pageStatusId);
     }
     
     public numeric function getPageVersionId() {
@@ -196,28 +183,23 @@ component {
         if(variables.pageId == 0) {
             variables.pageId = new Query().setSQL("INSERT INTO nephthys_page
                                                                (
-                                                                   creatorUserId,
-                                                                   pageStatusId
+                                                                   creatorUserId
                                                                )
                                                         VALUES (
-                                                                   :userId,
-                                                                   :pageStatusId
+                                                                   :userId
                                                                );
                                                    SELECT currval('seq_nephthys_page_id' :: regclass) newPageId;")
                                           .addParam(name = "userId",       value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
-                                          .addParam(name = "pageStatusId", value = variables.pageStatusId,        cfsqltype = "cf_sql_numeric")
                                           .execute()
                                           .getResult()
                                           .newPageId[1];
         }
         else {
             new Query().setSQL("UPDATE nephthys_page
-                                   SET pageVersionId = :pageVersionId,
-                                       pageStatusId  = :pageStatusId
+                                   SET pageVersionId = :pageVersionId
                                  WHERE pageId = :pageId")
                        .addParam(name = "pageId",        value = variables.pageId,        cfsqltype = "cf_sql_numeric")
                        .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "pageStatusId",  value = variables.pageStatusId,  cfsqltype = "cf_sql_numeric")
                        .execute()
                        .getResult();
         }
@@ -248,7 +230,6 @@ component {
                 variables.creator       = new user(qGetPage.creatorUserId[1]);
                 variables.creationDate  = qGetPage.creationDate[1];
                 variables.pageVersionId = qgetPage.pageVersionId[1];
-                variables.pageStatusId  = qGetPage.pageStatusId[1];
             }
             else {
                 throw(type = "nephthys.notFound.page", message = "The page could not be found", detail = variables.pageId);
@@ -258,16 +239,9 @@ component {
             variables.creator       = new user(request.user.getUserId());
             variables.creationDate  = now();
             variables.pageVersionId = null;
-            variables.pageStatusId  = getFirstStatusId();
         }
         
         variables.pageVersions = null;
-    }
-    
-    private numeric function getFirstStatusId() {
-        return new pageStatusFilter().setStartStatus(true)
-                                     .execute()
-                                     .getResult()[1].getPageStatusId();
     }
     
     private void function loadPageVersions() {

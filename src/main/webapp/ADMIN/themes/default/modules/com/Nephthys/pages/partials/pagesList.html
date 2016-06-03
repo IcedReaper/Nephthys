@@ -2,6 +2,7 @@
     <div class="col-md-10 col-sm-8">
         <a href="#/status" class="btn btn-secondary"><i class="fa fa-tags"></i> Statusübersicht</a>
         <a href="#/statusflow" class="btn btn-secondary"><i class="fa fa-tags"></i> Statusflow</a>
+        <a href="#/hierarchy" class="btn btn-secondary"><i class="fa fa-tags"></i> Seitenhierarchie</a>
     </div>
     <div class="col-md-2 col-sm-4">
         <div class="pull-right">
@@ -40,10 +41,8 @@
         <table class="table table-inverse m-t-1">
             <thead>
                 <th>ID</th>
-                <th>Beschribung</th>
+                <th>Linktext</th>
                 <th>Link</th>
-                <th>Region</th>
-                <th>Status</th>
                 <th>Aktuelle Version</th>
                 <th>Aktionen</th>
             </thead>
@@ -55,8 +54,7 @@
                     </td>
                     <td>{{page.link}}</td>
                     <td>{{page.region}}</td>
-                    <td ng-class="(page.isOnline ? 'text-success' : 'text-danger')">{{page.pageStatusName}}</td>
-                    <td>{{page.version}}</td>
+                    <td>{{page.version}} <span class="m-l-1" ng-class="(page.isOnline ? 'text-success' : 'text-danger')">{{page.pageStatusName}}</span></td>
                     <td>
                         <a href="#/{{page.pageId}}"
                            class="btn btn-primary"

@@ -8,22 +8,26 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h1>Seite <small>{{page.link}}</small></h1>
+        <h1>Seite <small>{{page.versions[selectedVersion.major][selectedVersion.minor].link}}</small></h1>
     </div>
 </div>
 <div class="row">
     <div class="col-xl-12">
         <div class="card card-block">
-            <form class="form-inline">
-                <div class="form-group">
-                    <label for="versionSelection">Version</label>
-                    <select class="form-control" id="versionSelection" ng-model="selectedCompleteVersion" ng-change="setVersion()">
-                        <optgroup ng-repeat="(majorVersion, mvs) in page.availableVersions" label="Majorversion: {{majorVersion}}">
-                            <option ng-repeat="(minorVersion, mnvs) in page.availableVersions[majorVersion]" value="{{majorVersion}}.{{minorVersion}}">Version {{majorVersion}}.{{minorVersion}}</option>
-                        </optgroup>
-                    </select>
-                    <button class="btn btn-primary" ng-click="addMajorVersion()" title="Major Version hinzufügen"><i class="fa fa-plus"></i></button>
-                    <button class="btn btn-primary" ng-click="addMinorVersion()" title="Minor Version hinzufügen"><i class="fa fa-plus"></i></button>
+            <form>
+                <div class="form-group row">
+                    <label for="versionSelection" class="col-md-2 col-sm-4 form-control-label">Version</label>
+                    <div class="col-md-8 col-sm-5">
+                        <select class="form-control" id="versionSelection" ng-model="selectedCompleteVersion" ng-change="setVersion()">
+                            <optgroup ng-repeat="(majorVersion, mvs) in page.availableVersions" label="Majorversion: {{majorVersion}}">
+                                <option ng-repeat="(minorVersion, mnvs) in page.availableVersions[majorVersion]" value="{{majorVersion}}.{{minorVersion}}">Version {{majorVersion}}.{{minorVersion}}</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="col-md-2 col-sm-3">
+                        <button class="btn btn-primary" ng-click="addMajorVersion()" title="Major Version hinzufügen"><i class="fa fa-plus"></i></button>
+                        <button class="btn btn-primary" ng-click="addMinorVersion()" title="Minor Version hinzufügen"><i class="fa fa-plus"></i></button>
+                    </div>
                 </div>
             </form>
             <!-- Add custom version -->
@@ -42,6 +46,19 @@
                             <input type="text" class="form-control" id="link" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].link" ng-readonly="isReadonly()">
                         </div>
                         <div class="form-group">
+                            <label for="useDynamicSuffixes" title="Dynamische Seiten Suffixe sind Erweiterungen der Url, über welche sich Datensätze eines Moduls laden lassen">Dynamische Seiten Suffixe verwenden *</label>
+                            <select class="form-control" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].useDynamicSuffixes"
+                                    ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]"
+                                    ng-readonly="isReadonly()">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="statusName">Aktueller Status</label>
+                            <input type="text" class="form-control" id="statusName" value="{{pageStatus[ page.versions[selectedVersion.major][selectedVersion.minor].pageStatusId ].name}}" readonly="readonly">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
                             <label for="linktext">Text des Links</label>
                             <input type="text" class="form-control" id="linktext" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].linktext" ng-readonly="isReadonly()">
                         </div>
@@ -54,42 +71,23 @@
                             <input type="text" class="form-control" id="description" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].description" ng-readonly="isReadonly()">
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label for="parentId">Übergeordnete Seite</label>
-                            <input type="text" class="form-control" id="parentId" disabled readonly="readonly" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].parentPageId" title="Not yet implemented">
-                        </div>
-                        <div class="form-group">
-                            <label for="sortOrder">Sortierung</label>
-                            <input type="text" class="form-control" id="sortOrder" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].sortOrder" ng-readonly="isReadonly()">
-                        </div>
-                        <div class="form-group">
-                            <label for="useDynamicSuffixes" title="Dynamische Seiten Suffixe sind Erweiterungen der Url, über welche sich Datensätze eines Moduls laden lassen">Dynamische Seiten Suffixe verwenden *</label>
-                            <select class="form-control" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].useDynamicSuffixes"
-                                    ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]"
-                                    ng-readonly="isReadonly()">
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="region" title="Eine Navigationsregion ist zum Beispiel die Kopfnavigation am oberen Rand der Webseite">Region *</label>
-                            <select class="form-control" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].region"
-                                    ng-options="o.v as o.n for o in [{ n: 'Kopfnavigation', v: 'header' }, { n: 'Fußnavigation', v: 'footer' }, { n: 'Systemlink', v: 'system'}]"
-                                    ng-readonly="isReadonly()">
-                            </select>
-                        </div>
-                    </div>
                 </div>
                 
-                <button type="submit" class="btn btn-success" ng-click="save()" ng-if="isEditable()"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
-                
-                <h4>Aktueller Status: <small>{{pageStatus[ page.versions[selectedVersion.major][selectedVersion.minor].pageStatusId ].name}}</small></h4>
-                
-                <div ng-if="pageStatus[ page.versions[selectedVersion.major][selectedVersion.minor].pageStatusId ].nextStatus && page.pageId && page.versions[selectedVersion.major][selectedVersion.minor].pageVersionId">
-                    <h4>Status ändern in</h4>
-                    <button type="submit"
-                            class="btn btn-primary m-r-1"
-                            ng-repeat="ps in pageStatus[ page.versions[selectedVersion.major][selectedVersion.minor].pageStatusId ].nextStatus"
-                            ng-click="pushToStatus(ps.pageStatusId);">{{ps.name}}</button>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div ng-if="pageStatus[ page.versions[selectedVersion.major][selectedVersion.minor].pageStatusId ].nextStatus && page.pageId && page.versions[selectedVersion.major][selectedVersion.minor].pageVersionId">
+                            <h4>Status ändern in</h4>
+                            <button type="submit"
+                                    class="btn btn-primary m-r-1"
+                                    ng-repeat="ps in pageStatus[ page.versions[selectedVersion.major][selectedVersion.minor].pageStatusId ].nextStatus"
+                                    ng-click="pushToStatus(ps.pageStatusId);">{{ps.name}}</button>
+                        </div>
+                    </div>
+                    <div class="col-md-6" ng-if="isEditable()">
+                        <div class="pull-right">
+                            <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
+                        </div>
+                    </div>
                 </div>
             </form>
         </div>

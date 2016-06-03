@@ -58,7 +58,7 @@ nephthysAdminApp
                 return $http.get("/ajax/com/Nephthys/pages/getAvailableOptions");
             },
             
-            getActualUser: function() {
+            getActualUser: function () {
                 return $http.get("/ajax/com/Nephthys/pages/getActualUser");
             },
             
@@ -70,6 +70,13 @@ nephthysAdminApp
                         minorVersion: minorVersion
                     }
                 });
+            },
+            
+            getHierarchy: function () {
+                return $http.get("/ajax/com/Nephthys/pages/getHierarchy");
+            },
+            addHierarchyVersion: function () {
+                return $http.get("/ajax/com/Nephthys/pages/addHierarchyVersion");
             }
         };
     });

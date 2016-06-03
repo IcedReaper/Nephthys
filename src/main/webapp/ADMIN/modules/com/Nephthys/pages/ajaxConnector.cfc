@@ -87,15 +87,12 @@ component {
                                .setMinorVersion(arguments.minorVersion);
                 }
                 
-                pageVersion.setParentPageId(arguments.pageVersion.parentPageId)
-                           .setLinktext(arguments.pageVersion.linktext)
+                pageVersion.setLinktext(arguments.pageVersion.linktext)
                            .setLink(arguments.pageVersion.link)
                            .setTitle(arguments.pageVersion.title)
                            .setDescription(arguments.pageVersion.description)
                            .setContent(arguments.pageVersion.content)
-                           .setSortOrder(arguments.pageVersion.sortOrder)
                            .setUseDynamicSuffixes(arguments.pageVersion.useDynamicSuffixes)
-                           .setRegion(arguments.pageVersion.region)
                            .setLastEditorById(request.user.getUserId())
                            .setLastEditDate(now())
                            .setPageStatusId(arguments.pageVersion.pageStatusId);
@@ -159,96 +156,6 @@ component {
                         
                         page.setPageVersionId(pageVersion.getPageVersionId())
                             .save();
-                        
-                        // If required we also have to update the hierarchy...
-                        if(oldPageVersion.getSortOrder() != pageVersion.getSortOrder()) {
-                            // TODO: check were to move this stuff...
-                            var hierarchyEntryMoved = false;
-                            if(oldPageVersion.getParentPageId() != pageVersion.getParentPageId() ||
-                               oldPageVersion.getRegion() != pageVersion.getRegion()) {
-                                new Query().setSQL("UPDATE nephthys_pageHierarchy
-                                                       SET region       = :region,
-                                                           parentPageId = :parentPageId,
-                                                           sortOrder    = :sortOrder
-                                                     WHERE pageId = :pageId;")
-                                           .addParam(name = "pageId",       value = pageVersion.getPageId(),       cfsqltype = "cf_sql_numeric")
-                                           .addParam(name = "region",       value = pageVersion.getRegion(),       cfsqltype = "cf_sql_varchar")
-                                           .addParam(name = "parentPageId", value = pageVersion.getParentPageId(), cfsqltype = "cf_sql_numeric", null = oldPageVersion.getParentPageId() == null)
-                                           .addParam(name = "sortOrder",    value = pageVersion.getSortOrder(),    cfsqltype = "cf_sql_numeric")
-                                           .execute();
-                                
-                                if(oldPageVersion.getParentPageId() == null) {
-                                    new Query().setSQL("UPDATE nephthys_pageHierarchy
-                                                           SET sortOrder = sortOrder - 1
-                                                         WHERE region       = :region
-                                                           AND parentPageId IS NULL
-                                                           AND sortOrder    > :sortOrder")
-                                               .addParam(name = "region",       value = oldPageVersion.getRegion(),       cfsqltype = "cf_sql_varchar")
-                                               .addParam(name = "parentPageId", value = oldPageVersion.getParentPageId(), cfsqltype = "cf_sql_numeric")
-                                               .addParam(name = "sortOrder",    value = oldPageVersion.getSortOrder(),    cfsqltype = "cf_sql_numeric")
-                                               .execute();
-                                }
-                                else {
-                                    new Query().setSQL("UPDATE nephthys_pageHierarchy
-                                                           SET sortOrder = sortOrder - 1
-                                                         WHERE region       = :region
-                                                           AND parentPageId = :parentPageId
-                                                           AND sortOrder    > :sortOrder")
-                                               .addParam(name = "region",       value = oldPageVersion.getRegion(),       cfsqltype = "cf_sql_varchar")
-                                               .addParam(name = "parentPageId", value = oldPageVersion.getParentPageId(), cfsqltype = "cf_sql_numeric")
-                                               .addParam(name = "sortOrder",    value = oldPageVersion.getSortOrder(),    cfsqltype = "cf_sql_numeric")
-                                               .execute();
-                                }
-                                hierarchyEntryMoved = true;
-                            }
-                            
-                            if(pageVersion.getRegion() != "system") {
-                                var pageFilterCtrl = new filter().setParentId(pageVersion.getParentPageId())
-                                                                 .setRegion(pageVersion.getRegion())
-                                                                 .setOnline(true)
-                                                                 .execute();
-                                
-                                for(var tmpPage in pageFilterCtrl.getResult()) {
-                                    if(tmpPage.getPageId() != page.getPageId()) {
-                                        var tmpActualPageVersion = page.getActualPageVersion();
-                                        var newSortOrder = 0;
-                                        
-                                        if(tmpActualPageVersion.getSortOrder() >= pageVersion.getSortOrder() && tmpActualPageVersion.getSortOrder() <= oldPageVersion.getSortOrder()) {
-                                            newSortOrder = tmpActualPageVersion.getSortOrder() + 1;
-                                        }
-                                        else if(tmpActualPageVersion.getSortOrder() >= oldPageVersion.getSortOrder() && tmpActualPageVersion.getSortOrder() <= pageVersion.getSortOrder()) {
-                                            newSortOrder = tmpActualPageVersion.getSortOrder() - 1;
-                                        }
-                                        
-                                        if(newSortOrder != 0) {
-                                            new Query().setSQL("UPDATE nephthys_pageHierarchy
-                                                                   SET sortOrder = :sortOrder
-                                                                 WHERE pageId       = :pageId")
-                                                       .addParam(name = "pageId",    value = tmpPage.getPageId(), cfsqltype = "cf_sql_numeric")
-                                                       .addParam(name = "sortOrder", value = newSortOrder,        cfsqltype = "cf_sql_numeric")
-                                                       .execute();
-                                        }
-                                    }
-                                    else {
-                                        if(! hierarchyEntryMoved) {
-                                            new Query().setSQL("UPDATE nephthys_pageHierarchy
-                                                                   SET sortOrder = :sortOrder
-                                                                 WHERE pageId       = :pageId")
-                                                       .addParam(name = "pageId",    value = pageVersion.getPageId(),    cfsqltype = "cf_sql_numeric")
-                                                       .addParam(name = "sortOrder", value = pageVersion.getSortOrder(), cfsqltype = "cf_sql_numeric")
-                                                       .execute();
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else {
-                        // if the actual status is online the new status is not online we have to update the page. // TODO: check if required.
-                        if(actualPageStatus.isOnline() && ! newPageStatus.isOnline()) {
-                            page.setPageStatusId(newPageStatus.getPageStatusId())
-                                .save();
-                        }
                     }
                     
                     new pageApproval(arguments.pageVersionId).approve(actualPageStatus.getPageStatusId(),
@@ -356,6 +263,7 @@ component {
     
     remote boolean function deleteStatus(required numeric pageStatusId) {
         var pageFilterCtrl = new filter().setPageStatusId(arguments.pageStatusId).execute();
+        // TODO: add check for hierarchy
         if(pageFilterCtrl.getResultCount() == 0) {
             new pageStatus(arguments.pageStatusId).delete();
             
@@ -435,6 +343,69 @@ component {
         return _modules;
     }
     
+    remote struct function getHierarchy() {
+        var regions = [{
+            name = "Kopfnavigation",
+            region = "header"
+        }, {
+            name = "Fußnavigation",
+            region = "footer"
+        }, {
+            name = "Noch nicht gesetzt",
+            region = "null"
+        }];
+        
+        var hierarchy = {
+            "versions" = {}
+        };
+        
+        var hierarchyFilterCtrl = new filter().setFor("hierarchy").execute();
+        
+        for(var hierarchyVersion in hierarchyFilterCtrl.getResult()) {
+            // hierarchyVersionId == version
+            hierarchy["versions"][hierarchyVersion.hierarchyVersionId] = {};
+            
+            hierarchy["versions"][hierarchyVersion.hierarchyVersionId] = {
+                "editable" = false,
+                "regions"  = []
+            };
+            
+            for(region in regions) {
+                hierarchy["versions"][hierarchyVersion.hierarchyVersionId]["regions"].append({
+                    "name"   = region.name,
+                    "region" = region.region,
+                    "pages"  = getSubPagesForHierarchy(null, region.region, hierarchyVersion.hierarchyVersionId)
+                });
+            }
+        }
+
+        return hierarchy;
+    }
+    
+    remote struct function addHierarchyVersion() {
+        var hierarchy = getHierarchy();
+        
+        var index = 0;
+        for(var version in hierarchy["versions"]) {
+            index = version;
+        }
+        index++;
+        
+        hierarchy["versions"][index] = {
+            "editable" = true,
+            "regions"  = []
+        };
+        
+        hierarchy["versions"][index]["regions"] = duplicate(hierarchy["versions"][version].regions);
+        
+        return {
+            "newVersion" = index,
+            "hierarchy"  = hierarchy
+        };
+    }
+    
+    
+    
     // P R I V A T E
     private array function getSubPages(required numeric parentId, required string region) {
         var pageFilterCtrl = new filter();
@@ -442,7 +413,6 @@ component {
         
         pageFilterCtrl.setParentId(arguments.parentId)
                       .setRegion(arguments.region)
-                      .setVersion("actual")
                       .execute();
         
         var pageData = [];
@@ -451,24 +421,42 @@ component {
             pageData.append({
                 "pageId"             = page.getPageId(),
                 "pageVersionId"      = pageVersion.getPageVersionId(),
-                "parentId"           = pageVersion.getParentPageId(),
                 "linktext"           = pageVersion.getLinktext(),
                 "link"               = pageVersion.getLink(),
                 "title"              = pageVersion.getTitle(),
                 "description"        = pageVersion.getDescription(),
                 "content"            = serializeJSON(pageVersion.getContent()),
-                "sortOrder"          = pageVersion.getSortOrder(),
-                "region"             = pageVersion.getRegion(),
                 "useDynamicSuffixes" = pageVersion.getUseDynamicSuffixes(),
                 "creator"            = getUserInformation(pageVersion.getCreator()),
                 "creationDate"       = formatCtrl.formatDate(pageVersion.getCreationDate()),
                 "lastEditor"         = getUserInformation(pageVersion.getLastEditor()),
                 "lastEditDate"       = formatCtrl.formatDate(pageVersion.getLastEditDate()),
-                "subPages"           = getSubPages(pageVersion.getPageId(), pageVersion.getRegion()),
                 "isOnline"           = pageVersion.isOnline(),
                 "pageStatusId"       = pageVersion.getPageStatusId(),
                 "pageStatusName"     = pageVersion.getPageStatus().getName(),
                 "version"            = page.getActualVersion()
+            });
+        }
+        
+        return pageData;
+    }
+    
+    private array function getSubPagesForHierarchy(required numeric parentId, required string region, required numeric hierarchyVersionId) {
+        var pageFilterCtrl = new filter();
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
+        
+        pageFilterCtrl.setParentId(arguments.parentId)
+                      .setHierarchyVersionId(arguments.hierarchyVersionId)
+                      .setRegion(arguments.region)
+                      .execute();
+        
+        var pageData = [];
+        for(var page in pageFilterCtrl.getResult()) {
+            var pageVersion = page.getActualPageVersion();
+            pageData.append({
+                "id"    = page.getPageId(),
+                "title" = pageVersion.getLinktext(),
+                "nodes" = getSubPagesForHierarchy(page.getPageId(), arguments.region, arguments.hierarchyVersionId)
             });
         }
         
@@ -575,15 +563,12 @@ component {
         
         return  {
             "pageVersionId"      = arguments.pageVersion.getPageVersionId(),
-            "parentPageId"       = arguments.pageVersion.getParentPageId(),
             "linktext"           = arguments.pageVersion.getLinktext(),
             "link"               = arguments.pageVersion.getLink(),
             "title"              = arguments.pageVersion.getTitle(),
             "description"        = arguments.pageVersion.getDescription(),
             "content"            = arguments.pageVersion.getContent(),
-            "sortOrder"          = arguments.pageVersion.getSortOrder(),
             "useDynamicSuffixes" = arguments.pageVersion.getUseDynamicSuffixes(),
-            "region"             = arguments.pageVersion.getRegion(),
             "isOnline"           = arguments.pageVersion.isOnline(),
             "creator"            = getUserInformation(arguments.pageVersion.getCreator()),
             "creationDate"       = formatCtrl.formatDate(arguments.pageVersion.getCreationDate()),

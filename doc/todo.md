@@ -7,8 +7,9 @@
 - Status-Button stylen
 - required approvals
 - Übersicht über die Seitenversionen, die noch nicht online sind/waren
-- sortierung auch ohne neue version möglich
+- sortierung auch ohne neue version möglich => Komplett Refactored
     - Hierarchie "Chart"
+        - https://github.com/angular-ui-tree/angular-ui-tree
 - Statusflow
     - https://github.com/marceljuenemann/angular-drag-and-drop-lists
         - http://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/#/simple
@@ -16,7 +17,7 @@
     - http://bl.ocks.org/mbostock/1093025
     - https://github.com/codef0rmer/angular-dragdrop
 - revalidate the sortOrder within the pageVersion table
-- offene todos
+- offene todos ( // TODO: )
 
 
 ## Allgemein
@@ -74,15 +75,9 @@
         2. Installation per git-repository
         3. Module-Modul überarbeiten: Neues Modul => Installation
     2. Seitenmanagement
-        1. Seitenhierarchie
-        2. Contentbearbeitung
-            * Version fertig - noch sehr abstrakt
-        3. Seitenversionierung
-        4. Workflow - benötigt Versionierung
-        5. Mehrsprachigkeit des Contents
-        6. Möglichkeit für unterschiedlichen Content bei Übersicht / Detailansicht ?
-        7. Autospeichern (Setzt Versionierung voraus)
-        8. Vorschau
+        1. Mehrsprachigkeit des Contents
+        2. Autospeichern (Setzt Versionierung voraus)
+        3. Vorschau
             * Template in ADMIN, welches ein Template in WWW inkludiert, wo dann die richtigen Sachen angezeigt werden; dann halt nur auch schon nicht veröffentlichte Sachen.
     3. Thememanagement
         1. Themeinstallation per git repository

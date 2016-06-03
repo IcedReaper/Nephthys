@@ -318,3 +318,115 @@ comment on column nephthys_pageStatus.deleteable is 'If this is true, pages with
 alter table nephthys_pageHierarchy add column parentPageId integer DEFAULT NULL;
 alter table nephthys_pageHierarchy add constraint FK_nephthys_pageHierarchy_parentPageId foreign key (parentPageId) references nephthys_page (pageId) ON UPDATE NO ACTION ON DELETE CASCADE;
 create index fki_nephthys_page_pageHierarchy_parentPageId ON nephthys_pageHierarchy (parentPageId);
+
+
+
+-- 160603 - 15:00
+-- page hierarchy changes
+alter table nephthys_pageVersion drop column sortOrder;
+alter table nephthys_pageVersion drop column parentPageId;
+alter table nephthys_pageVersion drop column region;
+
+alter table nephthys_page drop column pageStatusId;
+
+
+drop table nephthys_pageHierarchy;
+drop sequence seq_nephthys_pageHierarchy_id;
+
+CREATE SEQUENCE seq_nephthys_pageHierarchyVersion_id
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 65535
+  START 1
+  CACHE 1;
+
+CREATE TABLE nephthys_pageHierarchyVersion
+(
+    pageHierarchyVersionId integer NOT NULL DEFAULT nextval('seq_nephthys_pageHierarchyVersion_id'::regclass),
+    pageStatusId integer NOT NULL,
+    creatorUserId integer NOT NULL,
+    creationDate timestamp with time zone NOT NULL DEFAULT now(),
+    
+    CONSTRAINT PK_nephthys_pageHierarchyVersion_id PRIMARY KEY (pageHierarchyVersionId),
+    CONSTRAINT FK_nephthys_pageHierarchyVersion_pageStatusId FOREIGN KEY (pageStatusId)  REFERENCES nephthys_pageStatus (pageStatusId) ON UPDATE NO ACTION ON DELETE CASCADE,
+    CONSTRAINT UK_nephthys_pageHierarchyVersion_userId       FOREIGN KEY (creatorUserId) REFERENCES nephthys_user (userId)             ON UPDATE NO ACTION ON DELETE NO ACTION
+)
+WITH (
+    OIDS = FALSE
+);
+
+CREATE INDEX FKI_nephthys_pageHierarchyVersion_pageStatusId ON nephthys_pageHierarchyVersion (pageStatusId);
+CREATE INDEX FKI_nephthys_pageHierarchyVersion_userId       ON nephthys_pageHierarchyVersion (creatorUserId);
+
+
+CREATE SEQUENCE seq_nephthys_pageHierarchy_id
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+CREATE TABLE nephthys_pageHierarchy
+(
+    pageHierarchyId integer NOT NULL DEFAULT nextval('seq_nephthys_pageHierarchy_id'::regclass),
+    pageHierarchyVersionId integer NOT NULL,
+    region character varying(25) DEFAULT 'header',
+    pageId integer NOT NULL,
+    parentPageId integer DEFAULT NULL,
+    sortOrder integer NOT NULL,
+    
+    CONSTRAINT PK_nephthys_pageHierarchy_id           PRIMARY KEY (pageHierarchyId),
+    CONSTRAINT FK_nephthys_pageHierarchy_versionId    FOREIGN KEY (pageHierarchyVersionId) REFERENCES nephthys_pageHierarchyVersion (pageHierarchyVersionId) ON UPDATE NO ACTION ON DELETE CASCADE,
+    CONSTRAINT FK_nephthys_pageHierarchy_pageId       FOREIGN KEY (pageId)                 REFERENCES nephthys_page (pageId)                                 ON UPDATE NO ACTION ON DELETE CASCADE,
+    CONSTRAINT FK_nephthys_pageHierarchy_parentPageId FOREIGN KEY (parentPageId)           REFERENCES nephthys_page (pageId)                                 ON UPDATE NO ACTION ON DELETE CASCADE,
+    
+    CONSTRAINT UK_nephthys_pageHierarchy_regionParentSortOrder UNIQUE (pageHierarchyVersionId, region, parentPageId, sortOrder),
+    CONSTRAINT UK_nephthys_pageHierarchy_pageId                UNIQUE (pageHierarchyVersionId, pageId)
+)
+WITH (
+    OIDS = FALSE
+);
+
+
+CREATE INDEX FKI_nephthys_pageHierarchy_versionId    ON nephthys_pageHierarchy (pageHierarchyVersionId);
+CREATE INDEX FKI_nephthys_pageHierarchy_pageId       ON nephthys_pageHierarchy (pageId);
+CREATE INDEX FKI_nephthys_pageHierarchy_parentPageId ON nephthys_pageHierarchy (parentPageId);
+CREATE INDEX FK_nephthys_pageHierarchy_default       ON nephthys_pageHierarchy (pageHierarchyVersionId, region, parentPageid, sortOrder);
+
+
+CREATE SEQUENCE seq_nephthys_pageHierarchyApproval_id
+  INCREMENT 1
+  MINVALUE 1
+  MAXVALUE 9223372036854775807
+  START 1
+  CACHE 1;
+
+CREATE TABLE nephthys_pageHierarchyApproval
+(
+    pageHierarchyApprovalId integer NOT NULL DEFAULT nextval('seq_nephthys_pageHierarchyApproval_id'::regclass),
+    pageHierarchyVersionId integer NOT NULL,
+    oldPageStatusId integer, -- for the first the old is null
+    newPageStatusId integer NOT NULL,
+    userId integer NOT NULL,
+    approvalDate timestamp with time zone NOT NULL DEFAULT now(),
+    
+    CONSTRAINT PK_nephthys_pageHierarchyApproval_Id     PRIMARY KEY (pageHierarchyApprovalId),
+    CONSTRAINT FK_nephthys_pageHierarchyApproval_phvId  FOREIGN KEY (pageHierarchyVersionId) REFERENCES nephthys_pageHierarchyVersioh (pageHierarchyVersionId) ON UPDATE NO ACTION ON DELETE CASCADE,
+    CONSTRAINT FK_nephthys_pageHierarchyApproval_opsId  FOREIGN KEY (oldPageStatusId)        REFERENCES nephthys_pageStatus (pageStatusId)                     ON UPDATE NO ACTION ON DELETE CASCADE,
+    CONSTRAINT FK_nephthys_pageHierarchyApproval_npsId  FOREIGN KEY (newPageStatusId)        REFERENCES nephthys_pageStatus (pageStatusId)                     ON UPDATE NO ACTION ON DELETE CASCADE,
+    CONSTRAINT FK_nephthys_pageHierarchyApproval_userId FOREIGN KEY (userId)                 REFERENCES nephthys_user (userId)                                 ON UPDATE NO ACTION ON DELETE CASCADE
+)
+WITH
+(
+    OIDS = FALSE
+);
+
+CREATE INDEX FKI_nephthys_pageHierarchyApproval_oldPageStatusId ON nephthys_pageApproval(oldPageStatusId);
+CREATE INDEX FKI_nephthys_pageHierarchyApproval_newPageStatusId ON nephthys_pageApproval(newPageStatusId);
+CREATE INDEX FKI_nephthys_pageHierarchyApproval_userId          ON nephthys_pageApproval(userId);
+
+
+
+GRANT SELECT ON TABLE nephthys_pageHierarchy TO nephthys_user;
+GRANT SELECT ON TABLE nephthys_pageHierarchyVersion TO nephthys_user;
+GRANT SELECT ON TABLE nephthys_pageVersion TO nephthys_user;
