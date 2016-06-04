@@ -16,18 +16,25 @@ nephthysAdminApp
                 pagesService
                     .saveHierarchy($scope.selectedVersion, $scope.hierarchy.versions[$scope.selectedVersion])
                     .then(function(selectedVersion) {
-                        $scope.selectedVersion = selectedVersion;
+                        $scope.selectedVersion = selectedVersion.toString();
                         
                         return pagesService.getHierarchy();
                     })
                     .then(function (hierarchy) {
                         $scope.hierarchy = hierarchy;
-                    })
+                    });
             }
         };
         
         $scope.pushToStatus = function (newPageStatusId) {
-            
+            pagesService
+                .pushHierarchyToStatus($scope.selectedVersion, newPageStatusId)
+                    .then(function(selectedVersion) {
+                        return pagesService.getHierarchy();
+                    })
+                    .then(function (hierarchy) {
+                        $scope.hierarchy = hierarchy;
+                    });
         };
         
         $scope.addVersion = function () {

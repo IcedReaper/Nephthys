@@ -2,9 +2,7 @@ component {
     import "API.modules.com.Nephthys.page.*";
     
     remote array function getList() {
-        return getSubPages(null, "header")
-                   .append(getSubPages(null, "footer"), true)
-                   .append(getSubPages(null, "system"), true);
+        return getSubPages(new filter().execute());
     }
     
     remote struct function getActualUser() {
@@ -140,15 +138,17 @@ component {
                     
                     if(newPageStatus.isOnline()) {
                         // update last page Status
-                        var offlinePageStatusId = new pageStatusFilter().setEndStatus(true)
-                                                                        .execute()
-                                                                        .getResult()[1].getPageStatusId();
+                        var offlinePageStatusId = new filter().setFor("pageStatus")
+                                                              .setEndStatus(true)
+                                                              .execute()
+                                                              .getResult()[1].getPageStatusId();
                         
                         var oldPageVersion = page.getActualPageVersion();
                         if(oldPageVersion.getPageVersionId() != pageVersion.getPageVersionId()) {
-                            new pageApproval(oldPageVersion.getPageVersionId()).approve(oldPageVersion.getPageStatusId(),
-                                                                                           offlinePageStatusId,
-                                                                                           request.user.getUserId());
+                            new approval(oldPageVersion.getPageVersionId()).setFor("pageVersion")
+                                                                           .approve(oldPageVersion.getPageStatusId(),
+                                                                                    offlinePageStatusId,
+                                                                                    request.user.getUserId());
                             
                             oldPageVersion.setPageStatusId(offlinePageStatusId)
                                              .save();
@@ -158,9 +158,10 @@ component {
                             .save();
                     }
                     
-                    new pageApproval(arguments.pageVersionId).approve(actualPageStatus.getPageStatusId(),
-                                                                      newPageStatus.getPageStatusId(),
-                                                                      request.user.getUserId());
+                    new approval(arguments.pageVersionId).setFor("pageVersion")
+                                                         .approve(actualPageStatus.getPageStatusId(),
+                                                                  newPageStatus.getPageStatusId(),
+                                                                  request.user.getUserId());
                     
                     transactionCommit();
                 }
@@ -202,7 +203,7 @@ component {
     // STATUS
     
     remote struct function getStatusList() {
-        var pageStatusLoader = new pageStatusFilter();
+        var pageStatusLoader = new filter().setFor("pageStatus");
         
         var prepPageStatus = {};
         
@@ -230,19 +231,19 @@ component {
             }
             
             if(! pageStatus.isStartStatus() && arguments.status.startStatus) {
-                new pageStatusFilter()
-                    .setStartStatus(true)
-                    .execute()
-                    .getResult()[1].setStartStatus(false)
-                                   .save();
+                new filter().setFor("pageStatus")
+                            .setStartStatus(true)
+                            .execute()
+                            .getResult()[1].setStartStatus(false)
+                                           .save();
             }
             
             if(! pageStatus.isEndStatus() && arguments.status.endStatus) {
-                new pageStatusFilter()
-                    .setEndStatus(true)
-                    .execute()
-                    .getResult()[1].setEndStatus(false)
-                                   .save();
+                new filter().setFor("pageStatus")
+                            .setEndStatus(true)
+                            .execute()
+                            .getResult()[1].setEndStatus(false)
+                                           .save();
             }
             
             pageStatus.setActiveStatus(arguments.status.active)
@@ -254,23 +255,22 @@ component {
                       .setDeleteable(arguments.status.deleteable)
                       .save();
             
-            // update next status
-            
             transactionCommit();
             return true;
         }
     }
     
     remote boolean function deleteStatus(required numeric pageStatusId) {
-        var pageFilterCtrl = new filter().setPageStatusId(arguments.pageStatusId).execute();
+        var pagesStillWithThisPageStatus = new filter().setPageStatusId(arguments.pageStatusId).execute().getResultCount();
+        var hierarchiesStillWithThisPageStatus = new filter().setFor("hierarchy").setPageStatusId(arguments.pageStatusId).execute.getResultCount();
         // TODO: add check for hierarchy
-        if(pageFilterCtrl.getResultCount() == 0) {
+        if(pagesStillWithThisPageStatus == 0 && hierarchiesStillWithThisPageStatus == 0) {
             new pageStatus(arguments.pageStatusId).delete();
             
             return true;
         }
         else {
-            throw(type = "nephthys.application.notAllowed", message = "You cannot delete a status that is still used. There are still " & pageFilterCtrl.getResultCount() & " pages on this status.");
+            throw(type = "nephthys.application.notAllowed", message = "You cannot delete a status that is still used. There are still " & pagesStillWithThisPageStatus & " pages and " & hierarchiesStillWithThisPageStatus & " hierarchies on this status.");
         }
     }
     
@@ -352,7 +352,7 @@ component {
             region = "footer"
         }, {
             name = "Noch nicht gesetzt",
-            region = "null"
+            region = null
         }];
         
         var hierarchy = {
@@ -362,14 +362,18 @@ component {
         var hierarchyFilterCtrl = new filter().setFor("hierarchy").execute();
         
         for(var hierarchyVersion in hierarchyFilterCtrl.getResult()) {
+            var preparedApprovalList = prepareApprovalList(new approval(hierarchyVersion.hierarchyVersionId).setFor("hierarchyVersion").getApprovalList());
+            
+            var status = new pageStatus(hierarchyVersion.pageStatusId);
             // hierarchyVersionId == version
             hierarchy["versions"][hierarchyVersion.hierarchyVersionId] = {};
             
             hierarchy["versions"][hierarchyVersion.hierarchyVersionId] = {
-                "editable"     = false,
+                "editable"     = status.isEditable(),
                 "pageStatusId" = hierarchyVersion.pageStatusId,
                 "new"          = false,
-                "regions"      = []
+                "regions"      = [],
+                "approvalList" = preparedApprovalList
             };
             
             for(region in regions) {
@@ -394,9 +398,10 @@ component {
         index++;
         
         
-        var pageStatusId = new pageStatusFilter().setStartStatus(true)
-                                                 .execute()
-                                                 .getResult()[1].getPageStatusId();
+        var pageStatusId = new filter().setFor("pageStatus")
+                                       .setStartStatus(true)
+                                       .execute()
+                                       .getResult()[1].getPageStatusId();
         
         hierarchy["versions"][index] = {
             "editable"     = true,
@@ -413,8 +418,8 @@ component {
         };
     }
     
-    remote numeric function saveHierarchy(required numeric hierarchyId, required struct hierarchy) {
-        var hierarchyVersionId = arguments.hierarchyId;
+    remote numeric function saveHierarchy(required numeric hierarchyVersionId, required struct hierarchy) {
+        var hierarchyVersionId = arguments.hierarchyVersionId;
         if(arguments.hierarchy.new) {
             hierarchyVersionId = new Query().setSQL("INSERT INTO nephthys_pageHierarchyVersion
                                                                  (
@@ -439,7 +444,7 @@ component {
                    .execute();
         
         for(var region in arguments.hierarchy.regions) {
-            if(region.region != "null") {
+            if(region.region != null) {
                 saveHierarchyLevel(hierarchyVersionId, region.region, null, region.pages);
             }
         }
@@ -480,14 +485,44 @@ component {
     }
     
     remote boolean function pushHierarchyToStatus(required numeric hierarchyVersionId, required numeric pageStatusId) {
-        /*
-        TODO: implement
-        update hierarchy version
-        if new status is online update old hierarchy version
-        
-        add approval
-        
-        */
+        transaction {
+            var oldStatusId = new filter().setFor("hierarchy")
+                                          .setPageHierarchyVersionId(arguments.hierarchyVersionId)
+                                          .execute()
+                                          .getResult()[1].pageStatusId;
+            
+            var newStatus = new pageStatus(arguments.pageStatusId);
+            if(newStatus.isOnline()) {
+                var offlineStatusId = new filter().setFor("pageStatus")
+                                                  .setEndStatus(true)
+                                                  .execute()
+                                                  .getResult()[1].getPageStatusId();
+               
+               var actualOnlineVersionId = new filter().setFor("hierarchy")
+                                                       .setOnline(true)
+                                                       .execute()
+                                                       .getResult()[1].hierarchyVersionId;
+                
+                new Query().setSQL("UPDATE nephthys_pageHierarchyVersion
+                                   SET pageStatusId = :pageStatusId
+                                 WHERE pageHierarchyVersionId = :hierarchyVersionId")
+                       .addParam(name = "pageStatusId",       value = offlineStatusId,       cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "hierarchyVersionId", value = actualOnlineVersionId, cfsqltype = "cf_sql_numeric")
+                       .execute();
+            }
+            
+            new Query().setSQL("UPDATE nephthys_pageHierarchyVersion 
+                                   SET pageStatusId = :pageStatusId
+                                 WHERE pageHierarchyVersionId = :hierarchyVersionId")
+                       .addParam(name = "pageStatusId",       value = arguments.pageStatusId,       cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "hierarchyVersionId", value = arguments.hierarchyVersionId, cfsqltype = "cf_sql_numeric")
+                       .execute();
+            
+            new approval(arguments.hierarchyVersionId).setFor("hierarchyVersion")
+                                                      .approve(oldStatusId, pageStatusId, request.user.getUserId());
+            
+            transactionCommit();
+        }
         
         return false;
     }
@@ -495,16 +530,11 @@ component {
     
     
     // P R I V A T E
-    private array function getSubPages(required numeric parentId, required string region) {
-        var pageFilterCtrl = new filter();
+    private array function getSubPages(required filter pageFilterCtrl) {
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
-        pageFilterCtrl.setParentId(arguments.parentId)
-                      .setRegion(arguments.region)
-                      .execute();
-        
         var pageData = [];
-        for(var page in pageFilterCtrl.getResult()) {
+        for(var page in arguments.pageFilterCtrl.getResult()) {
             var pageVersion = page.getActualPageVersion();
             pageData.append({
                 "pageId"             = page.getPageId(),
@@ -530,13 +560,20 @@ component {
     }
     
     private array function getSubPagesForHierarchy(required numeric parentId, required string region, required numeric hierarchyVersionId) {
-        var pageFilterCtrl = new filter();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
-        pageFilterCtrl.setParentId(arguments.parentId)
-                      .setHierarchyVersionId(arguments.hierarchyVersionId)
-                      .setRegion(arguments.region)
-                      .execute();
+        var pageFilterCtrl = new filter().setFor("sitemap")
+                                         .setParentId(arguments.parentId)
+                                         .setHierarchyVersionId(arguments.hierarchyVersionId);
+        
+        if(arguments.region != null) {
+            pageFilterCtrl.setRegion(arguments.region);
+        }
+        else {
+            pageFilterCtrl.setFor("pagesNotInHierarchy");
+        }
+        
+        pageFilterCtrl.execute();
         
         var pageData = [];
         for(var page in pageFilterCtrl.getResult()) {
@@ -544,7 +581,7 @@ component {
             pageData.append({
                 "id"    = page.getPageId(),
                 "title" = pageVersion.getLinktext(),
-                "pages" = arguments.region != "null" ? getSubPagesForHierarchy(page.getPageId(), arguments.region, arguments.hierarchyVersionId) : []
+                "pages" = arguments.region != null ? getSubPagesForHierarchy(page.getPageId(), arguments.region, arguments.hierarchyVersionId) : []
             });
         }
         
@@ -637,17 +674,7 @@ component {
     private struct function preparePageVersion(required pageVersion pageVersion) {
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
-        var approvalList = new pageApproval(arguments.pageVersion.getPageVersionId()).getApprovalList();
-        
-        var preparedApprovalList = [];
-        for(var approval in approvalList) {
-            preparedApprovalList.append({
-                "user" = getUserInformation(approval.user),
-                "approvalDate" = formatCtrl.formatDate(approval.approvalDate),
-                "oldPageStatusName" = approval.oldPageStatus.getName(),
-                "newPageStatusName" = approval.newPageStatus.getName()
-            });
-        }
+        var preparedApprovalList = prepareApprovalList(new approval(arguments.pageVersion.getPageVersionId()).setFor("pageVersion").getApprovalList());
         
         return  {
             "pageVersionId"      = arguments.pageVersion.getPageVersionId(),
@@ -692,5 +719,21 @@ component {
             "deleteable"   = arguments.pageStatus.isDeleteable(),
             "nextStatus"   = nextStatusList
         };
+    }
+    
+    private array function prepareApprovalList(required array approvalList) {
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
+        
+        var preparedApprovalList = [];
+        for(var approval in arguments.approvalList) {
+            preparedApprovalList.append({
+                "user" = getUserInformation(approval.user),
+                "approvalDate" = formatCtrl.formatDate(approval.approvalDate),
+                "oldPageStatusName" = approval.oldPageStatus.getName(),
+                "newPageStatusName" = approval.newPageStatus.getName()
+            });
+        }
+        
+        return preparedApprovalList;
     }
 }

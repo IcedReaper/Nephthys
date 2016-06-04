@@ -29,7 +29,10 @@
                             </div>
                         </div>
                         <div class="form-group row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
+                                <h4>Aktueller Status: <small>{{pageStatus[ hierarchy.versions[selectedVersion].pageStatusId ].name}}</small></h4>
+                            </div>
+                            <div class="col-md-4">
                                 <div ng-if="pageStatus[ hierarchy.versions[selectedVersion].pageStatusId ].nextStatus && ! hierarchy.versions[selectedVersion].new">
                                     <h4>Status ändern in</h4>
                                     <button type="submit"
@@ -38,7 +41,7 @@
                                             ng-click="pushToStatus(ps.pageStatusId);">{{ps.name}}</button>
                                 </div>
                             </div>
-                            <div class="col-md-6" ng-if="hierarchy.versions[selectedVersion].editable">
+                            <div class="col-md-4" ng-if="hierarchy.versions[selectedVersion].editable">
                                 <div class="pull-right">
                                     <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
                                 </div>
@@ -58,6 +61,28 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="row" ng-if="! hierarchy.versions[selectedVersion].new">
+    <div class="col-sm-12">
+        <div class="card card-block">
+            <h3>Statusänderungshistorie</h3>
+            <table class="table table-striped">
+                <thead>
+                    <th>User</th>
+                    <th>Alter Status</th>
+                    <th>Neuer Status</th>
+                    <th>Datum</th>
+                </thead>
+                <tbody ng-repeat="approval in hierarchy.versions[selectedVersion].approvalList">
+                    <td><a href="/com.Nephthys.user#/{{approval.user.userId}}" target="_blank">{{approval.user.userName}}</a></td>
+                    <td>{{approval.oldPageStatusName}}</td>
+                    <td>{{approval.newPageStatusName}}</td>
+                    <td>{{approval.approvalDate}}</td>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

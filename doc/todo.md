@@ -18,6 +18,8 @@
     - https://github.com/codef0rmer/angular-dragdrop
 - revalidate the sortOrder within the pageVersion table
 - offene todos ( // TODO: )
+- versuchen pages.filter refactored / aufräumen / vereinfachen
+- Variablennamen gleich ziehen (mal ist page prefix da - mal nicht)
 
 
 ## Allgemein
