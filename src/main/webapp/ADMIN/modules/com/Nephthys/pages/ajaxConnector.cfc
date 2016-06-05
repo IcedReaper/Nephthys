@@ -323,7 +323,7 @@ component {
                     }
                     
                     if(! found) {
-                        // delete as next status
+                        pageStatus.removeNextStatus(arguments.statusFlow[i].nextStatus[j].pageStatusId);
                     }
                 }
                 
@@ -336,9 +336,11 @@ component {
                     }
                     
                     if(! found) {
-                        // add as next status
+                        pageStatus.addNextStatus(arguments.statusFlow[i].nextStatus[j].pageStatusId);
                     }
                 }
+                
+                pageStatus.save();
             }
             
             transactionCommit();
