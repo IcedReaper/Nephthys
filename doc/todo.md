@@ -3,13 +3,9 @@
 ## Actual Task TODO - Reminder:
 - Page Statistics
 - Dashboard Statistics
-- Sortierung
 - Status-Button stylen
 - required approvals
 - Übersicht über die Seitenversionen, die noch nicht online sind/waren
-- sortierung auch ohne neue version möglich => Komplett Refactored
-    - Hierarchie "Chart"
-        - https://github.com/angular-ui-tree/angular-ui-tree
 - Statusflow
     - https://github.com/marceljuenemann/angular-drag-and-drop-lists
         - http://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/#/simple
@@ -20,6 +16,7 @@
 - offene todos ( // TODO: )
 - versuchen pages.filter refactored / aufräumen / vereinfachen
 - Variablennamen gleich ziehen (mal ist page prefix da - mal nicht)
+- Hardcoded /user & /search Links fixen...
 
 
 ## Allgemein

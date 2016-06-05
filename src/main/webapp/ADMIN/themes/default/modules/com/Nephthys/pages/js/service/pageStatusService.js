@@ -37,6 +37,16 @@ nephthysAdminApp
                 return $http.post('/ajax/com/Nephthys/pages/deactivateStatus', {
                     pageStatusId: pageStatusId
                 });
+            },
+            
+            getListAsArray: function () {
+                return $http.get('/ajax/com/Nephthys/pages/getStatusListAsArray');
+            },
+            
+            saveStatusFlow: function (statusFlow) {
+                return $http.post("/ajax/com/Nephthys/pages/saveStatusFlow", {
+                    statusFlow: statusFlow
+                });
             }
         };
     });

@@ -89,7 +89,7 @@
 
 <script type="text/ng-template" id="tree_renderer.html">
     <h4>{{region.name}}</h4>
-    <div ui-tree id="ui-tree-{{region}}" data-nodrag="{{! hierarchy.versions[selectedVersion].editable}}" data-nodrop="{{! region.editable}}" data-clone-enabled="false">
+    <div ui-tree id="ui-tree-{{region.region}}" data-nodrag="{{! hierarchy.versions[selectedVersion].editable}}" data-nodrop="{{! region.editable}}" data-clone-enabled="false">
         <ol ui-tree-nodes ng-model="region.pages">
             <li ng-repeat="page in region.pages" ui-tree-node ng-include="'tree_nodes_renderer.html'"></li>
         </ol>
@@ -105,12 +105,6 @@
               'fa-chevron-down': !collapsed
             }"></span></a>
         <span class="title">{{page.title}}</span>
-        <!--
-        <a class="pull-right btn btn-danger btn-sm" data-nodrag ng-click="remove(this)"><span
-            class="fa fa-remove"></span></a>
-        <a class="pull-right btn btn-primary btn-sm" data-nodrag ng-click="newSubItem(this)" style="margin-right: 8px;"><span
-            class="fa fa-plus"></span></a>
-        -->
     </div>
     <ol ui-tree-nodes="" ng-model="page.pages" ng-class="{hidden: collapsed}">
         <li ng-repeat="page in page.pages" ui-tree-node ng-include="'tree_nodes_renderer.html'"></li>

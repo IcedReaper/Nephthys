@@ -214,6 +214,18 @@ component {
         return prepPageStatus;
     }
     
+    remote array function getStatusListAsArray() {
+        var pageStatusLoader = new filter().setFor("pageStatus");
+        
+        var prepPageStatus = [];
+        
+        for(var pageStatus in pageStatusLoader.execute().getResult()) {
+            prepPageStatus.append(preparePageStatusAsArray(pageStatus));
+        }
+        
+        return prepPageStatus;
+    }
+    
     remote struct function getStatusDetails(required numeric pageStatusId) {
         return preparePageStatus(new pageStatus(arguments.pageStatusId));
     }
@@ -263,7 +275,6 @@ component {
     remote boolean function deleteStatus(required numeric pageStatusId) {
         var pagesStillWithThisPageStatus = new filter().setPageStatusId(arguments.pageStatusId).execute().getResultCount();
         var hierarchiesStillWithThisPageStatus = new filter().setFor("hierarchy").setPageStatusId(arguments.pageStatusId).execute.getResultCount();
-        // TODO: add check for hierarchy
         if(pagesStillWithThisPageStatus == 0 && hierarchiesStillWithThisPageStatus == 0) {
             new pageStatus(arguments.pageStatusId).delete();
             
@@ -290,6 +301,50 @@ component {
                   .save();
         
         return true;
+    }
+    
+    remote boolean function saveStatusFlow(required array statusFlow) {
+        var i = 0;
+        var j = 0;
+        var k = 0;
+        var found = false;
+        transaction {
+            for(i = 1; i <= arguments.statusFlow.len(); ++i) {
+                var pageStatus = new pageStatus(arguments.statusFlow[i].pageStatusId);
+                
+                var nextStatus = pageStatus.getNextStatus();
+                
+                for(j = 1; j <= nextStatus.len(); ++j) {
+                    found = false;
+                    for(k = 1; k <= arguments.statusFlow[i].nextStatus.len() && ! found; ++k) {
+                        if(nextStatus[j].getPageStatusId() == arguments.statusFlow[i].nextStatus[k].pageStatusId) {
+                            found = true;
+                        }
+                    }
+                    
+                    if(! found) {
+                        // delete as next status
+                    }
+                }
+                
+                for(j = 1; j <= arguments.statusFlow[i].nextStatus.len(); ++j) {
+                    found = false;
+                    for(k = 1; k <= nextStatus.len() && ! found; ++k) {
+                        if(nextStatus[k].getPageStatusId() == arguments.statusFlow[i].nextStatus[j].pageStatusId) {
+                            found = true;
+                        }
+                    }
+                    
+                    if(! found) {
+                        // add as next status
+                    }
+                }
+            }
+            
+            transactionCommit();
+        }
+        
+        return false;
     }
     
     // TODO: Workflow
@@ -709,7 +764,38 @@ component {
         }
         
         return {
+            "id"           = arguments.pageStatus.getPageStatusId(),
             "pageStatusId" = arguments.pageStatus.getPageStatusId(),
+            "title"        = arguments.pageStatus.getName(),
+            "name"         = arguments.pageStatus.getName(),
+            "active"       = arguments.pageStatus.getActiveStatus(),
+            "offline"      = arguments.pageStatus.getOfflineStatus(),
+            "editable"     = arguments.pageStatus.isEditable(),
+            "startStatus"  = arguments.pageStatus.isStartStatus(),
+            "endStatus"    = arguments.pageStatus.isEndStatus(),
+            "deleteable"   = arguments.pageStatus.isDeleteable(),
+            "nextStatus"   = nextStatusList
+        };
+    }
+    
+    private struct function preparePageStatusAsArray(required pageStatus pageStatus) {
+        var nextStatusList = [];
+        for(var nextStatus in arguments.pageStatus.getNextStatus()) {
+            if(nextStatus.getActiveStatus()) {
+                nextStatusList.append({
+                    "pageStatusId" = nextStatus.getPageStatusId(),
+                    "name"         = nextStatus.getName(),
+                    "active"       = nextStatus.getActiveStatus(),
+                    "offline"      = nextStatus.getOfflineStatus(),
+                    "editable"     = nextStatus.isEditable()
+                });
+            }
+        }
+        
+        return {
+            "id"           = arguments.pageStatus.getPageStatusId(),
+            "pageStatusId" = arguments.pageStatus.getPageStatusId(),
+            "title"        = arguments.pageStatus.getName(),
             "name"         = arguments.pageStatus.getName(),
             "active"       = arguments.pageStatus.getActiveStatus(),
             "offline"      = arguments.pageStatus.getOfflineStatus(),
