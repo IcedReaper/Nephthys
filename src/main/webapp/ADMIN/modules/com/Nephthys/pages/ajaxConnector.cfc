@@ -323,7 +323,7 @@ component {
                     }
                     
                     if(! found) {
-                        pageStatus.removeNextStatus(arguments.statusFlow[i].nextStatus[j].pageStatusId);
+                        pageStatus.removeNextStatus(nextStatus[j].getPageStatusId());
                     }
                 }
                 

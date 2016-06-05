@@ -91,7 +91,7 @@ component {
         return this;
     }
     
-    public pageStatus function removeNextStatus(required numeirc nextPageStatusId) {
+    public pageStatus function removeNextStatus(required numeric nextPageStatusId) {
         if(! variables.nextStatusLoaded) {
             loadNextStatus();
         }
@@ -284,7 +284,7 @@ component {
             }
             for(var removedStatusId in variables.nextStatusRemoved) {
                 new Query().setSQL("DELETE FROM nephthys_pageStatusFlow
-                                           WHERE pageStatusId     = :pageStatusId,
+                                           WHERE pageStatusId     = :pageStatusId
                                              AND nextPageStatusId = :nextPageStatusId")
                            .addParam(name = "pageStatusId",     value = variables.pageStatusId, cfsqltype = "cf_sql_numeric")
                            .addParam(name = "nextPageStatusId", value = removedStatusId,        cfsqltype = "cf_sql_numeric")

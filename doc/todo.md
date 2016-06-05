@@ -2,21 +2,28 @@
 
 ## Actual Task TODO - Reminder:
 - Page Statistics
-- Dashboard Statistics
+    - refactor unter page module
+        - pageId
+        - paremeter
+        - date
+        - userId ?
+    - Dashboard Statistics
 - Status-Button stylen
 - required approvals
 - Übersicht über die Seitenversionen, die noch nicht online sind/waren
-- Statusflow
-    - https://github.com/marceljuenemann/angular-drag-and-drop-lists
-        - http://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/#/simple
-        - http://marceljuenemann.github.io/angular-drag-and-drop-lists/demo/#/nested
-    - http://bl.ocks.org/mbostock/1093025
-    - https://github.com/codef0rmer/angular-dragdrop
-- revalidate the sortOrder within the pageVersion table
 - offene todos ( // TODO: )
 - versuchen pages.filter refactored / aufräumen / vereinfachen
-- Variablennamen gleich ziehen (mal ist page prefix da - mal nicht)
 - Hardcoded /user & /search Links fixen...
+- Namen refactoren, wie bei den anderen: (columns ohne prefix)
+    - page => page_page
+    - pageApproval => page_approval
+    - pageHierarchy => page_hierarchy | component => hierarchy (add)
+    - pageHierarchyApproval => page_hierarchyApproval
+    - pageHierarchyVersion => page_hierarchyVersion | component => hierarchyVersion (add)
+    - pageStatus => page_status | component => status
+    - pageStatusFlow => page_statusFlow | component statusFlow (add)
+    - pageVersion => page_version | component version
+
 
 
 ## Allgemein
