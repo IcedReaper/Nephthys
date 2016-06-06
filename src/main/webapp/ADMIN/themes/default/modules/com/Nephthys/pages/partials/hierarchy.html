@@ -30,15 +30,15 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-md-4">
-                                <h4>Aktueller Status: <small>{{pageStatus[ hierarchy.versions[selectedVersion].pageStatusId ].name}}</small></h4>
+                                <h4>Aktueller Status: <small>{{status[ hierarchy.versions[selectedVersion].statusId ].name}}</small></h4>
                             </div>
                             <div class="col-md-4">
-                                <div ng-if="pageStatus[ hierarchy.versions[selectedVersion].pageStatusId ].nextStatus && ! hierarchy.versions[selectedVersion].new">
+                                <div ng-if="status[ hierarchy.versions[selectedVersion].statusId ].nextStatus && ! hierarchy.versions[selectedVersion].new">
                                     <h4>Status ändern in</h4>
                                     <button type="submit"
                                             class="btn btn-primary m-r-1"
-                                            ng-repeat="ps in pageStatus[ hierarchy.versions[selectedVersion].pageStatusId ].nextStatus"
-                                            ng-click="pushToStatus(ps.pageStatusId);">{{ps.name}}</button>
+                                            ng-repeat="ps in status[ hierarchy.versions[selectedVersion].statusId ].nextStatus"
+                                            ng-click="pushToStatus(ps.statusId);">{{ps.name}}</button>
                                 </div>
                             </div>
                             <div class="col-md-4" ng-if="hierarchy.versions[selectedVersion].editable">
@@ -78,8 +78,8 @@
                 </thead>
                 <tbody ng-repeat="approval in hierarchy.versions[selectedVersion].approvalList">
                     <td><a href="/com.Nephthys.user#/{{approval.user.userId}}" target="_blank">{{approval.user.userName}}</a></td>
-                    <td>{{approval.oldPageStatusName}}</td>
-                    <td>{{approval.newPageStatusName}}</td>
+                    <td>{{approval.oldstatusName}}</td>
+                    <td>{{approval.newstatusName}}</td>
                     <td>{{approval.approvalDate}}</td>
                 </tbody>
             </table>

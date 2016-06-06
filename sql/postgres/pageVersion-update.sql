@@ -430,3 +430,112 @@ CREATE INDEX FKI_nephthys_pageHierarchyApproval_userId          ON nephthys_page
 GRANT SELECT ON TABLE nephthys_pageHierarchy TO nephthys_user;
 GRANT SELECT ON TABLE nephthys_pageHierarchyVersion TO nephthys_user;
 GRANT SELECT ON TABLE nephthys_pageVersion TO nephthys_user;
+
+-- 6.6.16 - name refactorings
+create table nephthys_page_region
+(
+    regionId serial primary key,
+    name character varying(30) not null unique
+);
+
+create table nephthys_page_status
+(
+    statusId serial primary key,
+    name character varying(100) not null unique,
+    active boolean not null default true,
+    online boolean not null default false,
+    
+    pagesAreEditable boolean not null default false,
+    pagesAreDeleteable boolean not null default false,
+    
+    creationUserId integer not null references nephthys_user,
+    creationDate timestamp with time zone not null default now(),
+    
+    lastEditUserId integer not null references nephthys_user,
+    lastEditDate timestamp with time zone not null default now()
+);
+
+create table nephthys_page_statusFlow
+(
+    statusFlowId serial primary key,
+    statusId integer not null references nephthys_page_status,
+    nextStatusId integer not null references nephthys_page_status
+);
+
+create table nephthys_page_page
+(
+    pageId       serial primary key,
+    versionId    integer,
+    creationDate timestamp with time zone not null default now()
+);
+
+create table nephthys_page_pageVersion
+(
+    pageVersionId serial primary key,
+    pageId integer not null references nephthys_page_page,
+    majorVersion integer not null default 1,
+    minorVersion integer not null default 0,
+    statusId integer references nephthys_page_status,
+    useDynamicSuffixes boolean not null default false,
+    
+    linktext character varying(30) not null,
+    link character varying(100) not null,
+    title character varying(160) not null default '',
+    description character varying(160) not null default '',
+    content text,
+    
+    creationUserId integer not null references nephthys_user,
+    creationDate timestamp with time zone not null default now(),
+    
+    lastEditUserId integer not null references nephthys_user,
+    lastEditDate timestamp with time zone not null default now()
+);
+
+
+create table nephthys_page_hierarchy
+(
+    hierarchyId serial primary key,
+    statusId integer not null references nephthys_page_status,
+    version integer not null unique,
+    
+    creationUserId integer not null references nephthys_user,
+    creationDate timestamp with time zone not null default now()
+);
+
+create table nephthys_page_hierarchyPage
+(
+    hierarchyPageId serial primary key,
+    hierarchyId integer not null references nephthys_page_hierarchy,
+    regionId integer not null references nephthys_page_region,
+    pageId integer not null references nephthys_page_page,
+    parentPageId integer references nephthys_page_page,
+    sortOrder integer not null,
+    
+    unique (hierarchyId, regionId, parentPageid, sortOrder)
+);
+
+create table nephthys_page_approval
+(
+    approvalId serial primary key,
+    pageVersionId integer references nephthys_page_pageVersion,
+    hierarchyId integer references nephthys_page_hierarchy,
+    
+    prevStatusId integer references nephthys_page_status,
+    nextStatusId integer not null references nephthys_page_status,
+    
+    userId integer not null references nephthys_user,
+    approvalDate timestamp with time zone not null default now(),
+    
+    check (pageVersionId IS NOT NULL or hierarchyId IS NOT NULL)
+);
+
+
+
+GRANT SELECT ON TABLE nephthys_page_region TO nephthys_user;
+GRANT SELECT ON TABLE nephthys_page_status TO nephthys_user;
+GRANT SELECT ON TABLE nephthys_page_statusFlow TO nephthys_user;
+GRANT SELECT ON TABLE nephthys_page_page TO nephthys_user;
+GRANT SELECT ON TABLE nephthys_page_pageVersion TO nephthys_user;
+GRANT SELECT ON TABLE nephthys_page_hierarchy TO nephthys_user;
+GRANT SELECT ON TABLE nephthys_page_hierarchyPage TO nephthys_user;
+GRANT SELECT ON TABLE nephthys_page_approval TO nephthys_user;

@@ -26,11 +26,11 @@
             <div class="row">
                 <div class="col-sm-6">
                     <div class="form-group">
-                        <label for="pageStatusName" class="col-sm-3 control-label">Status</label>
+                        <label for="statusName" class="col-sm-3 control-label">Status</label>
                         <div class="col-sm-6">
-                            <select class="form-control" name="pageStatusName" ng-model="search.pageStatusName">
+                            <select class="form-control" name="statusName" ng-model="search.statusName">
                                 <option value="!!">Alle</option>
-                                <option ng-repeat="ps in pageStatus" value="{{ps.name}}">{{ps.name}}</option>
+                                <option ng-repeat="ps in status" value="{{ps.name}}">{{ps.name}}</option>
                             </select>
                         </div>
                     </div>
@@ -53,23 +53,23 @@
                         <a href="#/{{page.pageId}}">{{page.linktext}}</a>
                     </td>
                     <td>{{page.link}}</td>
-                    <td>{{page.version}} <span class="m-l-1" ng-class="(page.isOnline ? 'text-success' : 'text-danger')">{{page.pageStatusName}}</span></td>
+                    <td>{{page.version}} <span class="m-l-1" ng-class="(page.isOnline ? 'text-success' : 'text-danger')">{{page.statusName}}</span></td>
                     <td>
                         <a href="#/{{page.pageId}}"
                            class="btn btn-primary"
                            title="Seitendetails">
                             <span class="fa fa-cog"></span>
                         </a>
-                        <a href="#/{{page.pageId}}/statistics"
+                        <!--<a href="#/{{page.pageId}}/statistics"
                            class="btn btn-secondary"
                            title="Statistiken">
                             <span class="fa fa-line-chart"></span>
-                        </a>
+                        </a>-->
                         
                         <button class="btn btn-danger"
                                 title="Die Seite wird unwiederruflich gelöscht! - Nur mit Vorsicht benutzen! - Lieber den gelöscht Status verwenden!"
                                 ng-click="deletePage(page.pageId)"
-                                ng-disabled="! pageStatus[page.pageStatusId].deleteable">
+                                ng-disabled="! status[page.statusId].deleteable">
                             <i class="fa fa-trash"></i>
                         </button>
                         
@@ -79,8 +79,8 @@
                             </button>
                             <div class="dropdown-menu">
                                 <button class="dropdown-item"
-                                        ng-repeat="ps in pageStatus[ page.pageStatusId ].nextStatus"
-                                        ng-click="pushToStatus(page.pageId, page.pageVersionId, ps.pageStatusId);">{{ps.name}}</button>
+                                        ng-repeat="ps in status[ page.statusId ].nextStatus"
+                                        ng-click="pushToStatus(page.pageId, page.pageVersionId, ps.statusId);">{{ps.name}}</button>
                             </div>
                         </div>
                     </td>

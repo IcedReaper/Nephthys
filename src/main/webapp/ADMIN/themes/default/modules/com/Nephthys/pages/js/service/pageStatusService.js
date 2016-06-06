@@ -1,41 +1,41 @@
 nephthysAdminApp
-    .service("pageStatusService", function($http) {
+    .service("statusService", function($http) {
         return {
             getList: function () {
                 return $http.get('/ajax/com/Nephthys/pages/getStatusList');
             },
             
-            getDetails: function (pageStatusId) {
+            getDetails: function (statusId) {
                 return $http.get('/ajax/com/Nephthys/pages/getStatusDetails', {
                     params: {
-                        pageStatusId: pageStatusId
+                        statusId: statusId
                     }
                 });
             },
             
-            save: function (pageStatus) {
+            save: function (status) {
                 return $http.post('/ajax/com/Nephthys/pages/saveStatus', {
-                    status: pageStatus
+                    status: status
                 });
             },
             
-            delete: function (pageStatusId) {
+            delete: function (statusId) {
                 return $http.delete('/ajax/com/Nephthys/pages/deleteStatus', {
                     params: {
-                        pageStatusId: pageStatusId
+                        statusId: statusId
                     }
                 });
             },
             
-            activate: function (pageStatusId) {
+            activate: function (statusId) {
                 return $http.post('/ajax/com/Nephthys/pages/activateStatus', {
-                    pageStatusId: pageStatusId
+                    statusId: statusId
                 });
             },
             
-            deactivate: function (pageStatusId) {
+            deactivate: function (statusId) {
                 return $http.post('/ajax/com/Nephthys/pages/deactivateStatus', {
-                    pageStatusId: pageStatusId
+                    statusId: statusId
                 });
             },
             

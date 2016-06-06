@@ -15,7 +15,7 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/statusList.html",
                     controller:  "statusListCtrl"
                 })
-                .when("/status/:pageStatusId", {
+                .when("/status/:statusId", {
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/statusDetail.html",
                     controller:  "statusDetailCtrl"
                 })

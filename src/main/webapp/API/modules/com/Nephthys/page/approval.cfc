@@ -11,9 +11,9 @@ component {
     public approval function setFor(required string for) {
         switch(arguments.for) {
             case "pageVersion":
-            case "hierarchyVersion":
             case "page":
-            case "hierarchy": {
+            case "hierarchy":
+            case "hierarchyVersion": {
                 variables.for = arguments.for;
                 break;
             }
@@ -29,7 +29,7 @@ component {
                 case "pageversion":
                 case "page": {
                     sql = "  SELECT *
-                               FROM nephthys_pageApproval
+                               FROM nephthys_page_approval
                               WHERE pageVersionId = :versionId
                            ORDER BY approvalDate DESC";
                     break;
@@ -37,8 +37,8 @@ component {
                 case "hierarchyVersion":
                 case "hierarchy": {
                     sql = "  SELECT *
-                               FROM nephthys_pageHierarchyApproval
-                              WHERE pageHierarchyVersionId = :versionId
+                               FROM nephthys_page_approval
+                              WHERE hierarchyVersionId = :versionId
                            ORDER BY approvalDate DESC";
                     break;
                 }
@@ -52,10 +52,10 @@ component {
             var approvalList = [];
             for(var i = 1; i <= qApprovalList.getRecordCount(); ++i) {
                 approvalList.append({
-                    user          = new user(qApprovalList.userId[i]),
-                    approvalDate  = qApprovalList.approvalDate[i],
-                    oldPageStatus = new pageStatus(qApprovalList.oldPageStatusId[i]),
-                    newPageStatus = new pageStatus(qApprovalList.newPageStatusId[i])
+                    user           = new user(qApprovalList.userId[i]),
+                    approvalDate   = qApprovalList.approvalDate[i],
+                    previousStatus = new status(qApprovalList.prevStatusId[i]),
+                    newStatus      = new status(qApprovalList.nextStatusId[i])
                 });
             }
             
@@ -66,49 +66,49 @@ component {
         }
     }
     
-    public boolean function approve(required numeric oldPageStatusId, required numeric newPageStatusId, required numeric userId) {
+    public boolean function approve(required numeric prevStatusId, required numeric nextStatusId, required numeric userId) {
         var sql = "";
         switch(variables.for) {
-            case "pageversion":
+            case "pageVersion":
             case "page": {
-                var sql = "INSERT INTO nephthys_pageApproval
+                var sql = "INSERT INTO nephthys_page_approval
                                        (
                                            pageVersionId,
-                                           oldPageStatusId,
-                                           newPageStatusId,
+                                           prevStatusId,
+                                           nextStatusId,
                                            userId
                                        )
                                 VALUES (
                                            :versionId,
-                                           :oldPageStatusId,
-                                           :newPageStatusId,
+                                           :prevStatusId,
+                                           :nextStatusId,
                                            :userId
                                        )";
                 break;
             }
             case "hierarchyVersion":
             case "hierarchy": {
-                var sql = "INSERT INTO nephthys_pageHierarchyApproval
+                var sql = "INSERT INTO nephthys_page_approval
                                        (
-                                           pageHierarchyVersionId,
-                                           oldPageStatusId,
-                                           newPageStatusId,
+                                           hierarchyVersionId,
+                                           prevStatusId,
+                                           nextStatusId,
                                            userId
                                        )
                                 VALUES (
                                            :versionId,
-                                           :oldPageStatusId,
-                                           :newPageStatusId,
+                                           :prevStatusId,
+                                           :nextStatusId,
                                            :userId
                                        )";
                 break;
             }
         }
         new Query().setSQL(sql)
-                   .addParam(name = "versionId",       value = variables.versionId,       cfsqltype = "cf_sql_numeric")
-                   .addParam(name = "oldPageStatusId", value = arguments.oldPageStatusId, cfsqltype = "cf_sql_numeric")
-                   .addParam(name = "newPageStatusId", value = arguments.newPageStatusId, cfsqltype = "cf_sql_numeric")
-                   .addParam(name = "userId",          value = arguments.userId,          cfsqltype = "cf_sql_numeric")
+                   .addParam(name = "versionId",    value = variables.versionId,    cfsqltype = "cf_sql_numeric")
+                   .addParam(name = "prevStatusId", value = arguments.prevStatusId, cfsqltype = "cf_sql_numeric")
+                   .addParam(name = "nextStatusId", value = arguments.nextStatusId, cfsqltype = "cf_sql_numeric")
+                   .addParam(name = "userId",       value = arguments.userId,       cfsqltype = "cf_sql_numeric")
                    .execute()
         
         return true;

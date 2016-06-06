@@ -3,24 +3,11 @@ component {
     
     public page function init(required numeric pageId) {
         variables.pageId = arguments.pageId;
+        
         variables.pageVersionsLoaded = false;
         
         load();
         
-        return this;
-    }
-    
-    public page function setCreator(required user user) {
-        if(variables.pageId == 0 || variables.pageId == null || ! variables.creator.isActive()) {
-            variables.creator = arguments.user;
-        }
-        return this;
-    }
-    
-    public page function setCreatorById(required numeric userId) {
-        if(variables.pageId == 0 || variables.pageId == null || ! variables.creator.isActive()) {
-            variables.creator = new user(arguments.userId);
-        }
         return this;
     }
     
@@ -30,7 +17,6 @@ component {
         }
         return this;
     }
-    
     
     public page function setPageVersionId(required string pageVersionId) {
         variables.pageVersionId = arguments.pageVersionId;
@@ -49,10 +35,6 @@ component {
     
     public numeric function getPageId() {
         return variables.pageId;
-    }
-    
-    public user function getCreator() {
-        return duplicate(variables.creator);
     }
     
     public date function getCreationDate() {
@@ -180,28 +162,19 @@ component {
     
     
     public page function save() {
-        if(variables.pageId == 0) {
-            variables.pageId = new Query().setSQL("INSERT INTO nephthys_page
+        if(variables.pageId == null || variables.pageId == 0) {
+            variables.pageId = new Query().setSQL("INSERT INTO nephthys_page_page
                                                                (
-                                                                   creatorUserId
+                                                                   creationDate
                                                                )
                                                         VALUES (
-                                                                   :userId
+                                                                   :creationDate
                                                                );
-                                                   SELECT currval('seq_nephthys_page_id' :: regclass) newPageId;")
-                                          .addParam(name = "userId",       value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
+                                                   SELECT currval('nephthys_page_page_pageId_seq' :: regclass) newPageId;")
+                                          .addParam(name = "creationDate",       value = variables.creationDate, cfsqltype = "cf_sql_timestamp")
                                           .execute()
                                           .getResult()
                                           .newPageId[1];
-        }
-        else {
-            new Query().setSQL("UPDATE nephthys_page
-                                   SET pageVersionId = :pageVersionId
-                                 WHERE pageId = :pageId")
-                       .addParam(name = "pageId",        value = variables.pageId,        cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
-                       .execute()
-                       .getResult();
         }
         
         return this;
@@ -209,7 +182,7 @@ component {
     
     public void function delete() {
         new Query().setSQL("DELETE
-                              FROM nephthys_page
+                              FROM nephthys_page_page
                              WHERE pageId = :pageId")
                    .addParam(name = "pageId", value = variables.pageId, cfsqltype = "cf_sql_numeric")
                    .execute();
@@ -220,14 +193,13 @@ component {
     private void function load() {
         if(variables.pageId != 0 && variables.pageId != null) {
             var qGetPage = new Query().setSQL("SELECT *
-                                                 FROM nephthys_page
+                                                 FROM nephthys_page_page
                                                 WHERE pageId = :pageId")
                                       .addParam(name = "pageId", value = variables.pageId, cfsqltype = "cf_sql_numeric")
                                       .execute()
                                       .getResult();
             
             if(qGetPage.getRecordCount() == 1) {
-                variables.creator       = new user(qGetPage.creatorUserId[1]);
                 variables.creationDate  = qGetPage.creationDate[1];
                 variables.pageVersionId = qgetPage.pageVersionId[1];
             }
@@ -236,7 +208,6 @@ component {
             }
         }
         else {
-            variables.creator       = new user(request.user.getUserId());
             variables.creationDate  = now();
             variables.pageVersionId = null;
         }
@@ -248,10 +219,10 @@ component {
         variables.pageVersionsLoaded = true;
         variables.pageVersions = {};
         
-        var qGetVersions = new Query().setSQL("SELECT pageVersionId, majorVersion, minorVersion
-                                                 FROM nephthys_pageVersion
-                                                WHERE pageId = :pageId
-                                               ORDER BY majorVersion, minorVersion")
+        var qGetVersions = new Query().setSQL("  SELECT pageVersionId, majorVersion, minorVersion
+                                                   FROM nephthys_page_pageVersion
+                                                  WHERE pageId = :pageId
+                                               ORDER BY majorVersion ASC, minorVersion ASC")
                                       .addParam(name = "pageId", value = variables.pageId, cfsqltype = "cf_sql_numeric")
                                       .execute()
                                       .getResult();

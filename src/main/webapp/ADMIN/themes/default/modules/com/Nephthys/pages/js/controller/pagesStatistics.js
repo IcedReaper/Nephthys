@@ -1,6 +1,6 @@
 nephthysAdminApp
     .controller('pagesStatisticsCtrl', ["$scope", "$routeParams", "pagesService", function ($scope, $routeParams, pagesService) {
-        $scope.refresh = function () {
+        /*$scope.refresh = function () {
             pagesService
                 .loadStatistics($routeParams.pageId)
                 .then(function (result) {
@@ -19,5 +19,5 @@ nephthysAdminApp
                 });
         };
         
-        $scope.refresh();
+        $scope.refresh();*/
     }]);

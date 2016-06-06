@@ -22,11 +22,11 @@ nephthysAdminApp
                 });
             },
             
-            pushToStatus: function (pageId, pageVersionId, pageStatusId) {
+            pushToStatus: function (pageId, pageVersionId, statusId) {
                 return $http.post('/ajax/com/Nephthys/pages/pushToStatus', {
                     pageId:        pageId,
                     pageVersionId: pageVersionId,
-                    pageStatusId:  pageStatusId
+                    statusId:  statusId
                 });
             },
             
@@ -84,10 +84,10 @@ nephthysAdminApp
                     hierarchy:          hierarchy
                 });
             },
-            pushHierarchyToStatus: function (hierarchyVersionId, pageStatusId) {
+            pushHierarchyToStatus: function (hierarchyVersionId, statusId) {
                 return $http.post("/ajax/com/Nephthys/pages/pushHierarchyToStatus", {
                     hierarchyVersionId: hierarchyVersionId,
-                    pageStatusId:       pageStatusId
+                    statusId:           statusId
                 });
             }
         };

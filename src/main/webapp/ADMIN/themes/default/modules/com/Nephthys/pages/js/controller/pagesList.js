@@ -3,18 +3,18 @@ nephthysAdminApp
         var init = function () {
             pagesService
                 .getStatus()
-                .then(function (pageStatus) {
-                    $scope.pageStatus = pageStatus;
+                .then(function (status) {
+                    $scope.status = status;
                 })
                 .then($scope.load());
         };
         
-        $scope.pushToStatus = function (pageId, pageVersionId, newPageStatusId) {
-            if(pageId && pageVersionId && newPageStatusId) {
+        $scope.pushToStatus = function (pageId, pageVersionId, newstatusId) {
+            if(pageId && pageVersionId && newstatusId) {
                 pagesService
                     .pushToStatus(pageId,
                                   pageVersionId,
-                                  newPageStatusId)
+                                  newstatusId)
                     .then($scope.load());
             }
         };
@@ -42,7 +42,7 @@ nephthysAdminApp
         
         $scope.pages = [];
         $scope.search = {
-            pageStatusName: '!!'
+            statusName: '!!'
         };
         init();
     }]);

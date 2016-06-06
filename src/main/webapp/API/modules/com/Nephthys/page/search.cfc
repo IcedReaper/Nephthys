@@ -9,10 +9,14 @@ component extends="API.abstractClasses.search" {
                                                                     pv.description,
                                                                     pv.title,
                                                                     NULL c
-                                                               FROM nephthys_page p
-                                                         INNER JOIN nephthys_pageVersion pv ON p.pageId = pv.pageId
-                                                         INNER JOIN nephthys_pageStatus ps ON pv.pageStatusId = ps.pageStatusId
-                                                              WHERE ps.offline = :false
+                                                               FROM nephthys_page_page p
+                                                         INNER JOIN nephthys_page_pageVersion   pv ON p.pageId = pv.pageId
+                                                         INNER JOIN nephthys_page_status        ps ON pv.statusId = ps.statusId
+                                                         INNER JOIN nephthys_page_hierarchyPage hp ON p.pageId = hp.pageId
+                                                         INNER JOIN nephthys_page_hierarchy     h  ON hp.hierarchyId = hp.hierarchyId
+                                                         INNER JOIN nephthys_page_status        hs ON h.statusId = hs.statusId
+                                                              WHERE ps.online = :online
+                                                                AND hs.online = :online
                                                                 AND (pv.linktext   LIKE :searchLikePhrase
                                                                  OR pv.link        LIKE :searchLikePhrase
                                                                  OR pv.title       LIKE :searchLikePhrase
@@ -23,11 +27,15 @@ component extends="API.abstractClasses.search" {
                                                                     pv.description,
                                                                     pv.title,
                                                                     regExp_matches(pv.content, '^.*""type""\s*:\s*""com.Nephthys.text""\s*,\s*""options""\s*:\s*{\s*""content""\s*:\s*""(.*?' || :searchPhrase || '.*?)"".*$', 'i') c
-                                                               FROM nephthys_page p
-                                                         INNER JOIN nephthys_pageVersion pv ON p.pageId = pv.pageId
-                                                         INNER JOIN nephthys_pageStatus ps ON pv.pageStatusId = ps.pageStatusId
-                                                              WHERE ps.offline = :false) sq")
-                                        .addParam(name = "false",            value = 0,                                  cfsqltype = "cf_sql_bit")
+                                                               FROM nephthys_page_page p
+                                                         INNER JOIN nephthys_page_pageVersion    pv ON p.pageId = pv.pageId
+                                                         INNER JOIN nephthys_page_status         ps ON pv.statusId = ps.statusId
+                                                         INNER JOIN nephthys_page_hierarchyPage hp ON p.pageId = hp.pageId
+                                                         INNER JOIN nephthys_page_hierarchy     h  ON hp.hierarchyId = hp.hierarchyId
+                                                         INNER JOIN nephthys_page_status        hs ON h.statusId = hs.statusId
+                                                              WHERE ps.online = :online
+                                                                AND hs.online = :online) sq")
+                                        .addParam(name = "online",            value = 1,                                  cfsqltype = "cf_sql_bit")
                                         .addParam(name = "searchLikePhrase", value = "%" & variables.searchPhrase & "%", cfsqltype = "cf_sql_varchar")
                                         .addParam(name = "searchPhrase",     value = variables.searchPhrase,             cfsqltype = "cf_sql_varchar")
                                         .execute()

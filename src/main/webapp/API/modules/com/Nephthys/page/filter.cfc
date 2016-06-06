@@ -1,22 +1,18 @@
 component implements="API.interfaces.filter" {
     public filter function init() {
-        variables.pageId             = null;
-        variables.link               = null;
-        variables.online             = null;
-        variables.parentId           = null;
-        variables.region             = null;
-        variables.actualVersion      = null;
-        variables.majorVersion       = null;
-        variables.minorVersion       = null;
-        variables.pageStatusId       = null;
-        variables.hierarchyVersionId = null;
-        
-        // only for variables.for == 'pageStatus'
-        variables.startStatus = null;
-        variables.endStatus   = null;
+        variables.pageId        = null;
+        variables.link          = null;
+        variables.online        = null;
+        variables.parentId      = null;
+        variables.region        = null;
+        variables.actualVersion = null;
+        variables.majorVersion  = null;
+        variables.minorVersion  = null;
+        variables.statusId      = null;
+        variables.hierarchyId   = null;
         
         // only for hierarchy
-        variables.pageHierarchyVersionId = null;
+        variables.hierarchyId = null;
         
         variables.for = "page"; // page | pageVersion | pageHierarchy
         
@@ -33,7 +29,7 @@ component implements="API.interfaces.filter" {
             case "pageVersion":
             case "hierarchy":
             case "pagesNotInHierarchy":
-            case "pageStatus": {
+            case "Status": {
                 variables.for = arguments.for;
                 break;
             }
@@ -69,28 +65,18 @@ component implements="API.interfaces.filter" {
         variables.minorVersion = arguments.minorVersion;
         return this;
     }
-    public filter function setHierarchyVersionId(required numeric hierarchyVersionId) {
-        variables.hierarchyVersionId = arguments.hierarchyVersionId;
+    public filter function setHierarchyId(required numeric hierarchyId) {
+        variables.hierarchyId = arguments.hierarchyId;
         return this;
     }
-    public filter function setPageStatusId(required numeric pageStatusId) {
-        variables.pageStatusId = arguments.pageStatusId;
-        return this;
-    }
-    
-    
-    public filter function setStartStatus(required boolean startStatus) {
-        variables.startStatus = arguments.startStatus;
-        return this;
-    }
-    public filter function setEndStatus(required boolean endStatus) {
-        variables.endStatus = arguments.endStatus;
+    public filter function setStatusId(required numeric statusId) {
+        variables.statusId = arguments.statusId;
         return this;
     }
     
     
-    public filter function setPageHierarchyVersionId(required numeric pageHierarchyVersionId) {
-        variables.pageHierarchyVersionId = arguments.pageHierarchyVersionId;
+    public filter function setPageHierarchyVersionId(required numeric hierarchyId) {
+        variables.hierarchyId = arguments.hierarchyId;
         return this;
     }
     
@@ -105,17 +91,17 @@ component implements="API.interfaces.filter" {
         switch(variables.for) {
             case "page": {
                 sql = "    SELECT DISTINCT p.pageId, pv.link
-                             FROM nephthys_page p
-                       INNER JOIN nephthys_pageVersion pv ON p.pageId = pv.pageId
-                       INNER JOIN nephthys_pageStatus  ps ON pv.pageStatusId = ps.pageStatusId";
+                             FROM nephthys_page_page p
+                       INNER JOIN nephthys_page_pageVersion pv ON p.pageId = pv.pageId
+                       INNER JOIN nephthys_page_status  ps ON pv.statusId = ps.statusId";
                 
                 if(variables.link != null) {
                     // TODO: regEx | parameter check
                     where &= (where == "" ? " WHERE " : " AND ") & "lower(pv.link) = :link";
                     qryFilter.addParam(name = "link", value = variables.link, cfsqltype = "cf_sql_varchar");
                 }
-                if(variables.pageStatusId != null) {
-                    where &= (where == "" ? " WHERE " : " AND ") & "pv.pageStatusId = :pageStatusId";
+                if(variables.statusId != null) {
+                    where &= (where == "" ? " WHERE " : " AND ") & "pv.statusId = :statusId";
                 }
                 if(variables.online != null) {
                     where &= (where == "" ? " WHERE " : " AND ") & "ps.offline = :online";
@@ -138,50 +124,51 @@ component implements="API.interfaces.filter" {
                 break;
             }
             case "sitemap": {
-                var innerQuery = "    SELECT h.pageId, h.sortOrder
-                                        FROM nephthys_pageHierarchy h
-                                  INNER JOIN nephthys_pageHierarchyVersion hv ON h.pageHierarchyVersionId = hv.pageHierarchyVersionId
-                                  INNER JOIN nephthys_pageStatus hs ON hv.pageStatusId = hs.pageStatusId ";
+                var innerQuery = "    SELECT hp.pageId, hp.sortOrder
+                                        FROM nephthys_page_hierarchyPage hp
+                                  INNER JOIN nephthys_page_hierarchy h  ON hp.hierarchyId = h.hierarchyId
+                                  INNER JOIN nephthys_page_status    hs ON h.statusId = hs.statusId ";
                 
                 var innerWhere = "";
                 if(variables.region != null && variables.region != "null") {
-                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "h.region = :region";
+                    innerQuery &= " INNER JOIN nephthys_page_region r ON hp.regionId = r.regionId"
+                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "r.name = :region";
                     qryFilter.addParam(name = "region", value = variables.region, cfsqltype = "cf_sql_varchar");
                 }
                 if(variables.online != null) {
-                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "hs.offline = :online";
-                    qryFilter.addParam(name = "online", value = ! variables.online, cfsqltype = "cf_sql_bit");
+                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "hs.online = :online";
+                    qryFilter.addParam(name = "online", value = variables.online, cfsqltype = "cf_sql_bit");
                 }
                 if(variables.parentId != null) {
                     innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "h.parentPageId = :parentId";
                     qryFilter.addParam(name = "parentId", value = variables.parentId, cfsqltype = "cf_sql_numeric");
                 }
-                if(variables.pageStatusId != null) {
-                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "hv.pageStatusId = :pageStatusId";
-                    qryFilter.addParam(name = "pageStatusId", value = variables.pageStatusId, cfsqltype = "cf_sql_numeric");
+                if(variables.statusId != null) {
+                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "hv.statusId = :statusId";
+                    qryFilter.addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric");
                 }
-                if(variables.hierarchyVersionId != null) {
-                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "hv.pageHierarchyVersionId = :hierarchyVersionId";
-                    qryFilter.addParam(name = "hierarchyVersionId", value = variables.hierarchyVersionId, cfsqltype = "cf_sql_numeric");
+                if(variables.hierarchyId != null) {
+                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "hv.hierarchyId = :hierarchyId";
+                    qryFilter.addParam(name = "hierarchyId", value = variables.hierarchyId, cfsqltype = "cf_sql_numeric");
                 }
                 
                 innerQuery &= innerWhere;
                 
                 sql = "    SELECT p.pageId
-                             FROM nephthys_page p
-                       INNER JOIN nephthys_pageVersion pv ON p.pageId = pv.pageId
-                       INNER JOIN nephthys_pageStatus  ps ON pv.pageStatusId = ps.pageStatusId
-                       INNER JOIN (" & innerQuery & ") ph ON p.pageId = ph.pageId";
+                             FROM nephthys_page_page p
+                       INNER JOIN nephthys_page_pageVersion pv ON p.pageId = pv.pageId
+                       INNER JOIN nephthys_page_status      ps ON pv.statusId = ps.statusId
+                       INNER JOIN (" & innerQuery & ")      ph ON p.pageId = ph.pageId";
                 
                 if(variables.link != null) {
                     where &= (where == "" ? " WHERE " : " AND ") & "lower(pv.link) = :link";
                     qryFilter.addParam(name = "link", value = variables.link, cfsqltype = "cf_sql_varchar");
                 }
-                if(variables.pageStatusId != null) {
-                    where &= (where == "" ? " WHERE " : " AND ") & "pv.pageStatusId = :pageStatusId";
+                if(variables.statusId != null) {
+                    where &= (where == "" ? " WHERE " : " AND ") & "pv.statusId = :statusId";
                 }
                 if(variables.online != null) {
-                    where &= (where == "" ? " WHERE " : " AND ") & "ps.offline = :online";
+                    where &= (where == "" ? " WHERE " : " AND ") & "ps.online = :online";
                 }
                 if(variables.majorVersion == null && variables.minorVersion == null) {
                     where &= (where == "" ? " WHERE " : " AND ") & "p.pageVersionId = pv.pageversionId";
@@ -206,56 +193,56 @@ component implements="API.interfaces.filter" {
             }
             case "hierarchy": {
                 
-                sql = "    SELECT hv.pageHierarchyVersionId, hv.pageStatusId
-                             FROM nephthys_pageHierarchyVersion hv
-                       INNER JOIN nephthys_pageStatus ps ON hv.pageStatusId = ps.pageStatusId";
+                sql = "    SELECT h.hierarchyId, hv.statusId
+                             FROM nephthys_page_hierarchy h
+                       INNER JOIN nephthys_page_status s ON h.statusId = s.statusId";
                 
-                if(variables.pageHierarchyVersionId != null) {
-                    where &= (where == "" ? " WHERE " : " AND ") & "hv.pageHierarchyVersionId = :pageHierarchyVersionId";
-                    qryFilter.addParam(name = "pageHierarchyVersionId", value = variables.pageHierarchyVersionId, cfsqltype = "cf_sql_numeric");
+                if(variables.hierarchyId != null) {
+                    where &= (where == "" ? " WHERE " : " AND ") & "h.hierarchyId = :hierarchyId";
+                    qryFilter.addParam(name = "hierarchyId", value = variables.hierarchyId, cfsqltype = "cf_sql_numeric");
                 }
-                if(variables.pageStatusId != null) {
-                    where &= (where == "" ? " WHERE " : " AND ") & "hv.pageStatusId = :pageStatusId";
-                    qryFilter.addParam(name = "pageStatusId", value = variables.pageStatusId, cfsqltype = "cf_sql_numeric");
+                if(variables.statusId != null) {
+                    where &= (where == "" ? " WHERE " : " AND ") & "h.statusId = :statusId";
+                    qryFilter.addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric");
                 }
                 if(variables.online != null) {
-                    where &= (where == "" ? " WHERE " : " AND ") & "ps.offline = :online";
-                    qryFilter.addParam(name = "online", value = ! variables.online, cfsqltype = "cf_sql_bit");
+                    where &= (where == "" ? " WHERE " : " AND ") & "s.online = :online";
+                    qryFilter.addParam(name = "online", value = variables.online, cfsqltype = "cf_sql_bit");
                 }
                 
-                orderBy = " ORDER BY hv.pageHierarchyVersionId ASC";
+                orderBy = " ORDER BY h.hierarchyId ASC";
                 
                 break;
             }
             case "pagesNotInHierarchy": {
                 var innerQuery = "    SELECT h.pageId
-                                        FROM nephthys_pageHierarchy h
-                                  INNER JOIN nephthys_pageHierarchyVersion hv ON h.pageHierarchyVersionId = hv.pageHierarchyVersionId
-                                  INNER JOIN nephthys_pageStatus hs ON hv.pageStatusId = hs.pageStatusId ";
+                                        FROM nephthys_page_hierarchyPage hp
+                                  INNER JOIN nephthys_page_hierarchy h ON hp.hierarchyId = h.hierarchyId
+                                  INNER JOIN nephthys_page_status hs ON hv.statusId = hs.statusId ";
                 
                 var innerWhere = "";
                 if(variables.region != null) {
-                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "h.region = :region";
+                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "hp.region = :region";
                     qryFilter.addParam(name = "region", value = variables.region, cfsqltype = "cf_sql_varchar");
                 }
                 if(variables.parentId != null) {
-                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "h.parentPageId = :parentId";
+                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "hp.parentPageId = :parentId";
                     qryFilter.addParam(name = "parentId", value = variables.parentId, cfsqltype = "cf_sql_numeric");
                 }
-                if(variables.pageStatusId != null) {
-                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "hv.pageStatusId = :pageStatusId";
-                    qryFilter.addParam(name = "pageStatusId", value = variables.pageStatusId, cfsqltype = "cf_sql_numeric");
+                if(variables.statusId != null) {
+                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "h.statusId = :statusId";
+                    qryFilter.addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric");
                 }
-                if(variables.hierarchyVersionId != null) {
-                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "hv.pageHierarchyVersionId = :hierarchyVersionId";
-                    qryFilter.addParam(name = "hierarchyVersionId", value = variables.hierarchyVersionId, cfsqltype = "cf_sql_numeric");
+                if(variables.hierarchyId != null) {
+                    innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "h.hierarchyId = :hierarchyId";
+                    qryFilter.addParam(name = "hierarchyId", value = variables.hierarchyId, cfsqltype = "cf_sql_numeric");
                 }
                 
                 innerQuery &= innerWhere;
                 sql = "    SELECT DISTINCT p.pageId
-                             FROM nephthys_page p
-                       INNER JOIN nephthys_pageVersion pv ON p.pageId = pv.pageId
-                       INNER JOIN nephthys_pageStatus  ps ON pv.pageStatusId = ps.pageStatusId";
+                             FROM nephthys_page_page p
+                       INNER JOIN nephthys_page_pageVersion pv ON p.pageId = pv.pageId
+                       INNER JOIN nephthys_page_status      ps ON pv.statusId = ps.statusId";
                 where = " WHERE p.pageId NOT IN ( " & innerQuery & " )";
                 
                 if(variables.link != null) {
@@ -263,8 +250,8 @@ component implements="API.interfaces.filter" {
                     where &= (where == "" ? " WHERE " : " AND ") & "lower(pv.link) = :link";
                     qryFilter.addParam(name = "link", value = variables.link, cfsqltype = "cf_sql_varchar");
                 }
-                if(variables.pageStatusId != null) {
-                    where &= (where == "" ? " WHERE " : " AND ") & "pv.pageStatusId = :pageStatusId";
+                if(variables.statusId != null) {
+                    where &= (where == "" ? " WHERE " : " AND ") & "pv.statusId = :statusId";
                 }
                 if(variables.online != null) {
                     where &= (where == "" ? " WHERE " : " AND ") & "ps.offline = :online";
@@ -287,21 +274,13 @@ component implements="API.interfaces.filter" {
                 
                 break;
             }
-            case "pageStatus": {
-                var sql = "SELECT pageStatusId
-                             FROM nephthys_pageStatus ";
+            case "Status": {
+                var sql = "SELECT statusId
+                             FROM nephthys_page_status ";
                 
                 var where = "";
-                if(variables.startStatus != null) {
-                    where &= (where == "" ? " WHERE " : " AND ") & " startStatus = :startStatus";
-                    qryFilter.addParam(name = "startStatus", value = variables.startStatus, cfsqltype = "cf_sql_bit");
-                }
-                if(variables.endStatus != null) {
-                    where &= (where == "" ? " WHERE " : " AND ") & " endStatus = :endStatus";
-                    qryFilter.addParam(name = "endStatus", value = variables.endStatus, cfsqltype = "cf_sql_bit");
-                }
                 
-                var orderBy = " ORDER BY pageStatusId";
+                var orderBy = " ORDER BY statusId";
                 break;
             }
         }
@@ -333,13 +312,13 @@ component implements="API.interfaces.filter" {
                     }
                     case "hierarchy": {
                         variables.results.append({
-                            "hierarchyVersionId" = variables.qRes.pageHierarchyVersionId[i],
-                            "pageStatusId"       = variables.qRes.pageStatusId[i]
+                            "hierarchyId" = variables.qRes.hierarchyId[i],
+                            "statusId"    = variables.qRes.statusId[i]
                         });
                         break;
                     }
-                    case "pageStatus": {
-                        variables.results.append(new pageStatus(variables.qRes.pageStatusId[i]));
+                    case "Status": {
+                        variables.results.append(new status(variables.qRes.statusId[i]));
                         break;
                     }
                 }

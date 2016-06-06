@@ -78,7 +78,7 @@ component {
             }
             
             var pageVersion = new pageVersion(arguments.pageVersion.pageVersionId);
-            if(pageVersion.getPageStatus().isEditable()) {
+            if(pageVersion.getStatus().arePagesEditable()) {
                 if(arguments.pageVersion.pageVersionId == null) {
                     pageVersion.setPageId(arguments.pageId)
                                .setMajorVersion(arguments.majorVersion)
@@ -93,7 +93,7 @@ component {
                            .setUseDynamicSuffixes(arguments.pageVersion.useDynamicSuffixes)
                            .setLastEditorById(request.user.getUserId())
                            .setLastEditDate(now())
-                           .setPageStatusId(arguments.pageVersion.pageStatusId);
+                           .setStatusId(arguments.pageVersion.statusId);
                 
                 pageVersion.save();
                 
@@ -111,56 +111,56 @@ component {
             }
             else {
                 transactionRollback();
-                throw(type = "nephthys.application.notAllowed", message = "The page version is in an non editable status.");
+                throw(type = "nephthys.application.notAllowed", message = "The page version is in an non pagesAreEditable status.");
             }
         }
     }
     
-    remote string function pushToStatus(required numeric pageVersionId, required numeric pageStatusId) {
-        var newPageStatus    = new pageStatus(arguments.pageStatusId);
+    remote string function pushToStatus(required numeric pageVersionId, required numeric statusId) {
+        var newStatus    = new status(arguments.statusId);
         var pageVersion      = new pageVersion(arguments.pageVersionId);
-        var actualPageStatus = pageVersion.getPageStatus();
+        var actualStatus = pageVersion.getStatus();
         
-        var newPageStatusOK = false;
-        for(var nextPageStatus in actualPageStatus.getNextStatus()) {
-            if(nextPageStatus.getPageStatusId() == newPageStatus.getPageStatusId()) {
-                newPageStatusOk = true;
+        var newStatusOK = false;
+        for(var nextStatus in actualStatus.getNextStatus()) {
+            if(nextStatus.getStatusId() == newStatus.getStatusId()) {
+                newStatusOk = true;
             }
         }
         
-        if(newPageStatusOk) {
-            if(newPageStatus.isApprovalValid(request.user.getUserId())) {
+        if(newStatusOk) {
+            if(newStatus.isApprovalValid(request.user.getUserId())) {
                 transaction {
-                    pageVersion.setPageStatusId(newPageStatus.getPageStatusId())
+                    pageVersion.setStatusId(newStatus.getStatusId())
                                .save();
                     
                     var page = new page(pageVersion.getPageId());
                     
-                    if(newPageStatus.isOnline()) {
+                    if(newStatus.isOnline()) {
                         // update last page Status
-                        var offlinePageStatusId = new filter().setFor("pageStatus")
+                        /*var offlineStatusId = new filter().setFor("status")
                                                               .setEndStatus(true)
                                                               .execute()
-                                                              .getResult()[1].getPageStatusId();
+                                                              .getResult()[1].getStatusId();
                         
                         var oldPageVersion = page.getActualPageVersion();
                         if(oldPageVersion.getPageVersionId() != pageVersion.getPageVersionId()) {
                             new approval(oldPageVersion.getPageVersionId()).setFor("pageVersion")
-                                                                           .approve(oldPageVersion.getPageStatusId(),
-                                                                                    offlinePageStatusId,
+                                                                           .approve(oldPageVersion.getStatusId(),
+                                                                                    offlineStatusId,
                                                                                     request.user.getUserId());
                             
-                            oldPageVersion.setPageStatusId(offlinePageStatusId)
+                            oldPageVersion.setStatusId(offlineStatusId)
                                              .save();
-                        }
+                        }*/
                         
                         page.setPageVersionId(pageVersion.getPageVersionId())
                             .save();
                     }
                     
                     new approval(arguments.pageVersionId).setFor("pageVersion")
-                                                         .approve(actualPageStatus.getPageStatusId(),
-                                                                  newPageStatus.getPageStatusId(),
+                                                         .approve(actualStatus.getStatusId(),
+                                                                  newStatus.getStatusId(),
                                                                   request.user.getUserId());
                     
                     transactionCommit();
@@ -176,7 +176,7 @@ component {
     
     remote boolean function delete(required numeric pageId) {
         var page = new page(arguments.pageId);
-        if(page.getPageStatus().isDeleteable()) {
+        if(page.getStatus().arePagesDeleteable()) {
             page.delete();
         }
         
@@ -203,101 +203,100 @@ component {
     // STATUS
     
     remote struct function getStatusList() {
-        var pageStatusLoader = new filter().setFor("pageStatus");
+        var statusLoader = new filter().setFor("status");
         
-        var prepPageStatus = {};
+        var prepStatus = {};
         
-        for(var pageStatus in pageStatusLoader.execute().getResult()) {
-            prepPageStatus[pageStatus.getPageStatusId()] = preparePageStatus(pageStatus);
+        for(var status in statusLoader.execute().getResult()) {
+            prepStatus[status.getStatusId()] = prepareStatus(status);
         }
         
-        return prepPageStatus;
+        return prepStatus;
     }
     
     remote array function getStatusListAsArray() {
-        var pageStatusLoader = new filter().setFor("pageStatus");
+        var statusLoader = new filter().setFor("status");
         
-        var prepPageStatus = [];
+        var prepStatus = [];
         
-        for(var pageStatus in pageStatusLoader.execute().getResult()) {
-            prepPageStatus.append(preparePageStatusAsArray(pageStatus));
+        for(var status in statusLoader.execute().getResult()) {
+            prepStatus.append(prepareStatusAsArray(status));
         }
         
-        return prepPageStatus;
+        return prepStatus;
     }
     
-    remote struct function getStatusDetails(required numeric pageStatusId) {
-        return preparePageStatus(new pageStatus(arguments.pageStatusId));
+    remote struct function getStatusDetails(required numeric statusId) {
+        return prepareStatus(new status(arguments.statusId));
     }
     
     remote boolean function saveStatus(required struct status) {
         transaction {
-            var pageStatus = new pageStatus(arguments.status.pageStatusId);
+            var status = new status(arguments.status.statusId);
             
-            if(pageStatus.isStartStatus() && ! arguments.status.startStatus) {
+            /*if(status.isStartStatus() && ! arguments.status.startStatus) {
                 throw(type = "nephthys.application.notAllowed", message = "You cannot remove the start status flag from the start status. Please set another status as start status to remove the start status flag from this status.");
             }
             
-            if(pageStatus.isEndStatus() && ! arguments.status.endStatus) {
+            if(status.isEndStatus() && ! arguments.status.endStatus) {
                 throw(type = "nephthys.application.notAllowed", message = "You cannot remove the end status flag from the end status. Please set another status as end status to remove the end status flag from this status.");
             }
             
-            if(! pageStatus.isStartStatus() && arguments.status.startStatus) {
-                new filter().setFor("pageStatus")
+            if(! status.isStartStatus() && arguments.status.startStatus) {
+                new filter().setFor("status")
                             .setStartStatus(true)
                             .execute()
                             .getResult()[1].setStartStatus(false)
                                            .save();
             }
             
-            if(! pageStatus.isEndStatus() && arguments.status.endStatus) {
-                new filter().setFor("pageStatus")
+            if(! status.isEndStatus() && arguments.status.endStatus) {
+                new filter().setFor("status")
                             .setEndStatus(true)
                             .execute()
                             .getResult()[1].setEndStatus(false)
                                            .save();
-            }
+            }*/
             
-            pageStatus.setActiveStatus(arguments.status.active)
-                      .setEditable(arguments.status.editable)
-                      .setEndStatus(arguments.status.endStatus)
-                      .setName(arguments.status.name)
-                      .setOfflineStatus(arguments.status.offline)
-                      .setStartStatus(arguments.status.startStatus)
-                      .setDeleteable(arguments.status.deleteable)
-                      .save();
+            status.setActiveStatus(arguments.status.active)
+                  .setPagesAreEditable(arguments.status.pagesAreEditable)
+                  .setName(arguments.status.name)
+                  .setOnlineStatus(arguments.status.online)
+                  .setPagesAreDeleteable(arguments.status.pagesAreDeleteable)
+                  .setLastEditor(request.user)
+                  .save();
             
             transactionCommit();
             return true;
         }
     }
     
-    remote boolean function deleteStatus(required numeric pageStatusId) {
-        var pagesStillWithThisPageStatus = new filter().setPageStatusId(arguments.pageStatusId).execute().getResultCount();
-        var hierarchiesStillWithThisPageStatus = new filter().setFor("hierarchy").setPageStatusId(arguments.pageStatusId).execute.getResultCount();
-        if(pagesStillWithThisPageStatus == 0 && hierarchiesStillWithThisPageStatus == 0) {
-            new pageStatus(arguments.pageStatusId).delete();
+    remote boolean function deleteStatus(required numeric statusId) {
+        var pagesStillWithThisStatus = new filter().setStatusId(arguments.statusId).execute().getResultCount();
+        var hierarchiesStillWithThisStatus = new filter().setFor("hierarchy").setStatusId(arguments.statusId).execute.getResultCount();
+        if(pagesStillWithThisStatus == 0 && hierarchiesStillWithThisStatus == 0) {
+            new status(arguments.statusId).delete();
             
             return true;
         }
         else {
-            throw(type = "nephthys.application.notAllowed", message = "You cannot delete a status that is still used. There are still " & pagesStillWithThisPageStatus & " pages and " & hierarchiesStillWithThisPageStatus & " hierarchies on this status.");
+            throw(type = "nephthys.application.notAllowed", message = "You cannot delete a status that is still used. There are still " & pagesStillWithThisStatus & " pages and " & hierarchiesStillWithThisStatus & " hierarchies on this status.");
         }
     }
     
-    remote boolean function activateStatus(required numeric pageStatusId) {
-        var pageStatus = new pageStatus(arguments.pageStatusId);
+    remote boolean function activateStatus(required numeric statusId) {
+        var status = new status(arguments.statusId);
         
-        pageStatus.setActiveStatus(true)
+        status.setActiveStatus(true)
                   .save();
         
         return true;
     }
     
-    remote boolean function deactivateStatus(required numeric pageStatusId) {
-        var pageStatus = new pageStatus(arguments.pageStatusId);
+    remote boolean function deactivateStatus(required numeric statusId) {
+        var status = new status(arguments.statusId);
         
-        pageStatus.setActiveStatus(false)
+        status.setActiveStatus(false)
                   .save();
         
         return true;
@@ -310,37 +309,37 @@ component {
         var found = false;
         transaction {
             for(i = 1; i <= arguments.statusFlow.len(); ++i) {
-                var pageStatus = new pageStatus(arguments.statusFlow[i].pageStatusId);
+                var status = new status(arguments.statusFlow[i].statusId);
                 
-                var nextStatus = pageStatus.getNextStatus();
+                var nextStatus = status.getNextStatus();
                 
                 for(j = 1; j <= nextStatus.len(); ++j) {
                     found = false;
                     for(k = 1; k <= arguments.statusFlow[i].nextStatus.len() && ! found; ++k) {
-                        if(nextStatus[j].getPageStatusId() == arguments.statusFlow[i].nextStatus[k].pageStatusId) {
+                        if(nextStatus[j].getStatusId() == arguments.statusFlow[i].nextStatus[k].statusId) {
                             found = true;
                         }
                     }
                     
                     if(! found) {
-                        pageStatus.removeNextStatus(nextStatus[j].getPageStatusId());
+                        status.removeNextStatus(nextStatus[j].getStatusId());
                     }
                 }
                 
                 for(j = 1; j <= arguments.statusFlow[i].nextStatus.len(); ++j) {
                     found = false;
                     for(k = 1; k <= nextStatus.len() && ! found; ++k) {
-                        if(nextStatus[k].getPageStatusId() == arguments.statusFlow[i].nextStatus[j].pageStatusId) {
+                        if(nextStatus[k].getStatusId() == arguments.statusFlow[i].nextStatus[j].statusId) {
                             found = true;
                         }
                     }
                     
                     if(! found) {
-                        pageStatus.addNextStatus(arguments.statusFlow[i].nextStatus[j].pageStatusId);
+                        status.addNextStatus(arguments.statusFlow[i].nextStatus[j].statusId);
                     }
                 }
                 
-                pageStatus.save();
+                status.save();
             }
             
             transactionCommit();
@@ -412,13 +411,13 @@ component {
         for(var hierarchyVersion in hierarchyFilterCtrl.getResult()) {
             var preparedApprovalList = prepareApprovalList(new approval(hierarchyVersion.hierarchyVersionId).setFor("hierarchyVersion").getApprovalList());
             
-            var status = new pageStatus(hierarchyVersion.pageStatusId);
+            var status = new status(hierarchyVersion.statusId);
             // hierarchyVersionId == version
             hierarchy["versions"][hierarchyVersion.hierarchyVersionId] = {};
             
             hierarchy["versions"][hierarchyVersion.hierarchyVersionId] = {
-                "editable"     = status.isEditable(),
-                "pageStatusId" = hierarchyVersion.pageStatusId,
+                "pagesAreEditable"     = status.arePagesEditable(),
+                "statusId" = hierarchyVersion.statusId,
                 "new"          = false,
                 "regions"      = [],
                 "approvalList" = preparedApprovalList
@@ -445,14 +444,14 @@ component {
         }
         index++;
         
-        var pageStatusId = new filter().setFor("pageStatus")
+        /*var statusId = new filter().setFor("status")
                                        .setStartStatus(true)
                                        .execute()
-                                       .getResult()[1].getPageStatusId();
+                                       .getResult()[1].getStatusId();
         
         hierarchy["versions"][index] = {
-            "editable"     = true,
-            "pageStatusId" = pageStatusId,
+            "pagesAreEditable"     = true,
+            "statusId" = statusId,
             "new"          = true,
             "regions"      = []
         };
@@ -476,7 +475,7 @@ component {
                     "pages" = []
                 });
             }
-        }
+        }*/
         
         return {
             "newVersion" = index,
@@ -489,15 +488,15 @@ component {
         if(arguments.hierarchy.new) {
             hierarchyVersionId = new Query().setSQL("INSERT INTO nephthys_pageHierarchyVersion
                                                                  (
-                                                                     pageStatusId,
+                                                                     statusId,
                                                                      creatorUserId
                                                                  )
                                                           VALUES (
-                                                                     :pageStatusId,
+                                                                     :statusId,
                                                                      :userId
                                                                  );
                                                      SELECT currval('seq_nephthys_pageHierarchyVersion_id' :: regclass) newId;")
-                                            .addParam(name = "pageStatusId", value = arguments.hierarchy.pageStatusId, cfsqltype = "cf_sql_numeric")
+                                            .addParam(name = "statusId", value = arguments.hierarchy.statusId, cfsqltype = "cf_sql_numeric")
                                             .addParam(name = "userId",       value = request.user.getUserId(),         cfsqltype = "cf_sql_numeric")
                                             .execute()
                                             .getResult()
@@ -550,19 +549,19 @@ component {
         return true;
     }
     
-    remote boolean function pushHierarchyToStatus(required numeric hierarchyVersionId, required numeric pageStatusId) {
+    remote boolean function pushHierarchyToStatus(required numeric hierarchyVersionId, required numeric statusId) {
         transaction {
-            var oldStatusId = new filter().setFor("hierarchy")
+            /*var oldStatusId = new filter().setFor("hierarchy")
                                           .setPageHierarchyVersionId(arguments.hierarchyVersionId)
                                           .execute()
-                                          .getResult()[1].pageStatusId;
+                                          .getResult()[1].statusId;
             
-            var newStatus = new pageStatus(arguments.pageStatusId);
+            var newStatus = new status(arguments.statusId);
             if(newStatus.isOnline()) {
-                var offlineStatusId = new filter().setFor("pageStatus")
+                var offlineStatusId = new filter().setFor("status")
                                                   .setEndStatus(true)
                                                   .execute()
-                                                  .getResult()[1].getPageStatusId();
+                                                  .getResult()[1].getStatusId();
                
                var actualOnlineCtrl = new filter().setFor("hierarchy")
                                                   .setOnline(true)
@@ -572,24 +571,24 @@ component {
                    var actualOnlineVersionId = actualOnlineCtrl.getResult()[1].hierarchyVersionId;
                     
                     new Query().setSQL("UPDATE nephthys_pageHierarchyVersion
-                                       SET pageStatusId = :pageStatusId
+                                       SET statusId = :statusId
                                      WHERE pageHierarchyVersionId = :hierarchyVersionId")
-                           .addParam(name = "pageStatusId",       value = offlineStatusId,       cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "statusId",       value = offlineStatusId,       cfsqltype = "cf_sql_numeric")
                            .addParam(name = "hierarchyVersionId", value = actualOnlineVersionId, cfsqltype = "cf_sql_numeric")
                            .execute();
                 }
             }
             
             new Query().setSQL("UPDATE nephthys_pageHierarchyVersion 
-                                   SET pageStatusId = :pageStatusId
+                                   SET statusId = :statusId
                                  WHERE pageHierarchyVersionId = :hierarchyVersionId")
-                       .addParam(name = "pageStatusId",       value = arguments.pageStatusId,       cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "statusId",       value = arguments.statusId,       cfsqltype = "cf_sql_numeric")
                        .addParam(name = "hierarchyVersionId", value = arguments.hierarchyVersionId, cfsqltype = "cf_sql_numeric")
                        .execute();
             
             new approval(arguments.hierarchyVersionId).setFor("hierarchyVersion")
-                                                      .approve(oldStatusId, pageStatusId, request.user.getUserId());
-            
+                                                      .approve(oldStatusId, statusId, request.user.getUserId());
+            */
             transactionCommit();
         }
         
@@ -619,8 +618,8 @@ component {
                 "lastEditor"         = getUserInformation(pageVersion.getLastEditor()),
                 "lastEditDate"       = formatCtrl.formatDate(pageVersion.getLastEditDate()),
                 "isOnline"           = pageVersion.isOnline(),
-                "pageStatusId"       = pageVersion.getPageStatusId(),
-                "pageStatusName"     = pageVersion.getPageStatus().getName(),
+                "statusId"       = pageVersion.getStatusId(),
+                "statusName"     = pageVersion.getStatus().getName(),
                 "version"            = page.getActualVersion()
             });
         }
@@ -758,66 +757,58 @@ component {
             "creationDate"       = formatCtrl.formatDate(arguments.pageVersion.getCreationDate()),
             "lastEditor"         = getUserInformation(arguments.pageVersion.getLastEditor()),
             "lastEditDate"       = formatCtrl.formatDate(arguments.pageVersion.getLastEditDate()),
-            "pageStatusId"       = arguments.pageVersion.getPageStatusId(),
+            "statusId"       = arguments.pageVersion.getStatusId(),
             "approvalList"       = preparedApprovalList
         };
     }
     
-    private struct function preparePageStatus(required pageStatus pageStatus) {
+    private struct function prepareStatus(required status status) {
         var nextStatusList = {};
-        for(var nextStatus in arguments.pageStatus.getNextStatus()) {
-            if(nextStatus.getActiveStatus()) {
-                nextStatusList[nextStatus.getPageStatusId()] = {
-                    "pageStatusId" = nextStatus.getPageStatusId(),
+        for(var nextStatus in arguments.status.getNextStatus()) {
+            if(nextStatus.isActive()) {
+                nextStatusList[nextStatus.getStatusId()] = {
+                    "statusId" = nextStatus.getStatusId(),
                     "name"         = nextStatus.getName(),
-                    "active"       = nextStatus.getActiveStatus(),
-                    "offline"      = nextStatus.getOfflineStatus(),
-                    "editable"     = nextStatus.isEditable()
+                    "active"       = nextStatus.isActive(),
+                    "online"      = nextStatus.isOnline(),
+                    "pagesAreEditable"     = nextStatus.arePagesEditable()
                 };
             }
         }
         
         return {
-            "id"           = arguments.pageStatus.getPageStatusId(),
-            "pageStatusId" = arguments.pageStatus.getPageStatusId(),
-            "title"        = arguments.pageStatus.getName(),
-            "name"         = arguments.pageStatus.getName(),
-            "active"       = arguments.pageStatus.getActiveStatus(),
-            "offline"      = arguments.pageStatus.getOfflineStatus(),
-            "editable"     = arguments.pageStatus.isEditable(),
-            "startStatus"  = arguments.pageStatus.isStartStatus(),
-            "endStatus"    = arguments.pageStatus.isEndStatus(),
-            "deleteable"   = arguments.pageStatus.isDeleteable(),
-            "nextStatus"   = nextStatusList
+            "statusId"           = arguments.status.getStatusId(),
+            "name"               = arguments.status.getName(),
+            "active"             = arguments.status.isActive(),
+            "online"             = arguments.status.isOnline(),
+            "pagesAreEditable"   = arguments.status.arePagesEditable(),
+            "pagesAreDeleteable" = arguments.status.arePagesDeleteable(),
+            "nextStatus"         = nextStatusList
         };
     }
     
-    private struct function preparePageStatusAsArray(required pageStatus pageStatus) {
+    private struct function prepareStatusAsArray(required status status) {
         var nextStatusList = [];
-        for(var nextStatus in arguments.pageStatus.getNextStatus()) {
-            if(nextStatus.getActiveStatus()) {
+        for(var nextStatus in arguments.status.getNextStatus()) {
+            if(nextStatus.isActive()) {
                 nextStatusList.append({
-                    "pageStatusId" = nextStatus.getPageStatusId(),
-                    "name"         = nextStatus.getName(),
-                    "active"       = nextStatus.getActiveStatus(),
-                    "offline"      = nextStatus.getOfflineStatus(),
-                    "editable"     = nextStatus.isEditable()
+                    "statusId"         = nextStatus.getStatusId(),
+                    "name"             = nextStatus.getName(),
+                    "active"           = nextStatus.isActive(),
+                    "online"           = nextStatus.getOnlineStatus(),
+                    "pagesAreEditable" = nextStatus.arePagesEditable()
                 });
             }
         }
         
         return {
-            "id"           = arguments.pageStatus.getPageStatusId(),
-            "pageStatusId" = arguments.pageStatus.getPageStatusId(),
-            "title"        = arguments.pageStatus.getName(),
-            "name"         = arguments.pageStatus.getName(),
-            "active"       = arguments.pageStatus.getActiveStatus(),
-            "offline"      = arguments.pageStatus.getOfflineStatus(),
-            "editable"     = arguments.pageStatus.isEditable(),
-            "startStatus"  = arguments.pageStatus.isStartStatus(),
-            "endStatus"    = arguments.pageStatus.isEndStatus(),
-            "deleteable"   = arguments.pageStatus.isDeleteable(),
-            "nextStatus"   = nextStatusList
+            "statusId"           = arguments.status.getStatusId(),
+            "name"               = arguments.status.getName(),
+            "active"             = arguments.status.isActive(),
+            "online"             = arguments.status.isOnline(),
+            "pagesAreEditable"   = arguments.status.arePagesEditable(),
+            "pagesAreDeleteable" = arguments.status.arePagesDeleteable(),
+            "nextStatus"         = nextStatusList
         };
     }
     
@@ -827,10 +818,10 @@ component {
         var preparedApprovalList = [];
         for(var approval in arguments.approvalList) {
             preparedApprovalList.append({
-                "user" = getUserInformation(approval.user),
-                "approvalDate" = formatCtrl.formatDate(approval.approvalDate),
-                "oldPageStatusName" = approval.oldPageStatus.getName(),
-                "newPageStatusName" = approval.newPageStatus.getName()
+                "user"               = getUserInformation(approval.user),
+                "approvalDate"       = formatCtrl.formatDate(approval.approvalDate),
+                "previousStatusName" = approval.previousStatus.getName(),
+                "newStatusName"      = approval.newStatus.getName()
             });
         }
         
@@ -838,6 +829,7 @@ component {
     }
     
     private  array function getRegions() {
+        // TODO implement to get Regions from db
         return [{
             name = "Kopfnavigation",
             region = "header"

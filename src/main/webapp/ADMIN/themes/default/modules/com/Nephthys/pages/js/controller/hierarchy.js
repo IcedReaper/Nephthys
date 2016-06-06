@@ -5,8 +5,8 @@ nephthysAdminApp
                 pagesService.getHierarchy(),
                 pagesService.getStatus()
             ])
-            .then($q.spread(function (hierarchy, pageStatus) {
-                $scope.pageStatus = pageStatus;
+            .then($q.spread(function (hierarchy, status) {
+                $scope.status = status;
                 $scope.hierarchy  = hierarchy;
             }));
         };
@@ -26,9 +26,9 @@ nephthysAdminApp
             }
         };
         
-        $scope.pushToStatus = function (newPageStatusId) {
+        $scope.pushToStatus = function (newstatusId) {
             pagesService
-                .pushHierarchyToStatus($scope.selectedVersion, newPageStatusId)
+                .pushHierarchyToStatus($scope.selectedVersion, newstatusId)
                     .then(function(selectedVersion) {
                         return pagesService.getHierarchy();
                     })

@@ -4,7 +4,7 @@ component {
     public pageVersion function init(required numeric pageVersionId = null) {
         variables.pageVersionId = arguments.pageVersionId;
         
-        variables.pageStatusChanged = false;
+        variables.statusChanged = false;
         
         load();
         
@@ -55,9 +55,9 @@ component {
         variables.useDynamicSuffixes = arguments.useDynamicSuffixes;
         return this;
     }
-    public pageVersion function setPageStatusId(required numeric pageStatusId) {
-        variables.pageStatusId = arguments.pageStatusId;
-        variables.pageStatusChanged = true;
+    public pageVersion function setStatusId(required numeric statusId) {
+        variables.statusId = arguments.statusId;
+        variables.statusChanged = true;
         return this;
     }
     public pageVersion function setCreator(required user creator) {
@@ -120,8 +120,8 @@ component {
     public boolean function getUseDynamicSuffixes() {
         return variables.useDynamicSuffixes == 1;
     }
-    public numeric function getPageStatusId() {
-        return variables.pageStatusId;
+    public numeric function getStatusId() {
+        return variables.statusId;
     }
     public user function getCreator() {
         return duplicate(variables.creator);
@@ -137,11 +137,11 @@ component {
     }
     
     public boolean function isOnline() {
-        return ! new pageStatus(variables.pageStatusId).getOfflineStatus();
+        return new status(variables.statusId).isOnline();
     }
     
-    public pageStatus function getPageStatus() {
-        return new pageStatus(variables.pageStatusId);
+    public status function getStatus() {
+        return new status(variables.statusId);
     }
     public string function getVersion() {
         return variables.majorVersion & "." & variables.minorVersion;
@@ -151,7 +151,7 @@ component {
     public pageVersion function save() {
         if(isNewEntry()) {
             if(variables.pageId != null && variables.pageId != 0 && variables.majorVersion != null && variables.majorVersion != 0 && variables.minorVersion != null) {
-                variables.pageVersionId = new Query().setSQL("INSERT INTO nephthys_pageVersion
+                variables.pageVersionId = new Query().setSQL("INSERT INTO nephthys_page_pageVersion
                                                                           (
                                                                               pageId,
                                                                               majorVersion,
@@ -162,9 +162,11 @@ component {
                                                                               description,
                                                                               content,
                                                                               useDynamicSuffixes,
-                                                                              pageStatusId,
-                                                                              creatorUserId,
-                                                                              lastEditorUserId,
+                                                                              statusId,
+                                                                              creationUserId,
+                                                                              creationDate,
+                                                                              lastEditUserId,
+                                                                              lastEditDate
                                                                           )
                                                                    VALUES (
                                                                               :pageId,
@@ -176,13 +178,13 @@ component {
                                                                               :description,
                                                                               :content,
                                                                               :useDynamicSuffixes,
-                                                                              :pageStatusId,
+                                                                              :statusId,
                                                                               :userId,
                                                                               :creationDate,
                                                                               :userId,
                                                                               :lastEditDate
                                                                           );
-                                                              SELECT currval('seq_nephthys_pageVersion_id' :: regclass) newPageVersionId;")
+                                                              SELECT currval('nephthys_page_pageVersion_pageVersionId_seq' :: regclass) newPageVersionId;")
                                                      .addParam(name = "pageId",             value = variables.pageId,                 cfsqltype = "cf_sql_numeric")
                                                      .addParam(name = "majorVersion",       value = variables.majorVersion,           cfsqltype = "cf_sql_numeric")
                                                      .addParam(name = "minorVersion",       value = variables.minorVersion,           cfsqltype = "cf_sql_numeric")
@@ -192,8 +194,10 @@ component {
                                                      .addParam(name = "description",        value = variables.description,            cfsqltype = "cf_sql_varchar")
                                                      .addParam(name = "content",            value = serializeJSON(variables.content), cfsqltype = "cf_sql_varchar")
                                                      .addParam(name = "useDynamicSuffixes", value = variables.useDynamicSuffixes,     cfsqltype = "cf_sql_bit")
-                                                     .addParam(name = "pageStatusId",       value = variables.pageStatusId,           cfsqltype = "cf_sql_numeric")
+                                                     .addParam(name = "statusId",           value = variables.statusId,               cfsqltype = "cf_sql_numeric")
                                                      .addParam(name = "userId",             value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
+                                                     .addParam(name = "creationDate",       value = variables.creationDate,           cfsqltype = "cf_sql_timestamp")
+                                                     .addParam(name = "lastEditDate",       value = variables.lastEditDate,           cfsqltype = "cf_sql_timestamp")
                                                      .execute()
                                                      .getResult()
                                                      .newPageVersionId[1];
@@ -209,8 +213,8 @@ component {
             }
         }
         else {
-            if(getPageStatus().isEditable()) {
-                new Query().setSQL("UPDATE nephthys_pageVersion
+            if(getStatus().arePagesEditable()) {
+                new Query().setSQL("UPDATE nephthys_page_pageVersion
                                        SET majorVersion       = :majorVersion,
                                            minorVersion       = :minorVersion,
                                            linktext           = :linktext,
@@ -219,8 +223,8 @@ component {
                                            description        = :description,
                                            content            = :content,
                                            useDynamicSuffixes = :useDynamicSuffixes,
-                                           pageStatusId       = :pageStatusId,
-                                           lastEditorUserId   = :lastEditorUserId,
+                                           statusId           = :statusId,
+                                           lastEditUserId     = :userId,
                                            lastEditDate       = :lastEditDate
                                      WHERE pageVersionId = :pageVersionId")
                            .addParam(name = "pageVersionId",      value = variables.pageVersionId,          cfsqltype = "cf_sql_numeric")
@@ -232,18 +236,18 @@ component {
                            .addParam(name = "description",        value = variables.description,            cfsqltype = "cf_sql_varchar")
                            .addParam(name = "content",            value = serializeJSON(variables.content), cfsqltype = "cf_sql_varchar")
                            .addParam(name = "useDynamicSuffixes", value = variables.useDynamicSuffixes,     cfsqltype = "cf_sql_bit")
-                           .addParam(name = "pageStatusId",       value = variables.pageStatusId,           cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "lastEditorUserId",   value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "statusId",           value = variables.statusId,               cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "userId",             value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
                            .addParam(name = "lastEditDate",       value = variables.lastEditDate,           cfsqltype = "cf_sql_timestamp")
                            .execute();
             }
             else {
-                if(variables.pageStatusChanged) {
-                    new Query().setSQL("UPDATE nephthys_pageVersion
-                                           SET pageStatusId = :pageStatusId
+                if(variables.statusChanged) {
+                    new Query().setSQL("UPDATE nephthys_page_pageVersion
+                                           SET statusId = :statusId
                                          WHERE pageVersionId = :pageVersionId")
                                .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "pageStatusId",  value = variables.pageStatusId,  cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "statusId",  value = variables.statusId,  cfsqltype = "cf_sql_numeric")
                                .execute();
                 }
                 else {
@@ -263,7 +267,7 @@ component {
         }*/
         
         new Query().setSQL("DELETE
-                              FROM nephthys_pageVersion
+                              FROM nephthys_page_pageVersion
                              WHERE pageVersionId = :pageVersionId")
                    .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
                    .execute();
@@ -271,29 +275,15 @@ component {
     
     
     
-    
-    public struct function dumpMyAttributes() {
-        return duplicate(variables);
-    }
-    
-    
     private void function load() {
         if(! isNewEntry()) {
             var qryPageVersion = new Query();
             
-            var sql = "SELECT * FROM nephthys_pageVersion ";
+            var sql = "SELECT * FROM nephthys_page_pageVersion ";
             var where = "";
             
-            if(variables.pageVersionId != 0 && variables.pageVersionId != null) {
-                where &= (where == "" ? " WHERE " : " AND ") & " pageVersionId = :pageVersionId ";
-                qryPageVersion.addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric");
-            }
-            else {
-                where &= (where == "" ? " WHERE " : " AND ") & " pageId = :pageId AND majorVersion = :majorVersion AND minorVersion = :minorVersion";
-                qryPageVersion.addParam(name = "pageId",       value = variables.pageId,       cfsqltype = "cf_sql_numeric");
-                qryPageVersion.addParam(name = "majorVersion", value = variables.majorVersion, cfsqltype = "cf_sql_numeric");
-                qryPageVersion.addParam(name = "minorVersion", value = variables.minorVersion, cfsqltype = "cf_sql_numeric");
-            }
+            where &= (where == "" ? " WHERE " : " AND ") & " pageVersionId = :pageVersionId ";
+            qryPageVersion.addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric");
             
             sql &= where;
             
@@ -311,10 +301,10 @@ component {
                 variables.description        = qPageVersion.description[1];
                 variables.content            = deserializeJSON(qPageVersion.content[1]);
                 variables.useDynamicSuffixes = qPageVersion.useDynamicSuffixes[1];
-                variables.pageStatusId       = qPageVersion.pageStatusId[1];
-                variables.creator            = new user(qPageVersion.creatorUserId[1]);
+                variables.statusId           = qPageVersion.statusId[1];
+                variables.creator            = new user(qPageVersion.creationUserId[1]);
                 variables.creationDate       = qPageVersion.creationDate[1];
-                variables.lastEditor         = new user(qPageVersion.lastEditorUserId[1]);
+                variables.lastEditor         = new user(qPageVersion.lastEditUserId[1]);
                 variables.lastEditDate       = qPageVersion.lastEditDate[1];
             }
             else {
@@ -336,7 +326,7 @@ component {
             variables.description        = "";
             variables.content            = [];
             variables.useDynamicSuffixes = false;
-            variables.pageStatusId       = getFirstStatusId();
+            variables.statusId           = getFirstStatusId();
             variables.creator            = new user(request.user.getUserId());
             variables.creationDate       = now();
             variables.lastEditor         = new user(request.user.getUserId());
@@ -350,21 +340,10 @@ component {
     }
     
     private numeric function getFirstStatusId() {
-        return new pageStatusFilter().setStartStatus(true)
-                                     .execute()
-                                     .getResult()[1].getPageStatusId();
+        return new status(application.system.settings.getValueOfKey("startStatus")).getStatusId();
     }
     
     public boolean function isNewEntry() {
         return (variables.pageVersionId == 0 || variables.pageVersionId == null);
-    }
-    
-    private boolean function isPageVersionOffline() {
-        // TOOD: implement
-        return true;
-    }
-    
-    private boolean function updateOnlineVersionAllowed() {
-        return false;
     }
 }

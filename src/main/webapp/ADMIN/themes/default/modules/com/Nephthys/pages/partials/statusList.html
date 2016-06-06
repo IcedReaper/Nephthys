@@ -53,21 +53,20 @@
                 <th>Name</th>
                 <th>Online</th>
                 <th>Mögliche Folgestatus</th>
-                <th></th>
                 <th title="Seiten mit diesem Status sind editierbar"><i class="fa fa-pencil"></i></th>
                 <th title="Seiten mit diesem Status sind permanent löschbar"><i class="fa fa-trash"></i></th>
                 <th>&nbsp;</th>
             </thead>
             <tbody>
-                <tr ng-repeat="status in pageStatus"
-                    ng-show="(filter.active === '' || status.active === filter.active) && (filter.online === '' || status.offline != filter.online)">
+                <tr ng-repeat="status in status"
+                    ng-show="(filter.active === '' || status.active === filter.active) && (filter.online === '' || status.online === filter.online)">
                     <td>
                         <i ng-if="status.active" class="fa fa-circle text-success" title="Aktiv"></i>
                         <i ng-if="! status.active" class="fa fa-circle text-danger" title="Unaktiv"></i>
                     </td>
-                    <td>{{status.pageStatusId}}</td>
+                    <td>{{status.statusId}}</td>
                     <td>
-                        <a href="#/status/{{status.pageStatusId}}">{{status.name}}</a>
+                        <a href="#/status/{{status.statusId}}">{{status.name}}</a>
                     </td>
                     <td ng-if="status.offline" class="text-danger">Nein</td>
                     <td ng-if="! status.offline" class="text-success">Ja</td>
@@ -75,39 +74,35 @@
                         <span class="m-r-1" ng-repeat="ps in status.nextStatus">{{ps.name}}</span>
                     </td>
                     <td>
-                        <i ng-if="status.startStatus" class="fa fa-play text-success" title="Startstatus"></i>
-                        <i ng-if="status.endStatus" class="fa fa-stop text-danger" title="Endstatus"></i>
+                        <i ng-if="status.pagesAreEditable" class="fa fa-pencil fa-border text-success" title="In diesem Status bearbeitbar"></i>
+                        <i ng-if="! status.pagesAreEditable" class="fa fa-pencil fa-border text-danger" title="In diesem Status nicht bearbeitbar"></i>
                     </td>
                     <td>
-                        <i ng-if="status.editable" class="fa fa-pencil fa-border text-success" title="In diesem Status bearbeitbar"></i>
-                        <i ng-if="! status.editable" class="fa fa-pencil fa-border text-danger" title="In diesem Status nicht bearbeitbar"></i>
+                        <i ng-if="status.pagesAreDeleteable" class="fa fa-trash fa-border text-success" title="In diesem Status permanent löschbar"></i>
+                        <i ng-if="! status.pagesAreDeleteable" class="fa fa-trash fa-border text-danger" title="In diesem Status nicht permanent löschbar"></i>
                     </td>
                     <td>
-                        <i ng-if="status.deleteable" class="fa fa-trash fa-border text-success" title="In diesem Status permanent löschbar"></i>
-                        <i ng-if="! status.deleteable" class="fa fa-trash fa-border text-danger" title="In diesem Status nicht permanent löschbar"></i>
-                    </td>
-                    <td>
-                        <a href="#/status/{{status.pageStatusId}}"
+                        <a href="#/status/{{status.statusId}}"
                            class="btn btn-primary"
                            title="Statusdetails">
                             <span class="fa fa-cog"></span>
                         </a>
                         
                         <button class="btn btn-warning"
-                                ng-click="activate(status.pageStatusId)"
-                                ng-show="status.active == 0"
+                                ng-click="activate(status.statusId)"
+                                ng-show="! status.active"
                                 title="Status aktivieren">
                             <span class="fa fa-toggle-off"></span>
                         </button>
                         <button class="btn btn-success"
-                                ng-click="deactivate(status.pageStatusId)"
-                                ng-show="status.active == 1"
+                                ng-click="deactivate(status.statusId)"
+                                ng-show="status.active"
                                 title="Status deaktivieren">
                             <span class="fa fa-toggle-on"></span>
                         </button>
                         
                         <button class="btn btn-danger"
-                                ng-click="delete(status.pageStatusId)"
+                                ng-click="delete(status.statusId)"
                                 title="Status löschen">
                             <span class="fa fa-trash-o"></span>
                         </button>

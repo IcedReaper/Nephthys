@@ -14,15 +14,9 @@
 - offene todos ( // TODO: )
 - versuchen pages.filter refactored / aufräumen / vereinfachen
 - Hardcoded /user & /search Links fixen...
-- Namen refactoren, wie bei den anderen: (columns ohne prefix)
-    - page => page_page
-    - pageApproval => page_approval
-    - pageHierarchy => page_hierarchy | component => hierarchy (add)
-    - pageHierarchyApproval => page_hierarchyApproval
-    - pageHierarchyVersion => page_hierarchyVersion | component => hierarchyVersion (add)
-    - pageStatus => page_status | component => status
-    - pageStatusFlow => page_statusFlow | component statusFlow (add)
-    - pageVersion => page_version | component version
+- Namen refactoren
+
+=> starting and ending status ==> applicationSettings
 
 
 

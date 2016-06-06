@@ -1,31 +1,31 @@
 nephthysAdminApp
-    .controller('statusListCtrl', ["$scope", "pageStatusService", function ($scope, pageStatusService) {
-        $scope.activate = function (pageStatusId) {
-            pageStatusService
-                .activate(pageStatusId)
+    .controller('statusListCtrl', ["$scope", "statusService", function ($scope, statusService) {
+        $scope.activate = function (statusId) {
+            statusService
+                .activate(statusId)
                 .then($scope.refresh);
         };
-        $scope.deactivate = function (pageStatusId) {
-            pageStatusService
-                .deactivate(pageStatusId)
+        $scope.deactivate = function (statusId) {
+            statusService
+                .deactivate(statusId)
                 .then($scope.refresh);
         };
         
-        $scope.delete = function (pageStatusId) {
-            pageStatusService
-                .delete(pageStatusId)
+        $scope.delete = function (statusId) {
+            statusService
+                .delete(statusId)
                 .then($scope.refresh);
         };
         
         $scope.refresh = function() {
-            pageStatusService
+            statusService
                 .getList()
-                .then(function (pageStatusList) {
-                    $scope.pageStatus = pageStatusList;
+                .then(function (statusList) {
+                    $scope.status = statusList;
                 });
         };
         
-        $scope.pageStatus = {};
+        $scope.status = {};
         $scope.filter = {
             active: '',
             online: ''

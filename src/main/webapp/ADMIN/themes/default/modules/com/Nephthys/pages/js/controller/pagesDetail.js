@@ -3,16 +3,17 @@ nephthysAdminApp
         var _actualUser,
             
             getStartStatus = function () {
-                for(var status in $scope.pageStatus) {
-                    if($scope.pageStatus[status].startStatus === true) {
-                        return $scope.pageStatus[status].pageStatusId;
-                    }
+                for(var status in $scope.status) {
+                    return $scope.status[status].statusId;
+                    /*if($scope.status[status].startStatus === true) {
+                        return $scope.status[status].statusId;
+                    }*/
                 }
             },
             updateNewVersionVariables = function (majorVersion, minorVersion) {
                 if(! isNaN(majorVersion) && ! isNaN(minorVersion)) {
                     $scope.page.versions[majorVersion][minorVersion].pageVersionId = null;
-                    $scope.page.versions[majorVersion][minorVersion].pageStatusId  = getStartStatus();
+                    $scope.page.versions[majorVersion][minorVersion].statusId      = getStartStatus();
                     
                     $scope.page.versions[majorVersion][minorVersion].creationDate = new Date();
                     $scope.page.versions[majorVersion][minorVersion].lastEditDate = new Date();
@@ -33,9 +34,9 @@ nephthysAdminApp
                 pagesService.getAvailableOptions(),
                 pagesService.getActualUser()
             ])
-            .then($q.spread(function (pageDetails, pageStatus, availableSubModules, availableOptions, actualUser) {
+            .then($q.spread(function (pageDetails, status, availableSubModules, availableOptions, actualUser) {
                 $scope.page                = pageDetails;
-                $scope.pageStatus          = pageStatus;
+                $scope.status              = status;
                 $scope.availableSubModules = availableSubModules;
                 $scope.availableOptions    = availableOptions;
                 
@@ -59,12 +60,12 @@ nephthysAdminApp
                 });
         };
         
-        $scope.pushToStatus = function (newPageStatusId) {
-            if(newPageStatusId) {
+        $scope.pushToStatus = function (newstatusId) {
+            if(newstatusId) {
                 pagesService
                     .pushToStatus($routeParams.pageId,
                                   $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageVersionId,
-                                  newPageStatusId)
+                                  newstatusId)
                     .then(function() {
                         return pagesService.getDetailsForVersion($routeParams.pageId,
                                                                  $scope.selectedVersion.major,
@@ -242,7 +243,7 @@ nephthysAdminApp
         
         $scope.isEditable = function () {
             if($scope.page) {
-                return $scope.pageStatus[$scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageStatusId].editable;
+                return $scope.status[$scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].statusId].pagesAreEditable;
             }
             else {
                 return false;
@@ -251,7 +252,7 @@ nephthysAdminApp
         
         $scope.isReadonly = function () {
             if($scope.page) {
-                return ! $scope.pageStatus[$scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageStatusId].editable;
+                return ! $scope.status[$scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].statusId].pagesAreEditable;
             }
             else {
                 return true;

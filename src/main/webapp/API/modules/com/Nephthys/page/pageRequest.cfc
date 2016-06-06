@@ -200,11 +200,11 @@ component {
     public string function getRegion() {
         return variables.pageVersion.getRegion();
     }
-    public numeric function getPageStatusId() {
-        return variables.pageVersion.getPageStatusId();
+    public numeric function getStatusId() {
+        return variables.pageVersion.getStatusId();
     }
     public pageStatus function getPageStatus() {
-        return new pageStatus(variables.pageVersion.getPageStatusId());
+        return new status(variables.pageVersion.getStatusId());
     }
     public boolean function isOnline() {
         return variables.pageVersion.isOnline();
@@ -245,17 +245,17 @@ component {
                                                                 ELSE 
                                                                   ''
                                                               END suffix
-                                                         FROM nephthys_page p
-                                                   INNER JOIN nephthys_pageVersion pv          ON p.pageId                  = pv.pageId
-                                                   INNER JOIN nephthys_pageStatus ps           ON pv.pageStatusId           = ps.pageStatusId
-                                                   INNER JOIN nephthys_pageHierarchy h         ON p.pageId                  = h.pageId
-                                                   INNER JOIN nephthys_pageHierarchyVersion hv ON hv.pageHierarchyVersionId = h.pageHierarchyVersionId
-                                                   INNER JOIN nephthys_pageStatus hs           ON hv.pageStatusId           = hs.pageStatusId
-                                                        WHERE ps.offline = :online
-                                                          AND hs.offline = :online) page")
+                                                         FROM nephthys_page_page p
+                                                   INNER JOIN nephthys_page_pageVersion   pv ON p.pageId       = pv.pageId
+                                                   INNER JOIN nephthys_page_status        ps ON pv.statusId    = ps.statusId
+                                                   INNER JOIN nephthys_page_hierarchyPage hp ON p.pageId       = hp.pageId
+                                                   INNER JOIN nephthys_page_hierarchy     h  ON hp.hierarchyId = h.hierarchyId
+                                                   INNER JOIN nephthys_page_status        hs ON h.statusId     = hs.statusId
+                                                        WHERE ps.online = :online
+                                                          AND hs.online = :online) page")
                                   .addParam(name = "link",   value = arguments.link, cfsqltype = "cf_sql_varchar")
                                   .addParam(name = "active", value = 1,              cfsqltype = "cf_sql_bit")
-                                  .addParam(name = "online", value = 0,              cfsqltype = "cf_sql_bit")
+                                  .addParam(name = "online", value = 1,              cfsqltype = "cf_sql_bit")
                                   .execute()
                                   .getResult();
         
