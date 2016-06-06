@@ -246,9 +246,13 @@ component {
                                                                   ''
                                                               END suffix
                                                          FROM nephthys_page p
-                                                   INNER JOIN nephthys_pageVersion pv ON p.pageId = pv.pageId
-                                                   INNER JOIN nephthys_pageStatus ps ON pv.pageStatusId = ps.pageStatusId
-                                                        WHERE ps.offline = :online) page")
+                                                   INNER JOIN nephthys_pageVersion pv          ON p.pageId                  = pv.pageId
+                                                   INNER JOIN nephthys_pageStatus ps           ON pv.pageStatusId           = ps.pageStatusId
+                                                   INNER JOIN nephthys_pageHierarchy h         ON p.pageId                  = h.pageId
+                                                   INNER JOIN nephthys_pageHierarchyVersion hv ON hv.pageHierarchyVersionId = h.pageHierarchyVersionId
+                                                   INNER JOIN nephthys_pageStatus hs           ON hv.pageStatusId           = hs.pageStatusId
+                                                        WHERE ps.offline = :online
+                                                          AND hs.offline = :online) page")
                                   .addParam(name = "link",   value = arguments.link, cfsqltype = "cf_sql_varchar")
                                   .addParam(name = "active", value = 1,              cfsqltype = "cf_sql_bit")
                                   .addParam(name = "online", value = 0,              cfsqltype = "cf_sql_bit")

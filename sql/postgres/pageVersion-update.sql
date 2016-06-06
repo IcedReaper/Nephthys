@@ -411,7 +411,7 @@ CREATE TABLE nephthys_pageHierarchyApproval
     approvalDate timestamp with time zone NOT NULL DEFAULT now(),
     
     CONSTRAINT PK_nephthys_pageHierarchyApproval_Id     PRIMARY KEY (pageHierarchyApprovalId),
-    CONSTRAINT FK_nephthys_pageHierarchyApproval_phvId  FOREIGN KEY (pageHierarchyVersionId) REFERENCES nephthys_pageHierarchyVersioh (pageHierarchyVersionId) ON UPDATE NO ACTION ON DELETE CASCADE,
+    CONSTRAINT FK_nephthys_pageHierarchyApproval_phvId  FOREIGN KEY (pageHierarchyVersionId) REFERENCES nephthys_pageHierarchyVersion (pageHierarchyVersionId) ON UPDATE NO ACTION ON DELETE CASCADE,
     CONSTRAINT FK_nephthys_pageHierarchyApproval_opsId  FOREIGN KEY (oldPageStatusId)        REFERENCES nephthys_pageStatus (pageStatusId)                     ON UPDATE NO ACTION ON DELETE CASCADE,
     CONSTRAINT FK_nephthys_pageHierarchyApproval_npsId  FOREIGN KEY (newPageStatusId)        REFERENCES nephthys_pageStatus (pageStatusId)                     ON UPDATE NO ACTION ON DELETE CASCADE,
     CONSTRAINT FK_nephthys_pageHierarchyApproval_userId FOREIGN KEY (userId)                 REFERENCES nephthys_user (userId)                                 ON UPDATE NO ACTION ON DELETE CASCADE

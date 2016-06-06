@@ -174,7 +174,6 @@ component implements="API.interfaces.filter" {
                        INNER JOIN (" & innerQuery & ") ph ON p.pageId = ph.pageId";
                 
                 if(variables.link != null) {
-                    // TODO: regEx | parameter check
                     where &= (where == "" ? " WHERE " : " AND ") & "lower(pv.link) = :link";
                     qryFilter.addParam(name = "link", value = variables.link, cfsqltype = "cf_sql_varchar");
                 }

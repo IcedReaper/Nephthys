@@ -401,16 +401,7 @@ component {
     }
     
     remote struct function getHierarchy() {
-        var regions = [{
-            name = "Kopfnavigation",
-            region = "header"
-        }, {
-            name = "Fußnavigation",
-            region = "footer"
-        }, {
-            name = "Noch nicht gesetzt",
-            region = null
-        }];
+        var regions = getRegions();
         
         var hierarchy = {
             "versions" = {}
@@ -454,7 +445,6 @@ component {
         }
         index++;
         
-        
         var pageStatusId = new filter().setFor("pageStatus")
                                        .setStartStatus(true)
                                        .execute()
@@ -467,7 +457,26 @@ component {
             "regions"      = []
         };
         
-        hierarchy["versions"][index]["regions"] = duplicate(hierarchy["versions"][version].regions);
+        if(index > 1) {
+            hierarchy["versions"][index]["regions"] = duplicate(hierarchy["versions"][version].regions);
+        }
+        else {
+            hierarchy["versions"][index]["regions"] = getRegions();
+            
+            for(var i = 1; i <= hierarchy["versions"][index]["regions"].len(); ++i) {
+                hierarchy["versions"][index]["regions"][i].pages = [];
+            }
+            
+            var notSetIndex = hierarchy["versions"][index]["regions"].len();
+            
+            for(var page in getList()) {
+                hierarchy["versions"][index]["regions"][notSetIndex].pages.append({
+                    "id"    = page.pageId,
+                    "title" = page.linktext,
+                    "pages" = []
+                });
+            }
+        }
         
         return {
             "newVersion" = index,
@@ -555,17 +564,20 @@ component {
                                                   .execute()
                                                   .getResult()[1].getPageStatusId();
                
-               var actualOnlineVersionId = new filter().setFor("hierarchy")
-                                                       .setOnline(true)
-                                                       .execute()
-                                                       .getResult()[1].hierarchyVersionId;
-                
-                new Query().setSQL("UPDATE nephthys_pageHierarchyVersion
-                                   SET pageStatusId = :pageStatusId
-                                 WHERE pageHierarchyVersionId = :hierarchyVersionId")
-                       .addParam(name = "pageStatusId",       value = offlineStatusId,       cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "hierarchyVersionId", value = actualOnlineVersionId, cfsqltype = "cf_sql_numeric")
-                       .execute();
+               var actualOnlineCtrl = new filter().setFor("hierarchy")
+                                                  .setOnline(true)
+                                                  .execute();
+               
+               if(actualOnlineCtrl.getResultCount() == 1) {
+                   var actualOnlineVersionId = actualOnlineCtrl.getResult()[1].hierarchyVersionId;
+                    
+                    new Query().setSQL("UPDATE nephthys_pageHierarchyVersion
+                                       SET pageStatusId = :pageStatusId
+                                     WHERE pageHierarchyVersionId = :hierarchyVersionId")
+                           .addParam(name = "pageStatusId",       value = offlineStatusId,       cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "hierarchyVersionId", value = actualOnlineVersionId, cfsqltype = "cf_sql_numeric")
+                           .execute();
+                }
             }
             
             new Query().setSQL("UPDATE nephthys_pageHierarchyVersion 
@@ -823,5 +835,18 @@ component {
         }
         
         return preparedApprovalList;
+    }
+    
+    private  array function getRegions() {
+        return [{
+            name = "Kopfnavigation",
+            region = "header"
+        }, {
+            name = "Fußnavigation",
+            region = "footer"
+        }, {
+            name = "Noch nicht gesetzt",
+            region = null
+        }];
     }
 }
