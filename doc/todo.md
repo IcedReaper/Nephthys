@@ -12,11 +12,7 @@
 - required approvals
 - Übersicht über die Seitenversionen, die noch nicht online sind/waren
 - offene todos ( // TODO: )
-- versuchen pages.filter refactored / aufräumen / vereinfachen
 - Hardcoded /user & /search Links fixen...
-- Namen refactoren
-
-=> starting and ending status ==> applicationSettings
 
 
 
@@ -44,17 +40,16 @@
     15. F5-Raids bei Formularen unterbinden
     16. Beim anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
     17. FileUpload, etc in eine Extra-Component aus dem Model auslagern
-    18. page filter erweitern
-    29. Pakete
+    18. Pakete
         * Alles
         * Blog
         * Gallerie
         * Marketing/Produkt
-    20. QueryBuilder zur Unterstützung verschiedener DB-Systeme
+    19. QueryBuilder zur Unterstützung verschiedener DB-Systeme
         * Idee und erste Doku unter QueryBuilder-idea-notes.md
-    22. Zusätzliche Optionen
+    20. Zusätzliche Optionen
         * Berechtigungssystem auf Menüpunkte ausweiten
-    23. Erweiterte Sicherheit in Modulen
+    21. Erweiterte Sicherheit in Modulen
         * Personen freischalten => Nur normales Editieren
         * 
 

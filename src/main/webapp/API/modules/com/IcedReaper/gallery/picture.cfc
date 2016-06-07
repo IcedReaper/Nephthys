@@ -108,7 +108,7 @@ component {
                                                                       :caption,
                                                                       (SELECT max(sortId)+1 newSortId FROM IcedReaper_gallery_picture WHERE galleryId = :galleryId)
                                                                   );
-                                                      SELECT currval('seq_icedreaper_gallery_picture_id' :: regclass) newPictureId;")
+                                                      SELECT currval('seq_icedreaper_gallery_picture_id') newPictureId;")
                                              .addParam(name = "galleryId",         value = variables.galleryId,         cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "pictureFileName",   value = variables.pictureFileName,   cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "thumbnailFileName", value = variables.thumbnailFileName, cfsqltype = "cf_sql_varchar")

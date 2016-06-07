@@ -116,7 +116,7 @@ component {
                                                                       :userName,
                                                                       :requestorUserId
                                                                   );
-                                                      SELECT currval('seq_icedreaper_contactForm_requestId' :: regclass) requestId;")
+                                                      SELECT currval('seq_icedreaper_contactForm_requestId') requestId;")
                                              .addParam(name = "subject",         value = variables.subject,         cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "email",           value = variables.email,           cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "message",         value = variables.message,         cfsqltype = "cf_sql_varchar")

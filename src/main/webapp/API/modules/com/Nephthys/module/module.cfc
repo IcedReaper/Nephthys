@@ -192,7 +192,7 @@ component {
                                                                          :availableWWW,
                                                                          :availableADMIN
                                                                      );
-                                                        SELECT currval('seq_nephthys_module_id' :: regclass) newModuleId;")
+                                                        SELECT currval('seq_nephthys_module_id') newModuleId;")
                                                 .addParam(name = "moduleName",     value = variables.moduleName,     cfsqltype = "cf_sql_varchar")
                                                 .addParam(name = "description",    value = variables.description,    cfsqltype = "cf_sql_varchar")
                                                 .addParam(name = "active",         value = variables.active,         cfsqltype = "cf_sql_bit")

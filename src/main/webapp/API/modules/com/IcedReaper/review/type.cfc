@@ -58,7 +58,7 @@ component {
                                                                     :userId,
                                                                     :userId
                                                                 );
-                                                      SELECT currval('seq_icedreaper_review_type_id' :: regclass) newTypeId;")
+                                                      SELECT currval('seq_icedreaper_review_type_id') newTypeId;")
                                            .addParam(name = "name",   value = variables.name,           cfsqltype = "cf_sql_varchar")
                                            .addParam(name = "userId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                            .execute()

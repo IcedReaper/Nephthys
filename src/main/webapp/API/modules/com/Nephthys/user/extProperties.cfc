@@ -153,7 +153,7 @@ component {
                                                                     :value,
                                                                     :public
                                                                 );
-                                                   SELECT currval('seq_nephthys_user_extProperty_id' :: regclass) newId;")
+                                                   SELECT currval('seq_nephthys_user_extProperty_id') newId;")
                                            .addParam(name = "userId",           value = variables.userId,                               cfsqltype = "cf_sql_numeric")
                                            .addParam(name = "extPropertyKeyId", value = variables.extProperties[prop].extPropertyKeyid, cfsqltype = "cf_sql_numeric")
                                            .addParam(name = "value",            value = variables.extProperties[prop].value,            cfsqltype = "cf_sql_varchar")

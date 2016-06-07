@@ -149,7 +149,7 @@ component {
                                                                       :publishedUserId,
                                                                       :publishedDate
                                                                   );
-                                                      SELECT currval('seq_icedreaper_blog_comment_id' :: regclass) newPictureId;")
+                                                      SELECT currval('seq_icedreaper_blog_comment_id') newPictureId;")
                                              .addParam(name = "blogpostId",        value = variables.blogpostId,        cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "comment",           value = variables.comment,           cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "creatorUserId",     value = variables.creatorUserId,     cfsqltype = "cf_sql_numeric", null = variables.creatorUserId == 0 || variables.creatorUserId == null)

@@ -8,16 +8,18 @@ nephthysAdminApp
             .then($q.spread(function (hierarchy, status) {
                 $scope.status    = status;
                 $scope.hierarchy = hierarchy;
+                
+                $scope.selectedIndex = ($scope.hierarchy.length - 1).toString()
             }));
         };
         
         $scope.save = function () {
-            if($scope.hierarchy.versions[$scope.selectedIndex].pagesAreEditable) {
+            if($scope.hierarchy[$scope.selectedIndex].pagesAreEditable) {
                 pagesService
-                    .saveHierarchy($scope.hierarchy.versions[$scope.selectedIndex])
+                    .saveHierarchy($scope.hierarchy[$scope.selectedIndex])
                     .then(function(hierarchyId) {
-                        if($scope.hierarchy.versions[$scope.selectedIndex].hierarchyId === null) {
-                            $scope.hierarchy.versions[$scope.selectedIndex].hierarchyId = hierarchyId;
+                        if($scope.hierarchy[$scope.selectedIndex].hierarchyId === null) {
+                            $scope.hierarchy[$scope.selectedIndex].hierarchyId = hierarchyId;
                         }
                     });
             }
@@ -25,9 +27,12 @@ nephthysAdminApp
         
         $scope.pushToStatus = function (newStatusId) {
             pagesService
-                .pushHierarchyToStatus($scope.hierarchy.versions[$scope.selectedIndex].hierarchyId, newStatusId)
+                .pushHierarchyToStatus($scope.hierarchy[$scope.selectedIndex].hierarchyId, newStatusId)
                 .then(function () {
-                    $scope.hierarchy.versions[$scope.selectedIndex].statusId = newStatusId;
+                    return pagesService.getHierarchy()
+                })
+                .then(function(hierarchy) {
+                    $scope.hierarchy = hierarchy;
                 });
         };
         

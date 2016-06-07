@@ -100,7 +100,7 @@ component {
                                                                     :referrer,
                                                                     :userAgent
                                                                 );
-                                                    SELECT currval('seq_nephthys_error_id' :: regclass) newErrorId")
+                                                    SELECT currval('seq_nephthys_error_id') newErrorId")
                                            .addParam(name = "errorCode",      value = left(variables.errorCode, 75),    cfsqltype = "cf_sql_varchar")
                                            .addParam(name = "link",           value = left(variables.link, 255),        cfsqltype = "cf_sql_varchar")
                                            .addParam(name = "message",        value = left(variables.message, 300),     cfsqltype = "cf_sql_varchar")

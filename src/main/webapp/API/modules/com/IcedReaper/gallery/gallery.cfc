@@ -284,7 +284,7 @@ component {
                                                                       :lastEditorUserId,
                                                                       now()
                                                                   );
-                                                      SELECT currval('seq_icedreaper_gallery_gallery_id' :: regclass) newGalleryId;")
+                                                      SELECT currval('seq_icedreaper_gallery_gallery_id') newGalleryId;")
                                              .addParam(name = "headline",         value = variables.headline,       cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "description",      value = variables.description,    cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "link",             value = variables.link,           cfsqltype = "cf_sql_varchar")

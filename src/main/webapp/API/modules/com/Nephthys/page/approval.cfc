@@ -12,8 +12,7 @@ component {
         switch(arguments.for) {
             case "pageVersion":
             case "page":
-            case "hierarchy":
-            case "hierarchyVersion": {
+            case "hierarchy": {
                 variables.for = arguments.for;
                 break;
             }
@@ -86,7 +85,6 @@ component {
                                        )";
                 break;
             }
-            case "hierarchyVersion":
             case "hierarchy": {
                 var sql = "INSERT INTO nephthys_page_approval
                                        (

@@ -435,7 +435,8 @@ GRANT SELECT ON TABLE nephthys_pageVersion TO nephthys_user;
 create table nephthys_page_region
 (
     regionId serial primary key,
-    name character varying(30) not null unique
+    name character varying(30) not null unique,
+    description character varying(50) not null
 );
 
 create table nephthys_page_status

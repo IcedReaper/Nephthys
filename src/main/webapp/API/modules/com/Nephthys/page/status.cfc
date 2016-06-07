@@ -222,7 +222,7 @@ component {
                                                                          :creationUserId,
                                                                          :lastEditUserId
                                                                      );
-                                                         SELECT currval('nephthys_page_status_statusId_seq' :: regclass) newStatusId;")
+                                                         SELECT currval('nephthys_page_status_statusId_seq') newStatusId;")
                                                 .execute()
                                                 .getResult()
                                                 .newStatusId[1];

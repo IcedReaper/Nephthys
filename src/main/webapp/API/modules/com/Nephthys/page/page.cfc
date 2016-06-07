@@ -170,7 +170,7 @@ component {
                                                         VALUES (
                                                                    :creationDate
                                                                );
-                                                   SELECT currval('nephthys_page_page_pageId_seq' :: regclass) newPageId;")
+                                                   SELECT currval('nephthys_page_page_pageId_seq') newPageId;")
                                           .addParam(name = "creationDate",       value = variables.creationDate, cfsqltype = "cf_sql_timestamp")
                                           .execute()
                                           .getResult()

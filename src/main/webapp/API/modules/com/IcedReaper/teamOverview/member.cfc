@@ -90,7 +90,7 @@ component {
                 sql &= "                   :actualUserId,
                                            :actualUserId
                                        );
-                           SELECT currval('seq_icedreaper_teamOverview_memberId' :: regclass) newMemberId;";
+                           SELECT currval('seq_icedreaper_teamOverview_memberId') newMemberId;";
                 
                 variables.memberId = qInsMember.setSQL(sql)
                                                .addParam(name = "userId",       value = variables.userId,         cfsqltype = "cf_sql_numeric")

@@ -60,7 +60,7 @@ component {
                                                                        :creatorUserId,
                                                                        :lastEditorUserId
                                                                    );
-                                                      SELECT currval('seq_icedreaper_gallery_category_id' :: regclass) newCategoryId;")
+                                                      SELECT currval('seq_icedreaper_gallery_category_id') newCategoryId;")
                                               .addParam(name = "name",             value = variables.name,           cfsqltype = "cf_sql_varchar")
                                               .addParam(name = "creatorUserId",    value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                               .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")

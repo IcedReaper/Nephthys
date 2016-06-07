@@ -187,7 +187,7 @@ component {
                                                                       :userId,
                                                                       :message
                                                                   );
-                                                           SELECT currval('seq_icedreaper_privateMessage_messageId' :: regclass) newMessageId;")
+                                                           SELECT currval('seq_icedreaper_privateMessage_messageId') newMessageId;")
                                              .addParam(name = "conversationId", value = variables.conversationId, cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "userId",         value = variables.userId,         cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "message",        value = variables.message,        cfsqltype = "cf_sql_varchar")

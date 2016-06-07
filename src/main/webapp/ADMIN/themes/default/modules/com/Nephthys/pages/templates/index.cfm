@@ -29,4 +29,4 @@
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/hierarchy.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/statusFlow.js"></script>
 
-<div ng-view></div>
+<div class="com-nephthys-page" ng-view></div>

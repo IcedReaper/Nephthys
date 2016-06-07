@@ -133,7 +133,7 @@ component {
                                                                    :themeId,
                                                                    :avatarFilename
                                                                );
-                                                  SELECT currval('seq_nephthys_user_id' :: regclass) newUserId;") // directly loading the current value of the sequence
+                                                  SELECT currval('seq_nephthys_user_id') newUserId;") // directly loading the current value of the sequence
                                           .addParam(name = "userName",       value = variables.userName,                                          cfsqltype = "cf_sql_varchar")
                                           .addParam(name = "eMail",          value = variables.eMail,                                             cfsqltype = "cf_sql_varchar")
                                           .addParam(name = "password",       value = variables.password,                                          cfsqltype = "cf_sql_varchar")

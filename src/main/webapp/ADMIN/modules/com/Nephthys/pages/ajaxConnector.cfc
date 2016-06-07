@@ -2,12 +2,12 @@ component {
     import "API.modules.com.Nephthys.page.*";
     
     remote array function getList() {
-        return getSubPages(new filter().execute());
+        return getSubPages(new filter().setFor("page").execute());
     }
     
     remote struct function getActualUser() {
         return {
-            "userId" = request.user.getUserId(),
+            "userId"   = request.user.getUserId(),
             "userName" = request.user.getUserName()
         };
     }
@@ -252,7 +252,8 @@ component {
             throw(type = "nephthys.application.notAllowed", message = "You cannot remove the end status. Please reset the end status in the system settings");
         }
         
-        var pagesStillWithThisStatus = new filter().setStatusId(arguments.statusId)
+        var pagesStillWithThisStatus = new filter().setFor("page")
+                                                   .setStatusId(arguments.statusId)
                                                    .execute()
                                                    .getResultCount();
         var hierarchiesStillWithThisStatus = new filter().setFor("hierarchy")
@@ -274,16 +275,14 @@ component {
         var status = new status(arguments.statusId);
         
         status.setActiveStatus(true)
-                  .save();
+              .save();
         
         return true;
     }
     
     remote boolean function deactivateStatus(required numeric statusId) {
-        var status = new status(arguments.statusId);
-        
-        status.setActiveStatus(false)
-                  .save();
+        new status(arguments.statusId).setActiveStatus(false)
+                                      .save();
         
         return true;
     }
@@ -385,57 +384,58 @@ component {
         return _modules;
     }
     
-    remote struct function getHierarchy() {
-        var regions = getRegions();
+    remote array function getHierarchy() {
+        var regions = new filter().setFor("region")
+                                  .execute()
+                                  .getResult();
         
-        var hierarchy = {
-            "versions" = []
-        };
+        var hierarchies = new filter().setFor("hierarchy")
+                                      .execute()
+                                      .getResult();
         
-        var hierarchyFilterCtrl = new filter().setFor("hierarchy").execute();
-        
-        for(var hierarchyVersion in hierarchyFilterCtrl.getResult()) {
-            var preparedApprovalList = prepareApprovalList(new approval(hierarchyVersion.hierarchyId).setFor("hierarchyVersion").getApprovalList());
+        var preparedHierarchies = [];
+        for(hierarchy in hierarchies) {
+            // TODO: move to hierarhcy
+            var preparedApprovalList = prepareApprovalList(new approval(hierarchy.getHierarchyId()).setFor("hierarchyVersion").getApprovalList());
             
             var preparedRegions = [];
             for(region in regions) {
                 preparedRegions.append({
-                    "name"        = region.name,
-                    "description" = region.description,
-                    "regionId"    = region.regionId,
-                    "pages"       = getSubPagesForHierarchy(null, region.regionId, hierarchyVersion.hierarchyId)
+                    "name"        = region.getName(),
+                    "description" = region.getDescription(),
+                    "regionId"    = region.getRegionId(),
+                    "pages"       = getSubPagesForHierarchy(null, region.getRegionId(), hierarchy.getHierarchyId())
                 });
             }
             
-            var status = new status(hierarchyVersion.statusId);
-            hierarchy["versions"].append({
-                "hierarchyId"      = hierarchyVersion.hierarchyId,
-                "version"          = hierarchyVersion.version,
-                "pagesAreEditable" = status.arePagesEditable(),
-                "statusId"         = hierarchyVersion.statusId,
+            preparedHierarchies.append({
+                "hierarchyId"      = hierarchy.getHierarchyId(),
+                "version"          = hierarchy.getVersion(),
+                "pagesAreEditable" = hierarchy.getStatus().arePagesEditable(),
+                "statusId"         = hierarchy.getStatus().getStatusId(),
                 "regions"          = preparedRegions,
                 "approvalList"     = preparedApprovalList,
                 "offline"          = [{
                     "regionId"    = null,
                     "name"        = null,
                     "description" = "Offline",
-                    "pages"       = getSubPagesForHierarchy(null, null, hierarchyVersion.hierarchyId)
+                    "pages"       = getSubPagesForHierarchy(null, null, hierarchy.getHierarchyId())
                 }]
             });
         }
 
-        return hierarchy;
+        return preparedHierarchies;
     }
     
     remote struct function addHierarchyVersion() {
         var hierarchy = getHierarchy();
         
-        var lastIndex = hierarchy["versions"].len();
+        var lastIndex = hierarchy.len();
         var index = lastIndex + 1;
         
         var statusId = application.system.settings.getValueOfKey("startStatus");
         
-        hierarchy["versions"][index] = {
+        hierarchy[index] = {
             "hierarchyId"      = null,
             "version"          = javaCast("integer", index),
             "pagesAreEditable" = true,
@@ -446,21 +446,21 @@ component {
         
         if(index > 1) {
             // existing hierarchy
-            hierarchy["versions"][index]["regions"] = duplicate(hierarchy["versions"][lastIndex].regions);
-            hierarchy["versions"][index]["offline"] = duplicate(hierarchy["versions"][lastIndex].offline);
+            hierarchy[index]["regions"] = duplicate(hierarchy[lastIndex].regions);
+            hierarchy[index]["offline"] = duplicate(hierarchy[lastIndex].offline);
         }
         else {
             // without existing completly new
-            hierarchy["versions"][index]["regions"] = getRegions();
+            hierarchy[index]["regions"] = getRegions();
             
-            for(var i = 1; i <= hierarchy["versions"][index]["regions"].len(); ++i) {
-                hierarchy["versions"][index]["regions"][i].pages = [];
+            for(var i = 1; i <= hierarchy[index]["regions"].len(); ++i) {
+                hierarchy[index]["regions"][i].pages = [];
             }
             
-            var notSetIndex = hierarchy["versions"][index]["regions"].len();
+            var notSetIndex = hierarchy[index]["regions"].len();
             
             for(var page in getList()) {
-                hierarchy["versions"][index]["regions"][notSetIndex].pages.append({
+                hierarchy[index]["regions"][notSetIndex].pages.append({
                     "pageId" = page.pageId,
                     "title"  = page.linktext,
                     "pages"  = []
@@ -475,114 +475,27 @@ component {
     }
     
     remote numeric function saveHierarchy(required struct hierarchy) {
-        var hierarchyId = arguments.hierarchy.hierarchyId;
         transaction {
-            if(arguments.hierarchy.hierarchyId == null) {
-                hierarchyId = new Query().setSQL("INSERT INTO nephthys_page_hierarchy
-                                                                     (
-                                                                         statusId,
-                                                                         version,
-                                                                         creationUserId
-                                                                     )
-                                                              VALUES (
-                                                                         :statusId,
-                                                                         :version,
-                                                                         :userId
-                                                                     );
-                                                         SELECT currval('nephthys_page_hierarchy_hierarchyid_seq' :: regclass) newId;")
-                                                .addParam(name = "statusId", value = arguments.hierarchy.statusId, cfsqltype = "cf_sql_numeric")
-                                                .addParam(name = "version",  value = arguments.hierarchy.version,  cfsqltype = "cf_sql_numeric")
-                                                .addParam(name = "userId",   value = request.user.getUserId(),     cfsqltype = "cf_sql_numeric")
-                                                .execute()
-                                                .getResult()
-                                                .newId[1];
-            }
+            var hierarchy = new hierarchy(arguments.hierarchy.hierarchyId);
             
-            new query().setSQL("DELETE FROM nephthys_page_hierarchyPage
-                                      WHERE hierarchyId = :hierarchyId")
-                       .addParam(name = "hierarchyId", value = hierarchyId, cfsqltype = "cf_sql_numeric")
-                       .execute();
+            hierarchy.setStatus(new status(arguments.hierarchy.statusId))
+                     .setVersion(arguments.hierarchy.version)
+                     .setCreator(request.user)
+                     .setLastEditor(request.user)
+                     .setCreationDate(now())
+                     .setLastEditDate(now())
+                     .save();
             
-            for(var region in arguments.hierarchy.regions) {
-                saveHierarchyLevel(hierarchyId, region.regionId, null, region.pages);
-            }
+            hierarchy.updatePagesByRegion(arguments.hierarchy.regions);
+            
             transactionCommit();
         }
-        return hierarchyId;
-    }
-    
-    private boolean function saveHierarchyLevel(required numeric hierarchyId, required numeric regionId, required numeric parentPageId, required array pages) {
-        for(var i = 1; i <= arguments.pages.len(); i++) {
-            new Query().setSQL("INSERT INTO nephthys_page_hierarchyPage
-                                            (
-                                                hierarchyId,
-                                                regionId,
-                                                pageId,
-                                                parentPageId,
-                                                sortOrder
-                                            )
-                                     VALUES (
-                                                :hierarchyId,
-                                                :regionId,
-                                                :pageId,
-                                                :parentPageId,
-                                                :sortOrder
-                                            )")
-                       .addParam(name = "hierarchyId",  value = arguments.hierarchyId,     cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "regionId",     value = arguments.regionId,        cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "pageId",       value = arguments.pages[i].pageId, cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "parentPageId", value = arguments.parentPageId,    cfsqltype = "cf_sql_numeric", null = arguments.parentPageId == null)
-                       .addParam(name = "sortOrder",    value = i,                         cfsqltype = "cf_sql_numeric")
-                       .execute();
-            
-            if(arguments.pages[i].pages.len() > 0) {
-                saveHierarchyLevel(arguments.hierarchyId, arguments.regionId, arguments.pages[i].pageId, arguments.pages[i].pages);
-            }
-        }
         
-        return true;
+        return hierarchy.getHierarchyId();
     }
     
     remote boolean function pushHierarchyToStatus(required numeric hierarchyId, required numeric statusId) {
-        transaction {
-            // TODO: Move to hierarchy model
-            var oldStatusId = new filter().setFor("hierarchy")
-                                          .setHierarchyId(arguments.hierarchyId)
-                                          .execute()
-                                          .getResult()[1].statusId;
-            
-            var newStatus = new status(arguments.statusId);
-            if(newStatus.isOnline()) {
-                var offlineStatusId = application.system.settings.getValueOfKey("endStatus");
-               
-               var actualOnlineCtrl = new filter().setFor("hierarchy")
-                                                  .setOnline(true)
-                                                  .execute();
-               
-               if(actualOnlineCtrl.getResultCount() == 1) {
-                   var actualOnlineVersionId = actualOnlineCtrl.getResult()[1].hierarchyId;
-                    
-                    new Query().setSQL("UPDATE nephthys_page_hierarchy
-                                           SET statusId = :statusId
-                                         WHERE hierarchyId = :hierarchyId")
-                               .addParam(name = "statusId",    value = offlineStatusId,       cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "hierarchyId", value = actualOnlineVersionId, cfsqltype = "cf_sql_numeric")
-                               .execute();
-                }
-            }
-            
-            new Query().setSQL("UPDATE nephthys_page_hierarchy 
-                                   SET statusId = :statusId
-                                 WHERE hierarchyId = :hierarchyId")
-                       .addParam(name = "statusId",    value = arguments.statusId,    cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "hierarchyId", value = arguments.hierarchyId, cfsqltype = "cf_sql_numeric")
-                       .execute();
-            
-            new approval(arguments.hierarchyId).setFor("hierarchyVersion")
-                                               .approve(oldStatusId, statusId, request.user.getUserId());
-            
-            transactionCommit();
-        }
+        new hierarchy(arguments.hierarchyId).pushToStatus(new status(arguments.statusId));
         
         return true;
     }
@@ -622,15 +535,17 @@ component {
     private array function getSubPagesForHierarchy(required numeric parentId, required numeric regionId, required numeric hierarchyId) {
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
-        var pageFilterCtrl = new filter().setFor("sitemap")
-                                         .setParentId(arguments.parentId)
-                                         .setHierarchyId(arguments.hierarchyId);
+        
         
         if(arguments.regionId != null) {
-            pageFilterCtrl.setRegionId(arguments.regionId);
+            var pageFilterCtrl = new filter().setFor("sitemap")
+                                             .setParentId(arguments.parentId)
+                                             .setHierarchyId(arguments.hierarchyId)
+                                             .setRegionId(arguments.regionId);
         }
         else {
-            pageFilterCtrl.setFor("pagesNotInHierarchy");
+            var pageFilterCtrl = new filter().setFor("pagesNotInHierarchy")
+                                             .setHierarchyId(arguments.hierarchyId);
         }
         
         pageFilterCtrl.execute();
@@ -818,22 +733,5 @@ component {
         }
         
         return preparedApprovalList;
-    }
-    
-    private  array function getRegions() {
-        // TODO implement to get Regions from db
-        return [{
-            regionId    = 1,
-            description = "Kopfnavigation",
-            name        = "header"
-        }, {
-            regionId    = 2,
-            description = "Fußnavigation",
-            name        = "footer"
-        }, {
-            regionId    = 3,
-            description = "Systemlinks",
-            name        = "system"
-        }];
     }
 }

@@ -152,7 +152,7 @@ component {
                                                                 VALUES (
                                                                            :initiatorUserId
                                                                        );
-                                                           SELECT currval('seq_icedreaper_privateMessage_conversationId' :: regclass) newConversationId;")
+                                                           SELECT currval('seq_icedreaper_privateMessage_conversationId') newConversationId;")
                                                   .addParam(name = "initiatorUserId", value = variables.initiator.getUserId(), cfsqltype = "cf_sql_numeric")
                                                   .execute()
                                                   .getResult()

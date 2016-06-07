@@ -227,7 +227,7 @@ component {
                                                                      :userId,
                                                                      :userId
                                                                  );
-                                                     SELECT currval('seq_icedreaper_review_reviewId' :: regclass) newReviewId;")
+                                                     SELECT currval('seq_icedreaper_review_reviewId') newReviewId;")
                                             .addParam(name = "typeId",       value = variables.typeId,         cfsqltype = "cf_sql_numeric")
                                             .addParam(name = "rating",       value = variables.rating,         cfsqltype = "cf_sql_numeric")
                                             .addParam(name = "description",  value = variables.description,    cfsqltype = "cf_sql_varchar")

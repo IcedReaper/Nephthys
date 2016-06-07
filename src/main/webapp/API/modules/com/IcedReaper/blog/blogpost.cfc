@@ -268,7 +268,7 @@ component {
                                                                        :lastEditorUserId,
                                                                        now()
                                                                    );
-                                                       SELECT currval('seq_icedreaper_blog_blogpost_id' :: regclass) newBlogpostId;")
+                                                       SELECT currval('seq_icedreaper_blog_blogpost_id') newBlogpostId;")
                                               .addParam(name = "headline",                   value = variables.headline,                   cfsqltype = "cf_sql_varchar")
                                               .addParam(name = "link",                       value = variables.link,                       cfsqltype = "cf_sql_varchar")
                                               .addParam(name = "story",                      value = variables.story,                      cfsqltype = "cf_sql_varchar")

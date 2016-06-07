@@ -128,7 +128,7 @@ component {
                                                                      :selectOptions,
                                                                      :sortOrder
                                                                  );
-                                                    SELECT currval('seq_nephthys_module_option_id' :: regclass) newOptionId;")
+                                                    SELECT currval('seq_nephthys_module_option_id') newOptionId;")
                                             .addParam(name = "moduleId",      value = variables.moduleId,    cfsqltype = "cf_sql_numeric")
                                             .addParam(name = "optionName",    value = variables.optionName,  cfsqltype = "cf_sql_varchar")
                                             .addParam(name = "description",   value = variables.description, cfsqltype = "cf_sql_varchar")

@@ -184,7 +184,7 @@ component {
                                                                               :userId,
                                                                               :lastEditDate
                                                                           );
-                                                              SELECT currval('nephthys_page_pageVersion_pageVersionId_seq' :: regclass) newPageVersionId;")
+                                                              SELECT currval('nephthys_page_pageVersion_pageVersionId_seq') newPageVersionId;")
                                                      .addParam(name = "pageId",             value = variables.pageId,                 cfsqltype = "cf_sql_numeric")
                                                      .addParam(name = "majorVersion",       value = variables.majorVersion,           cfsqltype = "cf_sql_numeric")
                                                      .addParam(name = "minorVersion",       value = variables.minorVersion,           cfsqltype = "cf_sql_numeric")
