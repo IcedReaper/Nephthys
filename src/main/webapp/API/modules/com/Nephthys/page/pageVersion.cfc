@@ -262,15 +262,47 @@ component {
     public void function delete() {
         var page = new page(variables.pageId);
         
-        /*if(page.getActualVersion() == variables.version) {
-            // TODO: update version of page to last one!
-        }*/
-        
-        new Query().setSQL("DELETE
-                              FROM nephthys_page_pageVersion
-                             WHERE pageVersionId = :pageVersionId")
-                   .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
-                   .execute();
+        transaction {
+            var qMaxMajorVersion = new Query().setSQL("  SELECT MAX(maxMajorVersion) maxMajorVersion
+                                                           FROM nephthys_page_pageVersion
+                                                          WHERE pageVersionId != :pageVersionId
+                                                            AND pageId         = :pageId")
+                                              .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
+                                              .addParam(name = "pageId",        value = variables.pageId,        cfsqltype = "cf_sql_numeric")
+                                              .execute()
+                                              .getResult();
+            
+            if(qMaxMajorVersion.getRecordCount() == 1) {
+                var qLastVersion = new Query().setSQL("  SELECT pageVersionId
+                                                               FROM nephthys_page_pageVersion
+                                                              WHERE pageVersionId != :pageVersionId
+                                                                AND pageId         = :pageId
+                                                                AND majorVersion   = :majorVersion")
+                                                  .addParam(name = "pageVersionId", value = variables.pageVersionId,             cfsqltype = "cf_sql_numeric")
+                                                  .addParam(name = "pageId",        value = variables.pageId,                    cfsqltype = "cf_sql_numeric")
+                                                  .addParam(name = "majorVersion",  value = qMaxMajorVersion.maxMajorVersion[1], cfsqltype = "cf_sql_numeric")
+                                                  .execute()
+                                                  .getResult();
+                
+                if(qLastVersion.getRecordCount() == 1) {
+                    new page(variables.pageId).setPageVersionId(qLastVersion.pageVersionId[1])
+                                              .save();
+                    
+                    new Query().setSQL("DELETE
+                                          FROM nephthys_page_pageVersion
+                                         WHERE pageVersionId = :pageVersionId")
+                               .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
+                               .execute();
+                    
+                    transactionCommit();
+                    
+                    return;
+                }
+            }
+            
+            // if we don't have another version than this we can delete the complete page
+            new page(variables.pageId).delete();
+        }
     }
     
     

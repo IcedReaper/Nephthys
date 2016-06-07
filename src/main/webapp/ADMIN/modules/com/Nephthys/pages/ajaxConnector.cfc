@@ -395,7 +395,6 @@ component {
         
         var preparedHierarchies = [];
         for(hierarchy in hierarchies) {
-            // TODO: move to hierarhcy
             var preparedApprovalList = prepareApprovalList(new approval(hierarchy.getHierarchyId()).setFor("hierarchyVersion").getApprovalList());
             
             var preparedRegions = [];
@@ -585,7 +584,6 @@ component {
         };
     }
     
-    // todo: optimize ?
     private struct function prepareVisitDataWithParameter(required array visitData) {
         var labels = [];
         var series = {};

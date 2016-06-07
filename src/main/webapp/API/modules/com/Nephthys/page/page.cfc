@@ -117,13 +117,37 @@ component {
     }
     
     public numeric function getNextMajorVersion() {
-        // TODO
-        return 0;
+        var qMaxMajorVersion = new Query().setSQL("SELECT MAX(majorVersion) maxMajorVersion
+                                                     FROM nephthys_page_pageVersion
+                                                    WHERE pageId = :pageId")
+                                          .addParam(name = "pageId", value = variables.pageId, cfsqltype = "cf_sql_numeric")
+                                          .execute()
+                                          .getResult();
+        
+        if(qMaxMajorVersion.getRecordCount() == 1) {
+            return qMaxMajorVersion.maxMajorVersion[1] + 1;
+        }
+        else {
+            return 1;
+        }
     }
     
     public numeric function getNextMinorVersion(required numeric majorVersion) {
-        // TODO
-        return 0;
+        var qMaxMinorVersion = new Query().setSQL("SELECT MAX(minorVersion) maxMinorVersion
+                                                     FROM nephthys_page_pageVersion
+                                                    WHERE pageId       = :pageId
+                                                      AND majorVersion = :majorVersion")
+                                          .addParam(name = "pageId",       value = variables.pageId,       cfsqltype = "cf_sql_numeric")
+                                          .addParam(name = "majorVersion", value = arguments.majorVersion, cfsqltype = "cf_sql_numeric")
+                                          .execute()
+                                          .getResult();
+        
+        if(qMaxMinorVersion.getRecordCount() == 1) {
+            return qMaxMinorVersion.maxMinorVersion[1] + 1;
+        }
+        else {
+            return 1;
+        }
     }
     
     public boolean function versionExists(required numeric majorVersion, required numeric minorVersion) {
