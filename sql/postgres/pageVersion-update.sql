@@ -499,7 +499,10 @@ create table nephthys_page_hierarchy
     version integer not null unique,
     
     creationUserId integer not null references nephthys_user,
-    creationDate timestamp with time zone not null default now()
+    creationDate timestamp with time zone not null default now(),
+    
+    lastEditUserId integer not null references nephthys_user,
+    lastEditDate timestamp with time zone not null default now()
 );
 
 create table nephthys_page_hierarchyPage
