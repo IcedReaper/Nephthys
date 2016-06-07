@@ -38,7 +38,7 @@ component {
                 case "hierarchy": {
                     sql = "  SELECT *
                                FROM nephthys_page_approval
-                              WHERE hierarchyVersionId = :versionId
+                              WHERE hierarchyId = :versionId
                            ORDER BY approvalDate DESC";
                     break;
                 }
@@ -90,7 +90,7 @@ component {
             case "hierarchy": {
                 var sql = "INSERT INTO nephthys_page_approval
                                        (
-                                           hierarchyVersionId,
+                                           hierarchyId,
                                            prevStatusId,
                                            nextStatusId,
                                            userId

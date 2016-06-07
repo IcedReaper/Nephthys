@@ -43,13 +43,13 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="link">Link</label>
-                            <input type="text" class="form-control" id="link" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].link" ng-readonly="isReadonly()">
+                            <input type="text" class="form-control" id="link" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].link" ng-disabled="isReadonly()">
                         </div>
                         <div class="form-group">
                             <label for="useDynamicSuffixes" title="Dynamische Seiten Suffixe sind Erweiterungen der Url, über welche sich Datensätze eines Moduls laden lassen">Dynamische Seiten Suffixe verwenden *</label>
                             <select class="form-control" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].useDynamicSuffixes"
                                     ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]"
-                                    ng-readonly="isReadonly()">
+                                    ng-disabled="isReadonly()">
                             </select>
                         </div>
                         <div class="form-group">
@@ -60,15 +60,15 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="linktext">Text des Links</label>
-                            <input type="text" class="form-control" id="linktext" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].linktext" ng-readonly="isReadonly()">
+                            <input type="text" class="form-control" id="linktext" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].linktext" ng-disabled="isReadonly()">
                         </div>
                         <div class="form-group">
                             <label for="title">Titel der Seite / des Links</label>
-                            <input type="text" class="form-control" id="title" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].title" ng-readonly="isReadonly()">
+                            <input type="text" class="form-control" id="title" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].title" ng-disabled="isReadonly()">
                         </div>
                         <div class="form-group">
                             <label for="description">Beschreibung der Seite</label>
-                            <input type="text" class="form-control" id="description" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].description" ng-readonly="isReadonly()">
+                            <input type="text" class="form-control" id="description" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].description" ng-disabled="isReadonly()">
                         </div>
                     </div>
                 </div>
@@ -123,19 +123,19 @@
                        class="form-control"
                        ng-if="option.type == 'text'"
                        ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
-                       ng-readonly="isReadonly()">
+                       ng-disabled="isReadonly()">
                 <select class="form-control"
                         ng-model="child.options[option.dbName]"
                         ng-if="option.type == 'boolean'"
                         ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
                         ng-options="o.v as o.n for o in [{ n: 'Option entfernen/Nicht gesetzt', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]"
-                        ng-readonly="isReadonly()">
+                        ng-disabled="isReadonly()">
                 </select>
                 <select ng-model="child.options[option.dbName]"
                         class="form-control"
                         ng-if="option.type == 'select' || option.type == 'query'"
                         ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
-                        ng-readonly="isReadonly()"
+                        ng-disabled="isReadonly()"
                         ng-options="o.value as o.description for o in option.selectOptions">
                     <option value="">Option entfernen/Nicht gesetzt</option>
                 </select>
@@ -159,7 +159,7 @@
                     ng-change="appendChild(child, child.newChildren)"
                     ng-model="child.newChildren"
                     ng-options="subModule as subModule for subModule in availableSubModules[child.type]"
-                    ng-readonly="isReadonly()">
+                    ng-disabled="isReadonly()">
                 <option value="" selected="selected"></option>
             </select>
         </div>

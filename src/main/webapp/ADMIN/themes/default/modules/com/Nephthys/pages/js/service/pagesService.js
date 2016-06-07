@@ -78,16 +78,15 @@ nephthysAdminApp
             addHierarchyVersion: function () {
                 return $http.get("/ajax/com/Nephthys/pages/addHierarchyVersion");
             },
-            saveHierarchy: function (hierarchyVersionId, hierarchy) {
+            saveHierarchy: function (hierarchy) {
                 return $http.post("/ajax/com/Nephthys/pages/saveHierarchy", {
-                    hierarchyVersionId: hierarchyVersionId,
-                    hierarchy:          hierarchy
+                    hierarchy: hierarchy
                 });
             },
-            pushHierarchyToStatus: function (hierarchyVersionId, statusId) {
+            pushHierarchyToStatus: function (hierarchyId, statusId) {
                 return $http.post("/ajax/com/Nephthys/pages/pushHierarchyToStatus", {
-                    hierarchyVersionId: hierarchyVersionId,
-                    statusId:           statusId
+                    hierarchyId: hierarchyId,
+                    statusId:    statusId
                 });
             }
         };

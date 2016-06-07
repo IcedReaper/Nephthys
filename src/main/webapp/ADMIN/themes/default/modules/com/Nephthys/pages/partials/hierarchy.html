@@ -21,7 +21,10 @@
                         <div class="form-group row">
                             <label for="version" class="col-md-2 col-sm-4 form-control-label">Version</label>
                             <div class="col-md-8 col-sm-5">
-                                <select class="form-control" name="version" ng-model="selectedVersion" ng-options="version as 'Version ' + version for (version, value) in hierarchy.versions">
+                                <select class="form-control"
+                                        name="version"
+                                        ng-model="selectedIndex"
+                                        ng-options="idx as 'Version ' + version.version for (idx, version) in hierarchy.versions">
                                 </select>
                             </div>
                             <div class="col-md-2 col-sm-3">
@@ -30,18 +33,18 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-md-4">
-                                <h4>Aktueller Status: <small>{{status[ hierarchy.versions[selectedVersion].statusId ].name}}</small></h4>
+                                <h4>Aktueller Status: <small>{{status[ hierarchy.versions[selectedIndex].statusId ].name}}</small></h4>
                             </div>
                             <div class="col-md-4">
-                                <div ng-if="status[ hierarchy.versions[selectedVersion].statusId ].nextStatus && ! hierarchy.versions[selectedVersion].new">
+                                <div ng-if="status[ hierarchy.versions[selectedIndex].statusId ].nextStatus && hierarchy.versions[selectedIndex].hierarchyId != null">
                                     <h4>Status ändern in</h4>
                                     <button type="submit"
                                             class="btn btn-primary m-r-1"
-                                            ng-repeat="ps in status[ hierarchy.versions[selectedVersion].statusId ].nextStatus"
+                                            ng-repeat="ps in status[ hierarchy.versions[selectedIndex].statusId ].nextStatus"
                                             ng-click="pushToStatus(ps.statusId);">{{ps.name}}</button>
                                 </div>
                             </div>
-                            <div class="col-md-4" ng-if="hierarchy.versions[selectedVersion].editable">
+                            <div class="col-md-4" ng-if="hierarchy.versions[selectedIndex].pagesAreEditable">
                                 <div class="pull-right">
                                     <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
                                 </div>
@@ -52,12 +55,18 @@
             </div>
         </div>
         
-        
-        <div class="row m-t-3">
-            <div class="col-xl-12">
+        <div class="row m-t-1">
+            <div class="col-sm-8">
                 <div class="card card-block">
                     <div class="row">
-                        <div class="col-md-4" ng-repeat="region in hierarchy.versions[selectedVersion].regions" ng-include="'tree_renderer.html'"></div>
+                        <div class="col-md-4" ng-repeat="region in hierarchy.versions[selectedIndex].regions" ng-include="'tree_renderer.html'"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card card-block">
+                    <div class="row">
+                        <div class="col-md-12" ng-repeat="region in hierarchy.versions[selectedIndex].offline" ng-include="'tree_renderer.html'"></div>
                     </div>
                 </div>
             </div>
@@ -65,7 +74,7 @@
     </div>
 </div>
 
-<div class="row" ng-if="! hierarchy.versions[selectedVersion].new">
+<div class="row m-t-1" ng-if="hierarchy.versions[selectedIndex].hierarchyId != null">
     <div class="col-sm-12">
         <div class="card card-block">
             <h3>Statusänderungshistorie</h3>
@@ -76,7 +85,7 @@
                     <th>Neuer Status</th>
                     <th>Datum</th>
                 </thead>
-                <tbody ng-repeat="approval in hierarchy.versions[selectedVersion].approvalList">
+                <tbody ng-repeat="approval in hierarchy.versions[selectedIndex].approvalList">
                     <td><a href="/com.Nephthys.user#/{{approval.user.userId}}" target="_blank">{{approval.user.userName}}</a></td>
                     <td>{{approval.oldstatusName}}</td>
                     <td>{{approval.newstatusName}}</td>
@@ -88,8 +97,8 @@
 </div>
 
 <script type="text/ng-template" id="tree_renderer.html">
-    <h4>{{region.name}}</h4>
-    <div ui-tree id="ui-tree-{{region.region}}" data-nodrag="{{! hierarchy.versions[selectedVersion].editable}}" data-nodrop="{{! region.editable}}" data-clone-enabled="false">
+    <h4>{{region.description}}</h4>
+    <div ui-tree id="ui-tree-{{region.region}}" data-nodrag="{{! hierarchy.versions[selectedIndex].pagesAreEditable}}" data-nodrop="{{! region.pagesAreEditable}}" data-clone-enabled="false">
         <ol ui-tree-nodes ng-model="region.pages">
             <li ng-repeat="page in region.pages" ui-tree-node ng-include="'tree_nodes_renderer.html'"></li>
         </ol>

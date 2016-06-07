@@ -464,9 +464,9 @@ create table nephthys_page_statusFlow
 
 create table nephthys_page_page
 (
-    pageId       serial primary key,
-    versionId    integer,
-    creationDate timestamp with time zone not null default now()
+    pageId        serial primary key,
+    pageVersionId integer,
+    creationDate  timestamp with time zone not null default now()
 );
 
 create table nephthys_page_pageVersion

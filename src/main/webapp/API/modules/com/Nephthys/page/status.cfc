@@ -314,7 +314,7 @@ component {
             variables.online             = true;
             variables.pagesAreEditable   = true;
             variables.pagesAreDeleteable = false;
-            variables.creatorUserId      = new user(request.user.getUserId());
+            variables.creator            = new user(request.user.getUserId());
             variables.creationDate       = now();
             variables.lastEditor         = new user(request.user.getUserId());
             variables.lastEditDate       = now();
