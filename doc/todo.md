@@ -9,6 +9,10 @@
         - userId ?
     - Dashboard Statistics
 - Status-Button stylen
+    - offline => online grün
+    - online => offline rot
+    - offline => offline blau
+    - online => onlien weiß/grün
 - required approvals
 - offene todos ( // TODO: )
 - Hardcoded /user & /search Links fixen...
