@@ -51,6 +51,7 @@ component implements="API.interfaces.filter" {
     }
     
     public filter function execute() {
+        variables.results = null;
         var qryFilter = new Query();
         
         var sql     = "";

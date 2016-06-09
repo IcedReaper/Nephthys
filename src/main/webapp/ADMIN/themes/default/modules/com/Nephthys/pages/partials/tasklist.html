@@ -1,0 +1,71 @@
+<div class="row m-b-2">
+    <div class="col-md-10 col-sm-8">
+        <a href="#/pages/list" class="btn btn-secondary"><i class="fa fa-list"></i> Seitenübersicht</a>
+        <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
+        <a href="#/hierarchy" class="btn btn-secondary"><i class="fa fa-sitemap"></i> Seitenhierarchie</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
+        <div class="pull-right">
+            <a href="#/pages/list" class="btn btn-primary"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
+    <h3>{{message.headline}}</h3>
+    <p>{{message.text}}</p>
+    <p>{{message.errorMessage}}</p>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Aufgabenliste</h1>
+    </div>
+</div>
+<div class="row m-t-2" ng-repeat="status in tasklist" ng-if="status.pages.length > 0">
+    <div class="col-md-12">
+        <h3>{{status.name}}</h3>
+        
+        <table class="table table-inverse">
+            <thead>
+                <th>ID</th>
+                <th>Linktext</th>
+                <th>Link</th>
+                <th>Erstellt durch</th>
+                <th>Letzte Änderungen durch</th>
+                <th>Aktionen</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="page in status.pages">
+                    <td>{{page.pageId}}</td>
+                    <td>
+                        <a href="#/pages/{{page.pageId}}/version/{{page.majorVersion}}/{{page.minorVersion}}">{{page.linktext}}</a>
+                    </td>
+                    <td>{{page.link}}</td>
+                    <td>
+                        <p><a href="/com.Nephthys.user/user/{{page.creator.userId}}">{{page.creator.userName}}</a></p>
+                        <p>{{page.creationDate}}</p>
+                    </td>
+                    <td>
+                        <p><a href="/com.Nephthys.user/user/{{page.lastEditor.userId}}">{{page.lastEditor.userName}}</a></p>
+                        <p>{{page.lastEditDate}}</p>
+                    </td>
+                    <td>
+                        <div>
+                            <a href="#/pages/{{page.pageId}}"
+                               class="btn btn-primary m-r-1"
+                               title="Seitendetails">
+                                <i class="fa fa-cog"></i>
+                            </a>
+                            
+                            <button class="btn btn-primary m-r-1"
+                                    ng-repeat="ps in status.nextStatus"
+                                    ng-click="pushToStatus(page.pageId, page.pageVersionId, ps.statusId);">{{ps.name}}</button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -147,6 +147,62 @@ component {
         return variables.majorVersion & "." & variables.minorVersion;
     }
     
+    public pageVersion function pushToStatus(required numeric newStatusId, required user user) {
+        var newStatus    = new status(arguments.newStatusId);
+        var actualStatus = new status(variables.statusId);
+        
+        var newStatusOK = false;
+        for(var nextStatus in actualStatus.getNextStatus()) {
+            if(nextStatus.getStatusId() == newStatus.getStatusId()) {
+                newStatusOk = true;
+            }
+        }
+        
+        if(newStatusOk) {
+            if(newStatus.isApprovalValid(arguments.user.getUserId())) {
+                transaction {
+                    setStatusId(newStatus.getStatusId());
+                    save();
+                    
+                    if(newStatus.isOnline()) {
+                        var page = new page(variables.pageId);
+                        // update last page Status
+                        var offlineStatusId = application.system.settings.getValueOfKey("endStatus");
+                        
+                        var oldPageVersion = page.getActualPageVersion();
+                        if(oldPageVersion.getPageVersionId() != variables.pageVersionId) {
+                            new approval(oldPageVersion.getPageVersionId()).setFor("pageVersion")
+                                                                           .approve(oldPageVersion.getStatusId(),
+                                                                                    offlineStatusId,
+                                                                                    arguments.user.getUserId());
+                            
+                            oldPageVersion.setStatusId(offlineStatusId)
+                                          .save();
+                        }
+                        
+                        page.setPageVersionId(variables.pageVersionId)
+                            .save();
+                    }
+                    
+                    new approval(variables.pageVersionId).setFor("pageVersion")
+                                                         .approve(actualStatus.getStatusId(),
+                                                                  newStatus.getStatusId(),
+                                                                  arguments.user.getUserId());
+                    
+                    transactionCommit();
+                }
+                
+                return this;
+            }
+            else {
+                throw(type = "nephthys.application.notAllowed", message = "You don't have the required permissions for this operation");
+            }
+        }
+        else {
+            throw(type = "nephthys.application.notAllowed", message = "The new status isn't allowed!");
+        }
+    }
+    
     
     public pageVersion function save() {
         if(isNewEntry()) {

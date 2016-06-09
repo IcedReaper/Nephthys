@@ -2,13 +2,22 @@ component implements="API.interfaces.filter" {
     import "API.modules.com.Nephthys.page.*";
     
     public filter function init() {
+        variables.pagesRequireAction = null;
+        
         variables.qRes    = null;
         variables.results = null;
         
         return this;
     }
     
+    public filter function setPagesRequireAction(required numeric pagesRequireAction) {
+        variables.pagesRequireAction = arguments.pagesRequireAction
+        
+        return this;
+    }
+    
     public filter function execute() {
+        variables.results = null;
         var qryFilter = new Query();
         
         var sql     = "";
@@ -16,9 +25,13 @@ component implements="API.interfaces.filter" {
         var orderBy = "";
         
         sql = "SELECT statusId
-                 FROM nephthys_page_status ";
+                 FROM nephthys_page_status s ";
         
         where = "";
+        if(variables.pagesRequireAction != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & "s.pagesRequireAction = :pagesRequireAction";
+            qryFilter.addParam(name = "pagesRequireAction", value = variables.pagesRequireAction, cfsqltype = "cf_sql_bit");
+        }
         
         orderBy = " ORDER BY statusId";
         

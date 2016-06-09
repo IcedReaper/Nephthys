@@ -22,6 +22,28 @@ nephthysAdminApp
                     $scope.page.versions[majorVersion][minorVersion].lastEditor.userId   = _actualUser.userId;
                     $scope.page.versions[majorVersion][minorVersion].lastEditor.userName = _actualUser.userName;
                 }
+            },
+            loadVersion = function (majorVersion, minorVersion) {
+                if(! $scope.page.versions[majorVersion] || ! $scope.page.versions[majorVersion][minorVersion]) {
+                    pagesService
+                        .getDetailsForVersion($routeParams.pageId,
+                                              majorVersion,
+                                              minorVersion)
+                        .then(function (pageVersion) {
+                            if(! $scope.page.versions[majorVersion]) {
+                                $scope.page.versions[majorVersion] = {};
+                            }
+                            
+                            $scope.page.versions[majorVersion][minorVersion] = pageVersion;
+                            
+                            $scope.selectedVersion.major = majorVersion;
+                            $scope.selectedVersion.minor = minorVersion;
+                        });
+                }
+                else {
+                    $scope.selectedVersion.major = majorVersion;
+                    $scope.selectedVersion.minor = minorVersion;
+                }
             };
         
         $scope.load = function () {
@@ -42,6 +64,10 @@ nephthysAdminApp
                 $scope.selectedCompleteVersion = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
                 
                 _actualUser = actualUser;
+                
+                if($scope.versionSpecified) {
+                    loadVersion($routeParams.majorVersion, $routeParams.minorVersion);
+                }
             }));
         };
         
@@ -216,26 +242,7 @@ nephthysAdminApp
             var major = scv[0];
             var minor = scv[1];
             
-            if(! $scope.page.versions[major] || ! $scope.page.versions[major][minor]) {
-                pagesService
-                    .getDetailsForVersion($routeParams.pageId,
-                                          major,
-                                          minor)
-                    .then(function (pageVersion) {
-                        if(! $scope.page.versions[major]) {
-                            $scope.page.versions[major] = {};
-                        }
-                        
-                        $scope.page.versions[major][minor] = pageVersion;
-                        
-                        $scope.selectedVersion.major = major;
-                        $scope.selectedVersion.minor = minor;
-                    });
-            }
-            else {
-                $scope.selectedVersion.major = major;
-                $scope.selectedVersion.minor = minor;
-            }
+            loadVersion(major, minor);
         };
         
         $scope.isEditable = function () {
@@ -257,4 +264,9 @@ nephthysAdminApp
         };
         
         $scope.load();
+        
+        $scope.versionSpecified = false;
+        if($routeParams.majorVersion && $routeParams.minorVersion !== undefined) {
+            $scope.versionSpecified = true;
+        }
     }]);

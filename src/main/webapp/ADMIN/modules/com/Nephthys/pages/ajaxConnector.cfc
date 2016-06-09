@@ -1,8 +1,73 @@
 component {
     import "API.modules.com.Nephthys.page.*";
     
+    formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
+    
     remote array function getList() {
-        return getSubPages(new filter().setFor("page").execute());
+        var pageFilterCtrl = new filter().setFor("page").execute();
+        
+        var pageData = [];
+        for(var page in pageFilterCtrl.getResult()) {
+            var actualPageVersion = page.getActualPageVersion();
+            
+            pageData.append({
+                "pageId"             = page.getPageId(),
+                "pageVersionId"      = actualPageVersion.getPageVersionId(),
+                "linktext"           = actualPageVersion.getLinktext(),
+                "link"               = actualPageVersion.getLink(),
+                "title"              = actualPageVersion.getTitle(),
+                "description"        = actualPageVersion.getDescription(),
+                "useDynamicSuffixes" = actualPageVersion.getUseDynamicSuffixes(),
+                "creator"            = getUserInformation(actualPageVersion.getCreator()),
+                "creationDate"       = formatCtrl.formatDate(actualPageVersion.getCreationDate()),
+                "lastEditor"         = getUserInformation(actualPageVersion.getLastEditor()),
+                "lastEditDate"       = formatCtrl.formatDate(actualPageVersion.getLastEditDate()),
+                "isOnline"           = actualPageVersion.isOnline(),
+                "statusId"           = actualPageVersion.getStatusId(),
+                "statusName"         = actualPageVersion.getStatus().getName(),
+                "version"            = actualPageVersion.getVersion(),
+                "majorVersion"       = actualPageVersion.getMajorVersion(),
+                "minorVersion"       = actualPageVersion.getMinorVersion()
+            });
+        }
+        
+        return pageData;
+    }
+    
+    remote array function getPageVersionInTasklist() {
+        var statusFilterCtrl = new filter().setFor("status")
+                                           .setPagesRequireAction(true)
+                                           .execute();
+        
+        var pageVersionFilterCtrl = new filter().setFor("pageVersion");
+        
+        var statusData = [];
+        var index = 0;
+        for(var status in statusFilterCtrl.execute().getResult()) {
+            index++;
+            statusData[index] = prepareStatusAsArray(status);
+            statusData[index]["pages"] = [];
+            
+            for(var pageVersion in pageVersionFilterCtrl.setStatusId(status.getStatusId()).execute().getResult()) {
+                statusData[index]["pages"].append({
+                    "pageId"        = pageVersion.getPageId(),
+                    "pageVersionId" = pageVersion.getPageVersionId(),
+                    "linktext"      = pageVersion.getLinktext(),
+                    "link"          = pageVersion.getLink(),
+                    "title"         = pageVersion.getTitle(),
+                    "description"   = pageVersion.getDescription(),
+                    "creator"       = getUserInformation(pageVersion.getCreator()),
+                    "creationDate"  = formatCtrl.formatDate(pageVersion.getCreationDate()),
+                    "lastEditor"    = getUserInformation(pageVersion.getLastEditor()),
+                    "lastEditDate"  = formatCtrl.formatDate(pageVersion.getLastEditDate()),
+                    "version"       = pageVersion.getVersion(),
+                    "majorVersion"  = pageVersion.getMajorVersion(),
+                    "minorVersion"  = pageVersion.getMinorVersion()
+                });
+            }
+        }
+        
+        return statusData;
     }
     
     remote struct function getActualUser() {
@@ -19,8 +84,8 @@ component {
             "pageId"        = page.getPageId(),
             "versions"      = {},
             "actualVersion" = {
-                "major" = page.getActualMajorVersion(),
-                "minor" = page.getActualMinorVersion()
+                "major" = 1,
+                "minor" = 0
             },
             "availableVersions" = {}
         };
@@ -29,18 +94,19 @@ component {
         if((arguments.pageId != null && arguments.pageId != 0) || (page.getPageVersionId() != null && page.getPageVersionId() != 0)) {
             var actualPageVersion = page.getActualPageVersion();
             
+            returnValue["actualVersion"]["major"] = actualPageVersion.getMajorVersion();
+            returnValue["actualVersion"]["minor"] = actualPageVersion.getMinorVersion();
+            
             returnValue.versions[actualPageVersion.getMajorVersion()] = {};
             returnValue.versions[actualPageVersion.getMajorVersion()][actualPageVersion.getMinorVersion()] = preparePageVersion(actualPageVersion);;
             
-            var versions = page.getStructuredPageVersions();
-            for(var majorVersion in versions) {
-                for(var minorVersion in versions[majorVersion]) {
-                    if(! returnValue["availableVersions"].keyExists(majorVersion)) {
-                        returnValue["availableVersions"][majorVersion] = [];
-                    }
-                    
-                    returnValue["availableVersions"][majorVersion].append(minorVersion);
+            var pageVersions = new filter().setFor("pageVersion").setPageId(page.getPageId()).execute().getResult();
+            for(var pageVersion in pageVersions) {
+                if(! returnValue["availableVersions"].keyExists(pageVersion.getMajorVersion())) {
+                    returnValue["availableVersions"][pageVersion.getMajorVersion()] = [];
                 }
+                
+                returnValue["availableVersions"][pageVersion.getMajorVersion()].append(pageVersion.getMinorVersion);
             }
         }
         // otherwise we "create" a new blank one
@@ -58,9 +124,12 @@ component {
     }
     
     remote struct function getDetailsForVersion(required numeric pageId, required numeric majorVersion, required numeric minorVersion) {
-        var page = new page(arguments.pageId);
-        
-        return preparePageVersion(page.getPageVersion(arguments.majorVersion, arguments.minorVersion));
+        return preparePageVersion(new filter().setFor("pageVersion")
+                                              .setPageId(arguments.pageId)
+                                              .setMajorVersion(arguments.majorVersion)
+                                              .setMinorVersion(arguments.minorVersion)
+                                              .execute()
+                                              .getResult()[1]);
     }
     
     remote struct function save(required numeric pageId,
@@ -116,66 +185,15 @@ component {
         }
     }
     
-    remote string function pushToStatus(required numeric pageVersionId, required numeric statusId) {
-        var newStatus    = new status(arguments.statusId);
-        var pageVersion      = new pageVersion(arguments.pageVersionId);
-        var actualStatus = pageVersion.getStatus();
+    remote boolean function pushToStatus(required numeric pageVersionId, required numeric statusId) {
+        new pageVersion(arguments.pageVersionId).pushToStatus(arguments.statusId, request.user);
         
-        var newStatusOK = false;
-        for(var nextStatus in actualStatus.getNextStatus()) {
-            if(nextStatus.getStatusId() == newStatus.getStatusId()) {
-                newStatusOk = true;
-            }
-        }
-        
-        if(newStatusOk) {
-            if(newStatus.isApprovalValid(request.user.getUserId())) {
-                transaction {
-                    pageVersion.setStatusId(newStatus.getStatusId())
-                               .save();
-                    
-                    var page = new page(pageVersion.getPageId());
-                    
-                    if(newStatus.isOnline()) {
-                        // update last page Status
-                        var offlineStatusId = application.system.settings.getValueOfKey("endStatus");
-                        
-                        var oldPageVersion = page.getActualPageVersion();
-                        if(oldPageVersion.getPageVersionId() != pageVersion.getPageVersionId()) {
-                            new approval(oldPageVersion.getPageVersionId()).setFor("pageVersion")
-                                                                           .approve(oldPageVersion.getStatusId(),
-                                                                                    offlineStatusId,
-                                                                                    request.user.getUserId());
-                            
-                            oldPageVersion.setStatusId(offlineStatusId)
-                                             .save();
-                        }
-                        
-                        page.setPageVersionId(pageVersion.getPageVersionId())
-                            .save();
-                    }
-                    
-                    new approval(arguments.pageVersionId).setFor("pageVersion")
-                                                         .approve(actualStatus.getStatusId(),
-                                                                  newStatus.getStatusId(),
-                                                                  request.user.getUserId());
-                    
-                    transactionCommit();
-                }
-                
-                return true;
-            }
-        }
-        else {
-            return false;
-        }
+        return true;
     }
     
     remote boolean function delete(required numeric pageId) {
-        var page = new page(arguments.pageId);
-        if(page.getStatus().arePagesDeleteable()) {
-            page.delete();
-        }
+        // TODO: Implement Security check - has permission
+        new page(arguments.pageId).delete();
         
         return true;
     }
@@ -236,6 +254,7 @@ component {
                   .setName(arguments.status.name)
                   .setOnlineStatus(arguments.status.online)
                   .setPagesAreDeleteable(arguments.status.pagesAreDeleteable)
+                  .setPagesRequireAction(arguments.status.pagesRequireAction)
                   .setLastEditor(request.user)
                   .save();
             
@@ -502,35 +521,6 @@ component {
     
     
     // P R I V A T E
-    private array function getSubPages(required filter pageFilterCtrl) {
-        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
-        
-        var pageData = [];
-        for(var page in arguments.pageFilterCtrl.getResult()) {
-            var pageVersion = page.getActualPageVersion();
-            pageData.append({
-                "pageId"             = page.getPageId(),
-                "pageVersionId"      = pageVersion.getPageVersionId(),
-                "linktext"           = pageVersion.getLinktext(),
-                "link"               = pageVersion.getLink(),
-                "title"              = pageVersion.getTitle(),
-                "description"        = pageVersion.getDescription(),
-                "content"            = serializeJSON(pageVersion.getContent()),
-                "useDynamicSuffixes" = pageVersion.getUseDynamicSuffixes(),
-                "creator"            = getUserInformation(pageVersion.getCreator()),
-                "creationDate"       = formatCtrl.formatDate(pageVersion.getCreationDate()),
-                "lastEditor"         = getUserInformation(pageVersion.getLastEditor()),
-                "lastEditDate"       = formatCtrl.formatDate(pageVersion.getLastEditDate()),
-                "isOnline"           = pageVersion.isOnline(),
-                "statusId"           = pageVersion.getStatusId(),
-                "statusName"         = pageVersion.getStatus().getName(),
-                "version"            = page.getActualVersion()
-            });
-        }
-        
-        return pageData;
-    }
-    
     private array function getSubPagesForHierarchy(required numeric parentId, required numeric regionId, required numeric hierarchyId) {
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
@@ -645,8 +635,6 @@ component {
     }
     
     private struct function preparePageVersion(required pageVersion pageVersion) {
-        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
-        
         var preparedApprovalList = prepareApprovalList(new approval(arguments.pageVersion.getPageVersionId()).setFor("pageVersion").getApprovalList());
         
         return  {
@@ -688,6 +676,7 @@ component {
             "online"             = arguments.status.isOnline(),
             "pagesAreEditable"   = arguments.status.arePagesEditable(),
             "pagesAreDeleteable" = arguments.status.arePagesDeleteable(),
+            "pagesRequireAction" = arguments.status.requirePagesAction(),
             "nextStatus"         = nextStatusList
         };
     }
@@ -713,13 +702,12 @@ component {
             "online"             = arguments.status.isOnline(),
             "pagesAreEditable"   = arguments.status.arePagesEditable(),
             "pagesAreDeleteable" = arguments.status.arePagesDeleteable(),
+            "pagesRequireAction" = arguments.status.requirePagesAction(),
             "nextStatus"         = nextStatusList
         };
     }
     
     private array function prepareApprovalList(required array approvalList) {
-        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
-        
         var preparedApprovalList = [];
         for(var approval in arguments.approvalList) {
             preparedApprovalList.append({

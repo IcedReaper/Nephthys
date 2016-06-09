@@ -10,6 +10,7 @@ component {
             case "hierarchy":
             case "pagesNotInHierarchy":
             case "region":
+            case "pageVersion":
             case "status": {
                 arguments.for = uCase(arguments.for.left(1)) & arguments.for.right(arguments.for.len() - 1);
                 return createObject("component", "filter.filter" & arguments.for).init();

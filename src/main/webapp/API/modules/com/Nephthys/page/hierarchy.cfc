@@ -84,8 +84,6 @@ component {
         return variables.lastEditDate;
     }
     
-    // TODO: hierarchyPage opterations...
-    
     public hierarchy function updatePagesByRegion(required array regions) {
          new query().setSQL("DELETE FROM nephthys_page_hierarchyPage
                                   WHERE hierarchyId = :hierarchyId")

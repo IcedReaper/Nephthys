@@ -88,6 +88,11 @@ nephthysAdminApp
                     hierarchyId: hierarchyId,
                     statusId:    statusId
                 });
+            },
+
+            getPageVersionInTasklist: function () {
+                return $http.get("/ajax/com/Nephthys/pages/getPageVersionInTasklist");
             }
+
         };
     });

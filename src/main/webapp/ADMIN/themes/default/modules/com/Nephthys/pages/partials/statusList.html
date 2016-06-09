@@ -1,10 +1,13 @@
 <div class="row m-b-2">
-    <div class="col-md-6">
-        <a href="#/" class="btn btn-secondary"><i class="fa fa-chevron-left"></i> Zurück zur Seitenübersicht</a>
+    <div class="col-md-10 col-sm-8">
+        <a href="#/" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>
+        <a href="#/pages/list" class="btn btn-secondary"><i class="fa fa-list"></i> Seitenübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
+        <a href="#/hierarchy" class="btn btn-secondary"><i class="fa fa-sitemap"></i> Seitenhierarchie</a>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-2 col-sm-4">
         <div class="pull-right">
-            <a href="#/statusflow" class="btn btn-primary">Statusfluss</a>
+            <a href="#/status/flow" class="btn btn-primary">Statusfluss</a>
             <a href="#/status/0" class="btn btn-primary">Neuen Status anlegen</a>
         </div>
     </div>
@@ -53,8 +56,10 @@
                 <th>Name</th>
                 <th>Online</th>
                 <th>Mögliche Folgestatus</th>
-                <th title="Seiten mit diesem Status sind editierbar"><i class="fa fa-pencil"></i></th>
-                <th title="Seiten mit diesem Status sind permanent löschbar"><i class="fa fa-trash"></i></th>
+                <th title="Seiten und Hierarchien mit diesem Status sind editierbar"><i class="fa fa-pencil"></i></th>
+                <th title="Seiten und Hierarchien mit diesem Status sind permanent löschbar"><i class="fa fa-trash"></i></th>
+                <th title="Seiten und Hierarchien in der Aufgabenliste aufführen"><i class="fa fa-cogs"></i></th>
+
                 <th>&nbsp;</th>
             </thead>
             <tbody>
@@ -80,6 +85,10 @@
                     <td>
                         <i ng-if="status.pagesAreDeleteable" class="fa fa-trash fa-border text-success" title="In diesem Status permanent löschbar"></i>
                         <i ng-if="! status.pagesAreDeleteable" class="fa fa-trash fa-border text-danger" title="In diesem Status nicht permanent löschbar"></i>
+                    </td>
+                    <td>
+                        <i ng-if="status.pagesRequireAction" class="fa fa-cogs fa-border text-success" title="In diesem Status in der Aufgabenliste aufführen"></i>
+                        <i ng-if="! status.pagesRequireAction" class="fa fa-cogs fa-border text-danger" title="In diesem Status nicht in der Aufgabenliste aufführen"></i>
                     </td>
                     <td>
                         <a href="#/status/{{status.statusId}}"

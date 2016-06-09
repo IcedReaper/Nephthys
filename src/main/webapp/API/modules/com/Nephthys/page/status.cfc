@@ -51,13 +51,19 @@ component {
         return this;
     }
     
+    public status function setPagesRequireAction(required boolean pagesRequireAction) {
+        variables.pagesRequireAction = arguments.pagesRequireAction;
+        variables.attributesChanged = true;
+        
+        return this;
+    }
+    
     public status function setLastEditor(required user lastEditor) {
         variables.lastEditor = arguments.lastEditor;
         variables.attributesChanged = true;
         
         return this;
     }
-    
     
     
     public status function addNextStatus(required numeric nextStatusId) {
@@ -118,39 +124,39 @@ component {
     public numeric function getStatusId() {
         return variables.statusId;
     }
-    
     public string function getName() {
         return variables.name;
     }
-    
-    public boolean function getActiveStatus() {
+    public numeric function getActiveStatus() {
         return variables.active;
     }
-    
-    public boolean function getOnlineStatus() {
+    public numeric function getOnlineStatus() {
         return variables.online;
     }
-    
+    public numeric function arePagesEditable() {
+        return variables.pagesAreEditable;
+    }
+    public numeric function arePagesDeleteable() {
+        return variables.pagesAreDeleteable;
+    }
+    public numeric function requirePagesAction() {
+        return variables.pagesRequireAction;
+    }
     public numeric function getCreatorUserId() {
         return variables.creator.getUserId();
     }
-    
     public date function getCreationDate() {
         return variables.creationDate;
     }
-    
     public numeric function getLastEditorUserId() {
         return variables.lastEditor.getUserId();
     }
-    
     public date function getLastEditDate() {
         return variables.lastEditDate;
     }
-    
     public user function getCreator() {
         return variables.creator;
     }
-    
     public user function getLastEditor() {
         return variables.lastEditor;
     }
@@ -168,6 +174,9 @@ component {
     }
     public boolean function arePagesDeleteable() {
         return variables.pagesAreDeleteable == 1;
+    }
+    public boolean function requirePagesAction() {
+        return variables.pagesRequireAction == 1;
     }
     public boolean function isActive() {
         return variables.active == 1;
@@ -199,6 +208,7 @@ component {
                                      .addParam(name = "online",             value = variables.online,                 cfsqltype = "cf_sql_bit")
                                      .addParam(name = "pagesAreEditable",   value = variables.pagesAreEditable,       cfsqltype = "cf_sql_bit")
                                      .addParam(name = "pagesAreDeleteable", value = variables.pagesAreDeleteable,     cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "pagesRequireAction", value = variables.pagesRequireAction,     cfsqltype = "cf_sql_bit")
                                      .addParam(name = "creationUserId",     value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
                                      .addParam(name = "lastEditUserId",     value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
             
@@ -210,6 +220,7 @@ component {
                                                                          online,
                                                                          pagesAreEditable,
                                                                          pagesAreDeleteable,
+                                                                         pagesRequireAction,
                                                                          creationUserId,
                                                                          lastEditUserId
                                                                      )
@@ -219,6 +230,7 @@ component {
                                                                          :online,
                                                                          :pagesAreEditable,
                                                                          :pagesAreDeleteable,
+                                                                         :pagesRequireAction,
                                                                          :creationUserId,
                                                                          :lastEditUserId
                                                                      );
@@ -235,6 +247,7 @@ component {
                                            online             = :online,
                                            pagesAreEditable   = :pagesAreEditable,
                                            pagesAreDeleteable = :pagesAreDeleteable,
+                                           pagesRequireAction = :pagesRequireAction,
                                            lastEditUserId     = :lastEditUserId,
                                            lastEditDate       = now()
                                      WHERE statusId = :statusId")
@@ -299,6 +312,7 @@ component {
                 variables.online             = qStatus.online[1];
                 variables.pagesAreEditable   = qStatus.pagesAreEditable[1];
                 variables.pagesAreDeleteable = qStatus.pagesAreDeleteable[1];
+                variables.pagesRequireAction = qStatus.pagesRequireAction[1];
                 variables.creator            = new user(qStatus.creationUserId[1]);
                 variables.creationDate       = qStatus.creationDate[1];
                 variables.lastEditor         = new user(qStatus.lastEditUserId[1]);
@@ -314,6 +328,7 @@ component {
             variables.online             = true;
             variables.pagesAreEditable   = true;
             variables.pagesAreDeleteable = false;
+            variables.pagesRequireAction = false;
             variables.creator            = new user(request.user.getUserId());
             variables.creationDate       = now();
             variables.lastEditor         = new user(request.user.getUserId());

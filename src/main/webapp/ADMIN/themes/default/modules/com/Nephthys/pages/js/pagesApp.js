@@ -8,32 +8,43 @@ nephthysAdminApp
         function ($routeProvider) {
             $routeProvider
                 .when("/", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/tasklist.html",
+                    controller:  "tasklistCtrl"
+                })
+                
+                .when("/pages/list", {
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/pagesList.html",
                     controller:  "pagesListCtrl"
                 })
-                .when("/status", {
+                .when("/pages/:pageId/version/:majorVersion/:minorVersion", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/pagesDetail.html",
+                    controller:  "pagesDetailCtrl"
+                })
+                .when("/pages/:pageId", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/pagesDetail.html",
+                    controller:  "pagesDetailCtrl"
+                })
+                .when("/pages/:pageId/statistics", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/pagesStatistics.html",
+                    controller:  "pagesStatisticsCtrl"
+                })
+                
+                .when("/status/list", {
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/statusList.html",
                     controller:  "statusListCtrl"
+                })
+                .when("/status/flow", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/statusFlow.html",
+                    controller:  "statusFlowCtrl"
                 })
                 .when("/status/:statusId", {
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/statusDetail.html",
                     controller:  "statusDetailCtrl"
                 })
-                .when("/statusflow", {
-                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/statusFlow.html",
-                    controller:  "statusFlowCtrl"
-                })
+                
                 .when("/hierarchy", {
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/hierarchy.html",
                     controller: "hierarchyCtrl"
-                })
-                .when("/:pageId", {
-                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/pagesDetail.html",
-                    controller:  "pagesDetailCtrl"
-                })
-                .when("/:pageId/statistics", {
-                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/pagesStatistics.html",
-                    controller:  "pagesStatisticsCtrl"
                 })
                 .otherwise({
                     redirectTo: "/"

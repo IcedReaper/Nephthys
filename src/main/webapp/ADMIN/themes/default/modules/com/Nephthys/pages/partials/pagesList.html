@@ -1,12 +1,13 @@
 <div class="row m-b-2">
     <div class="col-md-10 col-sm-8">
-        <a href="#/status" class="btn btn-secondary"><i class="fa fa-tags"></i> Statusübersicht</a>
-        <a href="#/statusflow" class="btn btn-secondary"><i class="fa fa-tags"></i> Statusflow</a>
-        <a href="#/hierarchy" class="btn btn-secondary"><i class="fa fa-tags"></i> Seitenhierarchie</a>
+        <a href="#/" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>
+        <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
+        <a href="#/hierarchy" class="btn btn-secondary"><i class="fa fa-sitemap"></i> Seitenhierarchie</a>
     </div>
     <div class="col-md-2 col-sm-4">
         <div class="pull-right">
-            <a href="#/0" class="btn btn-primary">Neue Seite anlegen</a>
+            <a href="#/pages/0" class="btn btn-primary">Neue Seite anlegen</a>
         </div>
     </div>
 </div>
@@ -50,37 +51,41 @@
                 <tr ng-repeat="page in pages | filter:search">
                     <td>{{page.pageId}}</td>
                     <td>
-                        <a href="#/{{page.pageId}}">{{page.linktext}}</a>
+                        <a href="#/pages/{{page.pageId}}">{{page.linktext}}</a>
                     </td>
                     <td>{{page.link}}</td>
-                    <td>{{page.version}} <span class="m-l-1" ng-class="(page.isOnline ? 'text-success' : 'text-danger')">{{page.statusName}}</span></td>
                     <td>
-                        <a href="#/{{page.pageId}}"
-                           class="btn btn-primary"
-                           title="Seitendetails">
-                            <span class="fa fa-cog"></span>
-                        </a>
-                        <!--<a href="#/{{page.pageId}}/statistics"
-                           class="btn btn-secondary"
-                           title="Statistiken">
-                            <span class="fa fa-line-chart"></span>
-                        </a>-->
-                        
-                        <button class="btn btn-danger"
-                                title="Die Seite wird unwiederruflich gelöscht! - Nur mit Vorsicht benutzen! - Lieber den gelöscht Status verwenden!"
-                                ng-click="deletePage(page.pageId)"
-                                ng-disabled="! status[page.statusId].deleteable">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                        
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Status ändern
+                        <p>{{page.version}} <span class="m-l-1" ng-class="(page.isOnline ? 'text-success' : 'text-danger')">{{page.statusName}}</span></p>
+                    </td>
+                    <td>
+                        <div>
+                            <a href="#/pages/{{page.pageId}}"
+                               class="btn btn-primary"
+                               title="Seitendetails">
+                                <span class="fa fa-cog"></span>
+                            </a>
+                            <!--<a href="#/{{page.pageId}}/statistics"
+                               class="btn btn-secondary"
+                               title="Statistiken">
+                                <span class="fa fa-line-chart"></span>
+                            </a>-->
+                            
+                            <button class="btn btn-danger"
+                                    title="Die Seite wird unwiederruflich gelöscht! - Nur mit Vorsicht benutzen! - Lieber den gelöscht Status verwenden!"
+                                    ng-click="deletePage(page.pageId)"
+                                    ng-disabled="! status[page.statusId].deleteable">
+                                <i class="fa fa-trash"></i>
                             </button>
-                            <div class="dropdown-menu">
-                                <button class="dropdown-item"
-                                        ng-repeat="ps in status[ page.statusId ].nextStatus"
-                                        ng-click="pushToStatus(page.pageId, page.pageVersionId, ps.statusId);">{{ps.name}}</button>
+                            
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Status ändern
+                                </button>
+                                <div class="dropdown-menu">
+                                    <button class="dropdown-item"
+                                            ng-repeat="ps in status[ page.statusId ].nextStatus"
+                                            ng-click="pushToStatus(page.pageId, page.pageVersionId, ps.statusId);">{{ps.name}}</button>
+                                </div>
                             </div>
                         </div>
                     </td>

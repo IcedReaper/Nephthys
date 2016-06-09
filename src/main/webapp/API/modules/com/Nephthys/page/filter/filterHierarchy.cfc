@@ -2,8 +2,8 @@ component implements="API.interfaces.filter" {
     import "API.modules.com.Nephthys.page.*";
     
     public filter function init() {
-        variables.online        = null;
-        variables.statusId      = null;
+        variables.online   = null;
+        variables.statusId = null;
         
         variables.qRes    = null;
         variables.results = null;
@@ -22,6 +22,7 @@ component implements="API.interfaces.filter" {
     
     
     public filter function execute() {
+        variables.results = null;
         var qryFilter = new Query();
         
         var sql     = "";

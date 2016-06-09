@@ -10,7 +10,6 @@
     - Dashboard Statistics
 - Status-Button stylen
 - required approvals
-- Übersicht über die Seitenversionen, die noch nicht online sind/waren
 - offene todos ( // TODO: )
 - Hardcoded /user & /search Links fixen...
 
