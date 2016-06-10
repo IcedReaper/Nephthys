@@ -8,14 +8,9 @@
         - date
         - userId ?
     - Dashboard Statistics
-- Status-Button stylen
-    - offline => online grün
-    - online => offline rot
-    - offline => offline blau
-    - online => onlien weiß/grün
 - required approvals
 - offene todos ( // TODO: )
-- Hardcoded /user & /search Links fixen...
+- Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
 
 
 

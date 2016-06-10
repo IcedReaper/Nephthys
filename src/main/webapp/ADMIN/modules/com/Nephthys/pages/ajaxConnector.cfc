@@ -106,7 +106,7 @@ component {
                     returnValue["availableVersions"][pageVersion.getMajorVersion()] = [];
                 }
                 
-                returnValue["availableVersions"][pageVersion.getMajorVersion()].append(pageVersion.getMinorVersion);
+                returnValue["availableVersions"][pageVersion.getMajorVersion()].append(pageVersion.getMinorVersion());
             }
         }
         // otherwise we "create" a new blank one
@@ -721,7 +721,7 @@ component {
                     "statusId"         = nextStatus.getStatusId(),
                     "name"             = nextStatus.getName(),
                     "active"           = nextStatus.isActive(),
-                    "online"           = nextStatus.getOnlineStatus(),
+                    "online"           = nextStatus.isOnline(),
                     "pagesAreEditable" = nextStatus.arePagesEditable()
                 });
             }

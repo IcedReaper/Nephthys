@@ -37,7 +37,6 @@
                     </div>
                 </div>
             </form>
-            <!-- Add custom version -->
         </div>
     </div>
 </div>
@@ -85,8 +84,9 @@
                         <div ng-if="status[ page.versions[selectedVersion.major][selectedVersion.minor].statusId ].nextStatus && page.pageId && page.versions[selectedVersion.major][selectedVersion.minor].pageVersionId">
                             <h4>Status ändern in</h4>
                             <button type="submit"
-                                    class="btn btn-primary m-r-1"
+                                    class="btn m-r-1"
                                     ng-repeat="ps in status[ page.versions[selectedVersion.major][selectedVersion.minor].statusId ].nextStatus"
+                                    ng-class="statusButtonClass(page.versions[selectedVersion.major][selectedVersion.minor].isOnline, ps.online)"
                                     ng-click="pushToStatus(ps.statusId);">{{ps.name}}</button>
                         </div>
                     </div>

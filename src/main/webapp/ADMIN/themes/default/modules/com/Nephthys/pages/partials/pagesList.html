@@ -84,6 +84,7 @@
                                 <div class="dropdown-menu">
                                     <button class="dropdown-item"
                                             ng-repeat="ps in status[ page.statusId ].nextStatus"
+                                            ng-class="statusButtonClass(page.isOnline, ps.online)"
                                             ng-click="pushToStatus(page.pageId, page.pageVersionId, ps.statusId);">{{ps.name}}</button>
                                 </div>
                             </div>

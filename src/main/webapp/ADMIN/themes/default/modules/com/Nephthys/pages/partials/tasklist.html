@@ -59,8 +59,9 @@
                                 <i class="fa fa-cog"></i>
                             </a>
                             
-                            <button class="btn btn-primary m-r-1"
+                            <button class="btn m-r-1"
                                     ng-repeat="ps in status.nextStatus"
+                                    ng-class="statusButtonClass(status.online, ps.online)"
                                     ng-click="pushPageToStatus(page.pageId, page.pageVersionId, ps.statusId);">{{ps.name}}</button>
                         </div>
                     </td>
@@ -101,8 +102,9 @@
                                 <i class="fa fa-cog"></i>
                             </a> <!-- todo: add version for direct call -->
                             
-                            <button class="btn btn-primary m-r-1"
+                            <button class="btn m-r-1"
                                     ng-repeat="ps in status.nextStatus"
+                                    ng-class="statusButtonClass(status.online, ps.online)"
                                     ng-click="pushSitemapToStatus(sitemap.sitemapId, ps.statusId);">{{ps.name}}</button>
                         </div>
                     </td>

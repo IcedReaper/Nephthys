@@ -42,8 +42,9 @@
                                 <div ng-if="status[ sitemap[selectedIndex].statusId ].nextStatus && sitemap[selectedIndex].sitemapId != null">
                                     <h4>Status ändern in</h4>
                                     <button type="submit"
-                                            class="btn btn-primary m-r-1"
+                                            class="btn m-r-1"
                                             ng-repeat="ps in status[ sitemap[selectedIndex].statusId ].nextStatus"
+                                            ng-class="statusButtonClass(status[ sitemap[selectedIndex].statusId ].online, ps.online)"
                                             ng-click="pushToStatus(ps.statusId);">{{ps.name}}</button>
                                 </div>
                             </div>

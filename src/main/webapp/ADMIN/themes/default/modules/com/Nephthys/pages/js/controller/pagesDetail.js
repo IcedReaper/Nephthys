@@ -263,6 +263,23 @@ nephthysAdminApp
             }
         };
         
+        $scope.statusButtonClass = function (actualOnline, nextOnline) {
+            if(! actualOnline && nextOnline) {
+                return "btn-success";
+            }
+            if(actualOnline && ! nextOnline) {
+                return "btn-danger";
+            }
+            if(! actualOnline && ! nextOnline) {
+                return "btn-primary";
+            }
+            if(actualOnline && nextOnline) {
+                return "btn-secondary";
+            }
+            
+            return "btn-warning";
+        };
+        
         $scope.load();
         
         $scope.versionSpecified = false;
