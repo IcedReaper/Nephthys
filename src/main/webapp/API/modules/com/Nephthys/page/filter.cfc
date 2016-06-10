@@ -8,6 +8,7 @@ component {
             case "page":
             case "sitemap":
             case "hierarchy":
+            case "hierarchyPage":
             case "pagesNotInHierarchy":
             case "region":
             case "pageVersion":

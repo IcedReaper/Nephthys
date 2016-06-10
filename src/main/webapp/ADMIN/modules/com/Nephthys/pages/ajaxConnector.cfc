@@ -445,6 +445,39 @@ component {
         return preparedHierarchies;
     }
     
+    remote array function getHiearchyInTasklist() {
+        var statusFilterCtrl = new filter().setFor("status")
+                                           .setPagesRequireAction(true)
+                                           .execute();
+        
+        var hierarchyFilterCtrl = new filter().setFor("hierarchy");
+        var hierarchyPageFilterCtrl = new filter().setFor("hierarchyPage");
+        
+        var statusData = [];
+        var index = 0;
+        for(var status in statusFilterCtrl.execute().getResult()) {
+            index++;
+            statusData[index] = prepareStatusAsArray(status);
+            statusData[index]["hierarchies"] = [];
+            
+            for(var hierarchy in hierarchyFilterCtrl.setStatusId(status.getStatusId()).execute().getResult()) {
+                statusData[index]["hierarchies"].append({
+                    "hierarchyId"      = hierarchy.getHierarchyId(),
+                    "version"          = hierarchy.getVersion(),
+                    "pagesAreEditable" = hierarchy.getStatus().arePagesEditable(),
+                    "statusId"         = hierarchy.getStatus().getStatusId(),
+                    "creator"          = getUserInformation(hierarchy.getCreator()),
+                    "creationDate"     = formatCtrl.formatDate(hierarchy.getCreationDate()),
+                    "lastEditor"       = getUserInformation(hierarchy.getLastEditor()),
+                    "lastEditDate"     = formatCtrl.formatDate(hierarchy.getLastEditDate()),
+                    "pageCount"        = hierarchyPageFilterCtrl.setHierarchyId(hierarchy.getHierarchyId()).execute().getResultCount()
+                });
+            }
+        }
+        
+        return statusData;
+    }
+    
     remote struct function addHierarchyVersion() {
         var hierarchy = getHierarchy();
         

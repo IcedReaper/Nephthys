@@ -16,6 +16,7 @@
 - required approvals
 - offene todos ( // TODO: )
 - Hardcoded /user & /search Links fixen...
+- Rename Hierarchy in Sitemap ???
 
 
 

@@ -24,7 +24,7 @@ component implements="API.interfaces.filter" {
         var where   = "";
         var orderBy = "";
         
-        sql = "    SELECT p.hierarchyPageId
+        sql = "    SELECT hp.hierarchyPageId
                      FROM nephthys_page_hierarchyPage hp";
         where = "";
         if(variables.hierarchyId != null) {
@@ -32,7 +32,7 @@ component implements="API.interfaces.filter" {
             qryFilter.addParam(name = "hierarchyId", value = variables.hierarchyId, cfsqltype = "cf_sql_numeric");
         }
         
-        orderBy = " ORDER BY p.pageId ASC";
+        orderBy = " ORDER BY hp.hierarchyPageId ASC";
         
         variables.qRes = qryFilter.setSQL(sql & where & orderBy)
                                   .execute()

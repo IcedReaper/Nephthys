@@ -92,7 +92,10 @@ nephthysAdminApp
 
             getPageVersionInTasklist: function () {
                 return $http.get("/ajax/com/Nephthys/pages/getPageVersionInTasklist");
-            }
+            },
 
+            getHiearchyInTasklist: function () {
+                return $http.get("/ajax/com/Nephthys/pages/getHiearchyInTasklist");
+            }
         };
     });
