@@ -27,7 +27,7 @@
                                 <select class="form-control"
                                         name="version"
                                         ng-model="selectedIndex"
-                                        ng-options="idx as 'Version ' + version.version for (idx, version) in hierarchy">
+                                        ng-options="idx as 'Version ' + version.version for (idx, version) in sitemap">
                                 </select>
                             </div>
                             <div class="col-md-2 col-sm-3">
@@ -36,18 +36,18 @@
                         </div>
                         <div class="form-group row">
                             <div class="col-md-4">
-                                <h4>Aktueller Status: <small>{{status[ hierarchy[selectedIndex].statusId ].name}}</small></h4>
+                                <h4>Aktueller Status: <small>{{status[ sitemap[selectedIndex].statusId ].name}}</small></h4>
                             </div>
                             <div class="col-md-4">
-                                <div ng-if="status[ hierarchy[selectedIndex].statusId ].nextStatus && hierarchy[selectedIndex].hierarchyId != null">
+                                <div ng-if="status[ sitemap[selectedIndex].statusId ].nextStatus && sitemap[selectedIndex].sitemapId != null">
                                     <h4>Status ändern in</h4>
                                     <button type="submit"
                                             class="btn btn-primary m-r-1"
-                                            ng-repeat="ps in status[ hierarchy[selectedIndex].statusId ].nextStatus"
+                                            ng-repeat="ps in status[ sitemap[selectedIndex].statusId ].nextStatus"
                                             ng-click="pushToStatus(ps.statusId);">{{ps.name}}</button>
                                 </div>
                             </div>
-                            <div class="col-md-4" ng-if="hierarchy[selectedIndex].pagesAreEditable">
+                            <div class="col-md-4" ng-if="sitemap[selectedIndex].pagesAreEditable">
                                 <div class="pull-right">
                                     <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
                                 </div>
@@ -62,14 +62,14 @@
             <div class="col-sm-8">
                 <div class="card card-block">
                     <div class="row">
-                        <div class="col-md-4" ng-repeat="region in hierarchy[selectedIndex].regions" ng-include="'tree_renderer.html'"></div>
+                        <div class="col-md-4" ng-repeat="region in sitemap[selectedIndex].regions" ng-include="'tree_renderer.html'"></div>
                     </div>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="card card-block">
                     <div class="row">
-                        <div class="col-md-12" ng-repeat="region in hierarchy[selectedIndex].offline" ng-include="'tree_renderer.html'"></div>
+                        <div class="col-md-12" ng-repeat="region in sitemap[selectedIndex].offline" ng-include="'tree_renderer.html'"></div>
                     </div>
                 </div>
             </div>
@@ -77,7 +77,7 @@
     </div>
 </div>
 
-<div class="row m-t-1" ng-if="hierarchy[selectedIndex].hierarchyId != null">
+<div class="row m-t-1" ng-if="sitemap[selectedIndex].sitemapId != null">
     <div class="col-sm-12">
         <div class="card card-block">
             <h3>Statusänderungshistorie</h3>
@@ -88,7 +88,7 @@
                     <th>Neuer Status</th>
                     <th>Datum</th>
                 </thead>
-                <tbody ng-repeat="approval in hierarchy[selectedIndex].approvalList">
+                <tbody ng-repeat="approval in sitemap[selectedIndex].approvalList">
                     <td><a href="/com.Nephthys.user#/{{approval.user.userId}}" target="_blank">{{approval.user.userName}}</a></td>
                     <td>{{approval.oldstatusName}}</td>
                     <td>{{approval.newstatusName}}</td>
@@ -101,7 +101,7 @@
 
 <script type="text/ng-template" id="tree_renderer.html">
     <h4>{{region.description}}</h4>
-    <div ui-tree id="ui-tree-{{region.region}}" data-nodrag="{{! hierarchy[selectedIndex].pagesAreEditable}}" data-nodrop="{{! region.pagesAreEditable}}" data-clone-enabled="false" data-max-depth="(region.regionId === null ? 1 : 0)">
+    <div ui-tree id="ui-tree-{{region.region}}" data-nodrag="{{! sitemap[selectedIndex].pagesAreEditable}}" data-nodrop="{{! region.pagesAreEditable}}" data-clone-enabled="false" data-max-depth="(region.regionId === null ? 1 : 0)">
         <ol ui-tree-nodes ng-model="region.pages">
             <li ng-repeat="page in region.pages" ui-tree-node ng-include="'tree_nodes_renderer.html'"></li>
         </ol>

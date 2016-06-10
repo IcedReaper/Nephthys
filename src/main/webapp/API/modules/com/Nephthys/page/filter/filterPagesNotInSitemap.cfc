@@ -2,7 +2,7 @@ component implements="API.interfaces.filter" {
     import "API.modules.com.Nephthys.page.*";
     
     public filter function init() {
-        variables.hierarchyId   = null;
+        variables.sitemapId   = null;
         
         variables.qRes    = null;
         variables.results = null;
@@ -10,8 +10,8 @@ component implements="API.interfaces.filter" {
         return this;
     }
     
-    public filter function setHierarchyId(required numeric hierarchyId) {
-        variables.hierarchyId = arguments.hierarchyId;
+    public filter function setSitemapId(required numeric sitemapId) {
+        variables.sitemapId = arguments.sitemapId;
         return this;
     }
     
@@ -24,15 +24,24 @@ component implements="API.interfaces.filter" {
         var where   = "";
         var orderBy = "";
         
-        sql = "    SELECT hp.hierarchyPageId
-                     FROM nephthys_page_hierarchyPage hp";
-        where = "";
-        if(variables.hierarchyId != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & " hp.hierarchyId = :hierarchyId";
-            qryFilter.addParam(name = "hierarchyId", value = variables.hierarchyId, cfsqltype = "cf_sql_numeric");
+        var innerQuery = "    SELECT sp.pageId
+                                FROM nephthys_page_sitemapPage sp
+                          INNER JOIN nephthys_page_sitemap     sm ON sp.sitemapId = sm.sitemapId";
+        
+        var innerWhere = "";
+        if(variables.sitemapId != null) {
+            innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "sm.sitemapId = :sitemapId";
+            qryFilter.addParam(name = "sitemapId", value = variables.sitemapId, cfsqltype = "cf_sql_numeric");
         }
         
-        orderBy = " ORDER BY hp.hierarchyPageId ASC";
+        innerQuery &= innerWhere;
+        sql = "    SELECT DISTINCT p.pageId
+                     FROM nephthys_page_page p
+               INNER JOIN nephthys_page_pageVersion pv ON p.pageId = pv.pageId
+               INNER JOIN nephthys_page_status      ps ON pv.statusId = ps.statusId";
+        where = " WHERE p.pageId NOT IN ( " & innerQuery & " )";
+        
+        orderBy = " ORDER BY p.pageId ASC";
         
         variables.qRes = qryFilter.setSQL(sql & where & orderBy)
                                   .execute()
@@ -49,7 +58,7 @@ component implements="API.interfaces.filter" {
         if(variables.results == null) {
             variables.results = [];
             for(var i = 1; i <= variables.qRes.getRecordCount(); i++) {
-                variables.results.append(new hierarchyPage(variables.qRes.hierarchyPageId[i]));
+                variables.results.append(new page(variables.qRes.pageId[i]));
             }
         }
         return variables.results;

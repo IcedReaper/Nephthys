@@ -1,6 +1,6 @@
 component {
-    public hierarchyPage function init(required numeric hierarchyPageId) {
-        variables.hierarchyPageId = arguments.hierarchyPageId;
+    public sitemapPage function init(required numeric sitemapPageId) {
+        variables.sitemapPageId = arguments.sitemapPageId;
         
         variables.attributesChanged = false;
         
@@ -9,40 +9,40 @@ component {
         return this;
     }
     
-    public hierarchyPage function setHierarchy(required hierarchy hierarchy) {
-        if(variables.hierarchyPageId == null) {
-            variables.hierarchy = arguments.hierarchy;
+    public sitemapPage function setSitemap(required sitemap sitemap) {
+        if(variables.sitemapPageId == null) {
+            variables.sitemap = arguments.sitemap;
         }
         return this;
     }
     
-    public hierarchyPage function setRegion(required region region) {
+    public sitemapPage function setRegion(required region region) {
         variables.region = arguments.region;
         return this;
     }
     
-    public hierarchyPage function setPage(required page page) {
+    public sitemapPage function setPage(required page page) {
         variables.page = arguments.page;
         return this;
     }
     
-    public hierarchyPage function setParentPage(required page parentPage) {
+    public sitemapPage function setParentPage(required page parentPage) {
         variables.parentPage = arguments.parentPage;
         return this;
     }
     
-    public hierarchyPage function setSortOrder(required numeric sortOrder) {
+    public sitemapPage function setSortOrder(required numeric sortOrder) {
         variables.sortOrder = arguments.sortOrder;
         return this;
     }
     
     
-    public numeric function getHierarchyPageId() {
-        return variables.hierarchyPageId;
+    public numeric function getSitemapPageId() {
+        return variables.sitemapPageId;
     }
     
-    public hierarchy function getHierarchy() {
-        return variables.hierarchy;
+    public sitemap function getSitemap() {
+        return variables.sitemap;
     }
     
     public page function getPage() {
@@ -58,24 +58,24 @@ component {
     }
     
     
-    public hierarchyPage function save() {
-        var qSave = new Query().addParam(name = "hierarchyId",  value = variables.hierarchy.getHierarchyId(), cfsqltype = "cf_sql_numeric")
+    public sitemapPage function save() {
+        var qSave = new Query().addParam(name = "sitemapId",  value = variables.sitemap.getSitemapId(), cfsqltype = "cf_sql_numeric")
                                .addParam(name = "regionId",     value = variables.region.getRegionId(),       cfsqltype = "cf_sql_numeric")
                                .addParam(name = "pageId",       value = variables.page.getPageId(),           cfsqltype = "cf_sql_numeric")
                                .addParam(name = "parentPageId", value = variables.parentPageId.getPageId(),   cfsqltype = "cf_sql_numeric")
                                .addParam(name = "sortOrder",    value = variables.sortOrder,                  cfsqltype = "cf_sql_numeric");
         
-        if(variables.hierarchyPageId == null) {
-            variables.hierarchyPageId = qSave.setSQL("INSERT INTO nephthys_page_hierarchyPage
+        if(variables.sitemapPageId == null) {
+            variables.sitemapPageId = qSave.setSQL("INSERT INTO nephthys_page_sitemapPage
                                                                   (
-                                                                      hierarchyId,
+                                                                      sitemapId,
                                                                       regionId,
                                                                       pageId,
                                                                       parentPageId,
                                                                       sortOrder
                                                                   )
                                                            VALUES (
-                                                                      :hierarchyId,
+                                                                      :sitemapId,
                                                                       :regionId,
                                                                       :pageId,
                                                                       :parentPageId,
@@ -83,16 +83,16 @@ component {
                                                                   )")
                                              .execute()
                                              .getResult()
-                                             .newHierarchyPageId[1];
+                                             .newSitemapPageId[1];
         }
         else {
-            qSave.setSQL("UPDATE nephthys_page_hierarchyPage
+            qSave.setSQL("UPDATE nephthys_page_sitemapPage
                              SET regionId     = :regionId
                                  pageId       = :pageId
                                  parentPageId = :parentPageId
                                  sortOrder    = :sortOrder
-                           WHERE hierarchyPageId = hierarchyPageId")
-                 .addParam(name = "hierarchyPageId", value = variables.hierarchyPageId, cfsqltype = "cf_sql_numeric")
+                           WHERE sitemapPageId = sitemapPageId")
+                 .addParam(name = "sitemapPageId", value = variables.sitemapPageId, cfsqltype = "cf_sql_numeric")
                  .execute();
         }
         
@@ -101,35 +101,35 @@ component {
     
     
     public void function delete() {
-        new Query().setSQL("DELETE FROM nephthys_page_hierarchyPage
-                                  WHERE hierarchyPageId = :hierarchyPageId")
-                   .addParam(name = "hierarchyPageId", value = variables.hierarchyPageId, cfsqltype = "cf_sql_numeric")
+        new Query().setSQL("DELETE FROM nephthys_page_sitemapPage
+                                  WHERE sitemapPageId = :sitemapPageId")
+                   .addParam(name = "sitemapPageId", value = variables.sitemapPageId, cfsqltype = "cf_sql_numeric")
                    .execute()
     }
     
     
     private void function load() {
-        if(variables.hierarchyPageId == null) {
-            var qHierarchyPage = new Query().setSQL("SELECT *
-                                                       FROM nephthys_page_hierarchyPage
-                                                      WHERE hierarchyPageId = :hierarchyPageId")
-                                            .addParam(name = "hierarchyPageId", value = variables.hierarchyPageId, cfsqltype = "cf_sql_numeric")
+        if(variables.sitemapPageId == null) {
+            var qSitemapPage = new Query().setSQL("SELECT *
+                                                       FROM nephthys_page_sitemapPage
+                                                      WHERE sitemapPageId = :sitemapPageId")
+                                            .addParam(name = "sitemapPageId", value = variables.sitemapPageId, cfsqltype = "cf_sql_numeric")
                                             .execute()
                                             .getResult();
             
-            if(qHierarchyPage.getRecordCount() == 1) {
-                variables.hierarchy  = new hierarchy(qHierarchyPage.hierarchyId[1]);
-                variables.region     = new region(qHierarchyPage.regionId[1]);
-                variables.page       = new page(qHierarchyPage.pageId[1]);
-                variables.parentPage = new page(qHierarchyPage.parentPageId[1]);
-                variables.sortOrder  = qHierarchyPage.sortOrder[1];
+            if(qSitemapPage.getRecordCount() == 1) {
+                variables.sitemap  = new sitemap(qSitemapPage.sitemapId[1]);
+                variables.region     = new region(qSitemapPage.regionId[1]);
+                variables.page       = new page(qSitemapPage.pageId[1]);
+                variables.parentPage = new page(qSitemapPage.parentPageId[1]);
+                variables.sortOrder  = qSitemapPage.sortOrder[1];
             }
             else {
-                throw(type = "nephthys.notFound.page", message = "The hierarchy page could not be found.");
+                throw(type = "nephthys.notFound.page", message = "The sitemap page could not be found.");
             }
         }
         else {
-            variables.hierarchy  = new hierarchy(null);
+            variables.sitemap  = new sitemap(null);
             variables.region     = new region(null);
             variables.page       = new page(null);
             variables.parentPage = new page(null);

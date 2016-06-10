@@ -72,20 +72,20 @@ nephthysAdminApp
                 });
             },
             
-            getHierarchy: function () {
-                return $http.get("/ajax/com/Nephthys/pages/getHierarchy");
+            getSitemap: function () {
+                return $http.get("/ajax/com/Nephthys/pages/getSitemap");
             },
-            addHierarchyVersion: function () {
-                return $http.get("/ajax/com/Nephthys/pages/addHierarchyVersion");
+            addSitemapVersion: function () {
+                return $http.get("/ajax/com/Nephthys/pages/addSitemapVersion");
             },
-            saveHierarchy: function (hierarchy) {
-                return $http.post("/ajax/com/Nephthys/pages/saveHierarchy", {
-                    hierarchy: hierarchy
+            saveSitemap: function (sitemap) {
+                return $http.post("/ajax/com/Nephthys/pages/saveSitemap", {
+                    sitemap: sitemap
                 });
             },
-            pushHierarchyToStatus: function (hierarchyId, statusId) {
-                return $http.post("/ajax/com/Nephthys/pages/pushHierarchyToStatus", {
-                    hierarchyId: hierarchyId,
+            pushSitemapToStatus: function (sitemapId, statusId) {
+                return $http.post("/ajax/com/Nephthys/pages/pushSitemapToStatus", {
+                    sitemapId: sitemapId,
                     statusId:    statusId
                 });
             },

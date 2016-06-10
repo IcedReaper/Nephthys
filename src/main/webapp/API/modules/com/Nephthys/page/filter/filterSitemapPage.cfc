@@ -2,8 +2,7 @@ component implements="API.interfaces.filter" {
     import "API.modules.com.Nephthys.page.*";
     
     public filter function init() {
-        variables.online   = null;
-        variables.statusId = null;
+        variables.sitemapId   = null;
         
         variables.qRes    = null;
         variables.results = null;
@@ -11,12 +10,8 @@ component implements="API.interfaces.filter" {
         return this;
     }
     
-    public filter function setStatusId(required numeric statusId) {
-        variables.statusId = arguments.statusId;
-        return this;
-    }
-    public filter function setOnline(required boolean online) {
-        variables.online = arguments.online;
+    public filter function setSitemapId(required numeric sitemapId) {
+        variables.sitemapId = arguments.sitemapId;
         return this;
     }
     
@@ -29,20 +24,15 @@ component implements="API.interfaces.filter" {
         var where   = "";
         var orderBy = "";
         
-        sql = "    SELECT h.hierarchyId
-                     FROM nephthys_page_hierarchy h
-               INNER JOIN nephthys_page_status s ON h.statusId = s.statusId";
-        
-        if(variables.statusId != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "h.statusId = :statusId";
-            qryFilter.addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric");
-        }
-        if(variables.online != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "s.online = :online";
-            qryFilter.addParam(name = "online", value = variables.online, cfsqltype = "cf_sql_bit");
+        sql = "    SELECT sp.sitemapPageId
+                     FROM nephthys_page_sitemapPage sp";
+        where = "";
+        if(variables.sitemapId != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & " sp.sitemapId = :sitemapId";
+            qryFilter.addParam(name = "sitemapId", value = variables.sitemapId, cfsqltype = "cf_sql_numeric");
         }
         
-        orderBy = " ORDER BY h.version ASC";
+        orderBy = " ORDER BY sp.sitemapPageId ASC";
         
         variables.qRes = qryFilter.setSQL(sql & where & orderBy)
                                   .execute()
@@ -59,7 +49,7 @@ component implements="API.interfaces.filter" {
         if(variables.results == null) {
             variables.results = [];
             for(var i = 1; i <= variables.qRes.getRecordCount(); i++) {
-                variables.results.append(new hierarchy(variables.qRes.hierarchyId[i]));
+                variables.results.append(new sitemapPage(variables.qRes.sitemapPageId[i]));
             }
         }
         return variables.results;

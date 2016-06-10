@@ -10,7 +10,7 @@ component implements="API.interfaces.filter" {
         
         variables.parentId     = null;
         variables.regionId     = null;
-        variables.hierarchyId  = null;
+        variables.sitemapId  = null;
         
         variables.inSitemap = false;
         
@@ -49,8 +49,8 @@ component implements="API.interfaces.filter" {
         variables.parentId = arguments.parentId;
         return this;
     }
-    public filter function setHierarchyId(required numeric hierarchyId) {
-        variables.hierarchyId = arguments.hierarchyId;
+    public filter function setSitemapId(required numeric sitemapId) {
+        variables.sitemapId = arguments.sitemapId;
         return this;
     }
     public filter function setInSitemap(required boolean inSitemap) {
@@ -69,36 +69,36 @@ component implements="API.interfaces.filter" {
         var innerQuery = "";
         
         if(variables.inSitemap) {
-            var innerQuery = "    SELECT hp.pageId, hp.sortOrder
-                                    FROM nephthys_page_hierarchyPage hp
-                              INNER JOIN nephthys_page_hierarchy h  ON hp.hierarchyId = h.hierarchyId
-                              INNER JOIN nephthys_page_status    hs ON h.statusId = hs.statusId ";
+            var innerQuery = "    SELECT sp.pageId, sp.sortOrder
+                                    FROM nephthys_page_sitemapPage sp
+                              INNER JOIN nephthys_page_sitemap     sm ON sp.sitemapId = sm.sitemapId
+                              INNER JOIN nephthys_page_status      ss ON sm.statusId  = ss.statusId ";
             
             var innerWhere = "";
             if(variables.regionId != null) {
-                innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "hp.regionId = :regionId";
+                innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "sp.regionId = :regionId";
                 qryFilter.addParam(name = "regionId", value = variables.regionId, cfsqltype = "cf_sql_numeric");
             }
             if(variables.online != null) {
-                innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "hs.online = :hsOnline";
+                innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "ss.online = :hsOnline";
                 qryFilter.addParam(name = "hsOnline", value = variables.online, cfsqltype = "cf_sql_bit");
             }
             if(variables.parentId != null) {
-                innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "hp.parentPageId = :parentId";
+                innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "sp.parentPageId = :parentId";
                 qryFilter.addParam(name = "parentId", value = variables.parentId, cfsqltype = "cf_sql_numeric");
             }
             if(variables.statusId != null) {
-                innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "h.statusId = :statusId";
+                innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "sm.statusId = :statusId";
                 qryFilter.addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric");
             }
-            if(variables.hierarchyId != null) {
-                innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "h.hierarchyId = :hierarchyId";
-                qryFilter.addParam(name = "hierarchyId", value = variables.hierarchyId, cfsqltype = "cf_sql_numeric");
+            if(variables.sitemapId != null) {
+                innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "sm.sitemapId = :sitemapId";
+                qryFilter.addParam(name = "sitemapId", value = variables.sitemapId, cfsqltype = "cf_sql_numeric");
             }
             
             innerQuery &= innerWhere;
             
-            innerQuery = " INNER JOIN (" & innerQuery & ") ph ON p.pageId = ph.pageId "
+            innerQuery = " INNER JOIN (" & innerQuery & ") sitemap ON p.pageId = sitemap.pageId "
         }
         
         sql = "    SELECT DISTINCT p.pageId, pv.link

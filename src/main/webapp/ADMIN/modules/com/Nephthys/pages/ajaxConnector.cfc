@@ -275,18 +275,18 @@ component {
                                                    .setStatusId(arguments.statusId)
                                                    .execute()
                                                    .getResultCount();
-        var hierarchiesStillWithThisStatus = new filter().setFor("hierarchy")
+        var sitemapsStillWithThisStatus = new filter().setFor("sitemap")
                                                          .setStatusId(arguments.statusId)
                                                          .execute()
                                                          .getResultCount();
         
-        if(pagesStillWithThisStatus == 0 && hierarchiesStillWithThisStatus == 0) {
+        if(pagesStillWithThisStatus == 0 && sitemapsStillWithThisStatus == 0) {
             new status(arguments.statusId).delete();
             
             return true;
         }
         else {
-            throw(type = "nephthys.application.notAllowed", message = "You cannot delete a status that is still used. There are still " & pagesStillWithThisStatus & " pages and " & hierarchiesStillWithThisStatus & " hierarchies on this status.");
+            throw(type = "nephthys.application.notAllowed", message = "You cannot delete a status that is still used. There are still " & pagesStillWithThisStatus & " pages and " & sitemapsStillWithThisStatus & " sitemaps on this status.");
         }
     }
     
@@ -403,18 +403,18 @@ component {
         return _modules;
     }
     
-    remote array function getHierarchy() {
+    remote array function getSitemap() {
         var regions = new filter().setFor("region")
                                   .execute()
                                   .getResult();
         
-        var hierarchies = new filter().setFor("hierarchy")
+        var sitemaps = new filter().setFor("sitemap")
                                       .execute()
                                       .getResult();
         
-        var preparedHierarchies = [];
-        for(hierarchy in hierarchies) {
-            var preparedApprovalList = prepareApprovalList(new approval(hierarchy.getHierarchyId()).setFor("hierarchyVersion").getApprovalList());
+        var preparedSitemaps = [];
+        for(var sitemap in sitemaps) {
+            var preparedApprovalList = prepareApprovalList(new approval(sitemap.getSitemapId()).setFor("sitemapVersion").getApprovalList());
             
             var preparedRegions = [];
             for(region in regions) {
@@ -422,27 +422,27 @@ component {
                     "name"        = region.getName(),
                     "description" = region.getDescription(),
                     "regionId"    = region.getRegionId(),
-                    "pages"       = getSubPagesForHierarchy(null, region.getRegionId(), hierarchy.getHierarchyId())
+                    "pages"       = getSubPagesForSitemap(null, region.getRegionId(), sitemap.getSitemapId())
                 });
             }
             
-            preparedHierarchies.append({
-                "hierarchyId"      = hierarchy.getHierarchyId(),
-                "version"          = hierarchy.getVersion(),
-                "pagesAreEditable" = hierarchy.getStatus().arePagesEditable(),
-                "statusId"         = hierarchy.getStatus().getStatusId(),
+            preparedSitemaps.append({
+                "sitemapId"        = sitemap.getSitemapId(),
+                "version"          = sitemap.getVersion(),
+                "pagesAreEditable" = sitemap.getStatus().arePagesEditable(),
+                "statusId"         = sitemap.getStatus().getStatusId(),
                 "regions"          = preparedRegions,
                 "approvalList"     = preparedApprovalList,
                 "offline"          = [{
                     "regionId"    = null,
                     "name"        = null,
                     "description" = "Offline",
-                    "pages"       = getSubPagesForHierarchy(null, null, hierarchy.getHierarchyId())
+                    "pages"       = getSubPagesForSitemap(null, null, sitemap.getSitemapId())
                 }]
             });
         }
 
-        return preparedHierarchies;
+        return preparedSitemaps;
     }
     
     remote array function getHiearchyInTasklist() {
@@ -450,27 +450,27 @@ component {
                                            .setPagesRequireAction(true)
                                            .execute();
         
-        var hierarchyFilterCtrl = new filter().setFor("hierarchy");
-        var hierarchyPageFilterCtrl = new filter().setFor("hierarchyPage");
+        var sitemapFilterCtrl = new filter().setFor("sitemap");
+        var sitemapPageFilterCtrl = new filter().setFor("sitemapPage");
         
         var statusData = [];
         var index = 0;
         for(var status in statusFilterCtrl.execute().getResult()) {
             index++;
             statusData[index] = prepareStatusAsArray(status);
-            statusData[index]["hierarchies"] = [];
+            statusData[index]["sitemaps"] = [];
             
-            for(var hierarchy in hierarchyFilterCtrl.setStatusId(status.getStatusId()).execute().getResult()) {
-                statusData[index]["hierarchies"].append({
-                    "hierarchyId"      = hierarchy.getHierarchyId(),
-                    "version"          = hierarchy.getVersion(),
-                    "pagesAreEditable" = hierarchy.getStatus().arePagesEditable(),
-                    "statusId"         = hierarchy.getStatus().getStatusId(),
-                    "creator"          = getUserInformation(hierarchy.getCreator()),
-                    "creationDate"     = formatCtrl.formatDate(hierarchy.getCreationDate()),
-                    "lastEditor"       = getUserInformation(hierarchy.getLastEditor()),
-                    "lastEditDate"     = formatCtrl.formatDate(hierarchy.getLastEditDate()),
-                    "pageCount"        = hierarchyPageFilterCtrl.setHierarchyId(hierarchy.getHierarchyId()).execute().getResultCount()
+            for(var sitemap in sitemapFilterCtrl.setStatusId(status.getStatusId()).execute().getResult()) {
+                statusData[index]["sitemaps"].append({
+                    "sitemapId"        = sitemap.getSitemapId(),
+                    "version"          = sitemap.getVersion(),
+                    "pagesAreEditable" = sitemap.getStatus().arePagesEditable(),
+                    "statusId"         = sitemap.getStatus().getStatusId(),
+                    "creator"          = getUserInformation(sitemap.getCreator()),
+                    "creationDate"     = formatCtrl.formatDate(sitemap.getCreationDate()),
+                    "lastEditor"       = getUserInformation(sitemap.getLastEditor()),
+                    "lastEditDate"     = formatCtrl.formatDate(sitemap.getLastEditDate()),
+                    "pageCount"        = sitemapPageFilterCtrl.setSitemapId(sitemap.getSitemapId()).execute().getResultCount()
                 });
             }
         }
@@ -478,16 +478,16 @@ component {
         return statusData;
     }
     
-    remote struct function addHierarchyVersion() {
-        var hierarchy = getHierarchy();
+    remote struct function addSitemapVersion() {
+        var sitemap = getSitemap();
         
-        var lastIndex = hierarchy.len();
+        var lastIndex = sitemap.len();
         var index = lastIndex + 1;
         
         var statusId = application.system.settings.getValueOfKey("startStatus");
         
-        hierarchy[index] = {
-            "hierarchyId"      = null,
+        sitemap[index] = {
+            "sitemapId"        = null,
             "version"          = javaCast("integer", index),
             "pagesAreEditable" = true,
             "statusId"         = javaCast("integer", statusId),
@@ -496,22 +496,22 @@ component {
         };
         
         if(index > 1) {
-            // existing hierarchy
-            hierarchy[index]["regions"] = duplicate(hierarchy[lastIndex].regions);
-            hierarchy[index]["offline"] = duplicate(hierarchy[lastIndex].offline);
+            // existing sitemap
+            sitemap[index]["regions"] = duplicate(sitemap[lastIndex].regions);
+            sitemap[index]["offline"] = duplicate(sitemap[lastIndex].offline);
         }
         else {
             // without existing completly new
-            hierarchy[index]["regions"] = getRegions();
+            sitemap[index]["regions"] = getRegions();
             
-            for(var i = 1; i <= hierarchy[index]["regions"].len(); ++i) {
-                hierarchy[index]["regions"][i].pages = [];
+            for(var i = 1; i <= sitemap[index]["regions"].len(); ++i) {
+                sitemap[index]["regions"][i].pages = [];
             }
             
-            var notSetIndex = hierarchy[index]["regions"].len();
+            var notSetIndex = sitemap[index]["regions"].len();
             
             for(var page in getList()) {
-                hierarchy[index]["regions"][notSetIndex].pages.append({
+                sitemap[index]["regions"][notSetIndex].pages.append({
                     "pageId" = page.pageId,
                     "title"  = page.linktext,
                     "pages"  = []
@@ -521,32 +521,32 @@ component {
         
         return {
             "newVersion" = javaCast("integer", index),
-            "hierarchy"  = hierarchy
+            "sitemap"  = sitemap
         };
     }
     
-    remote numeric function saveHierarchy(required struct hierarchy) {
+    remote numeric function saveSitemap(required struct sitemap) {
         transaction {
-            var hierarchy = new hierarchy(arguments.hierarchy.hierarchyId);
+            var sitemap = new sitemap(arguments.sitemap.sitemapId);
             
-            hierarchy.setStatus(new status(arguments.hierarchy.statusId))
-                     .setVersion(arguments.hierarchy.version)
-                     .setCreator(request.user)
-                     .setLastEditor(request.user)
-                     .setCreationDate(now())
-                     .setLastEditDate(now())
-                     .save();
+            sitemap.setStatus(new status(arguments.sitemap.statusId))
+                   .setVersion(arguments.sitemap.version)
+                   .setCreator(request.user)
+                   .setLastEditor(request.user)
+                   .setCreationDate(now())
+                   .setLastEditDate(now())
+                   .save();
             
-            hierarchy.updatePagesByRegion(arguments.hierarchy.regions);
+            sitemap.updatePagesByRegion(arguments.sitemap.regions);
             
             transactionCommit();
         }
         
-        return hierarchy.getHierarchyId();
+        return sitemap.getSitemapId();
     }
     
-    remote boolean function pushHierarchyToStatus(required numeric hierarchyId, required numeric statusId) {
-        new hierarchy(arguments.hierarchyId).pushToStatus(new status(arguments.statusId));
+    remote boolean function pushSitemapToStatus(required numeric sitemapId, required numeric statusId) {
+        new sitemap(arguments.sitemapId).pushToStatus(new status(arguments.statusId));
         
         return true;
     }
@@ -554,19 +554,19 @@ component {
     
     
     // P R I V A T E
-    private array function getSubPagesForHierarchy(required numeric parentId, required numeric regionId, required numeric hierarchyId) {
+    private array function getSubPagesForSitemap(required numeric parentId, required numeric regionId, required numeric sitemapId) {
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         if(arguments.regionId != null) {
             var pageFilterCtrl = new filter().setFor("page")
                                              .setInSitemap(true)
                                              .setParentId(arguments.parentId)
-                                             .setHierarchyId(arguments.hierarchyId)
+                                             .setSitemapId(arguments.sitemapId)
                                              .setRegionId(arguments.regionId);
         }
         else {
-            var pageFilterCtrl = new filter().setFor("pagesNotInHierarchy")
-                                             .setHierarchyId(arguments.hierarchyId);
+            var pageFilterCtrl = new filter().setFor("pagesNotInSitemap")
+                                             .setSitemapId(arguments.sitemapId);
         }
         
         pageFilterCtrl.execute();
@@ -577,7 +577,7 @@ component {
             pageData.append({
                 "pageId" = page.getPageId(),
                 "title"  = pageVersion.getLinktext(),
-                "pages"  = arguments.regionId != null ? getSubPagesForHierarchy(page.getPageId(), arguments.regionId, arguments.hierarchyId) : []
+                "pages"  = arguments.regionId != null ? getSubPagesForSitemap(page.getPageId(), arguments.regionId, arguments.sitemapId) : []
             });
         }
         

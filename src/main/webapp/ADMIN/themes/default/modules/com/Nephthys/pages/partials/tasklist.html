@@ -3,7 +3,7 @@
         <a href="#/pages/list" class="btn btn-secondary"><i class="fa fa-list"></i> Seitenübersicht</a>
         <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
         <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
-        <a href="#/hierarchy" class="btn btn-secondary"><i class="fa fa-sitemap"></i> Seitenhierarchie</a>
+        <a href="#/sitemap" class="btn btn-secondary"><i class="fa fa-sitemap"></i> Sitemap</a>
     </div>
     <div class="col-md-2 col-sm-4">
         <div class="pull-right">
@@ -69,7 +69,7 @@
         </table>
     </div>
 </div>
-<div class="row m-t-2" ng-repeat="status in tasklist.hierarchy" ng-if="status.hierarchies.length > 0">
+<div class="row m-t-2" ng-repeat="status in tasklist.sitemap" ng-if="status.sitemaps.length > 0">
     <div class="col-md-12">
         <h3>Sitemaps <small>{{status.name}}</small></h3>
         
@@ -82,20 +82,20 @@
                 <th>Aktionen</th>
             </thead>
             <tbody>
-                <tr ng-repeat="hierarchy in status.hierarchies">
-                    <td>{{hierarchy.hierarchyId}}</td>
-                    <th>{{hierarchy.pageCount}}</th>
+                <tr ng-repeat="sitemap in status.sitemaps">
+                    <td>{{sitemap.sitemapId}}</td>
+                    <th>{{sitemap.pageCount}}</th>
                     <td>
-                        <p><a href="/com.Nephthys.user/user/{{hierarchy.creator.userId}}">{{hierarchy.creator.userName}}</a></p>
-                        <p>{{hierarchy.creationDate}}</p>
+                        <p><a href="/com.Nephthys.user/user/{{sitemap.creator.userId}}">{{sitemap.creator.userName}}</a></p>
+                        <p>{{sitemap.creationDate}}</p>
                     </td>
                     <td>
-                        <p><a href="/com.Nephthys.user/user/{{hierarchy.lastEditor.userId}}">{{hierarchy.lastEditor.userName}}</a></p>
-                        <p>{{hierarchy.lastEditDate}}</p>
+                        <p><a href="/com.Nephthys.user/user/{{sitemap.lastEditor.userId}}">{{sitemap.lastEditor.userName}}</a></p>
+                        <p>{{sitemap.lastEditDate}}</p>
                     </td>
                     <td>
                         <div>
-                            <a href="#/hierarchy"
+                            <a href="#/sitemap"
                                class="btn btn-primary m-r-1"
                                title="Seitendetails">
                                 <i class="fa fa-cog"></i>
@@ -103,7 +103,7 @@
                             
                             <button class="btn btn-primary m-r-1"
                                     ng-repeat="ps in status.nextStatus"
-                                    ng-click="pushHierarchyToStatus(hierarchy.hierarchyId, ps.statusId);">{{ps.name}}</button>
+                                    ng-click="pushSitemapToStatus(sitemap.sitemapId, ps.statusId);">{{ps.name}}</button>
                         </div>
                     </td>
                 </tr>

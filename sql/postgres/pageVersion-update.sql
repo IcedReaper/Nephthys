@@ -546,3 +546,15 @@ GRANT SELECT ON TABLE nephthys_page_hierarchyPage TO nephthys_user;
 GRANT SELECT ON TABLE nephthys_page_approval TO nephthys_user;
 
 update table nephthys_page_status add column pagesRequireAction boolean not null default false;
+
+
+-- 10.6.
+
+alter table nephthys_page_hierarchyPage rename to nephthys_page_sitemapPage;
+alter table nephthys_page_sitemapPage rename column hierarchyPageId to sitemapPageId;
+alter table nephthys_page_hierarchy rename to nephthys_page_sitemap;
+alter table nephthys_page_sitemap rename column hierarchyId to sitemapId;
+alter table nephthys_page_sitemapPage rename column hierarchyId to sitemapId;
+
+alter sequence nephthys_page_hierarchy_hierarchyid_seq rename to nephthys_page_sitemap_sitemapid_seq;
+alter sequence nephthys_page_hierarchyPage_hierarchyPageid_seq rename to nephthys_page_sitemapPage_sitemapPageid_seq;

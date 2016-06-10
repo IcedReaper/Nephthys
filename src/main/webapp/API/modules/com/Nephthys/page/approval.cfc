@@ -12,7 +12,7 @@ component {
         switch(arguments.for) {
             case "pageVersion":
             case "page":
-            case "hierarchy": {
+            case "sitemap": {
                 variables.for = arguments.for;
                 break;
             }
@@ -33,11 +33,11 @@ component {
                            ORDER BY approvalDate DESC";
                     break;
                 }
-                case "hierarchyVersion":
-                case "hierarchy": {
+                case "sitemapVersion":
+                case "sitemap": {
                     sql = "  SELECT *
                                FROM nephthys_page_approval
-                              WHERE hierarchyId = :versionId
+                              WHERE sitemapId = :versionId
                            ORDER BY approvalDate DESC";
                     break;
                 }
@@ -85,10 +85,10 @@ component {
                                        )";
                 break;
             }
-            case "hierarchy": {
+            case "sitemap": {
                 var sql = "INSERT INTO nephthys_page_approval
                                        (
-                                           hierarchyId,
+                                           sitemapId,
                                            prevStatusId,
                                            nextStatusId,
                                            userId

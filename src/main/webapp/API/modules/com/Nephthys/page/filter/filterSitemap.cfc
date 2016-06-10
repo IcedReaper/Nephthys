@@ -2,7 +2,8 @@ component implements="API.interfaces.filter" {
     import "API.modules.com.Nephthys.page.*";
     
     public filter function init() {
-        variables.hierarchyId   = null;
+        variables.online   = null;
+        variables.statusId = null;
         
         variables.qRes    = null;
         variables.results = null;
@@ -10,8 +11,12 @@ component implements="API.interfaces.filter" {
         return this;
     }
     
-    public filter function setHierarchyId(required numeric hierarchyId) {
-        variables.hierarchyId = arguments.hierarchyId;
+    public filter function setStatusId(required numeric statusId) {
+        variables.statusId = arguments.statusId;
+        return this;
+    }
+    public filter function setOnline(required boolean online) {
+        variables.online = arguments.online;
         return this;
     }
     
@@ -24,24 +29,20 @@ component implements="API.interfaces.filter" {
         var where   = "";
         var orderBy = "";
         
-        var innerQuery = "    SELECT hp.pageId
-                                FROM nephthys_page_hierarchyPage hp
-                          INNER JOIN nephthys_page_hierarchy h ON hp.hierarchyId = h.hierarchyId";
+        sql = "    SELECT sm.sitemapId
+                     FROM nephthys_page_sitemap sm
+               INNER JOIN nephthys_page_status s ON sm.statusId = s.statusId";
         
-        var innerWhere = "";
-        if(variables.hierarchyId != null) {
-            innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "h.hierarchyId = :hierarchyId";
-            qryFilter.addParam(name = "hierarchyId", value = variables.hierarchyId, cfsqltype = "cf_sql_numeric");
+        if(variables.statusId != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & "sm.statusId = :statusId";
+            qryFilter.addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric");
+        }
+        if(variables.online != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & "s.online = :online";
+            qryFilter.addParam(name = "online", value = variables.online, cfsqltype = "cf_sql_bit");
         }
         
-        innerQuery &= innerWhere;
-        sql = "    SELECT DISTINCT p.pageId
-                     FROM nephthys_page_page p
-               INNER JOIN nephthys_page_pageVersion pv ON p.pageId = pv.pageId
-               INNER JOIN nephthys_page_status      ps ON pv.statusId = ps.statusId";
-        where = " WHERE p.pageId NOT IN ( " & innerQuery & " )";
-        
-        orderBy = " ORDER BY p.pageId ASC";
+        orderBy = " ORDER BY sm.version ASC";
         
         variables.qRes = qryFilter.setSQL(sql & where & orderBy)
                                   .execute()
@@ -58,7 +59,7 @@ component implements="API.interfaces.filter" {
         if(variables.results == null) {
             variables.results = [];
             for(var i = 1; i <= variables.qRes.getRecordCount(); i++) {
-                variables.results.append(new page(variables.qRes.pageId[i]));
+                variables.results.append(new sitemap(variables.qRes.sitemapId[i]));
             }
         }
         return variables.results;

@@ -248,8 +248,8 @@ component {
                                                          FROM nephthys_page_page p
                                                    INNER JOIN nephthys_page_pageVersion   pv ON p.pageId       = pv.pageId
                                                    INNER JOIN nephthys_page_status        ps ON pv.statusId    = ps.statusId
-                                                   INNER JOIN nephthys_page_hierarchyPage hp ON p.pageId       = hp.pageId
-                                                   INNER JOIN nephthys_page_hierarchy     h  ON hp.hierarchyId = h.hierarchyId
+                                                   INNER JOIN nephthys_page_sitemapPage hp ON p.pageId       = hp.pageId
+                                                   INNER JOIN nephthys_page_sitemap     h  ON hp.sitemapId = h.sitemapId
                                                    INNER JOIN nephthys_page_status        hs ON h.statusId     = hs.statusId
                                                         WHERE ps.online = :online
                                                           AND hs.online = :online) page")

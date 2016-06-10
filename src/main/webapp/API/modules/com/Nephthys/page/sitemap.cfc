@@ -1,13 +1,13 @@
 component {
     import "API.modules.com.Nephthys.user.*";
     
-    public hierarchy function init(required numeric hierarchyId) {
-        variables.hierarchyId = arguments.hierarchyId;
+    public sitemap function init(required numeric sitemapId) {
+        variables.sitemapId = arguments.sitemapId;
         
         
         variables.statusChanged = false;
         
-        variables.hierarchyPages = [];
+        variables.sitemapPages = [];
         variables.pagesLoaded    = false;
         variables.pagesChanged   = false;
         variables.pagesAdded     = [];
@@ -18,46 +18,46 @@ component {
         return this;
     }
     
-    public hierarchy function setStatus(required status status) {
+    public sitemap function setStatus(required status status) {
         variables.status = arguments.status;
         variables.statusChanged = true;
         return this;
     }
     
-    public hierarchy function setVersion(required numeric version) {
-        if(variables.hierarchyId == null) {
+    public sitemap function setVersion(required numeric version) {
+        if(variables.sitemapId == null) {
             variables.version = arguments.version;
         }
         return this;
     }
     
-    public hierarchy function setCreator(required user creator) {
-        if(variables.hierarchyId == null) {
+    public sitemap function setCreator(required user creator) {
+        if(variables.sitemapId == null) {
             variables.creator = arguments.creator;
         }
         return this;
     }
     
-    public hierarchy function setCreationDate(required date creationDate) {
-        if(variables.hierarchyId == null) {
+    public sitemap function setCreationDate(required date creationDate) {
+        if(variables.sitemapId == null) {
             variables.creationDate = arguments.creationDate;
         }
         return this;
     }
     
-    public hierarchy function setLastEditor(required user lastEditor) {
+    public sitemap function setLastEditor(required user lastEditor) {
         variables.lastEditor = arguments.lastEditor;
         return this;
     }
     
-    public hierarchy function setLastEditDate(required date lastEditDate) {
+    public sitemap function setLastEditDate(required date lastEditDate) {
         variables.lastEditDate = arguments.lastEditDate;
         return this;
     }
     
     
-    public numeric function getHierarchyId() {
-        return variables.hierarchyId;
+    public numeric function getSitemapId() {
+        return variables.sitemapId;
     }
     
     public status function getStatus() {
@@ -84,20 +84,20 @@ component {
         return variables.lastEditDate;
     }
     
-    public hierarchy function updatePagesByRegion(required array regions) {
-         new query().setSQL("DELETE FROM nephthys_page_hierarchyPage
-                                  WHERE hierarchyId = :hierarchyId")
-                   .addParam(name = "hierarchyId", value = hierarchyId, cfsqltype = "cf_sql_numeric")
+    public sitemap function updatePagesByRegion(required array regions) {
+         new query().setSQL("DELETE FROM nephthys_page_sitemapPage
+                                  WHERE sitemapId = :sitemapId")
+                   .addParam(name = "sitemapId", value = sitemapId, cfsqltype = "cf_sql_numeric")
                    .execute();
         
         for(var region in arguments.regions) {
-            saveHierarchyLevel(region.regionId, null, region.pages);
+            saveSitemapLevel(region.regionId, null, region.pages);
         }
         
         return this;
     }
     
-    public hierarchy function pushToStatus(required status newStatus) {
+    public sitemap function pushToStatus(required status newStatus) {
         transaction {
             var actualStatus = duplicate(variables.status);
             
@@ -106,7 +106,7 @@ component {
             if(variables.status.isOnline()) {
                 var offlineStatus = new status(application.system.settings.getValueOfKey("endStatus"));
                
-               var actualOnlineCtrl = new filter().setFor("hierarchy")
+               var actualOnlineCtrl = new filter().setFor("sitemap")
                                                   .setOnline(true)
                                                   .execute();
                
@@ -118,7 +118,7 @@ component {
             
             save();
             
-            new approval(variables.hierarchyId).setFor("hierarchy")
+            new approval(variables.sitemapId).setFor("sitemap")
                                                .approve(actualStatus.getStatusId(), variables.status.getStatusId(), request.user.getUserId());
             
             transactionCommit();
@@ -128,14 +128,14 @@ component {
     }
     
     
-    public hierarchy function save() {
+    public sitemap function save() {
         var qSave = new Query().addParam(name = "statusId",       value = variables.status.getStatusId(),   cfsqltype = "cf_sql_numeric")
                                .addParam(name = "version",        value = variables.version,                cfsqltype = "cf_sql_numeric")
                                .addParam(name = "lastEditUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
                                .addParam(name = "lastEditDate",   value = variables.lastEditDate,           cfsqltype = "cf_sql_timestamp");
         
-        if(variables.hierarchyId == null) {
-            variables.hierarchyId = qSave.setSQL("INSERT INTO nephthys_page_hierarchy
+        if(variables.sitemapId == null) {
+            variables.sitemapId = qSave.setSQL("INSERT INTO nephthys_page_sitemap
                                                               (
                                                                   statusId,
                                                                   version,
@@ -152,20 +152,20 @@ component {
                                                                   :lastEditUserId,
                                                                   :lastEditDate
                                                               );
-                                                  SELECT currval('nephthys_page_hierarchy_hierarchyId_seq') newHierarchyId;")
+                                                  SELECT currval('nephthys_page_sitemap_sitemapId_seq') newSitemapId;")
                                          .addParam(name = "creationUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
                                          .addParam(name = "creationDate",   value = variables.creationDate,        cfsqltype = "cf_sql_timestamp")
                                          .execute()
                                          .getResult()
-                                         .newHierarchyId[1];
+                                         .newSitemapId[1];
         }
         else {
-            qSave.setSQL("UPDATE nephthys_page_hierarchy
+            qSave.setSQL("UPDATE nephthys_page_sitemap
                              SET statusId       = :statusId,
                                  lastEditUserId = :lastEditUserId,
                                  lastEditDate   = :lastEditDate
-                           WHERE hierarchyId = :hierarchyId")
-                 .addParam(name = "hierarchyId", value = variables.hierarchyId, cfsqltype = "cf_sql_numeric")
+                           WHERE sitemapId = :sitemapId")
+                 .addParam(name = "sitemapId", value = variables.sitemapId, cfsqltype = "cf_sql_numeric")
                  .execute();
         }
         
@@ -174,35 +174,35 @@ component {
     
     public void function delete() {
         if(variables.status.arePagesDeleteable()) {
-            new Query().setSQL("DELETE FROM nephthys_page_hierarchy
-                                      WHERE hierarchyId = :hierarchyId")
-                       .addParam(name = "hierarchyId", variables = variables.hierarchyId, cfsqltype="cf_sql_numeric")
+            new Query().setSQL("DELETE FROM nephthys_page_sitemap
+                                      WHERE sitemapId = :sitemapId")
+                       .addParam(name = "sitemapId", variables = variables.sitemapId, cfsqltype="cf_sql_numeric")
                        .execute();
         }
         else {
-            throw(type = "nephthys.application.notAllowed", message="You cannot delete a hierarchy which status doesn't allow deletion.");
+            throw(type = "nephthys.application.notAllowed", message="You cannot delete a sitemap which status doesn't allow deletion.");
         }
     }
     
     private void function load() {
-        if(variables.hierarchyId != null) {
-            var qHierarchy = new Query().setSQL("SELECT *
-                                                   FROM nephthys_page_hierarchy
-                                                  WHERE hierarchyId = :hierarchyId")
-                                        .addParam(name = "hierarchyId", value = variables.hierarchyId, cfsqltype = "cf_sql_numeric")
+        if(variables.sitemapId != null) {
+            var qSitemap = new Query().setSQL("SELECT *
+                                                   FROM nephthys_page_sitemap
+                                                  WHERE sitemapId = :sitemapId")
+                                        .addParam(name = "sitemapId", value = variables.sitemapId, cfsqltype = "cf_sql_numeric")
                                         .execute()
                                         .getResult();
             
-            if(qHierarchy.getRecordCount() == 1) {
-                variables.version      = qHierarchy.version[1];
-                variables.status       = new status(qHierarchy.statusId[1]);
-                variables.creator      = new user(qHierarchy.creationUserId[1]);
-                variables.creationDate = qHierarchy.creationDate[1];
-                variables.lastEditor   = new user(qHierarchy.lastEditUserId[1]);
-                variables.lastEditDate = qHierarchy.lastEditDate[1];
+            if(qSitemap.getRecordCount() == 1) {
+                variables.version      = qSitemap.version[1];
+                variables.status       = new status(qSitemap.statusId[1]);
+                variables.creator      = new user(qSitemap.creationUserId[1]);
+                variables.creationDate = qSitemap.creationDate[1];
+                variables.lastEditor   = new user(qSitemap.lastEditUserId[1]);
+                variables.lastEditDate = qSitemap.lastEditDate[1];
             }
             else {
-                throw(type = "nephthys.notFound.page", message = "Could not find the required hierarchy");
+                throw(type = "nephthys.notFound.page", message = "Could not find the required sitemap");
             }
         }
         else {
@@ -217,7 +217,7 @@ component {
     
     private numeric function getMaxVersion() {
         var qMaxVersion = new Query().setSQL("SELECT MAX(version) maxVersion
-                                                FROM nephthys_page_hierarchy")
+                                                FROM nephthys_page_sitemap")
                                      .execute()
                                      .getResult();
         
@@ -230,27 +230,27 @@ component {
     }
     
     private void function loadPages() {
-        variables.hierarchyPages = [];
+        variables.sitemapPages = [];
     }
     
-    private boolean function saveHierarchyLevel(required numeric regionId, required numeric parentPageId, required array pages) {
+    private boolean function saveSitemapLevel(required numeric regionId, required numeric parentPageId, required array pages) {
         for(var i = 1; i <= arguments.pages.len(); i++) {
-            new Query().setSQL("INSERT INTO nephthys_page_hierarchyPage
+            new Query().setSQL("INSERT INTO nephthys_page_sitemapPage
                                             (
-                                                hierarchyId,
+                                                sitemapId,
                                                 regionId,
                                                 pageId,
                                                 parentPageId,
                                                 sortOrder
                                             )
                                      VALUES (
-                                                :hierarchyId,
+                                                :sitemapId,
                                                 :regionId,
                                                 :pageId,
                                                 :parentPageId,
                                                 :sortOrder
                                             )")
-                       .addParam(name = "hierarchyId",  value = variables.hierarchyId,     cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "sitemapId",  value = variables.sitemapId,     cfsqltype = "cf_sql_numeric")
                        .addParam(name = "regionId",     value = arguments.regionId,        cfsqltype = "cf_sql_numeric")
                        .addParam(name = "pageId",       value = arguments.pages[i].pageId, cfsqltype = "cf_sql_numeric")
                        .addParam(name = "parentPageId", value = arguments.parentPageId,    cfsqltype = "cf_sql_numeric", null = arguments.parentPageId == null)
@@ -258,7 +258,7 @@ component {
                        .execute();
             
             if(arguments.pages[i].pages.len() > 0) {
-                saveHierarchyLevel(arguments.regionId, arguments.pages[i].pageId, arguments.pages[i].pages);
+                saveSitemapLevel(arguments.regionId, arguments.pages[i].pageId, arguments.pages[i].pages);
             }
         }
         

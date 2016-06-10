@@ -42,9 +42,9 @@ nephthysAdminApp
                     controller:  "statusDetailCtrl"
                 })
                 
-                .when("/hierarchy", {
-                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/hierarchy.html",
-                    controller: "hierarchyCtrl"
+                .when("/sitemap", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/sitemap.html",
+                    controller: "sitemapCtrl"
                 })
                 .otherwise({
                     redirectTo: "/"

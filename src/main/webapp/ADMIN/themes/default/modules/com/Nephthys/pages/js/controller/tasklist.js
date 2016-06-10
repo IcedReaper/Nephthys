@@ -9,13 +9,13 @@ nephthysAdminApp
                     $scope.tasklist.pages = tasklist;
                 })
         };
-        $scope.loadHierarchy = function () {
-            $scope.tasklist.hierarchy = {};
+        $scope.loadSitemap = function () {
+            $scope.tasklist.sitemap = {};
             
             pagesService
                 .getHiearchyInTasklist()
                 .then(function (tasklist) {
-                    $scope.tasklist.hierarchy = tasklist;
+                    $scope.tasklist.sitemap = tasklist;
                 })
         };
         
@@ -29,19 +29,19 @@ nephthysAdminApp
             }
         };
         
-        $scope.pushHierarchyToStatus = function (hierarchyId, newstatusId) {
-            if(hierarchyId && newstatusId) {
+        $scope.pushSitemapToStatus = function (sitemapId, newstatusId) {
+            if(sitemapId && newstatusId) {
                 pagesService
-                    .pushHierarchyToStatus(hierarchyId,
+                    .pushSitemapToStatus(sitemapId,
                                            newstatusId)
-                    .then($scope.loadHierarchy());
+                    .then($scope.loadSitemap());
             }
         };
         
         $scope.tasklist = {
             pages: {},
-            hierarchy: {}
+            sitemap: {}
         };
         $scope.loadPages();
-        $scope.loadHierarchy();
+        $scope.loadSitemap();
     }]);
