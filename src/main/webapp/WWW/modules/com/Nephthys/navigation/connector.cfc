@@ -24,7 +24,8 @@ component implements="WWW.interfaces.connector" {
     private array function getSitemap(required numeric regionId) {
         var pageFilterCtrl = createObject("component", "API.modules.com.Nephthys.page.filter").init();
         // TODO: regionId istn icht intuitiv. Über Filter laden
-        return pageFilterCtrl.setFor("sitemap")
+        return pageFilterCtrl.setFor("page")
+                             .setInSitemap(true)
                              .setRegionId(arguments.regionId)
                              .setOnline(true)
                              .execute()

@@ -557,10 +557,9 @@ component {
     private array function getSubPagesForHierarchy(required numeric parentId, required numeric regionId, required numeric hierarchyId) {
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
-        
-        
         if(arguments.regionId != null) {
-            var pageFilterCtrl = new filter().setFor("sitemap")
+            var pageFilterCtrl = new filter().setFor("page")
+                                             .setInSitemap(true)
                                              .setParentId(arguments.parentId)
                                              .setHierarchyId(arguments.hierarchyId)
                                              .setRegionId(arguments.regionId);

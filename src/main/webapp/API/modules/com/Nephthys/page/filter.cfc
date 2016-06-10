@@ -6,7 +6,6 @@ component {
     public filter function setFor(required string for) {
         switch(arguments.for) {
             case "page":
-            case "sitemap":
             case "hierarchy":
             case "hierarchyPage":
             case "pagesNotInHierarchy":
