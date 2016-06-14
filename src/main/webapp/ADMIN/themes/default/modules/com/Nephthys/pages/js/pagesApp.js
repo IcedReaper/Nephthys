@@ -2,7 +2,8 @@ var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
                                                            "chart.js",
                                                            "ui.tree",
                                                            "ui.bootstrap",
-                                                           "textAngular"]);
+                                                           "textAngular",
+                                                           "com.nephthys.page.pageVisit"]);
 
 nephthysAdminApp
     .config(["$routeProvider",

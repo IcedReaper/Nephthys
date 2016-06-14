@@ -19,9 +19,16 @@
     </div>
 </div>
 
-
-<uib-tabset active="active">
-    <uib-tab heading="Details">
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a ng-click="showPage('details')" ng-class="tabClasses('details')" class="nav-link clickable">Details</a>
+    </li>
+    <li class="nav-item">
+        <a ng-click="showPage('statistics')" ng-class="tabClasses('statistics')" class="nav-link clickable" ng-disabled="page.pageId == 0">Statistiken</a>
+    </li>
+</ul>
+<div class="tab-content">
+    <div ng-class="pageClasses('details')" class="tab-pane">
         <div class="row" ng-if="! versionSpecified">
             <div class="col-xl-12">
                 <div class="card card-block">
@@ -216,26 +223,19 @@
                 </div>
             </div>
         </div>
-    </uib-tab>
+    </div>
     
-    <uib-tab heading="Statistiken" disable="page.pageId == 0">
-        <div ng-controller="pagesStatisticsCtrl">
+    <div ng-class="pageClasses('statistics')" class="tab-pane" ng-if="page.pageId != 0">
+        <div>
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-block">
-                        <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> Aktualisieren</button>
-                        
-                        <h3>Statistiken</h3>
-                        
-                        <h4 class="datePicker clickable" ng-click="openDatePickerDialog()">
-                            <apan>Von <em>{{fromDate | date:'dd.MM.yyyy' }} bis {{toDate | date:'dd.MM.yyyy' }}</em></span>
-                            <button class="btn btn-link"><i class="fa fa-calendar"></i></button>
-                        </h4>
-                        
-                        <canvas chart-options="chartData.options" chart-series="chartData.series" chart-labels="chartData.labels" chart-data="chartData.data" chart-type="chartData.type" class="chart chart-base ng-isolate-scope" chart-click="handleClick"></canvas>
+                        <nephthys-page-visit page-id="pageId"
+                                             chart-type="bar"
+                                             sort-order="ASC"></nephthys-page-visit>
                     </div>
                 </div>
             </div>
         </div>
-    </uib-tab>
-</uib-tabset>
+    </div>
+</div>

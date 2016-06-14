@@ -1,13 +1,36 @@
-nephthysAdminApp
-    .controller('datePickerModalCtrl', ["$scope", "$uibModalInstance", "items", function ($scope, $uibModalInstance, items) {
+angular.module("nephthys.datePicker", ["ui.bootstrap"])
+    .controller("nephthysDatePickerController", ["$rootScope", "$scope", "$uibModal", function ($rootScope, $scope, $uibModal) {
+        $scope.openDatePickerDialog = function () {
+            $uibModal.open({
+                controller:     "datePickerModalController",
+                templateUrl:    "/themes/default/directive/nephthysDatePicker/nephthysDatePickerModal.html",
+                windowTopClass: "datePickerModal",
+                resolve: {
+                    fromDate: $scope.fromDate,
+                    toDate:   $scope.toDate
+                }
+            }).result.then(function (modalResult) {
+                $scope.fromDate = modalResult.fromDate;
+                $scope.toDate   = modalResult.toDate;
+                
+                $rootScope.$broadcast("nephthys-date-picker-date-changed", {
+                    fromDate: $scope.fromDate,
+                    toDate: $scope.toDate
+                });
+            });
+        };
+        
+        $scope.format = $scope.format || "dd.MM.yyyy";
+    }])
+    .controller("datePickerModalController", ["$scope", "$uibModalInstance", "fromDate", "toDate", function ($scope, $uibModalInstance, fromDate, toDate) {
         var today = function() {
             var now = new Date();
             
             return new Date(now.getFullYear(), now.getMonth(), now.getDate());
         };
         
-        $scope.fromDate = items.fromDate;
-        $scope.toDate   = items.toDate;
+        $scope.fromDate = fromDate;
+        $scope.toDate   = toDate;
         
         $scope.fromDateOptions = {
             startingDay: 1
@@ -45,7 +68,7 @@ nephthysAdminApp
         
         $scope.selectYear = function (selector) {
             switch(selector) {
-                case 'this': {
+                case "this": {
                     $uibModalInstance.close({
                         fromDate: new Date(today().getFullYear(), 0, 1),
                         toDate:   today()
@@ -58,7 +81,7 @@ nephthysAdminApp
         
         $scope.selectMonth = function (selector) {
             switch(selector) {
-                case 'this': {
+                case "this": {
                     var now = new Date();
                     
                     $uibModalInstance.close({
@@ -68,7 +91,7 @@ nephthysAdminApp
                     
                     break;
                 }
-                case 'last': {
+                case "last": {
                     var now = new Date();
                     
                     var fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -96,4 +119,17 @@ nephthysAdminApp
                 });
             }
         };
-    }]);
+    }])
+    .directive("nephthysDatePicker", function() {
+        return {
+            replace: true,
+            restrict: "E",
+            controller: "nephthysDatePickerController",
+            scope: {
+                fromDate: "=fromDate",
+                toDate: "=toDate",
+                format: "@"
+            },
+            templateUrl : "/themes/default/directive/nephthysDatePicker/nephthysDatePicker.html"
+        };
+    });

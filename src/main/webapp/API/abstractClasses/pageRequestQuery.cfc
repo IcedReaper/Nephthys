@@ -4,6 +4,7 @@ component implements="API.interfaces.pageRequestQuery" {
         variables.toDate   = null;
         
         variables.pageId = null;
+        variables.sortOrder = "ASC";
         
         variables.prq = null;
         
@@ -23,6 +24,12 @@ component implements="API.interfaces.pageRequestQuery" {
     public pageRequestQuery function setPageId(required numeric pageId) {
         variables.pageId = arguments.pageId;
         
+        return this;
+    }
+    public pageRequestQuery function setSortOrder(required string sortOrder) {
+        if(uCase(arguments.sortOrder) == "ASC" || uCase(arguments.sortOrder) == "DESC") {
+            variables.sortOrder = arguments.sortOrder;
+        }
         return this;
     }
     

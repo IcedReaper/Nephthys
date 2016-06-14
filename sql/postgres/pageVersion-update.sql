@@ -545,7 +545,7 @@ GRANT SELECT ON TABLE nephthys_page_hierarchy TO nephthys_user;
 GRANT SELECT ON TABLE nephthys_page_hierarchyPage TO nephthys_user;
 GRANT SELECT ON TABLE nephthys_page_approval TO nephthys_user;
 
-update table nephthys_page_status add column pagesRequireAction boolean not null default false;
+alter table nephthys_page_status add column pagesRequireAction boolean not null default false;
 
 
 -- 10.6.

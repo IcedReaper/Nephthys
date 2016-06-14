@@ -31,7 +31,7 @@ component extends="API.abstractClasses.pageRequestQuery" {
                               FROM (SELECT i :: date d 
                                       FROM generate_series(:fromDate, :toDate, '1 month' :: interval) i) dateRange
                    LEFT OUTER JOIN ( " & innerQuery & " ) pageRequests ON dateRange.d = pageRequests._date
-                          ORDER BY dateRange.d";
+                          ORDER BY dateRange.d " & variables.sortOrder;
             
             variables.prq = qPageRequests.setSQL(sql)
                                          .addParam(name = "fromDate", value = variables.fromDate, cfsqltype = "cf_sql_date")

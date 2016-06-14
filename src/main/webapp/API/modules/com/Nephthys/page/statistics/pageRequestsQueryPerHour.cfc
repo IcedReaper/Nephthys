@@ -25,7 +25,7 @@ component extends="API.abstractClasses.pageRequestQuery" {
                               FROM (SELECT i d
                                       FROM generate_series(0, 23) i) dateRange
                    LEFT OUTER JOIN ( " & innerQuery & " ) pageRequests ON dateRange.d = pageRequests._date
-                          ORDER BY dateRange.d"
+                          ORDER BY dateRange.d " & variables.sortOrder;
             
             
             variables.prq = new Query().setSQL(sql)

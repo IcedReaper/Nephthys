@@ -199,7 +199,7 @@ component {
         return true;
     }
     
-    remote struct function getPageRequests(required numeric pageId, required string fromDate, required string toDate) { // format: DD.MM.YYYY // TODO: custom formats by server settings
+    remote struct function getPageRequests(required numeric pageId = null, required string sortOrder, required string fromDate, required string toDate) { // format: DD.MM.YYYY // TODO: custom formats by server settings
         var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
         var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
 
@@ -211,6 +211,7 @@ component {
         if(year(_fromDate) != year(_toDate)) {
             var requestData = new pageRequestsQueryPerYear()
                                       .setPageId(arguments.pageId)
+                                      .setSortOrder(arguments.sortOrder)
                                       .setFromDate(_fromDate)
                                       .setToDate(_toDate)
                                       .execute()
@@ -227,6 +228,7 @@ component {
         else if(month(_fromDate) != month(_toDate)) {
             var requestData = new pageRequestsQueryPerMonth()
                                       .setPageId(arguments.pageId)
+                                      .setSortOrder(arguments.sortOrder)
                                       .setFromDate(_fromDate)
                                       .setToDate(_toDate)
                                       .execute()
@@ -246,6 +248,7 @@ component {
             }
             var requestData = new pageRequestsQueryPerDay()
                                       .setPageId(arguments.pageId)
+                                      .setSortOrder(arguments.sortOrder)
                                       .setFromDate(_fromDate)
                                       .setToDate(_toDate)
                                       .execute()
@@ -261,6 +264,7 @@ component {
         else {
             var requestData = new pageRequestsQueryPerHour()
                                       .setPageId(arguments.pageId)
+                                      .setSortOrder(arguments.sortOrder)
                                       .setFromDate(_fromDate)
                                       .setToDate(_toDate)
                                       .execute()

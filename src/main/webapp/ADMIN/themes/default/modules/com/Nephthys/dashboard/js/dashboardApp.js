@@ -1,5 +1,5 @@
 var nephthysAdminApp = angular.module("nephthysAdminApp", ["chart.js",
-                                                           "ui.bootstrap"]);
+                                                           "com.nephthys.page.pageVisit"]);
 
 nephthysAdminApp
     .config(["$httpProvider", globalAngularAjaxSettings])

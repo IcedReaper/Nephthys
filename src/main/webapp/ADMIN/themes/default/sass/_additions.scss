@@ -63,20 +63,6 @@ body {
     .clickable {
         cursor: pointer;
     }
-
-    .nav-tabs .nav-link {
-        color: #FFFFFF;
-    }
-
-    .tab-content .tab-pane {
-        .card {
-            border-top: 0;
-        }
-        &.active:first-child .card {
-            border-top-left-radius: 0;
-        }
-    }
-
     /* TODO: implement */
     @keyframes spin {
         from { transform: rotate(0deg); }
@@ -130,8 +116,10 @@ body {
     .tab-content {
         .tab-pane {
             &.active {
-                .card.card-block {
-                    border-top-left-radius: 0;
+                > .row:first-child {
+                    .card.card-block {
+                        border-top-left-radius: 0;
+                    }
                 }
             }
         }

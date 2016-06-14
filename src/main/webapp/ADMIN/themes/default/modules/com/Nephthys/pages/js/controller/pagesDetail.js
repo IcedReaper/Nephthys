@@ -1,6 +1,7 @@
 nephthysAdminApp
     .controller('pagesDetailCtrl', ["$scope", "$routeParams", "$q", "pagesService", function ($scope, $routeParams, $q, pagesService) {
         var _actualUser,
+            activePage = "detail",
             
             getStartStatus = function () {
                 for(var status in $scope.status) {
@@ -44,7 +45,7 @@ nephthysAdminApp
             };
         
         $scope.load = function () {
-            $q.all([
+            return $q.all([
                 pagesService.getDetails($routeParams.pageId),
                 pagesService.getStatus(),
                 pagesService.getAvailableSubModules(),
@@ -277,7 +278,24 @@ nephthysAdminApp
             return "btn-warning";
         };
         
-        $scope.load();
+        // tabs and paging
+        $scope.showPage = function (page) {
+            activePage = page;
+        };
+        
+        $scope.tabClasses = function (page) {
+            return (activePage === page ? "active" : "");
+        };
+        
+        $scope.pageClasses = function (page) {
+            return (activePage === page ? "active" : "");
+        };
+        
+        $scope.pageId = $routeParams.pageId;
+        
+        $scope
+            .load()
+            .then($scope.showPage("details"));
         
         $scope.versionSpecified = false;
         if($routeParams.majorVersion && $routeParams.minorVersion !== undefined) {

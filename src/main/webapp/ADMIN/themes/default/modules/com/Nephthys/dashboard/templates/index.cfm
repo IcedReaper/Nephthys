@@ -1,20 +1,19 @@
 <script type="text/javascript" src="/themes/default/assets/ChartJS/Chart.min.js"></script>
-<script type="text/javascript" src="/themes/default/assets/ChartJS/Chart.HorizontalBar.js"></script>
 <script type="text/javascript" src="/themes/default/assets/angular-chart/angular-chart.min.js"></script>
-<link rel="stylesheet" href="/themes/default/assets/angular-chart/angular-chart.min.css"></script> <!--- check if this works - overwise implement resource handler - then refactor resource handler to work with website and admin panel --->
 
 <script src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
+
+<script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/nephthysPageVisit/nephthysPageVisit.js"></script>
+
 
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/dashboardApp.js"></script>
 
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/service/visitService.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/visitCtrl.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/pageCtrl.js"></script>
 
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/service/loginStatisticsService.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/loginStatisticsCtrl.js"></script>
-
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/datePickerModalCtrl.js"></script>
 
 <cfoutput>
 <div class="com-Nephthys-dashboard">
@@ -138,16 +137,8 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="card card-block" ng-controller="pageCtrl">
-                <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> refresh</button>
-                <h2>Verlauf von Seitenaufrufen</h2>
-                
-                <h4 class="datePicker clickable" ng-click="openDatePickerDialog()">
-                    <apan>Von <em>{{fromDate | date:'dd.MM.yyyy' }} bis {{toDate | date:'dd.MM.yyyy' }}</em></span>
-                    <button class="btn btn-link"><i class="fa fa-calendar"></i></button>
-                </h4>
-                
-                <canvas chart-options="chartData.options" chart-series="chartData.series" chart-labels="chartData.labels" chart-data="chartData.data" chart-type="chartData.type" class="chart chart-base ng-isolate-scope" height="1000px" chart-click="handleClick"></canvas>
+            <div class="card card-block">
+                <nephthys-page-visit sort-order="DESC"></nephthys-page-visit>
             </div>
         </div>
     </div>
