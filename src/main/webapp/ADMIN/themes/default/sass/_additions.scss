@@ -100,4 +100,40 @@ body {
     .form-group select {
         margin: 2px 0 1px;
     }
+    
+    
+    // bootstrap 4 adaptions
+    .nav.nav-tabs {
+        .uib-tab {
+            > a {
+                background-color: $highlight-color;
+                color: $highlight-font-color;
+                border-color: #dddddd #dddddd transparent;
+            }
+            &.active {
+                > a {
+                    background-color: $body-bg;
+                    color: $body-color;
+                    border-color: #dddddd #dddddd transparent;
+                }
+            }
+            &.disabled {
+                > a {
+                    background-color: $btn-link-disabled-color;
+                    border-color: #dddddd #dddddd transparent;
+                    color: #ffffff;
+                }
+            }
+        }
+    }
+    
+    .tab-content {
+        .tab-pane {
+            &.active {
+                .card.card-block {
+                    border-top-left-radius: 0;
+                }
+            }
+        }
+    }
 }

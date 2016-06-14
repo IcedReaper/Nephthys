@@ -5,9 +5,6 @@ nephthysAdminApp
             getStartStatus = function () {
                 for(var status in $scope.status) {
                     return $scope.status[status].statusId;
-                    /*if($scope.status[status].startStatus === true) {
-                        return $scope.status[status].statusId;
-                    }*/
                 }
             },
             updateNewVersionVariables = function (majorVersion, minorVersion) {

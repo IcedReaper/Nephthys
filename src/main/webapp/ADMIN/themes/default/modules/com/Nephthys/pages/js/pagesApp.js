@@ -1,6 +1,7 @@
 var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute", 
                                                            "chart.js",
                                                            "ui.tree",
+                                                           "ui.bootstrap",
                                                            "textAngular"]);
 
 nephthysAdminApp
@@ -20,13 +21,13 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/pagesDetail.html",
                     controller:  "pagesDetailCtrl"
                 })
-                .when("/pages/:pageId", {
+                .when("/pages/:pageId/:tabId", {
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/pagesDetail.html",
                     controller:  "pagesDetailCtrl"
                 })
-                .when("/pages/:pageId/statistics", {
-                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/pagesStatistics.html",
-                    controller:  "pagesStatisticsCtrl"
+                .when("/pages/:pageId", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/pagesDetail.html",
+                    controller:  "pagesDetailCtrl"
                 })
                 
                 .when("/status/list", {

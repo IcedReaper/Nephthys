@@ -86,6 +86,8 @@
     11. Dashboard pro User variabel gestaltbar machen
         * Anordnung
         * Module
+    12. Alle (asset) js Files in der index.cfm laden
+    13. Eigene Tabs gegen AngularUI Tabs ersetzen
 
 ## Module (in eigenen Repos/Projekten)
     1. Gallery

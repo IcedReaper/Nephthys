@@ -12,6 +12,7 @@
 <script type="text/javascript" src="/themes/default/assets/angular-ui-tree/angular-ui-tree.min.js"></script>
 <link rel="stylesheet" href="/themes/default/assets/angular-ui-tree/angular-ui-tree.min.css">
 
+<script src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
 
 <!--- app --->
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/pagesApp.js"></script>
