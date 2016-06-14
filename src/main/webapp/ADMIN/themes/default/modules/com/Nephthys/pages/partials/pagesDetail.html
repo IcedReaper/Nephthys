@@ -223,21 +223,16 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-block">
-                        <button ng-click="load()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> Aktualisieren</button>
+                        <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> Aktualisieren</button>
                         
                         <h3>Statistiken</h3>
                         
-                        <h4>Aufrufe der letzten {{dayCount}} Tage</h4>
-                        <form novalidate>
-                            <div class="form-group row">
-                                <label for="dayCount" class="col-sm-5 col-md-3 form-control-label">Anzahl Tage</label>
-                                <div class="col-sm-7 col-md-9">
-                                    <input type="text" class="form-control" id="dayCount" placeholder="dayCount" ng-model="dayCount">
-                                </div>
-                            </div>
-                        </form>
+                        <h4 class="datePicker clickable" ng-click="openDatePickerDialog()">
+                            <apan>Von <em>{{fromDate | date:'dd.MM.yyyy' }} bis {{toDate | date:'dd.MM.yyyy' }}</em></span>
+                            <button class="btn btn-link"><i class="fa fa-calendar"></i></button>
+                        </h4>
                         
-                        <canvas chart-options="visitChart.options" chart-series="visitChart.series" chart-labels="visitChart.labels" chart-data="visitChart.data" class="chart chart-bar"></canvas>
+                        <canvas chart-options="chartData.options" chart-series="chartData.series" chart-labels="chartData.labels" chart-data="chartData.data" chart-type="chartData.type" class="chart chart-base ng-isolate-scope" chart-click="handleClick"></canvas>
                     </div>
                 </div>
             </div>

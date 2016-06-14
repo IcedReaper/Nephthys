@@ -21,10 +21,6 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/pagesDetail.html",
                     controller:  "pagesDetailCtrl"
                 })
-                .when("/pages/:pageId/:tabId", {
-                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/pagesDetail.html",
-                    controller:  "pagesDetailCtrl"
-                })
                 .when("/pages/:pageId", {
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/pagesDetail.html",
                     controller:  "pagesDetailCtrl"

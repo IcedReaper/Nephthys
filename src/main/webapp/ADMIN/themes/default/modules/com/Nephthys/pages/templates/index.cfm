@@ -20,6 +20,7 @@
 <!--- services --->
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/service/pagesService.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/service/pageStatusService.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/service/visitService.js"></script>
 
 <!--- controller --->
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/pagesList.js"></script>
@@ -30,6 +31,8 @@
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/sitemap.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/statusFlow.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/tasklist.js"></script>
+
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/datePickerModal.js"></script>
 
 
 <div class="com-nephthys-page" ng-view></div>

@@ -11,7 +11,7 @@
 - required approvals
 - offene todos ( // TODO: )
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
-
+- Query in pageRequest => in filter
 
 
 ## Allgemein
@@ -49,7 +49,8 @@
         * Berechtigungssystem auf Menüpunkte ausweiten
     21. Erweiterte Sicherheit in Modulen
         * Personen freischalten => Nur normales Editieren
-        * 
+        *
+    22. API-Statistics wie page.filter allen Modulen hinzufügen. - abwägen, und nach und nach
 
 ## Website
     1. Codeoptimierung

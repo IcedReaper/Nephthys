@@ -215,17 +215,17 @@ component {
     
     public pageRequest function saveToStatistics() {
         // TODO: Move to separate statistics component
-        new Query().setSQL("INSERT INTO nephthys_statistics
+        new Query().setSQL("INSERT INTO nephthys_page_statistics
                                         (
-                                            link,
-                                            referrer
+                                            pageId,
+                                            completeLink
                                         )
                                  VALUES (
-                                            :link,
-                                            :referrer
+                                            :pageId,
+                                            :link
                                         )")
-                   .addParam(name = "link",     value = getLink() & variables.parameter, cfsqltype = "cf_sql_varchar")
-                   .addParam(name = "referrer", value = cgi.REFERRER,                    cfsqltype = "cf_sql_varchar")
+                   .addParam(name = "pageId", value = variables.page.getPageId(),      cfsqltype = "cf_sql_numeric")
+                   .addParam(name = "link",   value = getLink() & variables.parameter, cfsqltype = "cf_sql_varchar")
                    .execute();
         
         return this;
@@ -246,11 +246,11 @@ component {
                                                                   ''
                                                               END suffix
                                                          FROM nephthys_page_page p
-                                                   INNER JOIN nephthys_page_pageVersion   pv ON p.pageId       = pv.pageId
-                                                   INNER JOIN nephthys_page_status        ps ON pv.statusId    = ps.statusId
-                                                   INNER JOIN nephthys_page_sitemapPage hp ON p.pageId       = hp.pageId
-                                                   INNER JOIN nephthys_page_sitemap     h  ON hp.sitemapId = h.sitemapId
-                                                   INNER JOIN nephthys_page_status        hs ON h.statusId     = hs.statusId
+                                                   INNER JOIN nephthys_page_pageVersion pv ON p.pageId     = pv.pageId
+                                                   INNER JOIN nephthys_page_status      ps ON pv.statusId  = ps.statusId
+                                                   INNER JOIN nephthys_page_sitemapPage sp ON p.pageId     = sp.pageId
+                                                   INNER JOIN nephthys_page_sitemap     sm ON sp.sitemapId = sm.sitemapId
+                                                   INNER JOIN nephthys_page_status      hs ON sm.statusId  = hs.statusId
                                                         WHERE ps.online = :online
                                                           AND hs.online = :online) page")
                                   .addParam(name = "link",   value = arguments.link, cfsqltype = "cf_sql_varchar")

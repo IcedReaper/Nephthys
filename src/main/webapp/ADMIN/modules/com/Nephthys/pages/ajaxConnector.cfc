@@ -1,5 +1,6 @@
 component {
     import "API.modules.com.Nephthys.page.*";
+    import "API.modules.com.Nephthys.page.statistics.*";
     
     formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
     
@@ -198,21 +199,82 @@ component {
         return true;
     }
     
-    remote struct function loadStatistics(required numeric pageId) {
-        /* TODO: IMplement
-        var page = createObject("component", "API.modules.com.Nephthys.page.page").init(arguments.pageId);
-        
-        var pageStatistics = createObject("component", "API.modules.com.Nephthys.statistics.pageVisit").init();
-        var chartData              = prepareVisitData(pageStatistics.getPageStatistics(dateAdd("d", -30, now()), now(), arguments.pageId));
-        var chartWithParameterData = prepareVisitDataWithParameter(pageStatistics.getPageStatistcsWithParameter(dateAdd("d", -10, now()), now(), arguments.pageId));
-        
-        return {
-            "useDynamicSuffixes" = page.getUseDynamicSuffixes(),
-            "chart"              = chartData,
-            "chartWithParameter" = chartWithParameterData
+    remote struct function getPageRequests(required numeric pageId, required string fromDate, required string toDate) { // format: DD.MM.YYYY // TODO: custom formats by server settings
+        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
+        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+
+        var returnData = {
+            "labels" = [],
+            "data" = []
         };
-        */
-        return {};
+        
+        if(year(_fromDate) != year(_toDate)) {
+            var requestData = new pageRequestsQueryPerYear()
+                                      .setPageId(arguments.pageId)
+                                      .setFromDate(_fromDate)
+                                      .setToDate(_toDate)
+                                      .execute()
+                                      .getResult();
+            
+            
+            returnData.actualView = "perYear";
+            
+            for(var i = 1; i <= requestData.len(); ++i) {
+                returnData.labels[i] = requestData[i].date;
+                returnData.data[i]   = requestData[i].requestCount;
+            }
+        }
+        else if(month(_fromDate) != month(_toDate)) {
+            var requestData = new pageRequestsQueryPerMonth()
+                                      .setPageId(arguments.pageId)
+                                      .setFromDate(_fromDate)
+                                      .setToDate(_toDate)
+                                      .execute()
+                                      .getResult();
+            
+            returnData.actualView = "perMonth";
+            
+            for(var i = 1; i <= requestData.len(); ++i) {
+                returnData.labels[i] = monthAsString(requestData[i].date, "de-DE");
+                returnData.data[i]   = requestData[i].requestCount;
+            }
+        }
+        else if(day(_fromDate) != day(_toDate)) {
+            if(_toDate > now()) {
+                var n = now();
+                _toDate = createDate(year(n), month(n), day(n));
+            }
+            var requestData = new pageRequestsQueryPerDay()
+                                      .setPageId(arguments.pageId)
+                                      .setFromDate(_fromDate)
+                                      .setToDate(_toDate)
+                                      .execute()
+                                      .getResult();
+            
+            returnData.actualView = "perDay";
+            
+            for(var i = 1; i <= requestData.len(); ++i) {
+                returnData.labels[i] = dateFormat(requestData[i].date, "DD.MM.YYYY");
+                returnData.data[i] = requestData[i].requestCount;
+            }
+        }
+        else {
+            var requestData = new pageRequestsQueryPerHour()
+                                      .setPageId(arguments.pageId)
+                                      .setFromDate(_fromDate)
+                                      .setToDate(_toDate)
+                                      .execute()
+                                      .getResult();
+            
+            returnData.actualView = "perHour";
+            
+            for(var i = 1; i <= requestData.len(); ++i) {
+                returnData.labels[i] = requestData[i].date;
+                returnData.data[i] = requestData[i].requestCount;
+            }
+        }
+        
+        return returnData;
     }
     
     // STATUS

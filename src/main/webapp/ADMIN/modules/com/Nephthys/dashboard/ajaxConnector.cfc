@@ -1,5 +1,6 @@
 component {
     import "API.modules.com.Nephthys.statistics.*";
+    import "API.modules.com.Nephthys.page.statistics.*";
     
     remote struct function getTodaysVisits() {
         var today = now();

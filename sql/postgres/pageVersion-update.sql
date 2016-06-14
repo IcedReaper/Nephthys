@@ -558,3 +558,43 @@ alter table nephthys_page_sitemapPage rename column hierarchyId to sitemapId;
 
 alter sequence nephthys_page_hierarchy_hierarchyid_seq rename to nephthys_page_sitemap_sitemapid_seq;
 alter sequence nephthys_page_hierarchyPage_hierarchyPageid_seq rename to nephthys_page_sitemapPage_sitemapPageid_seq;
+
+
+-- 14.6.
+
+create table nephthys_page_statistics
+(
+    statisticsId serial primary key,
+    pageId integer not null references nephthys_page_page on delete cascade,
+    completeLink character varying(1024),
+    visitDate  timestamp with time zone not null default now()
+);
+
+
+INSERT INTO nephthys_page_statistics (pageId, completeLink, visitDate) SELECT tmp.pageId, tmp.link, tmp.visitDate FROM (
+SELECT page.pageId,
+       statistics.link,
+       regexp_matches(statistics.link, page.preparredLink || page.suffix || '$', 'i') parameter,
+       statistics.visitDate
+  FROM (
+SELECT pv.pageId,
+'^' || replace(pv.link, '/', '\/') preparredLink,
+CASE 
+WHEN pv.useDynamicSuffixes = true THEN 
+'(?:\/(\w*|\-|\s|\.)*)*'
+ELSE 
+''
+END suffix
+FROM nephthys_page_pageVersion pv
+) page,
+(  SELECT s.link, s.visitDate
+FROM nephthys_statistics s
+) statistics
+ORDER BY statistics.visitDate) tmp;
+
+
+drop table nephthys_statistics;
+drop sequence seq_nephthys_statistics_id;
+
+GRANT SELECT, INSERT ON TABLE nephthys_page_statistics TO nephthys_user;
+GRANT SELECT, UPDATE ON SEQUENCE nephthys_page_statistics_statisticsid_seq TO nephthys_user;

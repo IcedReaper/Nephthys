@@ -3,6 +3,8 @@ component implements="API.interfaces.pageRequestQuery" {
         variables.fromDate = null;
         variables.toDate   = null;
         
+        variables.pageId = null;
+        
         variables.prq = null;
         
         return this;
@@ -15,6 +17,11 @@ component implements="API.interfaces.pageRequestQuery" {
     }
     public pageRequestQuery function setToDate(required date _date) {
         variables.toDate = arguments._date;
+        
+        return this;
+    }
+    public pageRequestQuery function setPageId(required numeric pageId) {
+        variables.pageId = arguments.pageId;
         
         return this;
     }
