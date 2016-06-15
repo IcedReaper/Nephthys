@@ -109,7 +109,7 @@ component {
     
     
     private void function load() {
-        if(variables.sitemapPageId == null) {
+        if(variables.sitemapPageId != null) {
             var qSitemapPage = new Query().setSQL("SELECT *
                                                        FROM nephthys_page_sitemapPage
                                                       WHERE sitemapPageId = :sitemapPageId")
@@ -118,7 +118,7 @@ component {
                                             .getResult();
             
             if(qSitemapPage.getRecordCount() == 1) {
-                variables.sitemap  = new sitemap(qSitemapPage.sitemapId[1]);
+                variables.sitemap    = new sitemap(qSitemapPage.sitemapId[1]);
                 variables.region     = new region(qSitemapPage.regionId[1]);
                 variables.page       = new page(qSitemapPage.pageId[1]);
                 variables.parentPage = new page(qSitemapPage.parentPageId[1]);
@@ -129,7 +129,7 @@ component {
             }
         }
         else {
-            variables.sitemap  = new sitemap(null);
+            variables.sitemap    = new sitemap(null);
             variables.region     = new region(null);
             variables.page       = new page(null);
             variables.parentPage = new page(null);

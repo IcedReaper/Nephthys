@@ -514,7 +514,7 @@ component {
         return preparedSitemaps;
     }
     
-    remote array function getHiearchyInTasklist() {
+    remote array function getSitemapInTasklist() {
         var statusFilterCtrl = new filter().setFor("status")
                                            .setPagesRequireAction(true)
                                            .execute();

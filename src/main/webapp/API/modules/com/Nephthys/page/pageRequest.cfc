@@ -188,9 +188,6 @@ component {
     public page function getParentPage() {
         return variables.pageVersion.getParentPage();
     }
-    /*public array function getChildPages() {
-        return variables.page.getChildPages();
-    }*/
     public user function getCreator() {
         return variables.pageVersion.getCreator();
     }
@@ -232,29 +229,65 @@ component {
     }
     
     private void function loadPage(required string link) {
-        var pageRequestFilter = new filter().setFor("pageRequest").setLink(arguments.link).execute();
+        var pageRequestFilter = new filter().setFor("pageRequest")
+                                            .setLink(arguments.link)
+                                            .execute();
         
         if(pageRequestFilter.getResultCount() == 1) {
             var filterResult = pageRequestFilter.getResult()[1];
             variables.page = filterResult.page;
             variables.parameter = filterResult.parameter;
-            
-            if(variables.version == "actual") {
-                variables.pageVersion = variables.page.getActualPageVersion();
-            }
-            else {
-                // TODO: security check - only from admin panel
-                // TODO: check - should fail at the moment
-                /*if(variables.page.versionExists(variables.version)) {
-                    variables.pageVersion = variables.page.getPageVersion(variables.version);
-                }
-                else {
-                    throw(type = "nephthys.notFound.page", message = "The version of the page could not be found.", detail = variables.version);
-                }*/
-            }
         }
         else {
-            throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = arguments.link);
+            if(application.system.settings.getValueOfKey("useFirstPageAsStartPage") && 
+               pageRequestFilter.getResultCount() == 0 && arguments.link == "/") {
+                // if we have the root page and it doesn't exist we'll get the first existing page
+                variables.parameter = "";
+                
+                var sitemap = new filter().setFor("sitemap")
+                                          .setOnline(true)
+                                          .execute()
+                                          .getResult();
+                if(sitemap.len() >= 1) {
+                    var sitemapId = sitemap[1].getSitemapId();
+                    
+                    var sitemapPages = new filter().setFor("sitemapPage")
+                                                   .setSitemapId(sitemapId)
+                                                   .execute()
+                                                   .getResult();
+                    
+                    if(sitemapPages.len() >= 1) {
+                        variables.page = sitemapPages[1].getPage();
+                        
+                        if(application.system.settings.getValueOfKey("redirectToFirstPage")) {
+                            location(addtoken = false, statuscode = "301", url = variables.page.getActualPageVersion().getLink());
+                        }
+                    }
+                    else {
+                        throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = arguments.link);
+                    }
+                }
+                else {
+                    throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = arguments.link);
+                }
+            }
+            else {
+                throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = arguments.link);
+            }
+        }
+        
+        if(variables.version == "actual") {
+            variables.pageVersion = variables.page.getActualPageVersion();
+        }
+        else {
+            // TODO: security check - only from admin panel
+            // TODO: check - should fail at the moment
+            /*if(variables.page.versionExists(variables.version)) {
+                variables.pageVersion = variables.page.getPageVersion(variables.version);
+            }
+            else {
+                throw(type = "nephthys.notFound.page", message = "The version of the page could not be found.", detail = variables.version);
+            }*/
         }
     }
 }

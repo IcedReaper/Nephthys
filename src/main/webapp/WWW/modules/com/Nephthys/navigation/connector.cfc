@@ -1,4 +1,6 @@
 component implements="WWW.interfaces.connector" {
+    import "API.modules.com.Nephthys.page.*";
+    
     public connector function init() {
         return this;
     }
@@ -22,12 +24,28 @@ component implements="WWW.interfaces.connector" {
     }
     
     private array function getSitemap(required numeric regionId) {
-        var pageFilterCtrl = createObject("component", "API.modules.com.Nephthys.page.filter").init();
-        return pageFilterCtrl.setFor("page")
-                             .setInSitemap(true)
-                             .setRegionId(arguments.regionId)
-                             .setOnline(true)
-                             .execute()
-                             .getResult();
+        var sitemap = new filter().setFor("sitemap")
+                                          .setOnline(true)
+                                          .execute()
+                                          .getResult();
+        if(sitemap.len() >= 1) {
+            var sitemapId = sitemap[1].getSitemapId();
+            
+            var sitemapPages = new filter().setFor("sitemapPage")
+                                           .setSitemapId(sitemapId)
+                                           .setRegionId(arguments.regionId)
+                                           .execute()
+                                           .getResult();
+            
+            var sites = [];
+            for(var sitemapPage in sitemapPages) {
+                sites.append(sitemapPage.getPage());
+            }
+            
+            return sites;
+        }
+        else {
+            throw(type = "nephthys.notFound.page", message = "Could not find an active sitemap");
+        }
     }
 }

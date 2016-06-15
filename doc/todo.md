@@ -51,7 +51,6 @@
             * Weitere Views (für neue Themes) nachinstallieren?
         * Check im WWW einbauen => Wenn nicht gefunden im Default Theme anzeigen
             * Was passiert, wenn es auch da nicht vorhanden ist? Auslassen und Fehlerloggen? Fehler schmeißen?
-    4. Was passiert, wenn keine Seite mit dem Link / in der aktuellen Sitemap vorhanden ist?
 
 ## Adminbereich
     1. Modulinstallation
@@ -112,6 +111,7 @@
         4. Statistiken mit dem Datepicker aufbereiten
         5. Workflow der Seiten adaptieren?
         6. Alles prüfen
+        7. Statistiken pro Bild
     3. Reviewsystem
         => genre in tags umbenennen
         => Type in Kategorie umbennen

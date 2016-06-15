@@ -11,12 +11,12 @@ component interface="API.interfaces.authenticator" {
         
         var userId = new Query().setSQL("SELECT userid
                                            FROM nephthys_user
-                                          WHERE username = :username
-                                            AND password = :password
-                                            AND active   = :active")
-                                .addParam(name = "username", value = arguments.username, cfsqltype = "cf_sql_varchar")
-                                .addParam(name = "password", value = _password,          cfsqltype = "cf_sql_varchar")
-                                .addParam(name = "active",   value = '1',                cfsqltype = "cf_sql_bit")
+                                          WHERE lower(username) = :username
+                                            AND password        = :password
+                                            AND active          = :active")
+                                .addParam(name = "username", value = lCase(arguments.username), cfsqltype = "cf_sql_varchar")
+                                .addParam(name = "password", value = _password,                 cfsqltype = "cf_sql_varchar")
+                                .addParam(name = "active",   value = '1',                       cfsqltype = "cf_sql_bit")
                                 .execute()
                                 .getResult()
                                 .userid[1];

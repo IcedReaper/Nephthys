@@ -13,7 +13,7 @@ nephthysAdminApp
             $scope.tasklist.sitemap = {};
             
             pagesService
-                .getHiearchyInTasklist()
+                .getSitemapInTasklist()
                 .then(function (tasklist) {
                     $scope.tasklist.sitemap = tasklist;
                 })

@@ -2,7 +2,8 @@ component implements="API.interfaces.filter" {
     import "API.modules.com.Nephthys.page.*";
     
     public filter function init() {
-        variables.sitemapId   = null;
+        variables.sitemapId = null;
+        variables.regionId  = null;
         
         variables.qRes    = null;
         variables.results = null;
@@ -12,6 +13,10 @@ component implements="API.interfaces.filter" {
     
     public filter function setSitemapId(required numeric sitemapId) {
         variables.sitemapId = arguments.sitemapId;
+        return this;
+    }
+    public filter function setRegionId(required numeric regionId) {
+        variables.regionId = arguments.regionId;
         return this;
     }
     
@@ -30,6 +35,10 @@ component implements="API.interfaces.filter" {
         if(variables.sitemapId != null) {
             where &= (where == "" ? " WHERE " : " AND ") & " sp.sitemapId = :sitemapId";
             qryFilter.addParam(name = "sitemapId", value = variables.sitemapId, cfsqltype = "cf_sql_numeric");
+        }
+        if(variables.regionId != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & " sp.regionId = :regionId";
+            qryFilter.addParam(name = "regionId", value = variables.regionId, cfsqltype = "cf_sql_numeric");
         }
         
         orderBy = " ORDER BY sp.sitemapPageId ASC";
