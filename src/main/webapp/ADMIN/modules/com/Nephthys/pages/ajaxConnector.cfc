@@ -193,10 +193,13 @@ component {
     }
     
     remote boolean function delete(required numeric pageId) {
-        // TODO: Implement Security check - has permission
-        new page(arguments.pageId).delete();
-        
-        return true;
+        if(request.user.hasPermission("com.Nephthys.user", "admin")) {
+            new page(arguments.pageId).delete();
+            return true;
+        }
+        else {
+            throw(type = "nephthys.application.insufficientPermissions", message = "You have insufficient permissions. You need the role 'Admin' for the modile com.Nephthys.user");
+        }
     }
     
     remote struct function getPageRequests(required numeric pageId = null, required string sortOrder, required string fromDate, required string toDate) { // format: DD.MM.YYYY // TODO: custom formats by server settings
@@ -480,7 +483,7 @@ component {
         
         var preparedSitemaps = [];
         for(var sitemap in sitemaps) {
-            var preparedApprovalList = prepareApprovalList(new approval(sitemap.getSitemapId()).setFor("sitemapVersion").getApprovalList());
+            var preparedApprovalList = prepareApprovalList(new approval(sitemap.getSitemapId()).setFor("sitemap").getApprovalList());
             
             var preparedRegions = [];
             for(region in regions) {
@@ -653,7 +656,8 @@ component {
     private struct function getUserInformation(required user _user) {
         return {
             "userId"   = arguments._user.getUserId(),
-            "userName" = arguments._user.getUserName()
+            "userName" = arguments._user.getUserName(),
+            "avatar"   = arguments._user.getAvatarPath()
         };
     }
     

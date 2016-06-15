@@ -48,7 +48,6 @@ component implements="API.interfaces.filter" {
     }
     
     public filter function setLikeName(required string likeName) {
-        // todo: security check here
         variables.likeName = arguments.likeName;
         
         return this;

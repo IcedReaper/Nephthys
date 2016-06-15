@@ -232,57 +232,25 @@ component {
     }
     
     private void function loadPage(required string link) {
-        // TODO: add to filter
-        var qGetPage = new Query().setSQL("SELECT page.pageId,
-                                                  page.preparredLink,
-                                                  regexp_matches(:link, page.preparredLink || page.suffix || '$', 'i') parameter,
-                                                  page.suffix
-                                             FROM (    SELECT p.pageId,
-                                                              '^' || replace(pv.link, '/', '\/') preparredLink,
-                                                              CASE 
-                                                                WHEN pv.useDynamicSuffixes = true THEN 
-                                                                  '(?:\/(\w*|\-|\s|\.)*)*'
-                                                                ELSE 
-                                                                  ''
-                                                              END suffix
-                                                         FROM nephthys_page_page p
-                                                   INNER JOIN nephthys_page_pageVersion pv ON p.pageId     = pv.pageId
-                                                   INNER JOIN nephthys_page_status      ps ON pv.statusId  = ps.statusId
-                                                   INNER JOIN nephthys_page_sitemapPage sp ON p.pageId     = sp.pageId
-                                                   INNER JOIN nephthys_page_sitemap     sm ON sp.sitemapId = sm.sitemapId
-                                                   INNER JOIN nephthys_page_status      hs ON sm.statusId  = hs.statusId
-                                                        WHERE ps.online = :online
-                                                          AND hs.online = :online) page")
-                                  .addParam(name = "link",   value = arguments.link, cfsqltype = "cf_sql_varchar")
-                                  .addParam(name = "active", value = 1,              cfsqltype = "cf_sql_bit")
-                                  .addParam(name = "online", value = 1,              cfsqltype = "cf_sql_bit")
-                                  .execute()
-                                  .getResult();
+        var pageRequestFilter = new filter().setFor("pageRequest").setLink(arguments.link).execute();
         
-        if(qGetPage.getRecordCount() == 1) {
-            variables.parameter = "";
-            if(qGetPage.suffix[1] != '') {
-                /*
-                 * replace the link from the database from the url link
-                 * DB: /Gallery
-                 * URL: /Gallery/My-Gallery-1
-                 * Parameter => /My-Gallery-1
-                 */
-                variables.parameter = reReplaceNoCase(arguments.link, qGetPage.preparredLink[1], "");
-            }
-            
-            variables.page = new page(qGetPage.pageId[1]);
+        if(pageRequestFilter.getResultCount() == 1) {
+            var filterResult = pageRequestFilter.getResult()[1];
+            variables.page = filterResult.page;
+            variables.parameter = filterResult.parameter;
             
             if(variables.version == "actual") {
                 variables.pageVersion = variables.page.getActualPageVersion();
             }
             else {
-                if(variables.page.versionExists(variables.version)) {
+                // TODO: security check - only from admin panel
+                // TODO: check - should fail at the moment
+                /*if(variables.page.versionExists(variables.version)) {
                     variables.pageVersion = variables.page.getPageVersion(variables.version);
                 }
                 else {
                     throw(type = "nephthys.notFound.page", message = "The version of the page could not be found.", detail = variables.version);
-                }
+                }*/
             }
         }
         else {

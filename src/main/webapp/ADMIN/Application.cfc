@@ -114,14 +114,14 @@ component {
                         }
                     }
                     errorLogger.setThemePath("/ADMIN/themes/" & themeFoldername)
-                                .show(); // todo: check if needs to be changed to another component
+                               .show();
                     
                     break;
                 }
             }
         }
         catch(any e) {
-            // to be removed!!!
+            // TODO: to be removed!!!
             writeDump(var=e, label="critical error");
         }
     }

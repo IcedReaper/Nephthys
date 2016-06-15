@@ -11,7 +11,6 @@
 <!--- Charts --->
 <!---<script type="text/javascript" src="/themes/default/assets/ChartJS/Chart.min.js"></script>
 <script type="text/javascript" src="/themes/default/assets/angular-chart/angular-chart.min.js"></script>
-<link rel="stylesheet" href="/themes/default/assets/angular-chart/angular-chart.min.css"></script>
 --->
 <!--- tagsInput | for categories --->
 <link rel='stylesheet' href='/themes/default/assets/angular-tagsInput/ng-tags-input.min.css'>

@@ -3,7 +3,8 @@ var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
                                                            "ui.tree",
                                                            "ui.bootstrap",
                                                            "textAngular",
-                                                           "com.nephthys.page.pageVisit"]);
+                                                           "com.nephthys.page.pageVisit",
+                                                           "nephthys.userInfo"]);
 
 nephthysAdminApp
     .config(["$routeProvider",
@@ -66,3 +67,7 @@ Array.prototype.move = function (old_index, new_index) {
 structDeepCopy = function (struct) {
     return JSON.parse(JSON.stringify(struct));
 };
+
+structIsEmpty = function (struct) {
+    return Object.keys(struct).length === 0 && struct.constructor === Object;
+}

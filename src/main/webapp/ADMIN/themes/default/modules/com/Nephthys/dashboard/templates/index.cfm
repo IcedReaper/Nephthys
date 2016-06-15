@@ -9,9 +9,6 @@
 
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/dashboardApp.js"></script>
 
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/service/visitService.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/visitCtrl.js"></script>
-
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/service/loginStatisticsService.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/loginStatisticsCtrl.js"></script>
 
@@ -78,59 +75,27 @@
                 </div>
             </div>
             
-            <div>
-                <div class="card card-block">
-                    <div ng-controller="visitCtrl">
-                        <div class="container-fluid">
-                            <div class="col-sm-12">
-                                <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> refresh</button>
-                                <h2>Seitenbesuchsstatistiken</h2>
-                            </div>
-                        </div>
-                        
-                        <div class="container-fluid">
-                            <div class="col-lg-6 col-md-12">
-                                <h3>Heutige Aufrufe <small>Top 20</small></h3>
-                                <canvas chart-options="todayVisitChart.options" chart-series="todayVisitChart.series" chart-labels="todayVisitChart.labels" chart-data="todayVisitChart.data" class="chart chart-bar ng-isolate-scope"></canvas>
-                                
-                                <ul class="m-b-1 container-fluid">
-                                    <li ng-repeat="legend in todayVisitChartLegend" class="col-md-6"><a href="{{legend.link}}" target="_blank">{{legend.label}}</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-6 col-md-12">
-                                <h3>Gestrige Aufrufe <small>Top 20</small></h3>
-                                <canvas chart-options="yesterdayVisitChart.options" chart-series="yesterdayVisitChart.series" chart-labels="yesterdayVisitChart.labels" chart-data="yesterdayVisitChart.data" class="chart chart-bar ng-isolate-scope"></canvas>
-                                
-                                <ul class="container-fluid">
-                                    <li ng-repeat="legend in yesterdayVisitChartLegend" class="col-md-6"><a href="{{legend.link}}" target="_blank">{{legend.label}}</a></li>
-                                </ul>
-                            </div>
+            <div class="card card-block">
+                <div ng-controller="loginStatisticsCtrl">
+                    <div class="container-fluid">
+                        <div class="col-sm-12">
+                            <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> refresh</button>
+                            <h2>Loginstatistiken</h2>
                         </div>
                     </div>
-                </div>
-                
-                <div class="card card-block">
-                    <div ng-controller="loginStatisticsCtrl">
-                        <div class="container-fluid">
-                            <div class="col-sm-12">
-                                <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> refresh</button>
-                                <h2>Loginstatistiken</h2>
-                            </div>
+                    
+                    <div class="container-fluid">
+                        <div class="col-lg-6 col-md-12">
+                            <h3>Letzte erfolgreiche Logins</h3>
+                            <ul>
+                                <li ng-repeat="login in successfulLogins">{{login.username}} - {{login.loginDate}}</li>
+                            </ul>
                         </div>
-                        
-                        <div class="container-fluid">
-                            <div class="col-lg-6 col-md-12">
-                                <h3>Letzte erfolgreiche Logins</h3>
-                                <ul>
-                                    <li ng-repeat="login in successfulLogins">{{login.username}} - {{login.loginDate}}</li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-6 col-md-12">
-                                <h3>Letzte fehlgeschlagene Logins</h3>
-                                <ul>
-                                    <li ng-repeat="login in failedLogins">{{login.username}} - {{login.loginDate}}</li>
-                                </ul>
-                            </div>
+                        <div class="col-lg-6 col-md-12">
+                            <h3>Letzte fehlgeschlagene Logins</h3>
+                            <ul>
+                                <li ng-repeat="login in failedLogins">{{login.username}} - {{login.loginDate}}</li>
+                            </ul>
                         </div>
                     </div>
                 </div>

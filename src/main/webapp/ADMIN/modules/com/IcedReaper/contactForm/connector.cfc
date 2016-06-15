@@ -8,7 +8,7 @@ component interface="ADMIN.interfaces.connector" {
     }
     
     public boolean function checkPermission(required user user) {
-        return true;//arguments.user.hasPermission(moduleName = getName(), roleName = 'user'); // todo...
+        return arguments.user.hasPermission(moduleName = getName(), roleName = 'user');
     }
     
     public void function render() {

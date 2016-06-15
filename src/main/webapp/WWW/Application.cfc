@@ -39,7 +39,6 @@ component {
         
         switch(lcase(right(arguments.targetPage, 3))) {
             case "cfm": {
-                // todo: seite nicht aktiv fehler zeigen
                 if(! application.system.settings.getValueOfKey("active")) {
                     include template = "themes/" & request.user.getTheme().getFolderName() & "/offline.cfm";
                     abort;
@@ -48,9 +47,8 @@ component {
                 if(! application.system.settings.getValueOfKey("maintenanceMode")) {
                     request.requestType = "cfm";
                     
-                    // check for ses path
                     if(! url.keyExists("pageLink")) {
-                        url.pageLink = "/"; // todo: get First link
+                        url.pageLink = "/";
                     }
                     
                     request.page = createObject("component", "API.modules.com.Nephthys.page.pageRequest").init(url.pageLink);
@@ -124,7 +122,7 @@ component {
                         }
                     }
                     errorLogger.setThemePath("/ADMIN/themes/" & themeFoldername)
-                                .show(); // todo: check if needs to be changed to another component
+                                .show();
                     
                     break;
                 }

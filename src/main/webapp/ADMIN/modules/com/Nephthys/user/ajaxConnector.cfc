@@ -1,6 +1,8 @@
 component {
+    import "API.modules.com.Nephthys.user.*";
+    
     remote array function getList() {
-        var userListCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
+        var userListCtrl = new filter();
         
         var data = [];
         
@@ -17,7 +19,7 @@ component {
     }
     
     remote struct function getDetails(required numeric userId) {
-        var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
+        var user = new user(arguments.userId);
         
         return prepareDetailStruct(user);
     }
@@ -28,7 +30,7 @@ component {
                                 required boolean active,
                                 required string  password,
                                 required numeric themeId) {
-        var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
+        var user = new user(arguments.userId);
         var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.security.encryptionMethodLoader").init();
         
         if(arguments.userId == 0) {
@@ -51,15 +53,14 @@ component {
     }
     
     remote boolean function delete(required numeric userId) {
-        var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
-        fileDelete(expandPath("/upload/com.Nephthys.user/avatar/") & user.getAvatarFilename());
+        var user = new user(arguments.userId);
         user.delete();
         
         return true;
     }
     
     remote boolean function activate(required numeric userId) {
-        var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
+        var user = new user(arguments.userId);
         user.setActiveStatus(1)
             .save();
         
@@ -67,7 +68,7 @@ component {
     }
     
     remote boolean function deactivate(required numeric userId) {
-        var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
+        var user = new user(arguments.userId);
         user.setActiveStatus(0)
             .save();
         
@@ -75,13 +76,13 @@ component {
     }
     
     remote string function uploadAvatar(required numeric userId) {
-        var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
+        var user = new user(arguments.userId);
         
         if(user.getUserId() == request.user.getUserId()) {
             user.uploadAvatar()
                 .save();
             
-            return  "/upload/com.Nephthys.user/avatar/" & user.getAvatarFilename();
+            return  user.getAvatarPath();
         }
         else {
             throw(type = "nephthys.permission.notAuthorized", message = "It is only allowed to upload an avatar for yourself");
@@ -151,8 +152,8 @@ component {
     
     remote array function getExtProperties(required numeric userId) {
         var extProperties = [];
-        var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
-        var extPropertyKeyLoader = createObject("component", "API.modules.com.Nephthys.user.extPropertyKeyLoader").init();
+        var user = new user(arguments.userId);
+        var extPropertyKeyLoader = new extPropertyKeyLoader();
         var objExtProperties = user.getExtProperties();
         var extPropertyKeys = extPropertyKeyLoader.load();
         
@@ -188,9 +189,9 @@ component {
     }
     
     remote boolean function saveExtProperties(required numeric userId, required array extProperties) {
-        var extProperties = createObject("API.modules.com.Nephthys.user.extProperties").init(arguments.userId);
+        var extProperties = new extProperties(arguments.userId);
         for(var i = 1; i <= arguments.extProperties.len(); ++i) {
-            var extPropertyKey = createObject("component", "API.modules.com.Nephthys.user.extPropertyKey").init(arguments.extProperties[i].extPropertyKeyId);
+            var extPropertyKey = new extPropertyKey(arguments.extProperties[i].extPropertyKeyId);
             
             if(arguments.extProperties[i].value != "") {
                 extProperties.set(extPropertyKey.getKeyName(), arguments.extProperties[i].value, arguments.extProperties[i].public);

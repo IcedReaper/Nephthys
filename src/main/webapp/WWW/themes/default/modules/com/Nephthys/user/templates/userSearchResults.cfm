@@ -24,7 +24,6 @@
                                     #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.results[userIndex].getRegistrationDate())#
                                 </div>
                             </div>
-                            <!--- todo: check further information --->
                         </div>
                     </div>
                 </div>

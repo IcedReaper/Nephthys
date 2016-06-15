@@ -1,7 +1,6 @@
 nephthysAdminApp
     .controller('pagesDetailCtrl', ["$scope", "$routeParams", "$q", "pagesService", function ($scope, $routeParams, $q, pagesService) {
         var _actualUser,
-            activePage = "detail",
             
             getStartStatus = function () {
                 for(var status in $scope.status) {
@@ -45,7 +44,7 @@ nephthysAdminApp
             };
         
         $scope.load = function () {
-            return $q.all([
+            $q.all([
                 pagesService.getDetails($routeParams.pageId),
                 pagesService.getStatus(),
                 pagesService.getAvailableSubModules(),
@@ -53,13 +52,17 @@ nephthysAdminApp
                 pagesService.getActualUser()
             ])
             .then($q.spread(function (pageDetails, status, availableSubModules, availableOptions, actualUser) {
-                $scope.page                = pageDetails;
+                $scope.page.availableVersions = pageDetails.availableVersions;
+                $scope.page.actualVersion     = pageDetails.actualVersion;
+                $scope.page.pageId            = pageDetails.pageId;
+                $scope.page.versions          = pageDetails.versions;
                 $scope.status              = status;
                 $scope.availableSubModules = availableSubModules;
                 $scope.availableOptions    = availableOptions;
                 
-                $scope.selectedVersion = pageDetails.actualVersion; // {major, minor}
-                $scope.selectedCompleteVersion = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
+                $scope.selectedVersion.major = pageDetails.actualVersion.major;
+                $scope.selectedVersion.minor = pageDetails.actualVersion.minor;
+                $scope.selectedVersion.complete = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
                 
                 _actualUser = actualUser;
                 
@@ -187,7 +190,7 @@ nephthysAdminApp
         };
         
         $scope.addMajorVersion = function () {
-            var scv = $scope.selectedCompleteVersion.split(".");
+            var scv = $scope.selectedVersion.complete.split(".");
             
             var newMajorVersion = 0;
             var newMinorVersion = 0;
@@ -201,7 +204,7 @@ nephthysAdminApp
             
             $scope.selectedVersion.major = newMajorVersion;
             $scope.selectedVersion.minor = newMinorVersion;
-            $scope.selectedCompleteVersion = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
+            $scope.selectedVersion.complete = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
             $scope.page.availableVersions[newMajorVersion] = [];
             $scope.page.availableVersions[newMajorVersion][0] = newMinorVersion;
             
@@ -213,7 +216,7 @@ nephthysAdminApp
         };
         
         $scope.addMinorVersion = function () {
-            var scv = $scope.selectedCompleteVersion.split(".");
+            var scv = $scope.selectedVersion.complete.split(".");
             var majorVersion = scv[0];
             
             var newMinorVersion = 0;
@@ -226,7 +229,7 @@ nephthysAdminApp
             ++newMinorVersion;
             
             $scope.selectedVersion.minor = newMinorVersion;
-            $scope.selectedCompleteVersion = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
+            $scope.selectedVersion.complete = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
             $scope.page.availableVersions[majorVersion].push(newMinorVersion);
             
             $scope.page.versions[majorVersion][newMinorVersion] = structDeepCopy($scope.page.versions[ scv[0] ][ scv[1] ]);
@@ -236,7 +239,7 @@ nephthysAdminApp
         };
         
         $scope.setVersion = function () {
-            var scv = $scope.selectedCompleteVersion.split(".");
+            var scv = $scope.selectedVersion.complete.split(".");
             var major = scv[0];
             var minor = scv[1];
             
@@ -244,7 +247,7 @@ nephthysAdminApp
         };
         
         $scope.isEditable = function () {
-            if($scope.page) {
+            if($scope.page && ! structIsEmpty($scope.page)) {
                 return $scope.status[$scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].statusId].pagesAreEditable;
             }
             else {
@@ -253,49 +256,22 @@ nephthysAdminApp
         };
         
         $scope.isReadonly = function () {
-            if($scope.page) {
-                return ! $scope.status[$scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].statusId].pagesAreEditable;
-            }
-            else {
-                return true;
-            }
+            return ! $scope.isEditable;
         };
         
-        $scope.statusButtonClass = function (actualOnline, nextOnline) {
-            if(! actualOnline && nextOnline) {
-                return "btn-success";
-            }
-            if(actualOnline && ! nextOnline) {
-                return "btn-danger";
-            }
-            if(! actualOnline && ! nextOnline) {
-                return "btn-primary";
-            }
-            if(actualOnline && nextOnline) {
-                return "btn-secondary";
-            }
-            
-            return "btn-warning";
+        // init values
+        $scope.page = {};
+        $scope.status = {};
+        $scope.availableSubModules = {};
+        $scope.availableOptions = {};
+        $scope.selectedVersion = {
+            major: 1,
+            minor: 0,
+            complete: "1.0"
         };
-        
-        // tabs and paging
-        $scope.showPage = function (page) {
-            activePage = page;
-        };
-        
-        $scope.tabClasses = function (page) {
-            return (activePage === page ? "active" : "");
-        };
-        
-        $scope.pageClasses = function (page) {
-            return (activePage === page ? "active" : "");
-        };
-        
         $scope.pageId = $routeParams.pageId;
         
-        $scope
-            .load()
-            .then($scope.showPage("details"));
+        $scope.load();
         
         $scope.versionSpecified = false;
         if($routeParams.majorVersion && $routeParams.minorVersion !== undefined) {

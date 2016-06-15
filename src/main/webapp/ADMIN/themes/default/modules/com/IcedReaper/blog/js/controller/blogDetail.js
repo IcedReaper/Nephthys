@@ -27,7 +27,7 @@ nephthysAdminApp
         };
         
         $scope.save = function () {
-            var convContent = function() { // todo: change to angular functionality
+            var convContent = function() {
                 var ed = $('div[id^="taTextElement"]').clone();
 
                 ed.find('img[imageId]').each(function(index) {
@@ -97,7 +97,19 @@ nephthysAdminApp
             return (activePage === page ? "active" : "");
         };
         
+        $scope.openReleaseDate = function () {
+            $scope.releaseDate.isOpen = true;
+        }
+        
         // init
+        $scope.releaseDate = {
+            isOpen: false,
+            options: {
+                
+            }
+        };
+        $scope.blogpost = {};
+        
         $scope
             .load()
             .then($scope.showPage('details'));

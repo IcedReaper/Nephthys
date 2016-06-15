@@ -15,6 +15,7 @@ component extends="API.abstractClasses.search" {
     
     private array function getModules() {
         // TODO: refactor when I have a pretty idea for it... :/
+        // Idea: Flag in DB - Filter to get all
         return [
             "modules.com.Nephthys.page",
             "modules.com.Nephthys.user"/*,

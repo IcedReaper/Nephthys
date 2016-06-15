@@ -598,3 +598,5 @@ drop sequence seq_nephthys_statistics_id;
 
 GRANT SELECT, INSERT ON TABLE nephthys_page_statistics TO nephthys_user;
 GRANT SELECT, UPDATE ON SEQUENCE nephthys_page_statistics_statisticsid_seq TO nephthys_user;
+
+alter table nephthys_page_approval rename hierarchyId to sitemapId;

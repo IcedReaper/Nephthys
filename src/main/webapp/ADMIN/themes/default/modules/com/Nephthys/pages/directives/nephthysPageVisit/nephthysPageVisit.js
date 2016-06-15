@@ -137,7 +137,7 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
                 case "bar": {
                     $scope.chart.options = {
                         fixedHeight: true,
-                        height: 500,
+                        height: 450,
                         scales: {
                             yAxes: [{
                                 ticks: {

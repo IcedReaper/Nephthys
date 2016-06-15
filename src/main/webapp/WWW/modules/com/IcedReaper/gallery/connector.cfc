@@ -39,7 +39,7 @@ component implements="WWW.interfaces.connector" {
                 return renderOverview(arguments.options, galleryFilterCtrl, 1);
             }
             else {
-                if(splitParameter[1] == "Seite" && splitParameter.len() == 2) { // todo: Seite multilingual
+                if(splitParameter[1] == "Seite" && splitParameter.len() == 2) {
                     galleryFilterCtrl.setPublished(1)
                                    .setCount(arguments.options.maxEntries)
                                    .setOffset((splitParameter[2]-1) * arguments.options.maxEntries)
@@ -47,7 +47,7 @@ component implements="WWW.interfaces.connector" {
                     
                     return renderOverview(arguments.options, galleryFilterCtrl, splitParameter[2]);
                 }
-                else if(splitParameter[1] == "Kategorie") { // todo: Kategorie multilingual
+                else if(splitParameter[1] == "Kategorie") {
                     if(splitParameter.len() == 2) {
                         galleryFilterCtrl.setPublished(1)
                                          .setCategory(splitParameter[2])
@@ -56,7 +56,7 @@ component implements="WWW.interfaces.connector" {
                         
                         return renderOverview(arguments.options, galleryFilterCtrl, 1);
                     }
-                    else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") { // todo: Seite multilingual
+                    else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") {
                         galleryFilterCtrl.setPublished(1)
                                          .setCategory(splitParameter[2])
                                          .setCount(arguments.options.maxEntries)

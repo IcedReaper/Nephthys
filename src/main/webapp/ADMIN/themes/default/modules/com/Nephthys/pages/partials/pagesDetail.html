@@ -19,16 +19,8 @@
     </div>
 </div>
 
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a ng-click="showPage('details')" ng-class="tabClasses('details')" class="nav-link clickable">Details</a>
-    </li>
-    <li class="nav-item">
-        <a ng-click="showPage('statistics')" ng-class="tabClasses('statistics')" class="nav-link clickable" ng-disabled="page.pageId == 0">Statistiken</a>
-    </li>
-</ul>
-<div class="tab-content">
-    <div ng-class="pageClasses('details')" class="tab-pane">
+<uib-tabset active="active">
+    <uib-tab heading="Details">
         <div class="row" ng-if="! versionSpecified">
             <div class="col-xl-12">
                 <div class="card card-block">
@@ -36,7 +28,7 @@
                         <div class="form-group row">
                             <label for="versionSelection" class="col-md-2 col-sm-4 form-control-label">Version</label>
                             <div class="col-md-8 col-sm-5">
-                                <select class="form-control" id="versionSelection" ng-model="selectedCompleteVersion" ng-change="setVersion()">
+                                <select class="form-control" id="versionSelection" ng-model="selectedVersion.complete" ng-change="setVersion()">
                                     <optgroup ng-repeat="(majorVersion, mvs) in page.availableVersions" label="Majorversion: {{majorVersion}}">
                                         <option ng-repeat="(minorVersion, mnvs) in page.availableVersions[majorVersion]" value="{{majorVersion}}.{{minorVersion}}">Version {{majorVersion}}.{{minorVersion}}</option>
                                     </optgroup>
@@ -214,7 +206,7 @@
                             <th>Datum</th>
                         </thead>
                         <tbody ng-repeat="approval in page.versions[selectedVersion.major][selectedVersion.minor].approvalList">
-                            <td><a href="/com.Nephthys.user#/{{approval.user.userId}}" target="_blank">{{approval.user.userName}}</a></td>
+                            <td><nephthys-user-info user="approval.user"></nephthys-user-info></td>
                             <td>{{approval.previousStatusName}}</td>
                             <td>{{approval.newStatusName}}</td>
                             <td>{{approval.approvalDate}}</td>
@@ -223,9 +215,9 @@
                 </div>
             </div>
         </div>
-    </div>
+    </uib-tab>
     
-    <div ng-class="pageClasses('statistics')" class="tab-pane" ng-if="page.pageId != 0">
+    <uib-tab heading="Statistiken">
         <div>
             <div class="row">
                 <div class="col-md-12">
@@ -237,5 +229,5 @@
                 </div>
             </div>
         </div>
-    </div>
-</div>
+    </uib-tab>
+</uib-tabset>

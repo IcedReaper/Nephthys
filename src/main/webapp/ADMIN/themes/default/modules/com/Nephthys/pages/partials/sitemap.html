@@ -90,9 +90,9 @@
                     <th>Datum</th>
                 </thead>
                 <tbody ng-repeat="approval in sitemap[selectedIndex].approvalList">
-                    <td><a href="/com.Nephthys.user#/{{approval.user.userId}}" target="_blank">{{approval.user.userName}}</a></td>
-                    <td>{{approval.oldstatusName}}</td>
-                    <td>{{approval.newstatusName}}</td>
+                    <td><nephthys-user-info user="approval.user"></nephthys-user-info></td>
+                    <td>{{approval.previousStatusName}}</td>
+                    <td>{{approval.newStatusName}}</td>
                     <td>{{approval.approvalDate}}</td>
                 </tbody>
             </table>

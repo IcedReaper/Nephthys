@@ -1,17 +1,9 @@
 # TODO List
 
 ## Actual Task TODO - Reminder:
-- Page Statistics
-    - refactor unter page module
-        - pageId
-        - paremeter
-        - date
-        - userId ?
-    - Dashboard Statistics
 - required approvals
-- offene todos ( // TODO: )
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
-- Query in pageRequest => in filter
+- Statistiken für sub links (Darstellung?)
 
 
 ## Allgemein
@@ -26,31 +18,29 @@
         * Datasources bei der Installation in einer JSON Datei ablegen und in den Applications auslesen
     7. Updatesystem
     8. Repairmodus ?
-    9. Pfade in DB speichern / Controller what else | aktuell hard-coded an mehreren Stellen
-        * Avatar
-    10. Lizenzen von Assets und Plugins überprüfen
-    11. Mehrsprachigkeit/Internationalisierung
+    9. Lizenzen von Assets und Plugins überprüfen
+    10. Mehrsprachigkeit/Internationalisierung
         * i18n
         * i10n
-    12. filter.cfc auf gleichen Nenner bringen. (Aktuell gibt die Methode mal arrays, mal queries zurück) !!!
-    13. user => username überprüfen
-    14. user => blacklist erstellen | Innerhalb des Username überprüfen
-    15. F5-Raids bei Formularen unterbinden
-    16. Beim anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
-    17. FileUpload, etc in eine Extra-Component aus dem Model auslagern
-    18. Pakete
+    11. filter.cfc auf gleichen Nenner bringen. (Aktuell gibt die Methode mal arrays, mal queries zurück) !!!
+    12. user => username überprüfen
+    13. user => blacklist erstellen | Innerhalb des Username überprüfen
+    14. F5-Raids bei Formularen unterbinden
+    15. Beim anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
+    16. FileUpload, etc in eine Extra-Component aus dem Model auslagern
+    17. Pakete
         * Alles
         * Blog
         * Gallerie
         * Marketing/Produkt
-    19. QueryBuilder zur Unterstützung verschiedener DB-Systeme
+    18. QueryBuilder zur Unterstützung verschiedener DB-Systeme
         * Idee und erste Doku unter QueryBuilder-idea-notes.md
-    20. Zusätzliche Optionen
+    19. Zusätzliche Optionen
         * Berechtigungssystem auf Menüpunkte ausweiten
-    21. Erweiterte Sicherheit in Modulen
+    20. Erweiterte Sicherheit in Modulen
         * Personen freischalten => Nur normales Editieren
         *
-    22. API-Statistics wie page.filter allen Modulen hinzufügen. - abwägen, und nach und nach
+    21. API-Statistics wie page.filter allen Modulen hinzufügen. - abwägen, und nach und nach
 
 ## Website
     1. Codeoptimierung
@@ -61,6 +51,7 @@
             * Weitere Views (für neue Themes) nachinstallieren?
         * Check im WWW einbauen => Wenn nicht gefunden im Default Theme anzeigen
             * Was passiert, wenn es auch da nicht vorhanden ist? Auslassen und Fehlerloggen? Fehler schmeißen?
+    4. Was passiert, wenn keine Seite mit dem Link / in der aktuellen Sitemap vorhanden ist?
 
 ## Adminbereich
     1. Modulinstallation
@@ -89,6 +80,11 @@
         * Module
     12. Alle (asset) js Files in der index.cfm laden
     13. Eigene Tabs gegen AngularUI Tabs ersetzen
+    14. Scss - CSS Editor
+    15. Template Editor?
+    16. Responsive anpassungen
+    17. Design schick machen
+    18. Bei gewissen Modulen easy/export Mode?
 
 ## Module (in eigenen Repos/Projekten)
     1. Gallery
@@ -102,14 +98,20 @@
             * Bewertungen
                 * Anonym per Option
                 * Als eingeloggter User
+        2. Statistiken mit dem Datepicker aufbereiten
+        3. Workflow der Seiten adaptieren?
+        4. Alles prüfen
     2. Blog
-        * Mögliche Verbesserungen:
+        1. Mögliche Verbesserungen:
             * File resizing after upload is only applied by width and height attributes
             * F5-Raiding beim Abschicken des Kommentars möglich (Siehe Allgemein 17)
-        * Kommentarmöglichkeit
+        2. Kommentarmöglichkeit
             * Verschachtelte Kommentarmöglichkeit
-        * Adaptionen in der Übersicht
+        3. Adaptionen in der Übersicht
             * Kalenderübersicht hinzufügen => Klick auf Datum => zeigt alle Posts des Tages
+        4. Statistiken mit dem Datepicker aufbereiten
+        5. Workflow der Seiten adaptieren?
+        6. Alles prüfen
     3. Reviewsystem
         => genre in tags umbenennen
         => Type in Kategorie umbennen
@@ -122,6 +124,7 @@
             * Punkteanzeige
                 * Sterne
                 * Ausgeschrieben
+        * Statistiken
     4. Referenzen
     5. Preis/Leistung
     6. YouTube Videoliste

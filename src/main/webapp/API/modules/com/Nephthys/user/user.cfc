@@ -2,6 +2,8 @@ component {
     public user function init(numeric userId = 0) {
         variables.userId = arguments.userId;
         
+        variables.avatarFolder = "/upload/com.Nephthys.user/avatar/";
+        
         loadDetails();
         
         return this;
@@ -38,10 +40,10 @@ component {
         if(variables.userId != 0) {
             variables.oldAvatarFilename = variables.avatarFilename;
             
-            var uploaded = fileUpload(expandPath("/upload/com.Nephthys.user/avatar/"), "avatar", "image/*", "MakeUnique");
+            var uploaded = fileUpload(expandPath(variables.avatarFolder), "avatar", "image/*", "MakeUnique");
             
             var imageFunctionCtrl = application.system.settings.getValueOfKey("imageEditLibrary");
-            imageFunctionCtrl.resize(expandPath("/upload/com.Nephthys.user/avatar/") & uploaded.serverFile, 1024);
+            imageFunctionCtrl.resize(expandPath(variables.avatarFolder) & uploaded.serverFile, 1024);
             
             variables.avatarFilename = uploaded.serverFile;
         }
@@ -85,7 +87,7 @@ component {
     }
     public string function getAvatarPath(boolean returnAnonymous = true) {
         if(variables.avatarFilename != "" && variables.avatarFilename != null) {
-            return "/upload/com.Nephthys.user/avatar/" & variables.avatarFilename;
+            return variables.avatarFolder & variables.avatarFilename;
         }
         else {
             if(arguments.returnAnonymous) {
@@ -158,19 +160,16 @@ component {
                        .addParam(name = "avatarFilename", value = variables.avatarFilename, cfsqltype = "cf_sql_varchar", null = (variables.avatarFilename == "" || variables.avatarFileName == null))
                        .execute();
             
-            if(variables.keyExists("oldAvatarFilename") && variables.oldAvatarFilename != "" && variables.oldAvatarFilename != null && fileExists(expandPath("/upload/com.Nephthys.user/avatar/") & oldAvatarFilename)) {
-                fileDelete(expandPath("/upload/com.Nephthys.user/avatar/") & variables.oldAvatarFilename);
+            if(variables.keyExists("oldAvatarFilename") && variables.oldAvatarFilename != "" && variables.oldAvatarFilename != null && fileExists(expandPath(variables.avatarFolder) & oldAvatarFilename)) {
+                fileDelete(expandPath(variables.avatarFolder) & variables.oldAvatarFilename);
             }
         }
         return this;
     }
     
     public void function delete() {
-        // todo: implement a check if the user has done something yet.
-        // todo: if the user has done something yet, change the user to anonymous
-                
-        if(fileExists(expandPath("/upload/com.Nephthys.user/avatar/") & variables.avatarFilename)) {
-            fileDelete(expandPath("/upload/com.Nephthys.user/avatar/") & variables.avatarFilename);
+        if(fileExists(expandPath(variables.avatarFolder) & variables.avatarFilename)) {
+            fileDelete(expandPath(variables.avatarFolder) & variables.avatarFilename);
         }
         
         new Query().setSQL("DELETE
@@ -179,7 +178,7 @@ component {
                    .addParam(name = "userId", value = variables.userId, cfsqltype="cf_sql_numeric")
                    .execute();
         
-        variables.userId = -1; // user isn't existing anymore... // todo: change this to delete the calling struct - if possible
+        variables.userId = null;
     }
     
     // I N T E R N A L

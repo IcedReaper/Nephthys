@@ -1,6 +1,8 @@
 component {
+    import "API.modules.com.Nephthys.module.*";
+    
     remote array function getList() {
-        var filterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
+        var filterCtrl = new filter();
         
         var installedModules = filterCtrl.execute()
                                          .getResult();
@@ -14,48 +16,32 @@ component {
     }
     
     remote struct function getDetails(required numeric moduleId) {
-        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        var module = new module(arguments.moduleId);
         
         return prepareModule(module);
     }
     
     remote boolean function save(required numeric moduleId,
-                                required string  moduleName,
-                                required string  description,
-                                required numeric active,
-                                required numeric availableWWW,
-                                required numeric availableADMIN) {
-        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+                                 required string  description,
+                                 required numeric active) {
+        var module = new module(arguments.moduleId);
         
-        // todo: refactor
-        if(arguments.moduleId == 0) {
-            var filterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
-            var modules = filterCtrl.execute()
-                                    .getResult();
-            var maxSortOrder = modules[modules.len()].getSortId() + 1;
-            
-            module.setSortOrder(maxSortOrder + 1);
-        }
-        
-        module.setModuleName(arguments.moduleName)
-              .setDescription(arguments.description)
+        module.setDescription(arguments.description)
               .setActiveStatus(arguments.active)
-              .setAvailableWWW(arguments.availableWWW)
-              .setAvailableADMIN(arguments.availableADMIN)
               .save();
         
         return true;
     }
     
     remote boolean function delete(required numeric moduleId) {
-        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        var module = new module(arguments.moduleId);
         module.delete();
         
         return true;
     }
     
     remote boolean function activate(required numeric moduleId) {
-        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        var module = new module(arguments.moduleId);
         module.setActiveStatus(1)
               .save();
         
@@ -63,7 +49,7 @@ component {
     }
     
     remote boolean function deactivate(required numeric moduleId) {
-        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        var module = new module(arguments.moduleId);
         module.setActiveStatus(0)
               .save();
         
@@ -121,7 +107,7 @@ component {
     }
     
     remote array function getOptions(required numeric moduleId) {
-        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        var module = new module(arguments.moduleId);
         var options = [];
         
         for(var moduleOptions in module.getOptions()) {
@@ -137,7 +123,7 @@ component {
     }
     
     remote array function getSubModules(required numeric moduleId) {
-        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        var module = new module(arguments.moduleId);
         
         var subModules = [];
         for(var subModule in module.getSubModules()) {
@@ -148,7 +134,7 @@ component {
     }
     
     remote array function getUnusedSubModules(required numeric moduleId) {
-        var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
+        var moduleFilterCtrl = new filter();
         
         moduleFilterCtrl.setParentId(arguments.moduleId)
                         .setAvailableWWW(true);
@@ -162,8 +148,8 @@ component {
     }
     
     remote boolean function addSubModules(required numeric moduleId, required array subModules) {
-        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
-        var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
+        var module = new module(arguments.moduleId);
+        var moduleFilterCtrl = new filter();
         
         var subModule = null;
         for(var i = 1; i <= arguments.subModules.len(); ++i) {
@@ -178,7 +164,7 @@ component {
     }
     
     remote boolean function removeSubModules(required numeric moduleId, required array subModules) {
-        var module = createObject("component", "API.modules.com.Nephthys.module.module").init(arguments.moduleId);
+        var module = new module(arguments.moduleId);
         
         var subModule = null;
         for(var i = 1; i <= arguments.subModules.len(); ++i) {

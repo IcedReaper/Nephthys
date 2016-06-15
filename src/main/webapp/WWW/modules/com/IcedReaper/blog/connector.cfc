@@ -42,7 +42,7 @@ component implements="WWW.interfaces.connector" {
             return renderOverview(arguments.options, blogpostFilterCtrl, 1);
         }
         else {
-            if(splitParameter[1] == "Seite" && splitParameter.len() == 2) { // todo: Seite multilingual
+            if(splitParameter[1] == "Seite" && splitParameter.len() == 2) {
                 blogpostFilterCtrl.setReleased(1)
                                   .setCount(arguments.options.maxEntries)
                                   .setOffset((splitParameter[2]-1) * arguments.options.maxEntries)
@@ -50,7 +50,7 @@ component implements="WWW.interfaces.connector" {
                 
                 return renderOverview(arguments.options, blogpostFilterCtrl, splitParameter[2]);
             }
-            else if(splitParameter[1] == "Kategorie") { // todo: Kategorie multilingual
+            else if(splitParameter[1] == "Kategorie") {
                 if(splitParameter.len() == 2) {
                     blogpostFilterCtrl.setReleased(1)
                                       .setCategory(splitParameter[2])
@@ -59,7 +59,7 @@ component implements="WWW.interfaces.connector" {
                     
                     return renderOverview(arguments.options, blogpostFilterCtrl, 1, splitParameter[2]);
                 }
-                else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") { // todo: Seite multilingual
+                else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") {
                     blogpostFilterCtrl.setReleased(1)
                                       .setCategory(splitParameter[2])
                                       .setCount(arguments.options.maxEntries)
@@ -134,7 +134,6 @@ component implements="WWW.interfaces.connector" {
             if(true) { // check referrer
                 if(arguments.blogpost.getCommentsActivated()) {
                     if(len(form.comment) > 0 && len(form.comment) <= 500) {
-                        // todo: check if ip/user/what ever commented > X times the last Y seconds (Spam-Protection)
                         if(request.user.getUserId() != 0 || (arguments.blogpost.getAnonymousCommentAllowed() && validateUsername(form.anonymousUsername) && validateEmail(form.anonymousEmail))) {
                             var newComment = createObject("component", "API.modules.com.IcedReaper.blog.comment").init(0);
                             

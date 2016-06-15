@@ -63,7 +63,7 @@ component {
                                    .addParam(name = "replyUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                    .execute();
                         
-                        /* todo: to smtp server to check this feature...
+                        /* todo: setup smtp server to check this feature...
                         var cf_request = new request(variables.requestId);
                         var eMail = new mail().setFrom(request.user.getUsername() & "<" & request.user.getEmail() & ">")
                                               .setTo(cf_request.getEmail())

@@ -170,10 +170,10 @@
             // https://github.com/jtblin/angular-chart.js/issues/187
             destroyChart(chart, scope);
             
-            // changed by IcedReaper
+            // changes by IcedReaper
             if(scope.chartOptions.fixedBarHeight && scope.chartOptions.barHeight && scope.chartData && scope.chartData.length > 0) {
-                var height = scope.chartOptions.barHeight * scope.chartData[0].length;
-                ctx.canvas.height = height + 35; // 35 is legend height - needs to be dynamic
+                var height = scope.chartOptions.barHeight * scope.chartData[0].length; // todo: get max-length
+                ctx.canvas.height = height + 35; // todo: 35 is x axis height - needs to be dynamic + legend and what so ever
             }
             if(scope.chartOptions.fixedHeight && scope.chartOptions.height) {
                 ctx.canvas.height = scope.chartOptions.height;

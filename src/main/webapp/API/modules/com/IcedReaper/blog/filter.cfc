@@ -20,17 +20,11 @@ component implements="API.interfaces.filter" {
     public filter function setUserId(required numeric userId) {
         variables.userId = arguments.userId;
         
-        // todo: validation
-        // todo: multiple userIds
-        
         return this;
     }
     
     public filter function setBlogpostId(required numeric blogpostId) {
         variables.blogpostId = arguments.blogpostId;
-        
-        // todo: validation
-        // todo: multiple userIds
         
         return this;
     }
@@ -84,7 +78,6 @@ component implements="API.interfaces.filter" {
     }
     
     public filter function setLink(required string link) {
-        // todo: validation
         variables.link = arguments.link;
         
         return this;
@@ -181,8 +174,7 @@ component implements="API.interfaces.filter" {
         
         return variables.qRes.getRecordCount();
     }
+    /* more possible filter parameter:
+     * - adding tags to galleries and filter by them
+     */
 }
-
-/* more possible filter parameter:
- * - adding tags to galleries and filter by them
- */

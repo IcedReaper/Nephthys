@@ -6,19 +6,29 @@ nephthysAdminApp
                 blogService
                     .getLastVisitChart(blogpostId, $scope.dayCount)
                     .then(function (visitData) {
-                        $scope.visitChart = {
-                            labels: visitData.labels,
-                            data:   [visitData.data]
-                        };
+                        $scope.chart.labels = visitData.labels;
+                        $scope.chart.data   = [visitData.data];
                     });
             }
         };
         
         $scope.$watch('dayCount', $scope.load);
         
-        $scope.visitChart = {
+        $scope.chart = {
             labels: [],
-            data:   []
+            data:   [],
+            type:   "bar",
+            options: {
+                fixedHeight: true,
+                height: 450,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
         };
         
         $scope.dayCount = 20;

@@ -1,7 +1,6 @@
 <cfoutput>
 <article class="com-IcedReaper-review">
     <header>
-        <!-- todo optimize -->
         <p class="pull-right">
             <cfif attributes.review.getRating() EQ 0.5>
                 <i class="fa fa-star-half-o"></i>

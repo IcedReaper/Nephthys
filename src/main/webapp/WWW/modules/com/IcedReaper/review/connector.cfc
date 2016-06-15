@@ -19,8 +19,7 @@ component implements="WWW.interfaces.connector" {
         }
         
         if(splitParameter.len() == 0) {
-            reviewFilter//.setPublished(1)
-                        .setCount(arguments.options.maxEntries)
+            reviewFilter.setCount(arguments.options.maxEntries)
                         .execute();
                     
             arguments.options.link = request.page.getLink();
@@ -28,9 +27,8 @@ component implements="WWW.interfaces.connector" {
             return renderOverview(arguments.options, reviewFilter, 1);
         }
         else {
-            if(splitParameter[1] == "Seite" && splitParameter.len() == 2) { // todo: Seite multilingual
-                reviewFilter//.setPublished(1)
-                            .setCount(arguments.options.maxEntries)
+            if(splitParameter[1] == "Seite" && splitParameter.len() == 2) {
+                reviewFilter.setCount(arguments.options.maxEntries)
                             .setOffset((splitParameter[2]-1) * arguments.options.maxEntries)
                             .execute();
                     
@@ -38,10 +36,9 @@ component implements="WWW.interfaces.connector" {
                 
                 return renderOverview(arguments.options, reviewFilter, splitParameter[2]);
             }
-            else if(splitParameter[1] == "Kategorie") { // todo: Kategorie multilingual
+            else if(splitParameter[1] == "Kategorie") {
                 if(splitParameter.len() == 2) {
-                    reviewFilter//.setPublished(1)
-                                .setType(splitParameter[2])
+                    reviewFilter.setType(splitParameter[2])
                                 .setCount(arguments.options.maxEntries)
                                 .execute();
                     
@@ -54,8 +51,7 @@ component implements="WWW.interfaces.connector" {
                     return renderOverview(arguments.options, reviewFilter, 1);
                 }
                 else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") { // todo: Seite multilingual
-                    reviewFilter//.setPublished(1)
-                                .setType(splitParameter[2])
+                    reviewFilter.setType(splitParameter[2])
                                 .setCount(arguments.options.maxEntries)
                                 .setOffset((splitParameter[4]-1) * arguments.options.maxEntries)
                                 .execute();
@@ -84,7 +80,7 @@ component implements="WWW.interfaces.connector" {
                     
                     return renderOverview(arguments.options, reviewFilter, 1);
                 }
-                else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") { // todo: Seite multilingual
+                else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") {
                     reviewFilter//.setPublished(1)
                                 .setGenre(splitParameter[2])
                                 .setCount(arguments.options.maxEntries)
@@ -101,15 +97,12 @@ component implements="WWW.interfaces.connector" {
                 }
             }
             else {
-                var reviews = reviewFilter//.setPublished(1)
-                                          .setLink(request.page.getParameter())
+                var reviews = reviewFilter.setLink(request.page.getParameter())
                                           .execute()
                                           .getResult();
                 
                 if(reviews.len() == 1) {
                     var review = reviews[1];
-                    
-                    //review.incrementViewCounter();
                     
                     request.page.setDescription(review.getDescription())
                                 .setTitle(review.getHeadline());
@@ -142,9 +135,6 @@ component implements="WWW.interfaces.connector" {
     
     private string function renderDetails(required struct options, required review review) {
         var renderedContent = "";
-        //var statisticsCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.statistics").init();
-        
-        //statisticsCtrl.add(arguments.gallery.getGalleryId());
         
         saveContent variable="renderedContent" {
             module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/review/templates/reviewDetail.cfm"

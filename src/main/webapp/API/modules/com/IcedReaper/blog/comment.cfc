@@ -45,9 +45,6 @@ component {
         if(variables.commentId == 0) {
             variables.creatorUserId = arguments.userId;
         }
-        else {
-            // todo: throw???
-        }
         
         return this;
     }
@@ -87,7 +84,7 @@ component {
     public date function getCreationDate() {
         return variables.creationDate;
     }
-    public user function getPublishedUser() { // todo: rename to getPublisher
+    public user function getPublisher() {
         if(! variables.keyExists("publishedUser")) {
             variables.publishedUser = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.publishedUserId);
         }
