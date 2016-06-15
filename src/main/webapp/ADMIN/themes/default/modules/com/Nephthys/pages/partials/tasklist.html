@@ -44,11 +44,11 @@
                     </td>
                     <td>{{page.link}}</td>
                     <td>
-                        <p><a href="/com.Nephthys.user/user/{{page.creator.userId}}">{{page.creator.userName}}</a></p>
+                        <p><nephthys-user-info user="page.creator"></nephthys-user-info></p>
                         <p>{{page.creationDate}}</p>
                     </td>
                     <td>
-                        <p><a href="/com.Nephthys.user/user/{{page.lastEditor.userId}}">{{page.lastEditor.userName}}</a></p>
+                        <p><nephthys-user-info user="sitemap.lastEditor"></nephthys-user-info></p>
                         <p>{{page.lastEditDate}}</p>
                     </td>
                     <td>

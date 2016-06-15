@@ -212,7 +212,7 @@ component {
         };
         
         if(year(_fromDate) != year(_toDate)) {
-            var requestData = new pageRequestsQueryPerYear()
+            var requestData = createObject("component", "total.perYear").init()
                                       .setPageId(arguments.pageId)
                                       .setSortOrder(arguments.sortOrder)
                                       .setFromDate(_fromDate)
@@ -229,7 +229,7 @@ component {
             }
         }
         else if(month(_fromDate) != month(_toDate)) {
-            var requestData = new pageRequestsQueryPerMonth()
+            var requestData = createObject("component", "total.perMonth").init()
                                       .setPageId(arguments.pageId)
                                       .setSortOrder(arguments.sortOrder)
                                       .setFromDate(_fromDate)
@@ -249,7 +249,7 @@ component {
                 var n = now();
                 _toDate = createDate(year(n), month(n), day(n));
             }
-            var requestData = new pageRequestsQueryPerDay()
+            var requestData = createObject("component", "total.perDay").init()
                                       .setPageId(arguments.pageId)
                                       .setSortOrder(arguments.sortOrder)
                                       .setFromDate(_fromDate)
@@ -265,7 +265,7 @@ component {
             }
         }
         else {
-            var requestData = new pageRequestsQueryPerHour()
+            var requestData = createObject("component", "total.perHour").init()
                                       .setPageId(arguments.pageId)
                                       .setSortOrder(arguments.sortOrder)
                                       .setFromDate(_fromDate)

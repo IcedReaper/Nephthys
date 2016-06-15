@@ -6,8 +6,7 @@ component extends="API.abstractClasses.pageRequestQuery" {
             var sql = "";
             var innerQuery = "SELECT COUNT(*) requestCount, date_part('year', visitDate) _date 
                                 FROM nephthys_page_statistics
-                               WHERE date_trunc('month', visitDate) >= :fromDate
-                                 AND date_trunc('month', visitDate) <= :toDate ";
+                               WHERE date_part('year', visitDate) BETWEEN :fromYear AND :toYear ";
             
             if(variables.pageId != null) {
                 innerQuery &= " AND pageId = :pageId ";
@@ -29,10 +28,8 @@ component extends="API.abstractClasses.pageRequestQuery" {
                           ORDER BY dateRange.d " & variables.sortOrder;
             
             variables.prq = qPageRequests.setSQL(sql)
-                                         .addParam(name = "fromDate", value = variables.fromDate,       cfsqltype = "cf_sql_date")
-                                         .addParam(name = "toDate",   value = variables.toDate,         cfsqltype = "cf_sql_date")
-                                         .addParam(name = "fromYear", value = year(variables.fromDate), cfsqltype = "cf_sql_integer")
-                                         .addParam(name = "toYear",   value = year(variables.toDate),   cfsqltype = "cf_sql_integer")
+                                         .addParam(name = "fromYear", value = year(variables.fromDate), cfsqltype = "cf_sql_numeric")
+                                         .addParam(name = "toYear",   value = year(variables.toDate),   cfsqltype = "cf_sql_numeric")
                                          .execute();
             return this;
         }
