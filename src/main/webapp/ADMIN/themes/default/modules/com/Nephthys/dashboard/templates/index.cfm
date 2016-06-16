@@ -5,6 +5,7 @@
 
 <script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/nephthysPageVisit/nephthysPageVisit.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/nephthysPageStatistics/nephthysPageStatistics.js"></script>
 
 
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/dashboardApp.js"></script>
@@ -103,9 +104,13 @@
         </div>
         <div class="col-md-4">
             <div class="card card-block">
-                <nephthys-page-visit sort-order="DESC"></nephthys-page-visit>
+                <nephthys-page-visit request-type="total"
+                                     sort-order="DESC"
+                                     headline="Verlauf von Seitenaufrufen"></nephthys-page-visit>
             </div>
         </div>
     </div>
+    
+    <nephthys-page-statistics-per-page></nephthys-page-statistics-per-page>
 </div>
 </cfoutput>

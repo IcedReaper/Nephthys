@@ -1,6 +1,6 @@
 <div>
     <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> refresh</button>
-    <h2>Verlauf von Seitenaufrufen</h2>
+    <h2 ng-if="headline">{{headline}}</h2>
     <nephthys-date-picker from-date="selectedDate.fromDate"
                           to-date="selectedDate.toDate"
                           format="dd.MM.yyyy"></nephthys-date-picker>

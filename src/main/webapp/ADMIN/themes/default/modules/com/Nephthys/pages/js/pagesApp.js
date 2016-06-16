@@ -3,8 +3,9 @@ var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
                                                            "ui.tree",
                                                            "ui.bootstrap",
                                                            "textAngular",
+                                                           "nephthys.userInfo",
                                                            "com.nephthys.page.pageVisit",
-                                                           "nephthys.userInfo"]);
+                                                           "com.nephthys.page.statistics.perPage"]);
 
 nephthysAdminApp
     .config(["$routeProvider",
@@ -45,6 +46,11 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/sitemap.html",
                     controller: "sitemapCtrl"
                 })
+                
+                .when("/statistic", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/statistics.html"
+                })
+                
                 .otherwise({
                     redirectTo: "/"
                 });

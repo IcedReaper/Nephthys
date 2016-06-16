@@ -3,8 +3,27 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
                                                "nephthys.datePicker"])
     .service("nephthysPageVisitService", function($http) {
         return {
-            getPageRequests: function(pageId, sortOrder, fromDate, toDate) {
+            getPageRequests: function(sortOrder, fromDate, toDate, pageId) {
                 return $http.get('/ajax/com/Nephthys/pages/getPageRequests', {
+                    params: {
+                        pageId:    pageId,
+                        sortOrder: sortOrder,
+                        fromDate:  fromDate,
+                        toDate:    toDate
+                    }
+                });
+            },
+            getPageRequestsSeperatedByPage: function(sortOrder, fromDate, toDate) {
+                return $http.get('/ajax/com/Nephthys/pages/getPageRequestsSeperatedByPage', {
+                    params: {
+                        sortOrder: sortOrder,
+                        fromDate:  fromDate,
+                        toDate:    toDate
+                    }
+                });
+            },
+            getPageRequestsSeperatedByLink: function(sortOrder, fromDate, toDate, pageId) {
+                return $http.get('/ajax/com/Nephthys/pages/getPageRequestsSeperatedByLink', {
                     params: {
                         pageId:    pageId,
                         sortOrder: sortOrder,
@@ -18,9 +37,12 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
     .controller('nephthysPageVisitController', ["$rootScope", "$scope", "$q", "nephthysPageVisitService", function ($rootScope, $scope, $q, service) {
         var actualView = "perDay", // perYear | perMonth | perDay | perHour
             
-            renderChart = function (pageRequestData) {
-                $scope.chart.labels =  pageRequestData.labels;
-                $scope.chart.data   = [pageRequestData.data];
+            renderChart = function (pageVisitStatisticsData) {
+                $scope.chart.labels = pageVisitStatisticsData.labels;
+                $scope.chart.data   = pageVisitStatisticsData.data;
+                if(pageVisitStatisticsData.series) {
+                    $scope.chart.series = pageVisitStatisticsData.series;
+                }
             },
             today = function() {
                 var now = new Date();
@@ -38,24 +60,45 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
             $scope.chart.labels = [];
             $scope.chart.data   = [];
             
-            service
-                .getPageRequests($scope.pageId,
-                                 $scope.sortOrder,
-                                 $scope.selectedDate.fromDate.toLocaleDateString('de-DE', dateStringOptions),
-                                 $scope.selectedDate.toDate.toLocaleDateString('de-DE', dateStringOptions))
-                .then(function(res) {
-                    actualView = res.actualView;
-                    
-                    return res;
-                })
-                .then(renderChart);
+            var method = null;
+            switch($scope.requestType) {
+                case "total": {
+                    method = service.getPageRequests;
+                    break;
+                }
+                case "perPage": {
+                    method = service.getPageRequestsSeperatedByPage;
+                    break;
+                }
+                case "splitPerPage": {
+                    method = service.getPageRequestsSeperatedByLink;
+                    break;
+                }
+            }
+            
+            if(method) {
+                method($scope.sortOrder,
+                       $scope.selectedDate.fromDate.toLocaleDateString('de-DE', dateStringOptions),
+                       $scope.selectedDate.toDate.toLocaleDateString('de-DE', dateStringOptions),
+                       $scope.pageId)
+                    .then(function(res) {
+                        actualView = res.actualView;
+                        
+                        return res;
+                    })
+                    .then(renderChart);
+            }
         };
         
         $scope.handleClick = function (object, event) {
+            var getClickedDate = function() {
+                return object[0]._chart.config.data.labels[object[0]._index];
+            }
+            
             switch(actualView) {
                 case "perYear": {
-                    $scope.selectedDate.fromDate = new Date(object[0]._model.label, 0, 1);
-                    $scope.selectedDate.toDate   = new Date(object[0]._model.label + 1, 0, 0);
+                    $scope.selectedDate.fromDate = new Date(getClickedDate(), 0, 1);
+                    $scope.selectedDate.toDate   = new Date(getClickedDate() + 1, 0, 0);
                     
                     if($scope.selectedDate.toDate > today()) {
                         $scope.selectedDate.toDate = today();
@@ -66,7 +109,7 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
                 case "perMonth": {
                     var monthNames = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"];
                     
-                    var month = monthNames.indexOf(object[0]._model.label);
+                    var month = monthNames.indexOf(getClickedDate());
                     
                     if(month !== -1) {
                         $scope.selectedDate.fromDate = new Date($scope.selectedDate.fromDate.getFullYear(), month, 1);
@@ -82,7 +125,7 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
                     break;
                 }
                 case "perDay": {
-                    var d = object[0]._model.label.split(".");
+                    var d = getClickedDate().split(".");
                     
                     $scope.selectedDate.fromDate = new Date(d[2], d[1] - 1, d[0]);
                     $scope.selectedDate.toDate   = new Date(d[2], d[1] - 1, d[0]);
@@ -101,7 +144,9 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
             return actualView;
         }
         
-        $scope.chart = {};
+        $scope.chart = {
+            series: ["Seitenaufrufe"]
+        };
         
         // init dates
         if(! $scope.pageId) {
@@ -147,6 +192,24 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
                     
                     break;
                 }
+                case "line": {
+                    $scope.chart.options = {
+                        fixedHeight: true,
+                        height: 450,
+                        legend: {
+                            display: true
+                        },
+                        scales: {
+                            yAxes: [{
+                                ticks: {
+                                    beginAtZero:true
+                                }
+                            }]
+                        }
+                    };
+                    
+                    break;
+                }
             }
         }
         else {
@@ -180,7 +243,7 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
                 console.error("from date is not a date!");
             }
         }
-        console.log($scope.selectedDate);
+        
         if(! $scope.sortOrder) {
             $scope.sortOrder = "ASC";
         }
@@ -188,6 +251,10 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
             if($scope.sortOrder.toUpperCase() != "ASC" && $scope.sortOrder.toUpperCase() != "DESC") {
                 $scope.sortOrder = "ASC";
             }
+        }
+        
+        if(! $scope.requestType) {
+            $scope.requestType = "total";
         }
         
         var unregister = $rootScope.$on('nephthys-date-picker-date-changed', function(evt, data) {
@@ -214,7 +281,9 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
                 toDate: "=?",
                 chartType: "@",
                 chartOptions: "=?",
-                sortOrder: "@"
+                sortOrder: "@",
+                headline: "@",
+                requestType: "@"
             },
             templateUrl : "/themes/default/modules/com/Nephthys/pages/directives/nephthysPageVisit/nephthysPageVisit.html"
         };

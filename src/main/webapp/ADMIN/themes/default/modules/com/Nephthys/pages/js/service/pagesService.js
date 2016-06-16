@@ -38,14 +38,6 @@ nephthysAdminApp
                 });
             },
             
-            loadStatistics: function (pageId) {
-                return $http.get('/ajax/com/Nephthys/pages/loadStatistics', {
-                    params: {
-                        pageId: pageId
-                    }
-                });
-            },
-            
             getStatus: function () {
                 return $http.get("/ajax/com/Nephthys/pages/getStatusList");
             },

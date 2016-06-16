@@ -37,4 +37,19 @@ component extends="API.abstractClasses.pageRequestQuery" {
             throw(type = "application", message = "Start and/or end date isn't set");
         }
     }
+    
+    public array function getResult() {
+        var qResult = variables.prq.getResult();
+        
+        var pageRequests = [];
+        for(var i = 1; i <= qResult.getRecordCount(); ++i) {
+            pageRequests.append({
+                "date"         = qResult._date[i],
+                "requestCount" = qResult.requestCount[i],
+                "pageId"       = qResult.pageId[i]
+            });
+        }
+        
+        return pageRequests;
+    }
 }

@@ -21,8 +21,8 @@ component extends="API.abstractClasses.pageRequestQuery" {
                                                              date_trunc('month', s.visitDate) _date,
                                                              s.completeLink
                                                         FROM nephthys_page_statistics s
-                                                       WHERE date_trunc('month', s.visitDate) >= :fromDate
-                                                         AND date_trunc('month', s.visitDate) <= :toDate
+                                                       WHERE date_trunc('day', s.visitDate) >= :fromDate
+                                                         AND date_trunc('day', s.visitDate) <= :toDate
                                                          AND s.pageId = 3
                                                     GROUP BY date_trunc('month', s.visitDate), s.completeLink) stats
                                             ORDER BY inter._date, stats.completeLink
@@ -31,8 +31,8 @@ component extends="API.abstractClasses.pageRequestQuery" {
                                              date_trunc('month', s.visitDate) _date,
                                              s.completeLink
                                         FROM nephthys_page_statistics s
-                                       WHERE date_trunc('month', s.visitDate) >= :fromDate
-                                         AND date_trunc('month', s.visitDate) <= :toDate
+                                       WHERE date_trunc('day', s.visitDate) >= :fromDate
+                                         AND date_trunc('day', s.visitDate) <= :toDate
                                          AND s.pageId = 3
                                     GROUP BY date_trunc('month', s.visitDate), s.completeLink
                                    ) tmp2 ON tmp1._date = tmp2._date AND tmp1.completeLink = tmp2.completeLink
@@ -48,5 +48,20 @@ component extends="API.abstractClasses.pageRequestQuery" {
         else {
             throw(type = "application", message = "Start and/or end date isn't set");
         }
+    }
+    
+    public array function getResult() {
+        var qResult = variables.prq.getResult();
+        
+        var pageRequests = [];
+        for(var i = 1; i <= qResult.getRecordCount(); ++i) {
+            pageRequests.append({
+                "date"         = qResult._date[i],
+                "requestCount" = qResult.requestCount[i],
+                "completeLink" = qResult.completeLink[i]
+            });
+        }
+        
+        return pageRequests;
     }
 }

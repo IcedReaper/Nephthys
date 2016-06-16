@@ -5,6 +5,7 @@
         <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
         <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
         <a href="#/sitemap" class="btn btn-secondary"><i class="fa fa-sitemap"></i> Sitemap</a>
+        <a href="#/statistic" class="btn btn-secondary"><i class="fa fa-area-chart"></i> Gesamt Statistiken</a>
     </div>
     <div class="col-md-2 col-sm-4">
         <div class="pull-right">
@@ -222,9 +223,11 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-block">
-                        <nephthys-page-visit page-id="pageId"
+                        <nephthys-page-visit request-type="total"
+                                             page-id="pageId"
                                              chart-type="bar"
-                                             sort-order="ASC"></nephthys-page-visit>
+                                             sort-order="ASC"
+                                             headline="Verlauf von Seitenaufrufen"></nephthys-page-visit>
                     </div>
                 </div>
             </div>

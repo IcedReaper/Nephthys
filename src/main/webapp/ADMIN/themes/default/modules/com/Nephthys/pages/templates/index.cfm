@@ -11,11 +11,10 @@
 
 <script src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
 
-
 <script type="text/javascript" src="/themes/default/directive/nephthysUserInfo/nephthysUserInfo.js"></script>
 <script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/nephthysPageVisit/nephthysPageVisit.js"></script>
-
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/nephthysPageStatistics/nephthysPageStatistics.js"></script>
 
 <!--- app --->
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/pagesApp.js"></script>

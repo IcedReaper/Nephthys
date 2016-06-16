@@ -4,6 +4,7 @@
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
 - Statistiken für sub links (Darstellung?)
+- combine statistic calls
 
 
 ## Allgemein
@@ -223,6 +224,7 @@
     15. Controller zum Erstellen von Links (z.B. User) erstellen
     16. Creator und lastEditor direkt als Objekte in Objekten erstellen
     17. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
+    18. Charts responsive mit maxHeight!?
 
 
 

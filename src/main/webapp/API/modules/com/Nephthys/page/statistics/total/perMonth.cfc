@@ -8,11 +8,15 @@ component extends="API.abstractClasses.pageRequestQuery" {
         if(variables.fromDate != null && variables.toDate != null) {
             var qPageRequests = new Query();
             
+            // the truncated dates are required for the series as they have to be on the first of every month
+            var fromDateTruncated = createDate(year(variables.fromDate), month(variables.fromDate), 1);
+            var toDateTruncated   = createDate(year(variables.toDate), month(variables.toDate), 1);
+            
             var sql = "";
             var innerQuery = "SELECT COUNT(*) requestCount, date_trunc('month', visitDate) _date 
                                 FROM nephthys_page_statistics
-                               WHERE date_trunc('month', visitDate) >= :fromDate
-                                 AND date_trunc('month', visitDate) <= :toDate ";
+                               WHERE date_trunc('day', visitDate) >= :fromDate
+                                 AND date_trunc('day', visitDate) <= :toDate ";
             
             if(variables.pageId != null) {
                 innerQuery &= " AND pageId = :pageId ";
@@ -29,13 +33,15 @@ component extends="API.abstractClasses.pageRequestQuery" {
                                        0
                                    END requestCount
                               FROM (SELECT i :: date d 
-                                      FROM generate_series(:fromDate, :toDate, '1 month' :: interval) i) dateRange
+                                      FROM generate_series(:fromDateTruncated, :toDateTruncated, '1 month' :: interval) i) dateRange
                    LEFT OUTER JOIN ( " & innerQuery & " ) pageRequests ON dateRange.d = pageRequests._date
                           ORDER BY dateRange.d " & variables.sortOrder;
             
             variables.prq = qPageRequests.setSQL(sql)
-                                         .addParam(name = "fromDate", value = variables.fromDate, cfsqltype = "cf_sql_date")
-                                         .addParam(name = "toDate",   value = variables.toDate,   cfsqltype = "cf_sql_date")
+                                         .addParam(name = "fromDateTruncated", value = fromDateTruncated,  cfsqltype = "cf_sql_date")
+                                         .addParam(name = "toDateTruncated",   value = toDateTruncated,    cfsqltype = "cf_sql_date")
+                                         .addParam(name = "fromDate",          value = variables.fromDate, cfsqltype = "cf_sql_date")
+                                         .addParam(name = "toDate",            value = variables.toDate,   cfsqltype = "cf_sql_date")
                                          .execute();
             return this;
         }

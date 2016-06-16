@@ -16,8 +16,8 @@ component extends="API.abstractClasses.pageRequestQuery" {
                                              date_trunc('month', s.visitDate) _date,
                                              s.pageId
                                         FROM nephthys_page_statistics s
-                                       WHERE date_trunc('month', s.visitDate) >= :fromDate
-                                         AND date_trunc('month', s.visitDate) <= :toDate
+                                       WHERE date_trunc('day', s.visitDate) >= :fromDate
+                                         AND date_trunc('day', s.visitDate) <= :toDate
                                     GROUP BY date_trunc('month', s.visitDate), s.pageId
                                    ) stats
                    FULL OUTER JOIN (SELECT i :: date _date,
@@ -36,5 +36,20 @@ component extends="API.abstractClasses.pageRequestQuery" {
         else {
             throw(type = "application", message = "Start and/or end date isn't set");
         }
+    }
+    
+    public array function getResult() {
+        var qResult = variables.prq.getResult();
+        
+        var pageRequests = [];
+        for(var i = 1; i <= qResult.getRecordCount(); ++i) {
+            pageRequests.append({
+                "date"         = qResult._date[i],
+                "requestCount" = qResult.requestCount[i],
+                "pageId"       = qResult.pageId[i]
+            });
+        }
+        
+        return pageRequests;
     }
 }
