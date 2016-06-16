@@ -13,8 +13,8 @@
 
 <script type="text/javascript" src="/themes/default/directive/nephthysUserInfo/nephthysUserInfo.js"></script>
 <script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/nephthysPageVisit/nephthysPageVisit.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/nephthysPageStatistics/nephthysPageStatistics.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/statistics/statistics.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/tasklist/tasklist.js"></script>
 
 <!--- app --->
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/pagesApp.js"></script>
@@ -30,6 +30,5 @@
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/statusDetail.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/sitemap.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/statusFlow.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/js/controller/tasklist.js"></script>
 
 <div class="com-nephthys-page" ng-view></div>

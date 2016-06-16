@@ -1,7 +1,7 @@
-angular.module("com.nephthys.page.pageVisit", ["chart.js",
+angular.module("com.nephthys.page.statistics", ["chart.js",
                                                "ui.bootstrap",
                                                "nephthys.datePicker"])
-    .service("nephthysPageVisitService", function($http) {
+    .service("statisticsService", function($http) {
         return {
             getPageRequests: function(sortOrder, fromDate, toDate, pageId) {
                 return $http.get('/ajax/com/Nephthys/pages/getPageRequests', {
@@ -34,7 +34,7 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
             }
         };
     })
-    .controller('nephthysPageVisitController', ["$rootScope", "$scope", "$q", "nephthysPageVisitService", function ($rootScope, $scope, $q, service) {
+    .controller('statisticsController', ["$rootScope", "$scope", "$q", "statisticsService", function ($rootScope, $scope, $q, service) {
         var actualView = "perDay", // perYear | perMonth | perDay | perHour
             
             renderChart = function (pageVisitStatisticsData) {
@@ -270,11 +270,11 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
         
         $scope.refresh();
     }])
-    .directive("nephthysPageVisit", function() {
+    .directive("nephthysPageStatistics", function() {
         return {
             replace: true,
             restrict: "E",
-            controller: "nephthysPageVisitController",
+            controller: "statisticsController",
             scope: {
                 pageId: "=?",
                 fromDate: "=?",
@@ -285,6 +285,6 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
                 headline: "@",
                 requestType: "@"
             },
-            templateUrl : "/themes/default/modules/com/Nephthys/pages/directives/nephthysPageVisit/nephthysPageVisit.html"
+            templateUrl : "/themes/default/modules/com/Nephthys/pages/directives/statistics/statistics.html"
         };
     });

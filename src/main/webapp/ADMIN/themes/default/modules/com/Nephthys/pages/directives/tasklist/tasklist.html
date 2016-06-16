@@ -1,0 +1,128 @@
+<div>
+    <div class="row m-t-2" ng-repeat="status in tasklist.pages" ng-if="_showPages && status.pages.length > 0">
+        <div class="col-md-12">
+            <h3>Seiten <small>{{status.name}}</small></h3>
+            
+            <table class="table table-striped" ng-class="tableClass">
+                <thead>
+                    <th>ID</th>
+                    <th>Linktext</th>
+                    <th>Link</th>
+                    <th>Erstellt durch</th>
+                    <th>Letzte Änderungen durch</th>
+                    <th ng-if="_showActions">Aktionen</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="page in status.pages">
+                        <td>{{page.pageId}}</td>
+                        <td>
+                            <a href="#/pages/{{page.pageId}}/version/{{page.majorVersion}}/{{page.minorVersion}}">{{page.linktext}}</a>
+                        </td>
+                        <td>{{page.link}}</td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="page.creator" hide-name="true"></nephthys-user-info>
+                                <span class="text-nowrap">{{page.lastEditDate}}</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="page.lastEditor" hide-name="true"></nephthys-user-info>
+                                <span class="text-nowrap">{{page.lastEditDate}}</span>
+                            </p>
+                        </td>
+                        <td ng-if="_showActions">
+                            <div>
+                                <a href="#/pages/{{page.pageId}}"
+                                   class="btn btn-primary m-r-1"
+                                   title="Seitendetails"
+                                   ng-if="_showPageButton">
+                                    <i class="fa fa-cog"></i>
+                                </a>
+                                
+                                <button class="btn m-r-1"
+                                        ng-repeat="ps in status.nextStatus"
+                                        ng-class="statusButtonClass(status.online, ps.online)"
+                                        ng-click="pushPageToStatus(page.pageId, page.pageVersionId, ps.statusId);"
+                                        ng-if="! _combineNextStatusButton">{{ps.name}}</button>
+                                
+                                <div class="btn-group" ng-if="_combineNextStatusButton">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Status ändern
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <button class="dropdown-item"
+                                                ng-repeat="ps in status.nextStatus"
+                                                ng-class="statusButtonClass(status.online, ps.online)"
+                                                ng-click="pushPageToStatus(page.pageId, ps.statusId);">{{ps.name}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row m-t-2" ng-repeat="status in tasklist.sitemap" ng-if="_showSitemaps && status.sitemaps.length > 0">
+        <div class="col-md-12">
+            <h3>Sitemaps <small>{{status.name}}</small></h3>
+            
+            <table class="table table-striped" ng-class="tableClass">
+                <thead>
+                    <th>ID</th>
+                    <th>Anzahl an Seiten</th>
+                    <th>Erstellt durch</th>
+                    <th>Letzte Änderungen durch</th>
+                    <th ng-if="_showActions">Aktionen</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="sitemap in status.sitemaps">
+                        <td>{{sitemap.sitemapId}}</td>
+                        <th>{{sitemap.pageCount}}</th>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="sitemap.creator" hide-name="true"></nephthys-user-info>
+                                <span class="text-nowrap">{{sitemap.lastEditDate}}</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="sitemap.lastEditor" hide-name="true"></nephthys-user-info>
+                                <span class="text-nowrap">{{sitemap.lastEditDate}}</span>
+                            </p>
+                        </td>
+                        <td ng-if="_showActions">
+                            <div>
+                                <a href="#/sitemap"
+                                   class="btn btn-primary m-r-1"
+                                   title="Seitendetails"
+                                   ng-if="_showPageButton">
+                                    <i class="fa fa-cog"></i>
+                                </a> <!-- todo: add version for direct call -->
+                                
+                                <button class="btn m-r-1"
+                                        ng-repeat="ps in status.nextStatus"
+                                        ng-class="statusButtonClass(status.online, ps.online)"
+                                        ng-click="pushSitemapToStatus(sitemap.sitemapId, ps.statusId);"
+                                        ng-if="! _combineNextStatusButton">{{ps.name}}</button>
+                                
+                                <div class="btn-group" ng-if="_combineNextStatusButton">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Status ändern
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <button class="dropdown-item"
+                                                ng-repeat="ps in status.nextStatus"
+                                                ng-class="statusButtonClass(status.online, ps.online)"
+                                                ng-click="pushSitemapToStatus(sitemap.sitemapId, ps.statusId);">{{ps.name}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

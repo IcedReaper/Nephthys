@@ -5,6 +5,7 @@
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
 - Statistiken für sub links (Darstellung?)
 - combine statistic calls
+- Page-Modul-Button per directive?
 
 
 ## Allgemein

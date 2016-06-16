@@ -3,9 +3,10 @@
 
 <script src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
 
+<script type="text/javascript" src="/themes/default/directive/nephthysUserInfo/nephthysUserInfo.js"></script>
 <script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/nephthysPageVisit/nephthysPageVisit.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/nephthysPageStatistics/nephthysPageStatistics.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/statistics/statistics.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/tasklist/tasklist.js"></script>
 
 
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/dashboardApp.js"></script>
@@ -101,16 +102,35 @@
                     </div>
                 </div>
             </div>
+            
+            <div class="card card-block">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h2>Aufgabenliste</h2>
+                    </div>
+                </div>
+                <nephthys-page-tasklist class="tasklist-sm"
+                                        show-page-button="false"
+                                        combine-next-status-button="true"
+                                        show-page-putton="false"></nephthys-page-tasklist>
+            </div>
         </div>
         <div class="col-md-4">
             <div class="card card-block">
-                <nephthys-page-visit request-type="total"
-                                     sort-order="DESC"
-                                     headline="Verlauf von Seitenaufrufen"></nephthys-page-visit>
+                <nephthys-page-statistics request-type="total"
+                                          sort-order="DESC"
+                                          headline="Verlauf von Seitenaufrufen"></nephthys-page-statistics>
             </div>
         </div>
     </div>
-    
-    <nephthys-page-statistics-per-page></nephthys-page-statistics-per-page>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-block">
+                <nephthys-page-statistics request-type="perPage"
+                                          chart-type="line"
+                                          sort-order="ASC"></nephthys-page-statistics>
+            </div>
+        </div>
+    </div>
 </div>
 </cfoutput>

@@ -4,7 +4,8 @@ angular.module("nephthys.userInfo", [])
             replace: true,
             restrict: "E",
             scope: {
-                user: "=?"
+                user: "=?",
+                hideName: "@"
             },
             templateUrl : "/themes/default/directive/nephthysUserInfo/nephthysUserInfo.html"
         };

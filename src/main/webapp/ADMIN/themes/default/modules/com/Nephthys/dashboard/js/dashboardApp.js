@@ -1,5 +1,5 @@
-var nephthysAdminApp = angular.module("nephthysAdminApp", ["com.nephthys.page.pageVisit",
-                                                           "com.nephthys.page.statistics.perPage"]);
+var nephthysAdminApp = angular.module("nephthysAdminApp", ["com.nephthys.page.statistics",
+                                                           "com.nephthys.page.tasklist"]);
 
 nephthysAdminApp
     .config(["$httpProvider", globalAngularAjaxSettings])

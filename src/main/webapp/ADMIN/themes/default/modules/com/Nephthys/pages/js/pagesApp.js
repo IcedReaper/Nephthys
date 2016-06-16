@@ -4,16 +4,15 @@ var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
                                                            "ui.bootstrap",
                                                            "textAngular",
                                                            "nephthys.userInfo",
-                                                           "com.nephthys.page.pageVisit",
-                                                           "com.nephthys.page.statistics.perPage"]);
+                                                           "com.nephthys.page.statistics",
+                                                           "com.nephthys.page.tasklist"]);
 
 nephthysAdminApp
     .config(["$routeProvider",
         function ($routeProvider) {
             $routeProvider
                 .when("/", {
-                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/tasklist.html",
-                    controller:  "tasklistCtrl"
+                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/tasklist.html"
                 })
                 
                 .when("/pages/list", {

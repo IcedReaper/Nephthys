@@ -74,20 +74,6 @@ nephthysAdminApp
                 return $http.post("/ajax/com/Nephthys/pages/saveSitemap", {
                     sitemap: sitemap
                 });
-            },
-            pushSitemapToStatus: function (sitemapId, statusId) {
-                return $http.post("/ajax/com/Nephthys/pages/pushSitemapToStatus", {
-                    sitemapId: sitemapId,
-                    statusId:    statusId
-                });
-            },
-
-            getPageVersionInTasklist: function () {
-                return $http.get("/ajax/com/Nephthys/pages/getPageVersionInTasklist");
-            },
-
-            getSitemapInTasklist: function () {
-                return $http.get("/ajax/com/Nephthys/pages/getSitemapInTasklist");
             }
         };
     });
