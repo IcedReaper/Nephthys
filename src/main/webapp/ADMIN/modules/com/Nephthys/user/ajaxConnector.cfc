@@ -1,5 +1,6 @@
 component {
     import "API.modules.com.Nephthys.user.*";
+    import "API.modules.com.Nephthys.user.statistics.*";
     
     remote array function getList() {
         var userListCtrl = new filter();
@@ -207,6 +208,15 @@ component {
         return true;
     }
     
+    remote struct function loginStatistics() {
+        var loginStatisticsCtrl = new login();
+        
+        return {
+            "successful" = prepareLoginData(loginStatisticsCtrl.getSuccessful()),
+            "failed"     = prepareLoginData(loginStatisticsCtrl.getFailed())
+        };
+    }
+    
     // P R I V A T E   M E T H O D S
     
     private struct function prepareDetailStruct(required user userObject) {
@@ -220,5 +230,15 @@ component {
             "actualUser" = arguments.userObject.getUserId() == request.user.getUserId(),
             "themeId"    = arguments.userObject.getThemeId()
         };
+    }
+    
+    private array function prepareLoginData(required array loginData) {
+        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
+        
+        for(var i = 1; i <= arguments.loginData.len(); ++i) {
+            arguments.loginData[i].loginDate = formatCtrl.formatDate(arguments.loginData[i].loginDate);
+        }
+        
+        return arguments.loginData;
     }
 }

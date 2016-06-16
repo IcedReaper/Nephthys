@@ -7,12 +7,9 @@
 <script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/statistics/statistics.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/tasklist/tasklist.js"></script>
-
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/user/directives/loginLog/loginLog.js"></script>
 
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/dashboardApp.js"></script>
-
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/service/loginStatisticsService.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/loginStatisticsCtrl.js"></script>
 
 <cfoutput>
 <div class="com-Nephthys-dashboard">
@@ -78,29 +75,7 @@
             </div>
             
             <div class="card card-block">
-                <div ng-controller="loginStatisticsCtrl">
-                    <div class="container-fluid">
-                        <div class="col-sm-12">
-                            <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> refresh</button>
-                            <h2>Loginstatistiken</h2>
-                        </div>
-                    </div>
-                    
-                    <div class="container-fluid">
-                        <div class="col-lg-6 col-md-12">
-                            <h3>Letzte erfolgreiche Logins</h3>
-                            <ul>
-                                <li ng-repeat="login in successfulLogins">{{login.username}} - {{login.loginDate}}</li>
-                            </ul>
-                        </div>
-                        <div class="col-lg-6 col-md-12">
-                            <h3>Letzte fehlgeschlagene Logins</h3>
-                            <ul>
-                                <li ng-repeat="login in failedLogins">{{login.username}} - {{login.loginDate}}</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+                <nephthys-user-login-log></nephthys-user-login-log>
             </div>
             
             <div class="card card-block">

@@ -3,9 +3,10 @@
 ## Actual Task TODO - Reminder:
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
-- Statistiken für sub links (Darstellung?)
+- Statistiken für sub links
 - combine statistic calls
 - Page-Modul-Button per directive?
+- Login statistics per chart (wieviele erfolgreiche / nicht erfolgreiche Einlogversuche pro Zeiteinheit (datepicker))
 
 
 ## Allgemein
@@ -75,7 +76,7 @@
     7. Implement "loading screen" into http interceptor
     8. Sidebar auf Icons reduzieren
     9. Assets weiter optimieren/reduzieren
-    10. Dashboard untermodule in andere Dateien verschieben ggf mehr übersicht schaffen
+    10. Dashboard untermodule in andere Dateien verschieben ggf mehr übersicht schaffen => nearly done
     11. Dashboard pro User variabel gestaltbar machen
         * Anordnung
         * Module

@@ -1,0 +1,23 @@
+<div>
+    <div class="container-fluid">
+        <div class="col-sm-12">
+            <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> refresh</button>
+            <h2>Loginstatistiken</h2>
+        </div>
+    </div>
+    
+    <div class="container-fluid">
+        <div class="col-lg-6 col-md-12">
+            <h4>Letzte erfolgreiche Logins</h4>
+            <ul>
+                <li ng-repeat="login in successfulLogins">{{login.username}} - {{login.loginDate}}</li>
+            </ul>
+        </div>
+        <div class="col-lg-6 col-md-12">
+            <h4>Letzte fehlgeschlagene Logins</h4>
+            <ul>
+                <li ng-repeat="login in failedLogins">{{login.username}} - {{login.loginDate}}</li>
+            </ul>
+        </div>
+    </div>
+</div>
