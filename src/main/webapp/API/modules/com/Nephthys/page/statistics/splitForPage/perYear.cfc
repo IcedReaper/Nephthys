@@ -37,8 +37,8 @@ component extends="API.abstractClasses.pageRequestQuery" {
                           ORDER BY tmp1._date " & variables.sortOrder & ", tmp1.completeLink ASC";
             
             variables.prq = qPageRequests.setSQL(sql)
-                                         .addParam(name = "fromYear", value = year(variables.fromDate), cfsqltype = "cf_sql_numeric")
-                                         .addParam(name = "toYear",   value = year(variables.toDate),   cfsqltype = "cf_sql_numeric")
+                                         .addParam(name = "fromYear", value = year(variables.fromDate), cfsqltype = "cf_sql_integer")
+                                         .addParam(name = "toYear",   value = year(variables.toDate),   cfsqltype = "cf_sql_integer")
                                          .addParam(name = "pageId",   value = variables.pageId,         cfsqltype = "cf_sql_numeric")
                                          .execute();
             return this;

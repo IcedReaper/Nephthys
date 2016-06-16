@@ -41,8 +41,8 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
             service
                 .getPageRequests($scope.pageId,
                                  $scope.sortOrder,
-                                 $scope.fromDate.toLocaleDateString('de-DE', dateStringOptions),
-                                 $scope.toDate.toLocaleDateString('de-DE', dateStringOptions))
+                                 $scope.selectedDate.fromDate.toLocaleDateString('de-DE', dateStringOptions),
+                                 $scope.selectedDate.toDate.toLocaleDateString('de-DE', dateStringOptions))
                 .then(function(res) {
                     actualView = res.actualView;
                     
@@ -54,11 +54,11 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
         $scope.handleClick = function (object, event) {
             switch(actualView) {
                 case "perYear": {
-                    $scope.fromDate = new Date(object[0]._model.label, 0, 1);
-                    $scope.toDate   = new Date(object[0]._model.label + 1, 0, 0);
+                    $scope.selectedDate.fromDate = new Date(object[0]._model.label, 0, 1);
+                    $scope.selectedDate.toDate   = new Date(object[0]._model.label + 1, 0, 0);
                     
-                    if($scope.toDate > today()) {
-                        $scope.toDate = today();
+                    if($scope.selectedDate.toDate > today()) {
+                        $scope.selectedDate.toDate = today();
                     }
                     
                     break;
@@ -69,10 +69,10 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
                     var month = monthNames.indexOf(object[0]._model.label);
                     
                     if(month !== -1) {
-                        $scope.fromDate = new Date($scope.fromDate.getFullYear(), month, 1);
-                        $scope.toDate   = new Date($scope.fromDate.getFullYear(), month, 1);
-                        $scope.toDate.setMonth($scope.toDate.getMonth() + 1);
-                        $scope.toDate.setDate(0);
+                        $scope.selectedDate.fromDate = new Date($scope.selectedDate.fromDate.getFullYear(), month, 1);
+                        $scope.selectedDate.toDate   = new Date($scope.selectedDate.fromDate.getFullYear(), month, 1);
+                        $scope.selectedDate.toDate.setMonth($scope.selectedDate.toDate.getMonth() + 1);
+                        $scope.selectedDate.toDate.setDate(0);
                     }
                     else {
                         console.warn("Could not find month!");
@@ -84,8 +84,8 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
                 case "perDay": {
                     var d = object[0]._model.label.split(".");
                     
-                    $scope.fromDate = new Date(d[2], d[1] - 1, d[0]);
-                    $scope.toDate   = new Date(d[2], d[1] - 1, d[0]);
+                    $scope.selectedDate.fromDate = new Date(d[2], d[1] - 1, d[0]);
+                    $scope.selectedDate.toDate   = new Date(d[2], d[1] - 1, d[0]);
                     
                     break;
                 }
@@ -119,8 +119,6 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
             switch($scope.chart.type) {
                 case "horizontalBar": {
                     $scope.chart.options = {
-                        responsive: false,
-                        maintainAspectRatio: false,
                         fixedBarHeight: true,
                         barHeight: 40,
                         scales: {
@@ -155,27 +153,34 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
             $scope.chart.options = $scope.chartOptions;
         }
         
+        $scope.selectedDate = {};
+        
         if(! $scope.fromDate) {
             var now = new Date();
-            $scope.fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
+            $scope.selectedDate.fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
         }
         else {
-            if(! $scope.fromDate instanceof Date) {
+            if($scope.fromDate instanceof Date) {
+                $scope.selectedDate.fromDate = $scope.fromDate;
+            }
+            else {
                 console.error("from date is not a date!");
             }
         }
-        
         if(! $scope.toDate) {
-            $scope.toDate = new Date();
-            $scope.toDate.setMonth($scope.fromDate.getMonth() + 1);
-            $scope.toDate.setDate(0);
+            $scope.selectedDate.toDate = new Date();
+            $scope.selectedDate.toDate.setMonth($scope.selectedDate.fromDate.getMonth() + 1);
+            $scope.selectedDate.toDate.setDate(0);
         }
         else {
-            if(! $scope.toDate instanceof Date) {
+            if($scope.toDate instanceof Date) {
+                $scope.selectedDate.toDate = $scope.toDate;
+            }
+            else {
                 console.error("from date is not a date!");
             }
         }
-        
+        console.log($scope.selectedDate);
         if(! $scope.sortOrder) {
             $scope.sortOrder = "ASC";
         }
@@ -186,8 +191,8 @@ angular.module("com.nephthys.page.pageVisit", ["chart.js",
         }
         
         var unregister = $rootScope.$on('nephthys-date-picker-date-changed', function(evt, data) {
-            $scope.fromDate = data.fromDate;
-            $scope.toDate   = data.toDate;
+            $scope.selectedDate.fromDate = data.fromDate;
+            $scope.selectedDate.toDate   = data.toDate;
             
             $scope.refresh();
         });
