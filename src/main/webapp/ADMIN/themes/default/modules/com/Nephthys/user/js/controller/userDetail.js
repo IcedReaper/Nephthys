@@ -31,5 +31,7 @@ nephthysAdminApp
                 });
         };
         
+        $scope.user = {};
+        
         $scope.load();
     }]);

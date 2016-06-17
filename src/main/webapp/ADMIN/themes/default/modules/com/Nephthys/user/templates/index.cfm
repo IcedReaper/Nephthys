@@ -2,6 +2,12 @@
 <script type="text/javascript" src="/themes/default/assets/angular-fileUpload/ng-file-upload-shim.js"></script>
 <script type="text/javascript" src="/themes/default/assets/angular-fileUpload/ng-file-upload.js"></script>
 
+<script type="text/javascript" src="/themes/default/assets/ChartJS/Chart.min.js"></script>
+<script type="text/javascript" src="/themes/default/assets/angular-chart/angular-chart.min.js"></script>
+<script type="text/javascript" src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
+<script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/user/directives/statistics/statistics.js"></script>
+
 <!--- app --->
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/user/js/userApp.js"></script>
 

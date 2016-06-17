@@ -28,7 +28,7 @@ component extends="abstractPerPage" {
             
             variables.qRes = qPageRequests.setSQL(sql)
                                           .addParam(name = "fromYear", value = year(variables.fromDate), cfsqltype = "cf_sql_integer")
-                                          .addParam(name = "toYear",   value = year(variables.fromDate), cfsqltype = "cf_sql_integer")
+                                          .addParam(name = "toYear",   value = year(variables.toDate),   cfsqltype = "cf_sql_integer")
                                           .execute()
                                           .getResult();
             

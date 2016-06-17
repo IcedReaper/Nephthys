@@ -209,12 +209,24 @@ component {
     }
     
     remote struct function loginStatistics() {
-        var loginStatisticsCtrl = new login();
+        var loginStatisticsCtrl = new loginLog();
+        
+        loginStatisticsCtrl.setLimit(10);
         
         return {
-            "successful" = prepareLoginData(loginStatisticsCtrl.getSuccessful()),
-            "failed"     = prepareLoginData(loginStatisticsCtrl.getFailed())
+            "successful" = prepareLoginData(loginStatisticsCtrl.setSuccessful(true).execute().getResult()),
+            "failed"     = prepareLoginData(loginStatisticsCtrl.setSuccessful(false).execute().getResult())
         };
+    }
+    
+    remote struct function getLoginStatisticsTotal(required numeric userId = null, required string sortOrder, required string fromDate, required string toDate) { // format: DD.MM.YYYY // TODO: custom formats by server settings
+        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
+        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+
+        return new statistics().getTotal(arguments.userId,
+                                         arguments.sortOrder,
+                                         _fromDate,
+                                         _toDate);
     }
     
     // P R I V A T E   M E T H O D S

@@ -1,31 +1,12 @@
-angular.module("com.nephthys.page.statistics", ["chart.js",
+angular.module("com.nephthys.user.statistics", ["chart.js",
                                                "ui.bootstrap",
                                                "nephthys.datePicker"])
-    .service("comNephthysPageStatisticsService", function($http) {
+    .service("comNephthysUserStatisticsService", function($http) {
         return {
-            getPageRequests: function(sortOrder, fromDate, toDate, pageId) {
-                return $http.get('/ajax/com/Nephthys/pages/getPageRequests', {
+            getLoginStatistics: function(sortOrder, fromDate, toDate, userId) {
+                return $http.get('/ajax/com/Nephthys/user/getLoginStatisticsTotal', {
                     params: {
-                        pageId:    pageId,
-                        sortOrder: sortOrder,
-                        fromDate:  fromDate,
-                        toDate:    toDate
-                    }
-                });
-            },
-            getPageRequestsSeperatedByPage: function(sortOrder, fromDate, toDate) {
-                return $http.get('/ajax/com/Nephthys/pages/getPageRequestsSeperatedByPage', {
-                    params: {
-                        sortOrder: sortOrder,
-                        fromDate:  fromDate,
-                        toDate:    toDate
-                    }
-                });
-            },
-            getPageRequestsSeperatedByLink: function(sortOrder, fromDate, toDate, pageId) {
-                return $http.get('/ajax/com/Nephthys/pages/getPageRequestsSeperatedByLink', {
-                    params: {
-                        pageId:    pageId,
+                        userId:    userId,
                         sortOrder: sortOrder,
                         fromDate:  fromDate,
                         toDate:    toDate
@@ -34,7 +15,7 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
             }
         };
     })
-    .controller('comNephthysPageStatisticsController', ["$rootScope", "$scope", "$q", "comNephthysPageStatisticsService", function ($rootScope, $scope, $q, service) {
+    .controller('comNephthysUserStatisticsController', ["$rootScope", "$scope", "$q", "comNephthysUserStatisticsService", function ($rootScope, $scope, $q, service) {
         var actualView = "perDay", // perYear | perMonth | perDay | perHour
             
             renderChart = function (pageVisitStatisticsData) {
@@ -112,34 +93,16 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
             $scope.chart.labels = [];
             $scope.chart.data   = [];
             
-            var method = null;
-            switch($scope.requestType) {
-                case "total": {
-                    method = service.getPageRequests;
-                    break;
-                }
-                case "perPage": {
-                    method = service.getPageRequestsSeperatedByPage;
-                    break;
-                }
-                case "splitPerPage": {
-                    method = service.getPageRequestsSeperatedByLink;
-                    break;
-                }
-            }
-            
-            if(method) {
-                method($scope.sortOrder,
-                       $scope.selectedDate.fromDate.toLocaleDateString('de-DE', dateStringOptions),
-                       $scope.selectedDate.toDate.toLocaleDateString('de-DE', dateStringOptions),
-                       $scope.pageId)
-                    .then(function(res) {
-                        actualView = res.actualView;
-                        
-                        return res;
-                    })
-                    .then(renderChart);
-            }
+            service.getLoginStatistics($scope.sortOrder,
+                                       $scope.selectedDate.fromDate.toLocaleDateString('de-DE', dateStringOptions),
+                                       $scope.selectedDate.toDate.toLocaleDateString('de-DE', dateStringOptions),
+                                       $scope.userId)
+                .then(function(res) {
+                    actualView = res.actualView;
+                    
+                    return res;
+                })
+                .then(renderChart);
         };
         
         $scope.handleClick = function (object, event) {
@@ -205,8 +168,8 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
         };
         
         // init dates
-        if(! $scope.pageId) {
-            $scope.pageId = null;
+        if(! $scope.userId) {
+            $scope.userId = null;
         }
         
         if(! $scope.chartType) {
@@ -264,7 +227,7 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
             $scope.requestType = "total";
         }
         
-        $scope.$watchGroup(["chartOptions", "chartType", "requestType"], function(newValues, oldValues) {
+        $scope.$watchGroup(["chartOptions", "chartType", "requestType", "userId"], function(newValues, oldValues) {
             if(newValues[1] && newValues[1] !== oldValues[1]) {
                 $scope.chart.type = newValues[1];
             }
@@ -296,21 +259,20 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
             unregister();
         });
     }])
-    .directive("nephthysPageStatistics", function() {
+    .directive("nephthysUserStatistics", function() {
         return {
             replace: true,
             restrict: "E",
-            controller: "comNephthysPageStatisticsController",
+            controller: "comNephthysUserStatisticsController",
             scope: {
-                pageId: "=?",
+                userId: "=?",
                 fromDate: "=?",
                 toDate: "=?",
                 chartType: "=?",
                 chartOptions: "=?",
                 sortOrder: "@",
-                headline: "@",
-                requestType: "=?"
+                headline: "@"
             },
-            templateUrl : "/themes/default/modules/com/Nephthys/pages/directives/statistics/statistics.html"
+            templateUrl : "/themes/default/modules/com/Nephthys/user/directives/statistics/statistics.html"
         };
     });

@@ -1,13 +1,14 @@
 <script type="text/javascript" src="/themes/default/assets/ChartJS/Chart.min.js"></script>
 <script type="text/javascript" src="/themes/default/assets/angular-chart/angular-chart.min.js"></script>
 
-<script src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
+<script type="text/javascript" src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
 
 <script type="text/javascript" src="/themes/default/directive/nephthysUserInfo/nephthysUserInfo.js"></script>
 <script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/statistics/statistics.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/tasklist/tasklist.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/user/directives/loginLog/loginLog.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/user/directives/statistics/statistics.js"></script>
 
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/dashboardApp.js"></script>
 
@@ -75,7 +76,8 @@
             </div>
             
             <div class="card card-block">
-                <nephthys-user-login-log></nephthys-user-login-log>
+                <nephthys-user-statistics chart-type   = "'line'"
+                                          headline     = "Übersicht über erfolgreiche und gescheiterte Loginversuche"></nephthys-user-statistics>
             </div>
             
             <div class="card card-block">

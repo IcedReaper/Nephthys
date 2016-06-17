@@ -1,0 +1,15 @@
+<div>
+    <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> refresh</button>
+    <h2 ng-if="headline">{{headline}}</h2>
+    <nephthys-date-picker from-date="selectedDate.fromDate"
+                          to-date="selectedDate.toDate"
+                          format="dd.MM.yyyy"></nephthys-date-picker>
+    
+    <canvas chart-options="chart.options"
+            chart-series="chart.series"
+            chart-labels="chart.labels"
+            chart-data="chart.data"
+            chart-type="chart.type"
+            class="chart chart-base"
+            chart-click="handleClick"></canvas>
+</div>

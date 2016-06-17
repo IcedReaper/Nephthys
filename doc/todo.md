@@ -5,7 +5,8 @@
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
 - Page-Modul-Button per directive?
 - Login statistics per chart (wieviele erfolgreiche / nicht erfolgreiche Einlogversuche pro Zeiteinheit (datepicker))
-
+- statistics directive mit show date picker option versehen
+- page.statistics optimieren
 
 ## Allgemein
     1. Validierungen

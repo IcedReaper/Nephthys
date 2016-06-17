@@ -11,120 +11,142 @@
         <h1>User <small>{{user.username}}</small></h1>
     </div>
 </div>
-<div class="row">
-    <div class="col-md-6">
-        <div class="card card-block">
-            <h3>Details</h3>
-            <form novalidate>
-                <div class="form-group" ng-show="user.userId == 0">
-                    <label for="username">Benutzername</label>
-                    <input type="text" class="form-control" id="username" ng-disabled="user.userId != 0" placeholder="Username" ng-model="user.username">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email Adresse</label>
-                    <input type="email" class="form-control" id="email" placeholder="Email" ng-model="user.email">
-                </div>
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" class="form-control" id="password" placeholder="Password" ng-model="user.password">
-                </div>
-                <div class="form-group">
-                    <label for="active">Aktiv</label>
-                    <select class="form-control" ng-model="user.active"
-                            ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]">
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="active">Theme</label>
-                    <select class="form-control" ng-model="user.themeId" ng-options="o.themeId as o.name for o in themes">
-                    </select>
+
+<uib-tabset active="active">
+    <uib-tab heading="Details">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-block">
+                    <h3>Details</h3>
+                    <form novalidate>
+                        <div class="form-group" ng-show="user.userId == 0">
+                            <label for="username">Benutzername</label>
+                            <input type="text" class="form-control" id="username" ng-disabled="user.userId != 0" placeholder="Username" ng-model="user.username">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Adresse</label>
+                            <input type="email" class="form-control" id="email" placeholder="Email" ng-model="user.email">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" placeholder="Password" ng-model="user.password">
+                        </div>
+                        <div class="form-group">
+                            <label for="active">Aktiv</label>
+                            <select class="form-control" ng-model="user.active"
+                                    ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="active">Theme</label>
+                            <select class="form-control" ng-model="user.themeId" ng-options="o.themeId as o.name for o in themes">
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+                    </form>
                 </div>
                 
-                <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
-            </form>
-        </div>
-        
-        <div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
-            <h3>{{message.headline}}</h3>
-            <p>{{message.text}}</p>
-            <p>{{message.errorMessage}}</p>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card card-block">
-            <div class="row">
-                <div class="col-md-6">
-                    <h3>Aktuelles Avatar</h3>
-                    <img alt="user avatar" class="img-fluid" ng-src="{{user.avatar}}" ng-if="user.avatar">
+                <div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
+                    <h3>{{message.headline}}</h3>
+                    <p>{{message.text}}</p>
+                    <p>{{message.errorMessage}}</p>
                 </div>
-                <div class="col-md-6" ng-if="user.actualUser">
-                    <h3>Neues Avatar</h3>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-block">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3>Aktuelles Avatar</h3>
+                            <img alt="user avatar" class="img-fluid" ng-src="{{user.avatar}}" ng-if="user.avatar">
+                        </div>
+                        <div class="col-md-6" ng-if="user.actualUser">
+                            <h3>Neues Avatar</h3>
+                            <form novalidate>
+                                <div ng-show="user.newAvatar != undefined && user.newAvatar != ''">
+                                    <img alt="neues user avatar" class="img-fluid" ngf-src="user.newAvatar">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <input type="file" ngf-select required accept="image/*" ng-model="user.newAvatar" ngf-fix-orientation="false" class="form-control">
+                                </div>
+                                
+                                <button type="submit" class="btn btn-success" ng-click="uploadAvatar()"><i class="fa fa-upload"></i> Hochladen</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </uib-tab>
+    <uib-tab heading="Erweiterte Angaben" disable="userId == 0">
+        <div class="row">
+            <div class="col-md-12" ng-controller="userExtPropertiesCtrl">
+                <div class="card card-block">
+                    <h3>Zusätzliche Angaben</h3>
+                    
                     <form novalidate>
-                        <div ng-show="user.newAvatar != undefined && user.newAvatar != ''">
-                            <img alt="neues user avatar" class="img-fluid" ngf-src="user.newAvatar">
-                        </div>
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Wert</th>
+                                    <th>Öffentlich</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="form-group" ng-repeat="extProperty in extProperties">
+                                    <td>
+                                        {{extProperty.description}}
+                                    </td>
+                                    <td>
+                                        <input type="text" maxlength="255" ng-model="extProperty.value" class="form-control">
+                                    </td>
+                                    <td>
+                                        <select ng-model="extProperty.public" class="form-control"
+                                                ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]">
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                         
-                        <div class="form-group">
-                            <input type="file" ngf-select required accept="image/*" ng-model="user.newAvatar" ngf-fix-orientation="false" class="form-control">
-                        </div>
-                        
-                        <button type="submit" class="btn btn-success" ng-click="uploadAvatar()"><i class="fa fa-upload"></i> Hochladen</button>
+                        <button ng-click="save()" class="btn btn-success"><i class="fa fa-floppy-o"></i> Speichern</button>
                     </form>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<div class="row" ng-show="user.userId != 0">
-    <div class="col-md-6" ng-controller="userPermissionCtrl">
-        <div class="card card-block">
-            <h3>Berechtigungen</h3>
-            
-            <form novalidate>
-                <fieldset class="form-group" ng-repeat="permission in permissions">
-                    <label for="permission_{{permission.moduleId}}">{{permission.moduleName}}</label>
-                    <select name="{{permission.moduleId}}" id="permission_{{permission.moduleId}}" ng-model="permission.roleId" class="form-control"
-                            ng-options="o.roleId as o.name for o in roles">
-                        <option value="">Nicht gesetzt</option>
-                    </select>
-                </fieldset>
-                
-                <button ng-click="save()" class="btn btn-success"><i class="fa fa-floppy-o"></i> Speichern</button>
-            </form>
+    </uib-tab>
+    <uib-tab heading="Berechtigungen" disable="userId == 0">
+        <div class="row">
+            <div class="col-md-12" ng-controller="userPermissionCtrl">
+                <div class="card card-block">
+                    <h3>Berechtigungen</h3>
+                    
+                    <form novalidate>
+                        <fieldset class="form-group col-md-6 col-lg-4" ng-repeat="permission in permissions">
+                            <label for="permission_{{permission.moduleId}}">{{permission.moduleName}}</label>
+                            <select name="{{permission.moduleId}}" id="permission_{{permission.moduleId}}" ng-model="permission.roleId" class="form-control"
+                                    ng-options="o.roleId as o.name for o in roles">
+                                <option value="">Nicht gesetzt</option>
+                            </select>
+                        </fieldset>
+                        
+                        <button ng-click="save()" class="btn btn-success"><i class="fa fa-floppy-o"></i> Speichern</button>
+                    </form>
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="col-md-6" ng-controller="userExtPropertiesCtrl">
-        <div class="card card-block">
-            <h3>Zusätzliche Angaben</h3>
-            
-            <form novalidate>
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Description</th>
-                            <th>Wert</th>
-                            <th>Öffentlich</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="form-group" ng-repeat="extProperty in extProperties">
-                            <td>
-                                {{extProperty.description}}
-                            </td>
-                            <td>
-                                <input type="text" maxlength="255" ng-model="extProperty.value" class="form-control">
-                            </td>
-                            <td>
-                                <select ng-model="extProperty.public" class="form-control"
-                                        ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]">
-                                </select>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <button ng-click="save()" class="btn btn-success"><i class="fa fa-floppy-o"></i> Speichern</button>
-            </form>
+    </uib-tab>
+    <uib-tab heading="Statistiken" disable="userId == 0">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-block">
+                    <nephthys-user-statistics user-id    = "user.userId"
+                                              chart-type = "'line'"
+                                              headline   = "Übersicht über erfolgreiche und gescheiterte Loginversuche"></nephthys-user-statistics>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+    </uib-tab>
+</uib-tabset>
