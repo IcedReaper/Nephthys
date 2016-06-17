@@ -143,6 +143,10 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
         };
         
         $scope.handleClick = function (object, event) {
+            if(object.length === 0) {
+                return;
+            }
+            
             var getClickedDate = function() {
                 return object[0]._chart.config.data.labels[object[0]._index];
             }

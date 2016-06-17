@@ -3,8 +3,6 @@
 ## Actual Task TODO - Reminder:
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
-- Statistiken für sub links
-- combine statistic calls
 - Page-Modul-Button per directive?
 - Login statistics per chart (wieviele erfolgreiche / nicht erfolgreiche Einlogversuche pro Zeiteinheit (datepicker))
 
