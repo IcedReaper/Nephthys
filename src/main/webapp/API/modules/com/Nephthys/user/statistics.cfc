@@ -65,7 +65,7 @@ component {
                         break;
                     }
                     case "perMonth": {
-                        returnData.labels.append(monthAsString(requestData[i].date, variables.locale));
+                        returnData.labels.append(monthAsString(month(requestData[i].date), variables.locale));
                         break;
                     }
                 }

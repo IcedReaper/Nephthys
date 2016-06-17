@@ -48,15 +48,15 @@ component {
             switch(returnData.actualView) {
                 case "perHour":
                 case "perYear": {
-                    returnData.labels[i]  = requestData[i].date;
+                    returnData.labels[i] = requestData[i].date;
                     break;
                 }
                 case "perDay": {
-                    returnData.labels[i]  = dateFormat(requestData[i].date, variables.dateFormat);
+                    returnData.labels[i] = dateFormat(requestData[i].date, variables.dateFormat);
                     break;
                 }
                 case "perMonth": {
-                    returnData.labels[i]  = monthAsString(requestData[i].date, variables.locale);
+                    returnData.labels[i] = monthAsString(month(requestData[i].date), variables.locale);
                     break;
                 }
             }
@@ -133,7 +133,7 @@ component {
                         break;
                     }
                     case "perMonth": {
-                        returnData.labels.append(monthAsString(requestData[i].date, variables.locale));
+                        returnData.labels.append(monthAsString(month(requestData[i].date), variables.locale));
                         break;
                     }
                 }
@@ -157,116 +157,61 @@ component {
         var lastDate = "";
         
         if(year(arguments.fromDate) != year(arguments.toDate)) {
-            var requestData = createObject("component", "splitForPage.perYear").init()
-                                  .setPageId(arguments.pageId)
-                                  .setSortOrder(arguments.sortOrder)
-                                  .setFromDate(arguments.fromDate)
-                                  .setToDate(arguments.toDate)
-                                  .execute()
-                                  .getResult();
-            
+            var statisticsService = createObject("component", "splitForPage.perYear").init();
             returnData.actualView = "perYear";
-            
-            for(var i = 1; i <= requestData.len(); ++i) {
-                if(! linkIndex.keyExists(requestData[i].completeLink)) {
-                    linkIndex[requestData[i].completeLink] = ++maxLinkIndex;
-                    
-                    returnData.data[maxLinkIndex] = [];
-                    returnData.series[maxLinkIndex] = requestData[i].completeLink;
-                }
-                
-                if(lastDate != requestData[i].date) {
-                    lastDate = requestData[i].date;
-                    returnData.labels.append(requestData[i].date);
-                }
-                
-                returnData.data[linkIndex[requestData[i].completeLink]].append(requestData[i].requestCount);
-            }
         }
         else if(month(arguments.fromDate) != month(arguments.toDate)) {
-            var requestData = createObject("component", "splitForPage.perMonth").init()
-                                  .setPageId(arguments.pageId)
-                                  .setSortOrder(arguments.sortOrder)
-                                  .setFromDate(arguments.fromDate)
-                                  .setToDate(arguments.toDate)
-                                  .execute()
-                                  .getResult();
-            
+            var statisticsService = createObject("component", "splitForPage.perMonth").init();
             returnData.actualView = "perMonth";
-            
-            for(var i = 1; i <= requestData.len(); ++i) {
-                if(! linkIndex.keyExists(requestData[i].completeLink)) {
-                    linkIndex[requestData[i].completeLink] = ++maxLinkIndex;
-                    
-                    returnData.data[maxLinkIndex] = [];
-                    returnData.series[maxLinkIndex] = requestData[i].completeLink;
-                }
-                
-                if(lastDate != requestData[i].date) {
-                    lastDate = requestData[i].date;
-                    returnData.labels.append(monthAsString(requestData[i].date, variables.locale));
-                }
-                
-                returnData.data[linkIndex[requestData[i].completeLink]].append(requestData[i].requestCount);
-            }
         }
         else if(day(arguments.fromDate) != day(arguments.toDate)) {
             if(arguments.toDate > now()) {
                 var n = now();
                 arguments.toDate = createDate(year(n), month(n), day(n));
             }
-            var requestData = createObject("component", "splitForPage.perDay").init()
-                                  .setPageId(arguments.pageId)
-                                  .setSortOrder(arguments.sortOrder)
-                                  .setFromDate(arguments.fromDate)
-                                  .setToDate(arguments.toDate)
-                                  .execute()
-                                  .getResult();
-            
+            var statisticsService = createObject("component", "splitForPage.perDay").init();
             returnData.actualView = "perDay";
-            
-            for(var i = 1; i <= requestData.len(); ++i) {
-                if(! linkIndex.keyExists(requestData[i].completeLink)) {
-                    linkIndex[requestData[i].completeLink] = ++maxLinkIndex;
-                    
-                    returnData.data[maxLinkIndex] = [];
-                    returnData.series[maxLinkIndex] = requestData[i].completeLink;
-                }
-                
-                if(lastDate != requestData[i].date) {
-                    lastDate = requestData[i].date;
-                    returnData.labels.append(dateFormat(requestData[i].date, variables.dateFormat));
-                }
-                
-                returnData.data[linkIndex[requestData[i].completeLink]].append(requestData[i].requestCount);
-            }
         }
         else {
-            var requestData = createObject("component", "splitForPage.perHour").init()
-                                  .setPageId(arguments.pageId)
-                                  .setSortOrder(arguments.sortOrder)
-                                  .setFromDate(arguments.fromDate)
-                                  .setToDate(arguments.toDate)
-                                  .execute()
-                                  .getResult();
-            
+            var statisticsService = createObject("component", "splitForPage.perHour").init();
             returnData.actualView = "perHour";
-            
-            for(var i = 1; i <= requestData.len(); ++i) {
-                if(! linkIndex.keyExists(requestData[i].completeLink)) {
-                    linkIndex[requestData[i].completeLink] = ++maxLinkIndex;
-                    
-                    returnData.data[maxLinkIndex] = [];
-                    returnData.series[maxLinkIndex] = requestData[i].completeLink;
-                }
+        }
+        
+        var requestData = statisticsService.setPageId(arguments.pageId)
+                                           .setSortOrder(arguments.sortOrder)
+                                           .setFromDate(arguments.fromDate)
+                                           .setToDate(arguments.toDate)
+                                           .execute()
+                                           .getResult();
+        
+        for(var i = 1; i <= requestData.len(); ++i) {
+            if(! linkIndex.keyExists(requestData[i].completeLink)) {
+                linkIndex[requestData[i].completeLink] = ++maxLinkIndex;
                 
-                if(lastDate != requestData[i].date) {
-                    lastDate = requestData[i].date;
-                    returnData.labels.append(requestData[i].date);
-                }
-                
-                returnData.data[linkIndex[requestData[i].completeLink]].append(requestData[i].requestCount);
+                returnData.data[maxLinkIndex] = [];
+                returnData.series[maxLinkIndex] = requestData[i].completeLink;
             }
+            
+            if(lastDate != requestData[i].date) {
+                lastDate = requestData[i].date;
+                switch(returnData.actualView) {
+                    case "perHour":
+                    case "perYear": {
+                        returnData.labels.append(requestData[i].date);
+                        break;
+                    }
+                    case "perDay": {
+                        returnData.labels.append(dateFormat(requestData[i].date, variables.dateFormat));
+                        break;
+                    }
+                    case "perMonth": {
+                        returnData.labels.append(monthAsString(requestData[i].date, variables.locale));
+                        break;
+                    }
+                }
+            }
+            
+            returnData.data[linkIndex[requestData[i].completeLink]].append(requestData[i].requestCount);
         }
         
         return returnData;

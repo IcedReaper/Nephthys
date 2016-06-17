@@ -188,7 +188,7 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
         
         $scope.selectedDate = {};
         
-        if(! $scope.fromDate) {
+        if(! $scope.fromDate && ! $scope.selectedDate.fromDate) {
             var now = new Date();
             $scope.selectedDate.fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
         }
@@ -196,11 +196,11 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
             if($scope.fromDate instanceof Date) {
                 $scope.selectedDate.fromDate = $scope.fromDate;
             }
-            else {
+            else if (! $scope.selectedDate.fromDate) {
                 console.error("from date is not a date!");
             }
         }
-        if(! $scope.toDate) {
+        if(! $scope.toDate && ! $scope.selectedDate.toDate) {
             $scope.selectedDate.toDate = new Date();
             $scope.selectedDate.toDate.setMonth($scope.selectedDate.fromDate.getMonth() + 1);
             $scope.selectedDate.toDate.setDate(0);
@@ -208,8 +208,8 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
         else {
             if($scope.toDate instanceof Date) {
                 $scope.selectedDate.toDate = $scope.toDate;
-            }
-            else {
+            }  
+            else if (! $scope.selectedDate.toDate) {
                 console.error("from date is not a date!");
             }
         }
@@ -225,6 +225,13 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
         
         if(! $scope.requestType) {
             $scope.requestType = "total";
+        }
+        
+        if($scope.showDatePicker === undefined) {
+            $scope.showDatePicker = true;
+        }
+        if($scope.showRefreshButton === undefined) {
+            $scope.showRefreshButton = true;
         }
         
         $scope.$watchGroup(["chartOptions", "chartType", "requestType", "userId"], function(newValues, oldValues) {
@@ -248,15 +255,26 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
             $scope.refresh();
         });
         
-        var unregister = $rootScope.$on('nephthys-date-picker-date-changed', function(evt, data) {
+        $scope.$watch(function () {
+            return {
+                fromDate: $scope.selectedDate.fromDate,
+                toDate: $scope.selectedDate.toDate
+            };
+        }, function(newValues, oldValues) {
+            $scope.refresh();
+        }, true);
+        
+        var dateChangedEvent = $rootScope.$on('nephthys-date-picker-date-changed', function(evt, data) {
             $scope.selectedDate.fromDate = data.fromDate;
             $scope.selectedDate.toDate   = data.toDate;
             
             $scope.refresh();
         });
+        var refreshEvent = $rootScope.$on('nephthys-statistics-refresh', $scope.refresh);
         
         $scope.$on('$destroy', function() {
-            unregister();
+            dateChagedEvent();
+            refreshEvent();
         });
     }])
     .directive("nephthysUserStatistics", function() {
@@ -271,7 +289,10 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
                 chartType: "=?",
                 chartOptions: "=?",
                 sortOrder: "@",
-                headline: "@"
+                headline: "@",
+                showDatePicker: "=?",
+                showRefreshButton: "=?",
+                selectedDate: "=?"
             },
             templateUrl : "/themes/default/modules/com/Nephthys/user/directives/statistics/statistics.html"
         };

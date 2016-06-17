@@ -1,9 +1,12 @@
 <div>
-    <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> refresh</button>
+    <button class="btn btn-primary pull-right"
+            ng-if="showRefreshButton"
+            ng-click="refresh()"><i class="fa fa-refresh"></i> refresh</button>
     <h2 ng-if="headline">{{headline}}</h2>
     <nephthys-date-picker from-date="selectedDate.fromDate"
                           to-date="selectedDate.toDate"
-                          format="dd.MM.yyyy"></nephthys-date-picker>
+                          format="dd.MM.yyyy"
+                          ng-if="showDatePicker"></nephthys-date-picker>
     
     <canvas chart-options="chart.options"
             chart-series="chart.series"

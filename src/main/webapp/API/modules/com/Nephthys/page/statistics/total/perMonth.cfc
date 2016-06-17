@@ -20,7 +20,7 @@ component extends="abstractTotal" {
             
             innerQuery &= " GROUP BY date_trunc('month', visitDate)";
             
-            sql = "         SELECT to_char(dateRange.d, 'MM') _date, 
+            sql = "         SELECT dateRange.d _date, 
                                    CASE
                                      WHEN pageRequests.requestCount IS NOT NULL THEN
                                        pageRequests.requestCount
