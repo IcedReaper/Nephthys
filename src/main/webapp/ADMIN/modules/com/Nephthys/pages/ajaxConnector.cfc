@@ -755,6 +755,139 @@ component {
     }
     
     
+    remote struct function getPageRequestsSeperatedByLink(required numeric pageId, required string sortOrder, required string fromDate, required string toDate) { // format: DD.MM.YYYY // TODO: custom formats by server settings
+        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
+        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+
+        var returnData = {
+            "labels" = [],
+            "series" = [],
+            "data" = []
+        };
+        
+        var linkIndex = {};
+        var maxLinkIndex = 0;
+        var lastDate = "";
+        
+        if(year(_fromDate) != year(_toDate)) {
+            var requestData = createObject("component", "splitForPage.perYear").init()
+                                  .setPageId(arguments.pageId)
+                                  .setSortOrder(arguments.sortOrder)
+                                  .setFromDate(_fromDate)
+                                  .setToDate(_toDate)
+                                  .execute()
+                                  .getResult();
+            
+            returnData.actualView = "perYear";
+            
+            for(var i = 1; i <= requestData.len(); ++i) {
+                if(! linkIndex.keyExists(requestData[i].completeLink)) {
+                    linkIndex[requestData[i].completeLink] = ++maxLinkIndex;
+                    
+                    returnData.data[maxLinkIndex] = [];
+                    returnData.series[maxLinkIndex] = requestData[i].completeLink;
+                }
+                
+                if(lastDate != requestData[i].date) {
+                    lastDate = requestData[i].date;
+                    returnData.labels.append(requestData[i].date, "DD.MM.YYYY");
+                }
+                
+                returnData.data[linkIndex[requestData[i].completeLink]].append(requestData[i].requestCount);
+            }
+        }
+        else if(month(_fromDate) != month(_toDate)) {
+            var requestData = createObject("component", "splitForPage.perMonth").init()
+                                  .setPageId(arguments.pageId)
+                                  .setSortOrder(arguments.sortOrder)
+                                  .setFromDate(_fromDate)
+                                  .setToDate(_toDate)
+                                  .execute()
+                                  .getResult();
+            
+            returnData.actualView = "perMonth";
+            
+            for(var i = 1; i <= requestData.len(); ++i) {
+                if(! linkIndex.keyExists(requestData[i].completeLink)) {
+                    linkIndex[requestData[i].completeLink] = ++maxLinkIndex;
+                    
+                    returnData.data[maxLinkIndex] = [];
+                    returnData.series[maxLinkIndex] = requestData[i].completeLink;
+                }
+                
+                if(lastDate != requestData[i].date) {
+                    lastDate = requestData[i].date;
+                    returnData.labels.append(monthAsString(requestData[i].date, "de-DE"));
+                }
+                
+                returnData.data[linkIndex[requestData[i].completeLink]].append(requestData[i].requestCount);
+            }
+        }
+        else if(day(_fromDate) != day(_toDate)) {
+            if(_toDate > now()) {
+                var n = now();
+                _toDate = createDate(year(n), month(n), day(n));
+            }
+            var requestData = createObject("component", "splitForPage.perDay").init()
+                                  .setPageId(arguments.pageId)
+                                  .setSortOrder(arguments.sortOrder)
+                                  .setFromDate(_fromDate)
+                                  .setToDate(_toDate)
+                                  .execute()
+                                  .getResult();
+            
+            returnData.actualView = "perDay";
+            
+            for(var i = 1; i <= requestData.len(); ++i) {
+                if(! linkIndex.keyExists(requestData[i].completeLink)) {
+                    linkIndex[requestData[i].completeLink] = ++maxLinkIndex;
+                    
+                    returnData.data[maxLinkIndex] = [];
+                    returnData.series[maxLinkIndex] = requestData[i].completeLink;
+                }
+                
+                if(lastDate != requestData[i].date) {
+                    lastDate = requestData[i].date;
+                    returnData.labels.append(dateFormat(requestData[i].date, "DD.MM.YYYY"));
+                }
+                
+                returnData.data[linkIndex[requestData[i].completeLink]].append(requestData[i].requestCount);
+            }
+        }
+        else {
+            var requestData = createObject("component", "splitForPage.perHour").init()
+                                  .setPageId(arguments.pageId)
+                                  .setSortOrder(arguments.sortOrder)
+                                  .setFromDate(_fromDate)
+                                  .setToDate(_toDate)
+                                  .execute()
+                                  .getResult();
+            
+            returnData.actualView = "perHour";
+            
+            for(var i = 1; i <= requestData.len(); ++i) {
+                if(! linkIndex.keyExists(requestData[i].completeLink)) {
+                    linkIndex[requestData[i].completeLink] = ++maxLinkIndex;
+                    
+                    returnData.data[maxLinkIndex] = [];
+                    returnData.series[maxLinkIndex] = requestData[i].completeLink;
+                }
+                
+                if(lastDate != requestData[i].date) {
+                    lastDate = requestData[i].date;
+                    returnData.labels.append(requestData[i].date);
+                }
+                
+                returnData.data[linkIndex[requestData[i].completeLink]].append(requestData[i].requestCount);
+            }
+        }
+        
+        return returnData;
+    }
+    
+    
+    
+    
     
     // P R I V A T E
     private array function getSubPagesForSitemap(required numeric parentId, required numeric regionId, required numeric sitemapId) {

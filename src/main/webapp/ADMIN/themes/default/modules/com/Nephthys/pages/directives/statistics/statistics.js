@@ -44,10 +44,62 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
                     $scope.chart.series = pageVisitStatisticsData.series;
                 }
             },
-            today = function() {
+            today = function () {
                 var now = new Date();
                 
                 return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+            },
+            setDefaultChartOptions = function () {
+                switch($scope.chart.type) {
+                    case "horizontalBar": {
+                        $scope.chart.options = {
+                            fixedBarHeight: true,
+                            barHeight: 40,
+                            scales: {
+                                xAxes: [{
+                                    ticks: {
+                                        beginAtZero:true
+                                    }
+                                }]
+                            }
+                        };
+                        
+                        break;
+                    }
+                    case "bar": {
+                        $scope.chart.options = {
+                            fixedHeight: true,
+                            height: 450,
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero:true
+                                    }
+                                }]
+                            }
+                        };
+                        
+                        break;
+                    }
+                    case "line": {
+                        $scope.chart.options = {
+                            fixedHeight: true,
+                            height: 450,
+                            legend: {
+                                display: true
+                            },
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero:true
+                                    }
+                                }]
+                            }
+                        };
+                        
+                        break;
+                    }
+                }
             };
         
         $scope.refresh = function () {
@@ -161,56 +213,7 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
         }
         
         if(! $scope.chartOptions) {
-            switch($scope.chart.type) {
-                case "horizontalBar": {
-                    $scope.chart.options = {
-                        fixedBarHeight: true,
-                        barHeight: 40,
-                        scales: {
-                            xAxes: [{
-                                ticks: {
-                                    beginAtZero:true
-                                }
-                            }]
-                        }
-                    };
-                    
-                    break;
-                }
-                case "bar": {
-                    $scope.chart.options = {
-                        fixedHeight: true,
-                        height: 450,
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero:true
-                                }
-                            }]
-                        }
-                    };
-                    
-                    break;
-                }
-                case "line": {
-                    $scope.chart.options = {
-                        fixedHeight: true,
-                        height: 450,
-                        legend: {
-                            display: true
-                        },
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero:true
-                                }
-                            }]
-                        }
-                    };
-                    
-                    break;
-                }
-            }
+            setDefaultChartOptions();
         }
         else {
             $scope.chart.options = $scope.chartOptions;
@@ -257,6 +260,27 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
             $scope.requestType = "total";
         }
         
+        $scope.$watchGroup(["chartOptions", "chartType", "requestType"], function(newValues, oldValues) {
+            if(newValues[1] && newValues[1] !== oldValues[1]) {
+                $scope.chart.type = newValues[1];
+            }
+            
+            if(newValues[0] && newValues[0] !== oldValues[0]) {
+                $scope.chart.options = newValues[0];
+            }
+            else {
+                if(! newValues[0]) {
+                    setDefaultChartOptions();
+                }
+            }
+            
+            if(newValues[2] && newValues[2] !== oldValues[2]) {
+                $scope.requestType = newValues[2];
+            }
+            
+            $scope.refresh();
+        });
+        
         var unregister = $rootScope.$on('nephthys-date-picker-date-changed', function(evt, data) {
             $scope.selectedDate.fromDate = data.fromDate;
             $scope.selectedDate.toDate   = data.toDate;
@@ -267,8 +291,6 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
         $scope.$on('$destroy', function() {
             unregister();
         });
-        
-        $scope.refresh();
     }])
     .directive("nephthysPageStatistics", function() {
         return {
@@ -279,11 +301,11 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
                 pageId: "=?",
                 fromDate: "=?",
                 toDate: "=?",
-                chartType: "@",
+                chartType: "=?",
                 chartOptions: "=?",
                 sortOrder: "@",
                 headline: "@",
-                requestType: "@"
+                requestType: "=?"
             },
             templateUrl : "/themes/default/modules/com/Nephthys/pages/directives/statistics/statistics.html"
         };

@@ -259,6 +259,24 @@ nephthysAdminApp
             return ! $scope.isEditable;
         };
         
+        $scope.getStatisticsChartType = function () {
+            if(! structIsEmpty($scope.page)) {
+                if($scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].useDynamicSuffixes) {
+                    return "line";
+                }
+            }
+            return "bar";
+        };
+        
+        $scope.getStatisticsRequestType = function () {
+            if(! structIsEmpty($scope.page)) {
+                if($scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].useDynamicSuffixes) {
+                    return "splitPerPage";
+                }
+            }
+            return "total";
+        };
+        
         // init values
         $scope.page = {};
         $scope.status = {};

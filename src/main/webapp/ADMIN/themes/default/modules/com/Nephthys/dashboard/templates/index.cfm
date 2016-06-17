@@ -92,7 +92,7 @@
         </div>
         <div class="col-md-4">
             <div class="card card-block">
-                <nephthys-page-statistics request-type="total"
+                <nephthys-page-statistics request-type="'total'"
                                           sort-order="DESC"
                                           headline="Verlauf von Seitenaufrufen"></nephthys-page-statistics>
             </div>
@@ -101,8 +101,8 @@
     <div class="row">
         <div class="col-md-12">
             <div class="card card-block">
-                <nephthys-page-statistics request-type="perPage"
-                                          chart-type="line"
+                <nephthys-page-statistics request-type="'perPage'"
+                                          chart-type="'line'"
                                           sort-order="ASC"></nephthys-page-statistics>
             </div>
         </div>
