@@ -1,5 +1,5 @@
-component extends="API.abstractClasses.pageRequestQuery" {
-    public pageRequestQuery function execute() {
+component extends="abstractTotal" {
+    public statistic function execute() {
         if(variables.fromDate != null) {
             var qPageRequests = new Query();
             
@@ -28,9 +28,10 @@ component extends="API.abstractClasses.pageRequestQuery" {
                           ORDER BY dateRange.d " & variables.sortOrder;
             
             
-            variables.prq = new Query().setSQL(sql)
-                                       .addParam(name = "date", value = variables.fromDate, cfsqltype = "cf_sql_date")
-                                       .execute();
+            variables.qRes = qPageRequests.setSQL(sql)
+                                          .addParam(name = "date", value = variables.fromDate, cfsqltype = "cf_sql_date")
+                                          .execute()
+                                          .getResult();
             
             return this;
         }

@@ -1,10 +1,5 @@
-component extends="API.abstractClasses.pageRequestQuery" {
-    public pageRequestQuery function setYear(required numeric year) {
-        variables.fromDate = createDate(arguments.year, 1, 1);
-        variables.toDate   = today();
-    }
-    
-    public pageRequestQuery function execute() {
+component extends="abstractTotal" {
+    public statistic function execute() {
         if(variables.fromDate != null && variables.toDate != null) {
             var qPageRequests = new Query();
             
@@ -37,12 +32,14 @@ component extends="API.abstractClasses.pageRequestQuery" {
                    LEFT OUTER JOIN ( " & innerQuery & " ) pageRequests ON dateRange.d = pageRequests._date
                           ORDER BY dateRange.d " & variables.sortOrder;
             
-            variables.prq = qPageRequests.setSQL(sql)
-                                         .addParam(name = "fromDateTruncated", value = fromDateTruncated,  cfsqltype = "cf_sql_date")
-                                         .addParam(name = "toDateTruncated",   value = toDateTruncated,    cfsqltype = "cf_sql_date")
-                                         .addParam(name = "fromDate",          value = variables.fromDate, cfsqltype = "cf_sql_date")
-                                         .addParam(name = "toDate",            value = variables.toDate,   cfsqltype = "cf_sql_date")
-                                         .execute();
+            variables.qRes = qPageRequests.setSQL(sql)
+                                          .addParam(name = "fromDateTruncated", value = fromDateTruncated,  cfsqltype = "cf_sql_date")
+                                          .addParam(name = "toDateTruncated",   value = toDateTruncated,    cfsqltype = "cf_sql_date")
+                                          .addParam(name = "fromDate",          value = variables.fromDate, cfsqltype = "cf_sql_date")
+                                          .addParam(name = "toDate",            value = variables.toDate,   cfsqltype = "cf_sql_date")
+                                          .execute()
+                                          .getResult();
+            
             return this;
         }
         else {

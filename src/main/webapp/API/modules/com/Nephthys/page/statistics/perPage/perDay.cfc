@@ -1,5 +1,5 @@
-component extends="API.abstractClasses.pageRequestQuery" {
-    public pageRequestQuery function execute() {
+component extends="abstractPerPage" {
+    public statistic function execute() {
         // Get pageRequestCount per pageId and date for a specific month
         if(variables.fromDate != null && variables.toDate != null) {
             var qPageRequests = new Query();
@@ -27,29 +27,16 @@ component extends="API.abstractClasses.pageRequestQuery" {
                                    ) page ON stats.pageId = page.pageId AND page._date = stats._date
                           ORDER BY page._date " & variables.sortOrder & ", page.pageId ASC";
             
-            variables.prq = qPageRequests.setSQL(sql)
-                                         .addParam(name = "fromDate", value = variables.fromDate, cfsqltype = "cf_sql_date")
-                                         .addParam(name = "toDate",   value = variables.toDate,   cfsqltype = "cf_sql_date")
-                                         .execute();
+            variables.qRes = qPageRequests.setSQL(sql)
+                                          .addParam(name = "fromDate", value = variables.fromDate, cfsqltype = "cf_sql_date")
+                                          .addParam(name = "toDate",   value = variables.toDate,   cfsqltype = "cf_sql_date")
+                                          .execute()
+                                          .getResult();
+            
             return this;
         }
         else {
             throw(type = "application", message = "Start and/or end date isn't set");
         }
-    }
-    
-    public array function getResult() {
-        var qResult = variables.prq.getResult();
-        
-        var pageRequests = [];
-        for(var i = 1; i <= qResult.getRecordCount(); ++i) {
-            pageRequests.append({
-                "date"         = qResult._date[i],
-                "requestCount" = qResult.requestCount[i],
-                "pageId"       = qResult.pageId[i]
-            });
-        }
-        
-        return pageRequests;
     }
 }
