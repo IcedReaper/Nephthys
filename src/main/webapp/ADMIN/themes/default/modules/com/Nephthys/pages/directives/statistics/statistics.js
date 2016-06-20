@@ -88,6 +88,9 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
                             legend: {
                                 display: true
                             },
+                            tooltips: {
+                                mode: 'label'
+                            },
                             scales: {
                                 yAxes: [{
                                     ticks: {
