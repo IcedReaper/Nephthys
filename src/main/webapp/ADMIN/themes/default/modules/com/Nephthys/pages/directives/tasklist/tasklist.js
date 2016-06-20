@@ -83,36 +83,20 @@ angular.module("com.nephthys.page.tasklist", ["nephthys.userInfo"])
         $scope.tableClass = $scope.tableClass || "";
         $scope.class      = $scope.class || "";
         
-        if($scope.showPages) {
-            $scope._showPages = $scope.showPages === "true";
+        if($scope.showPages === undefined) {
+            $scope.showPages = true;
         }
-        else {
-            $scope._showPages = true;
+        if($scope.showSitemaps === undefined) {
+            $scope.showSitemaps = true;
         }
-        if($scope.showSitemaps) {
-            $scope._showSitemaps = $scope.showSitemaps === "true";
+        if($scope.showActions === undefined) {
+            $scope.showActions = true;
         }
-        else {
-            $scope._showSitemaps = true;
+        if($scope.showPageButton === undefined) {
+            $scope.showPageButton = true;
         }
-        
-        if($scope.showActions) {
-            $scope._showActions = $scope.showActions === "true";
-        }
-        else {
-            $scope._showActions = true;
-        }
-        if($scope.showPageButton) {
-            $scope._showPageButton = $scope.showPageButton === "true";
-        }
-        else {
-            $scope._showPageButton = true;
-        }
-        if($scope.combineNextStatusButton) {
-            $scope._combineNextStatusButton = $scope.combineNextStatusButton === "true";
-        }
-        else {
-            $scope._combineNextStatusButton = true;
+        if($scope.combineNextStatusButton === undefined) {
+            $scope.combineNextStatusButton = true;
         }
         
         $scope.tasklist = {
@@ -130,11 +114,11 @@ angular.module("com.nephthys.page.tasklist", ["nephthys.userInfo"])
             scope: {
                 tableClass: "@",
                 class: "@",
-                showPages: "@",
-                showSitemaps: "@",
-                showActions: "@",
-                showPageButton: "@",
-                combineNextStatusButton: "@"
+                showPages: "=?",
+                showSitemaps: "=?",
+                showActions: "=?",
+                showPageButton: "=?",
+                combineNextStatusButton: "=?"
             },
             templateUrl : "/themes/default/modules/com/Nephthys/pages/directives/tasklist/tasklist.html"
         };

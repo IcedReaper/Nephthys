@@ -127,9 +127,8 @@
             <div class="card card-block">
                 <h2>Aufgabenliste</h2>
                 <nephthys-page-tasklist class="tasklist-sm"
-                                        show-page-button="false"
-                                        combine-next-status-button="true"
-                                        show-page-putton="false"></nephthys-page-tasklist>
+                                        show-page-button="'false'"
+                                        combine-next-status-button="'true'"></nephthys-page-tasklist>
             </div>
         </div>
     </div>
