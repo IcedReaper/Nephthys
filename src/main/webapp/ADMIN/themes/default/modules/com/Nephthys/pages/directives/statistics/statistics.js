@@ -274,26 +274,35 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
             $scope.showRefreshButton = true;
         }
         
-        $scope.$watchGroup(["chartOptions", "chartType", "requestType"], function(newValues, oldValues) {
+        $scope.$watchGroup(["chartOptions", "chartType", "requestType", "pageId"], function(newValues, oldValues) {
+            var changed = false;
             if(newValues[1] && newValues[1] !== oldValues[1]) {
                 $scope.chart.type = newValues[1];
+                changed = true;
             }
             
             if(newValues[0] && newValues[0] !== oldValues[0]) {
                 $scope.chart.options = newValues[0];
+                changed = true;
             }
             else {
                 if(! newValues[0]) {
                     setDefaultChartOptions();
+                    changed = true;
                 }
             }
             
             if(newValues[2] && newValues[2] !== oldValues[2]) {
-                $scope.requestType = newValues[2];
+                changed = true;
             }
             
-            // TODO: check if some value changed
-            $scope.refresh();
+            if(newValues[3] && newValues[3] !== oldValues[3]) {
+                changed = true;
+            }
+            
+            if(changed) {
+                $scope.refresh();
+            }
         });
         
         $scope.$watch(function () {
@@ -302,14 +311,14 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
                 toDate: $scope.selectedDate.toDate
             };
         }, function(newValues, oldValues) {
-            $scope.refresh();
+            if(oldValues.fromDate !== newValues.fromDate || oldValues.toDate !== newValues.toDate) {
+                $scope.refresh();
+            }
         }, true);
         
         var dateChagedEvent = $rootScope.$on('nephthys-date-picker-date-changed', function(evt, data) {
             $scope.selectedDate.fromDate = data.fromDate;
             $scope.selectedDate.toDate   = data.toDate;
-            
-            $scope.refresh();
         });
         var refreshEvent = $rootScope.$on('nephthys-statistics-refresh', $scope.refresh);
         
