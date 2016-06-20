@@ -1,4 +1,4 @@
-angular.module("nephthys.datePicker", ["ui.bootstrap"])
+angular.module("com.nephthys.global.datePicker", ["ui.bootstrap"])
     .controller("nephthysDatePickerController", ["$rootScope", "$scope", "$uibModal", function ($rootScope, $scope, $uibModal) {
         $scope.openDatePickerDialog = function () {
             $uibModal.open({

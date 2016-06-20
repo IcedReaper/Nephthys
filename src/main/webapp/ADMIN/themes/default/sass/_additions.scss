@@ -1,8 +1,7 @@
 body {
     background: #2c3644 url("../img/pattern_hexagon_dark_2x.png") repeat scroll 0px -1px / 46px 26px;
     color: #EEEEEE;
-    padding-top: 50px;
-    
+    padding-top: 54px;
     
     & > footer {
         border-top: 1px solid #e5e5e5;
@@ -28,7 +27,68 @@ body {
     }
 
     .main {
-        padding: 20px 40px;
+        padding: 0;
+        
+        > div:not(.loadingBar) {
+            margin: 20px 40px;
+        }
+        
+        div.loadingBar {
+            > div {
+                height: 4px;
+                width: 100%;
+                position: relative;
+                overflow: hidden;
+                background-color: #ddd;
+                
+                &.line {
+                    &:before{
+                        display: block;
+                        position: absolute;
+                        content: "";
+                        left: -200px;
+                        width: 200px;
+                        height: 4px;
+                        background-color: $brand-primary;
+                        animation: loading 2s linear infinite;
+                    }
+
+                    @keyframes loading {
+                        from {left: -200px; width: 30%;}
+                        50% {width: 30%;}
+                        70% {width: 70%;}
+                        80% { left: 50%;}
+                        95% {left: 120%;}
+                        to {left: 100%;}
+                    }
+                }
+                
+                &.dots {
+                    div {
+                        width: 4px;
+                        height: 4px;
+                        position: absolute;
+                        left: -5px;
+                        background-color: $brand-primary;
+                        animation: move 4s infinite cubic-bezier(.2,.64,.81,.23);
+                    }
+                    div:nth-child(2) {
+                        animation-delay: 100ms;
+                    }
+                    div:nth-child(3) {
+                        animation-delay: 200ms;
+                    }
+                    div:nth-child(4) {
+                        animation-delay: 300ms;
+                    }
+                    @keyframes move {
+                        0% {left: 0%;}
+                        75% {left:100%;}
+                        100% {left:100%;}
+                    }
+                }
+            }
+        }
     }
 
     .container-fluid {
@@ -62,19 +122,6 @@ body {
 
     .clickable {
         cursor: pointer;
-    }
-    @keyframes spin {
-        from { transform: rotate(0deg); }
-        to { transform: rotate(360deg); }
-    }
-
-    .loadingWheel {
-        animation-name: spin; 
-        animation-duration: 3s; /* 3 seconds */
-        animation-iteration-count: infinite; 
-        animation-timing-function: linear;
-        
-        width: 50px;
     }
 
     .modal-title,

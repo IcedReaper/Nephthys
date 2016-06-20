@@ -19,6 +19,8 @@
 <!--- Angular UI --->
 <script src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
 
+<script type="text/javascript" src="/themes/default/directive/nephthysLoadingBar/nephthysLoadingBar.js"></script>
+
 <!--- app --->
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/blogApp.js"></script>
 
@@ -40,4 +42,5 @@
 
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/settings.js"></script>
 
+<nephthys-loading-bar></nephthys-loading-bar>
 <div ng-view></div>

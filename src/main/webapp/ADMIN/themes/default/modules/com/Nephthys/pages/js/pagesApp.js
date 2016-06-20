@@ -3,7 +3,8 @@ var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
                                                            "ui.tree",
                                                            "ui.bootstrap",
                                                            "textAngular",
-                                                           "nephthys.userInfo",
+                                                           "com.nephthys.global.loadingBar",
+                                                           "com.nephthys.global.userInfo",
                                                            "com.nephthys.page.statistics",
                                                            "com.nephthys.page.tasklist"]);
 

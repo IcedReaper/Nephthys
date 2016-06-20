@@ -3,6 +3,7 @@
 
 <script type="text/javascript" src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
 
+<script type="text/javascript" src="/themes/default/directive/nephthysLoadingBar/nephthysLoadingBar.js"></script>
 <script type="text/javascript" src="/themes/default/directive/nephthysUserInfo/nephthysUserInfo.js"></script>
 <script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/statistics/statistics.js"></script>
@@ -13,6 +14,7 @@
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/dashboardApp.js"></script>
 
 <cfoutput>
+<nephthys-loading-bar></nephthys-loading-bar>
 <div class="com-Nephthys-dashboard">
     <h1>Willkommen im Adminpanel <small>#request.user.getUsername()#</small></h1>
     

@@ -1,4 +1,5 @@
-var nephthysAdminApp = angular.module("nephthysAdminApp", ["com.nephthys.page.statistics",
+var nephthysAdminApp = angular.module("nephthysAdminApp", ["com.nephthys.global.loadingBar",
+                                                           "com.nephthys.page.statistics",
                                                            "com.nephthys.page.tasklist",
                                                            "com.nephthys.user.loginLog",
                                                            "com.nephthys.user.statistics"]);
@@ -21,5 +22,5 @@ nephthysAdminApp
         
         $scope.refresh = function () {
             $rootScope.$broadcast("nephthys-statistics-refresh");
-        }
+        };
     }]);

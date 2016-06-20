@@ -1,6 +1,6 @@
 angular.module("com.nephthys.page.statistics", ["chart.js",
                                                "ui.bootstrap",
-                                               "nephthys.datePicker"])
+                                               "com.nephthys.global.datePicker"])
     .service("comNephthysPageStatisticsService", function($http) {
         return {
             getPageRequests: function(sortOrder, fromDate, toDate, pageId) {
@@ -289,6 +289,7 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
                 $scope.requestType = newValues[2];
             }
             
+            // TODO: check if some value changed
             $scope.refresh();
         });
         

@@ -1,5 +1,5 @@
 var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
-                                                           "errorLogService"]);
+                                                           "com.nephthys.global.loadingBar"]);
 
 nephthysAdminApp
     .config(["$routeProvider",

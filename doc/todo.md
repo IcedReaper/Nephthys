@@ -3,8 +3,6 @@
 ## Actual Task TODO - Reminder:
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
-- Page-Modul-Button per directive?
-
 
 ## Allgemein
     1. Validierungen
@@ -22,25 +20,24 @@
     10. Mehrsprachigkeit/Internationalisierung
         * i18n
         * i10n
-    11. filter.cfc auf gleichen Nenner bringen. (Aktuell gibt die Methode mal arrays, mal queries zurück) !!!
-    12. user => username überprüfen
-    13. user => blacklist erstellen | Innerhalb des Username überprüfen
-    14. F5-Raids bei Formularen unterbinden
-    15. Beim anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
-    16. FileUpload, etc in eine Extra-Component aus dem Model auslagern
-    17. Pakete
+    11. user => username überprüfen
+    12. user => blacklist erstellen | Innerhalb des Username überprüfen
+    13. F5-Raids bei Formularen unterbinden
+    14. Beim anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
+    15. FileUpload, etc in eine Extra-Component aus dem Model auslagern
+    16. Pakete
         * Alles
         * Blog
         * Gallerie
         * Marketing/Produkt
-    18. QueryBuilder zur Unterstützung verschiedener DB-Systeme
+    17. QueryBuilder zur Unterstützung verschiedener DB-Systeme
         * Idee und erste Doku unter QueryBuilder-idea-notes.md
-    19. Zusätzliche Optionen
+    18. Zusätzliche Optionen
         * Berechtigungssystem auf Menüpunkte ausweiten
-    20. Erweiterte Sicherheit in Modulen
+    19. Erweiterte Sicherheit in Modulen
         * Personen freischalten => Nur normales Editieren
         *
-    21. API-Statistics wie page.filter allen Modulen hinzufügen. - abwägen, und nach und nach
+    20. API-Statistics wie page.filter allen Modulen hinzufügen. - abwägen, und nach und nach
 
 ## Website
     1. Codeoptimierung
@@ -224,6 +221,7 @@
     16. Creator und lastEditor direkt als Objekte in Objekten erstellen
     17. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
     18. Charts responsive mit maxHeight!?
+    19. Checken, ob man Loading Bar und Error Message Box irgendwie Global verankern kann
 
 
 

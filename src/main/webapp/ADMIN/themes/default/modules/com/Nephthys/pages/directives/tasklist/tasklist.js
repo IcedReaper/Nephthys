@@ -1,4 +1,4 @@
-angular.module("com.nephthys.page.tasklist", ["nephthys.userInfo"])
+angular.module("com.nephthys.page.tasklist", ["com.nephthys.global.userInfo"])
     .service("tasklistService", function($http) {
         return {
             getPageVersionInTasklist: function () {

@@ -1,4 +1,4 @@
-angular.module("errorLogService", [])
+nephthysAdminApp
     .config(window.$QDecorator)
     .service("errorLogService", function ($http) {
         return {

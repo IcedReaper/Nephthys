@@ -11,7 +11,7 @@ var globalAngularAjaxSettings = function($httpProvider) {
             "request": function(config) {
                 if(isServiceCall(config)) {
                     if(++activeAjaxCalls === 1) {
-                        console.log("show loading screen");
+                        $rootScope.$broadcast("nephthys-loading-bar-show", {});
                     }
                     
                     if(activeAjaxCalls === 0) {
@@ -21,11 +21,6 @@ var globalAngularAjaxSettings = function($httpProvider) {
                 
                 return config;
             },
-            "requestError": function (rejection) { // check if needed.
-                console.log("requestError", rejection);
-                
-                return $q.reject(rejection);
-            },
             
             "response": function (response) {
                 if(! isServiceCall(response.config)) {
@@ -33,8 +28,7 @@ var globalAngularAjaxSettings = function($httpProvider) {
                 }
                 else {
                     if(--activeAjaxCalls === 0) {
-                        // hide loading screen
-                        console.log("hide loading screen");
+                        $rootScope.$broadcast("nephthys-loading-bar-hide", {});
                     }
                     
                     switch(response.config.method) {
@@ -67,8 +61,7 @@ var globalAngularAjaxSettings = function($httpProvider) {
             "responseError": function (rejection) {
                 if(isServiceCall(rejection.config)) {
                     if(--activeAjaxCalls === 0) {
-                        // hide loading screen
-                        console.log("hide loading screen");
+                        $rootScope.$broadcast("nephthys-loading-bar-hide", {});
                     }
                     
                     var action = "unbekannte Aktion";

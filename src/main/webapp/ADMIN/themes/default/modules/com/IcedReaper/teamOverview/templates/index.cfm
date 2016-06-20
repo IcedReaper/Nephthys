@@ -1,7 +1,10 @@
+<script type="text/javascript" src="/themes/default/directive/nephthysLoadingBar/nephthysLoadingBar.js"></script>
+
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/teamOverview/js/teamOverviewApp.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/teamOverview/js/service/teamOverviewService.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/teamOverview/js/controller/teamOverviewList.js"></script>
 
+<nephthys-loading-bar></nephthys-loading-bar>
 <div ng-Controller="teamOverviewCtrl">
     <h1>Teammitglieder</h1>
     
