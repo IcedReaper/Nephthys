@@ -1,63 +1,79 @@
 component {
-    remote struct function getSettings() {
+    remote array function getSettings() {
         var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
         serverSettings.load();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var settings = duplicate(serverSettings.getAllSettings());
         
+        var configurations = [];
+        var index = 0;
         for(var key in settings) {
+            configurations[++index] = settings[key];
+            configurations[index].key = key;
+            
+            if(configurations[index].moduleId == null) {
+                configurations[index].moduleId = 0;
+            }
+            if(configurations[index].moduleName == null) {
+                configurations[index].moduleName = "";
+            }
+            
+            configurations[index].hidden           = configurations[index].hidden           == 1;
+            configurations[index].systemKey        = configurations[index].systemKey        == 1;
+            configurations[index].alwaysRevalidate = configurations[index].alwaysRevalidate == 1;
+            configurations[index].readonly         = configurations[index].readonly         == 1;
+            
             if(lcase(settings[key].type) == "datetime") {
-                settings[key].value = settings[key].value != null ? formatCtrl.formatDate(settings[key].value, true, "DD.MM.YYYY") : "";
+                configurations[index].value = settings[key].value != null ? formatCtrl.formatDate(settings[key].value, true, "DD.MM.YYYY") : "";
             }
             if(lcase(settings[key].type) == "date") {
-                settings[key].value = settings[key].value != null ? formatCtrl.formatDate(settings[key].value, false, "DD.MM.YYYY") : "";
+                configurations[index].value = settings[key].value != null ? formatCtrl.formatDate(settings[key].value, false, "DD.MM.YYYY") : "";
             }
-            settings[key].delete("foreignTableOptions");
+            configurations[index].delete("foreignTableOptions");
         }
         
-        return settings;
+        return configurations;
     }
     
-    remote boolean function saveSettings(required string settings) {
-        var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
-        var newSettings = deserializeJSON(arguments.settings);
+    remote boolean function saveSettings(required array settings) {
+        var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init().load();
         var resetAllPasswords = false;
         
-        for(var key in newSettings) {
-            if(key != "encryptionMethodId" || key != "encryptionKey") {
-                if(newSettings[key].keyExists("value")) {
-                    if(! serverSettings.isKeyReadonly(key)) {
-                        serverSettings.setValueOfKey(key, newSettings[key].rawValue);
+        transaction {
+            try {
+                for(var setting in arguments.settings) {
+                    if(setting.key != "encryptionMethodId" && setting.key != "encryptionKey") {
+                        if(setting.keyExists("value")) {
+                            if(! serverSettings.isKeyReadonly(setting.key)) {
+                                serverSettings.setValueOfKey(setting.key, setting.rawValue);
+                            }
+                        }
+                    }
+                    else {
+                        if(setting.key == "encryptionMethodId" && setting.value != serverSettings.getValueOfKey("encryptionMethodId")) {
+                            var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.security.encryptionMethodLoader").init();
+            
+                            var newAlgorithm = encryptionMethodLoader.getAlgorithm(setting.value);
+                            var newSecretKey = generateSecretKey(newAlgorithm);
+                            
+                            resetPasswordOfAllUsers(newSecretKey,
+                                                    newAlgorithm,
+                                                    serverSettings.getValueOfKey("encryptionKey"),
+                                                    encryptionMethodLoader.getAlgorithm(serverSettings.getValueOfKey("encryptionMethodId")));
+                            
+                            serverSettings.setValueOfKey("encryptionMethodId", setting.value)
+                                          .setValueOfKey("encryptionKey", newSecretKey);
+                        }
                     }
                 }
+                serverSettings.save();
+                
+                transactionCommit();
             }
-        }
-        serverSettings.save();
-        
-        if(newSettings["encryptionMethodId"].value != serverSettings.getValueOfKey("encryptionMethodId")) {
-            var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.security.encryptionMethodLoader").init();
-            
-            transaction {
-                try {
-                    var newAlgorithm = encryptionMethodLoader.getAlgorithm(newSettings["encryptionMethodId"].value);
-                    var newSecretKey = generateSecretKey(newAlgorithm);
-                    
-                    resetPasswordOfAllUsers(newSecretKey,
-                                            newAlgorithm,
-                                            serverSettings.getValueOfKey("encryptionKey"),
-                                            encryptionMethodLoader.getAlgorithm(serverSettings.getValueOfKey("encryptionMethodId")));
-                    
-                    serverSettings.setValueOfKey("encryptionMethodId", newSettings["encryptionMethodId"].value)
-                                  .setValueOfKey("encryptionKey", newSecretKey)
-                                  .save();
-                    
-                    transactionCommit();
-                }
-                catch(any e) {
-                    transactionRollback();
-                    throw(object=e);
-                }
+            catch(any e) {
+                transactionRollback();
+                throw(object=e);
             }
         }
         

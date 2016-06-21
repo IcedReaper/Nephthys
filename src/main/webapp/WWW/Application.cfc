@@ -165,7 +165,7 @@ component {
     }
     
     private void function reloadSystemSettings() {
-        application.system.settings.loadDetails();
+        application.system.settings.load();
     }
     
     private void function login() {

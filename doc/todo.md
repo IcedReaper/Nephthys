@@ -3,6 +3,7 @@
 ## Actual Task TODO - Reminder:
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
+- setting in config umbenennen?
 
 ## Allgemein
     1. Validierungen
@@ -200,28 +201,26 @@
                 * Genehmigt
                 * Abgelehnt 
             * Kommentar
+    17. Usermodul
+        * Registrierung
     
 
 ## Optimierungen
-    1. Settings der unterschiedlichen Module und des Systems verbinden
-    2. Nach weiteren DB-Enums Ausschau halten
-    3. Foreign Key Indices setzen
-    4. Aktuell gibt es sowohl creationDate als auch createdDate => gleichziehen!!!
-    5. Tabellenprefix in Application verankern. Aus Datei auslesen.
-    6. Datasources aus Datei auslesen.
-    7. Serversettings in Applikation verankern
-    8. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
-    9. Prüfen ob D3 besser ist als Chart.js | Chart.js V2 ausprobieren
-    10. Verwendung von nicht Klassenattributen (z.B. request.user) aus den Klassen entfernen und als Parameter erwarten
-    11. Berechtigungen (Admin, Editor, User) in Module einbauen
-    12. Alle Statistiken in einer Tabelle zusammenfassen
-    13. CreateObject gegen import und new ersetzen, außer bei den dynamischen
-    14. Move Module settings to server settings
-    15. Controller zum Erstellen von Links (z.B. User) erstellen
-    16. Creator und lastEditor direkt als Objekte in Objekten erstellen
-    17. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
-    18. Charts responsive mit maxHeight!?
-    19. Checken, ob man Loading Bar und Error Message Box irgendwie Global verankern kann
+    1. Datenbank optimieren
+    2. Aktuell gibt es sowohl creationDate als auch createdDate => gleichziehen!!!
+    3. Tabellenprefix in Application verankern. Aus Datei auslesen.
+    4. Datasources aus Datei auslesen.
+    5. (CFIDE/LuceeAdmin) Serversettings in Applikation verankern
+    6. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
+    7. Verwendung von nicht Klassenattributen (z.B. request.user) aus den Klassen entfernen und als Parameter erwarten
+    8. Berechtigungen (Admin, Editor, User) in Module einbauen
+    9. CreateObject gegen import und new ersetzen, außer bei den dynamischen
+    10. Move Module settings to server settings
+    11. Controller zum Erstellen von Links (z.B. User) erstellen
+    12. Creator und lastEditor direkt als Objekte in Objekten erstellen
+    13. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
+    14. Charts responsive mit maxHeight!?
+    15. Checken, ob man Loading Bar und Error Message Box irgendwie Global verankern kann
 
 
 

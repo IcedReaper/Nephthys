@@ -1,11 +1,14 @@
 nephthysAdminApp
-    .controller('serverSettingsDetailCtrl', ["$scope", "serverSettingsService", function ($scope, serverSettingsService) {
+    .controller('serverSettingsDetailCtrl', ["$scope", "$q", "serverSettingsService", function ($scope, $q, serverSettingsService) {
         $scope.load = function () {
-            serverSettingsService
-                .get()
-                .then(function (settings) {
-                    $scope.settings = settings;
-                });
+            $q.all([
+                serverSettingsService.get(),
+                serverSettingsService.getModuleList()
+            ])
+            .then($q.spread(function (settings, moduleList) {
+                $scope.settings = settings;
+                $scope.module   = moduleList;
+            }));
         };
         
         $scope.save = function() {
@@ -13,6 +16,10 @@ nephthysAdminApp
                 .save($scope.settings);
         }
         
-        $scope.settings = {};
+        $scope.settings = [];
+        $scope.module = {};
+        $scope.filter = {
+            moduleName: "!!"
+        };
         $scope.load();
     }]);

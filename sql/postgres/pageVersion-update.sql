@@ -600,3 +600,45 @@ GRANT SELECT, INSERT ON TABLE nephthys_page_statistics TO nephthys_user;
 GRANT SELECT, UPDATE ON SEQUENCE nephthys_page_statistics_statisticsid_seq TO nephthys_user;
 
 alter table nephthys_page_approval rename hierarchyId to sitemapId;
+
+-- 21.6.2016
+
+alter table nephthys_serversetting add column moduleId integer references nephthys_module on delete cascade;
+
+alter table nephthys_serversetting add constraint UK_nephthys_serverSetting_sortOrder unique (sortOrder, moduleId);
+
+alter table nephthys_serversetting alter column key TYPE character varying(80);
+
+insert into nephthys_serversetting 
+    (
+        key,
+        value,
+        type,
+        description,
+        systemKey,
+        readonly,
+        hidden,
+        creatorUserId,
+        lastEditorUserId,
+        alwaysRevalidate,
+        sortOrder,
+        moduleId
+    )
+SELECT * FROM (
+SELECT 
+        'com.IcedReaper.blog.' || bs.key as key,
+        CASE WHEN bs.value = '1' THEN 'true' ELSE 'false' END as value,
+        cast('boolean' as settingtype),
+        description,
+        false,
+        false,
+        false,
+        1,
+        1,
+        false,
+        settingId,
+        19
+FROM icedreaper_blog_settings bs) bs2;
+
+drop table icedreaper_blog_settings;
+drop sequence seq_icedreaper_blog_setting_id;

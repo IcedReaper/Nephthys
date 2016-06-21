@@ -283,24 +283,19 @@ component {
     }
     
     remote struct function getSettings() {
-        var settings = createObject("component", "API.modules.com.IcedReaper.blog.settings").init();
-        settings.load();
-        
-        return settings.getAllSettings();
+        return application.system.settings.getAllSettingsForModuleName("com.IcedReaper.blog");
     }
     
     remote boolean function saveSettings(required string settings) {
-        var settingsObj = createObject("component", "API.modules.com.IcedReaper.blog.settings").init();
-        settingsObj.load();
         var newSettings = deserializeJSON(arguments.settings);
         
         for(var setting in newSettings) {
             if(newSettings[setting].keyExists("rawValue")) {
-                settingsObj.setValueOfKey(setting, newSettings[setting].rawValue);
+                application.system.settings.setValueOfKey(setting, newSettings[setting].rawValue);
             }
         }
         
-        settingsObj.save();
+        application.system.settings.save();
         
         return true;
     }

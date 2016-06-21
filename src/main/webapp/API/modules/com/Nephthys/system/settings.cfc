@@ -11,7 +11,7 @@ component extends="API.abstractClasses.settings" {
             }
         }
         else {
-            throw(type = "nephthys.notFound.general", message = "Could not find a blog setting with the name " & arguments.key);
+            throw(type = "nephthys.notFound.general", message = "Could not find a setting with the name " & arguments.key);
         }
         
         return this;
@@ -22,7 +22,7 @@ component extends="API.abstractClasses.settings" {
             return variables.settings[arguments.key].readonly;
         }
         else {
-            throw(type = "nephthys.notFound.general", message = "Could not find a blog setting with the name " & arguments.key);
+            throw(type = "nephthys.notFound.general", message = "Could not find a setting with the name " & arguments.key);
         }
     }
     
@@ -31,7 +31,7 @@ component extends="API.abstractClasses.settings" {
             return variables.settings[arguments.key].systemKey;
         }
         else {
-            throw(type = "nephthys.notFound.general", message = "Could not find a blog setting with the name " & arguments.key);
+            throw(type = "nephthys.notFound.general", message = "Could not find a setting with the name " & arguments.key);
         }
     }
     
@@ -68,9 +68,10 @@ component extends="API.abstractClasses.settings" {
     }
     
     public settings function load() {
-        var qGetSettings = new Query().setSQL("  SELECT *
-                                                   FROM nephthys_serverSetting
-                                               ORDER BY sortOrder ASC")
+        var qGetSettings = new Query().setSQL("  SELECT ss.*, m.moduleName
+                                                   FROM nephthys_serverSetting ss
+                                               LEFT OUTER JOIN nephthys_module m ON ss.moduleId = m.moduleId
+                                               ORDER BY m.sortOrder ASC, ss.sortOrder ASC")
                                      .execute()
                                      .getResult();
         
@@ -85,7 +86,9 @@ component extends="API.abstractClasses.settings" {
                 enumOptions         = deserializeJSON(qGetSettings.enumOptions[i]),
                 hidden              = qGetSettings.hidden[i],
                 foreignTableOptions = deserializeJSON(qGetSettings.foreignTableOptions[i]),
-                alwaysRevalidate    = qGetSettings.alwaysRevalidate[i]
+                alwaysRevalidate    = qGetSettings.alwaysRevalidate[i],
+                moduleId            = qGetSettings.moduleId[i],
+                moduleName          = qGetSettings.moduleName[i]
             };
             
             variables.settings[ qGetSettings.key[i] ].value = convertAfterLoad(qGetSettings.value[i], qGetSettings.type[i]);

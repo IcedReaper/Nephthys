@@ -44,6 +44,26 @@ component {
         return variables.settings;
     }
     
+    public struct function getAllSettingsForModuleId(required numeric moduleId) {
+        var tmpSettings = {};
+        for(var setting in variables.settings) {
+            if(variables.settings[setting].moduleId == arguments.moduleId) {
+                tmpSettings[setting] = duplicate(variables.settings[setting]);
+            }
+        }
+        return tmpSettings;
+    }
+    
+    public struct function getAllSettingsForModuleName(required string moduleName) {
+        var tmpSettings = {};
+        for(var setting in variables.settings) {
+            if(variables.settings[setting].moduleName == arguments.moduleName) {
+                tmpSettings[setting] = duplicate(variables.settings[setting]);
+            }
+        }
+        return tmpSettings;
+    }
+    
     public string function getValueOfKeyFromForeignTable(required string key) {
         if(variables.settings[ arguments.key ].type == "foreignKey" && isStruct(variables.settings[ arguments.key ].foreignTableOptions)) {
             var ftOptions = variables.settings[ arguments.key ].foreignTableOptions;
