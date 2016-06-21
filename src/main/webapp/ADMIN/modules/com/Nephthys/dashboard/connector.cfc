@@ -1,17 +1,11 @@
-component interface="ADMIN.interfaces.connector" {
+component extends="ADMIN.abstractClasses.connector" {
     public connector function init() {
+        variables.moduleName = "com.Nephthys.dashboard";
+        
         return this;
-    }
-    
-    public string function getName() {
-        return 'com.Nephthys.dashboard';
     }
     
     public boolean function checkPermission(required user user) {
         return true;
-    }
-    
-    public void function render() {
-        include "/ADMIN/themes/" & request.user.getAdminTheme().getFolderName() & "/modules/com/Nephthys/dashboard/templates/index.cfm";
     }
 }

@@ -4,7 +4,6 @@
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
 - setting in config umbenennen?
-- admin module connector mit abstract class zusammenfassen | render macht aktuell immer das gleiche
 
 ## Allgemein
     1. Validierungen

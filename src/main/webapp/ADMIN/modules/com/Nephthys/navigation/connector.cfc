@@ -1,10 +1,8 @@
-component interface="ADMIN.interfaces.connector" {
+component extends="ADMIN.abstractClasses.connector" {
     public connector function init() {
+        variables.moduleName = "com.Nephthys.navigation";
+        
         return this;
-    }
-    
-    public string function getName() {
-        return 'com.Nephthys.navigation';
     }
     
     public void function render() {
