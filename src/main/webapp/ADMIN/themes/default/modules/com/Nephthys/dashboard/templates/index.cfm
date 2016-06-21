@@ -12,70 +12,17 @@
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/user/directives/statistics/statistics.js"></script>
 
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/dashboardApp.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/serverInfo.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/news.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/service/dashboard.js"></script>
 
-<cfoutput>
 <nephthys-loading-bar></nephthys-loading-bar>
 <div class="com-Nephthys-dashboard">
-    <h1>Willkommen im Adminpanel <small>#request.user.getUsername()#</small></h1>
+    <h1>Willkommen</h1>
     
     <div class="row">
         <div class="col-md-12">
-            <div class="card card-block">
-                <h2>Serverinformationen</h2>
-                <div class="row">
-                    <div class="col-md-3 text-right">
-                        <strong>Status</strong>
-                    </div>
-                    <div class="col-md-9">
-                        <cfif attributes.serverStatus.getValueOfKey("active") EQ 1>
-                            <p class="text-success"><strong>Online</strong></p>
-                        <cfelse>
-                            <p class="text-danger"><strong>Offline</strong></p>
-                        </cfif>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-3 text-right">
-                        <strong>Wartungsmodus</strong>
-                    </div>
-                    <div class="col-md-9">
-                        <cfif attributes.serverStatus.getValueOfKey("maintenanceMode") EQ 1>
-                            <p class="text-danger"><strong>Aktiv</strong></p>
-                        <cfelse>
-                            <p class="text-success"><strong>Inaktiv</strong></p>
-                        </cfif>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-3 text-right">
-                        <strong>Installationsdatum</strong>
-                    </div>
-                    <div class="col-md-9">
-                        <p>#application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.serverStatus.getValueOfKey("installDate"))#</p>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-3 text-right">
-                        <strong>Aktuell installierte Nephthys-Version</strong>
-                    </div>
-                    <div class="col-md-9">
-                        <p>#attributes.serverStatus.getValueOfKey("nephthysVersion")#</p>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-3 text-right">
-                        <strong>Aktuelle Speicherauslastung</strong>
-                    </div>
-                    <div class="col-md-6">
-                        #attributes.memory.used#MB / #attributes.memory.total#MB<br>
-                        <progress class="progress <cfif attributes.memory.percentageUsed LT 50>progress-success<cfelseif attributes.memory.percentageUsed LT 80>progress-warning<cfelse>progress-danger</cfif>" value="#attributes.memory.used#" max="#attributes.memory.total#">#attributes.memory.percentageUsed#%</progress>
-                    </div>
-                </div>
-            </div>
+            <div class="card card-block" ng-include="'/themes/default/modules/com/Nephthys/dashboard/partials/serverInfo.html'"></div>
         </div>
     </div>
     
@@ -135,4 +82,3 @@
         </div>
     </div>
 </div>
-</cfoutput>

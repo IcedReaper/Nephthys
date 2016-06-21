@@ -4,6 +4,7 @@
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
 - setting in config umbenennen?
+- front end and back end only themes
 
 ## Allgemein
     1. Validierungen
@@ -81,7 +82,7 @@
     15. Template Editor?
     16. Responsive anpassungen
     17. Design schick machen
-    18. Bei gewissen Modulen easy/export Mode?
+    18. Bei gewissen Modulen easy/expert Mode?
 
 ## Module (in eigenen Repos/Projekten)
     1. Gallery
