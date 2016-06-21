@@ -1,9 +1,8 @@
 nephthysAdminApp
-    .controller('galleryPictureCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "galleryService", function ($scope, $rootScope, $routeParams, $q, galleryService) {
-        var galleryId = null;
+    .controller('galleryPictureCtrl', ["$scope", "$routeParams", "$q", "galleryService", function ($scope, $routeParams, $q, galleryService) {
         $scope.load = function () {
             return galleryService
-                    .loadPictures(galleryId)
+                    .loadPictures($routeParams.galleryId)
                     .then(function (result) {
                         $scope.pictures = result;
                     });
@@ -17,7 +16,7 @@ nephthysAdminApp
         // delete
         $scope.delete = function (pictureId) {
             galleryService
-                .deletePicture(galleryId, pictureId)
+                .deletePicture($routeParams.galleryId, pictureId)
                 .then(function (result) {
                     $scope.pictures = result;
                 });
@@ -28,7 +27,7 @@ nephthysAdminApp
             var uploads = [];
             for(var i = 0; i < $scope.newPictures.length; i++) {
                 uploads.push(galleryService.uploadPicture($scope.newPictures[i],
-                                                          galleryId));
+                                                          $routeParams.galleryId));
             }
             
             $q.all(uploads)
@@ -46,12 +45,6 @@ nephthysAdminApp
         };
         $scope.newPictures = [];
         
-        $rootScope.$on('gallery-loaded', function(event, galleryData) {
-            galleryId = galleryData.galleryId;
-            
-            $scope.load();
-        });
-        
         $scope.rowCount = function (colCount) {
             if($scope.pictures) {
                 return new Array(Math.ceil($scope.pictures.length / colCount));
@@ -60,4 +53,6 @@ nephthysAdminApp
                 return new Array(0);
             }
         };
+        
+        $scope.load();
     }]);

@@ -1,10 +1,8 @@
 nephthysAdminApp
-    .controller('galleryCategoryCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "galleryService", function ($scope, $rootScope, $routeParams, $q, galleryService) {
-        var galleryId = null;
-        
+    .controller('galleryCategoryCtrl', ["$scope", "$routeParams", "$q", "galleryService", function ($scope, $routeParams, $q, galleryService) {
         $scope.load = function () {
             return galleryService
-                    .loadCategories(galleryId)
+                    .loadCategories($routeParams.galleryId)
                     .then(function (result) {
                         $scope.categories = [];
                         for(var c = 0; c < result.length; c++) {
@@ -17,11 +15,11 @@ nephthysAdminApp
         };
         
         $scope.add = function (category) {
-            galleryService.addCategory(galleryId, category.id, category.text);
+            galleryService.addCategory($routeParams.galleryId, category.id, category.text);
         };
         
         $scope.delete = function (category) {
-            galleryService.removeCategory(galleryId, category.id);
+            galleryService.removeCategory($routeParams.galleryId, category.id);
         };
         
         $scope.loadAutoCompleteCategories = function (queryString) {
@@ -39,9 +37,5 @@ nephthysAdminApp
                        });
         };
         
-        $rootScope.$on('gallery-loaded', function(event, galleryData) {
-            galleryId = galleryData.galleryId;
-            
-            $scope.load();
-        });
+        $scope.load();
     }]);

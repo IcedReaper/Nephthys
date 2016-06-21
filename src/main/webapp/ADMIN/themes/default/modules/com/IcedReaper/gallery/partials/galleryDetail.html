@@ -38,9 +38,9 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="active">Aktiv</label>
-                                    <select class="form-control" ng-model="gallery.active" ng-disabled="! gallery.isEditable">
-                                        <option value="1">Aktiv</option>
-                                        <option value="0">Inaktiv</option>
+                                    <select class="form-control" ng-model="gallery.active"
+                                            ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]"
+                                            ng-disabled="! gallery.isEditable">
                                     </select>
                                 </div>
                             </div>
@@ -65,7 +65,8 @@
                                         <span class="text text-info">Diese Gallerie kann nur von Ihnen bearbeitet werden</span>
                                     </label>
                                     <select class="form-control" ng-model="gallery.private"
-                                            ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]" ng-disabled="! gallery.isEditable">
+                                            ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]"
+                                            ng-disabled="! gallery.isEditable">
                                     </select>
                                 </div>
                             </div>

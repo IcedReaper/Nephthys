@@ -1,10 +1,9 @@
 nephthysAdminApp
-    .controller('galleryStatisticsCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "galleryService", function ($scope, $rootScope, $routeParams, $q, galleryService) {
-        var galleryId = null;
+    .controller('galleryStatisticsCtrl', ["$scope", "$routeParams", "$q", "galleryService", function ($scope, $routeParams, $q, galleryService) {
         $scope.load = function () {
-            if(galleryId !== null && ! isNaN(parseInt($scope.dayCount, 10))) {
+            if($routeParams.galleryId !== null && ! isNaN(parseInt($scope.dayCount, 10))) {
                 galleryService
-                    .getLastVisitChart(galleryId, $scope.dayCount)
+                    .getLastVisitChart($routeParams.galleryId, $scope.dayCount)
                     .then(function (visitData) {
                         $scope.chart.labels = visitData.labels;
                         $scope.chart.data   = [visitData.data];
@@ -33,9 +32,5 @@ nephthysAdminApp
         
         $scope.dayCount = 20;
         
-        $rootScope.$on('gallery-loaded', function(event, galleryData) {
-            galleryId = galleryData.galleryId;
-            
-            $scope.load();
-        });
+        $scope.load();
     }]);
