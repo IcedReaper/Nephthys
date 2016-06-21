@@ -49,9 +49,9 @@
         </div>
     </nav>
     <main>
-        <div class="container-fluid">
-            <div class="row">
-                <cfif request.user.getUserId() NEQ 0>
+        <cfif request.user.getUserId() NEQ 0>
+            <div class="container-fluid">
+                <div class="row">
                     <div class="col-sm-3 col-md-2 sidebar">
                         <h3>Modulübersicht</h3>
                         <cfscript>
@@ -62,16 +62,20 @@
                     <div class="col-sm-9 offset-sm-3 col-md-10 offset-md-2 main">
                         #request.moduleController.render()#
                     </div>
-                <cfelse>
-                    <div class="col-sm-12 main">
+                </div>
+            </div>
+        <cfelse>
+            <div class="container m-y-3">
+                <div class="row">
+                    <div class="col-sm-12">
                         #request.moduleController.render()#
                     </div>
-                </cfif>
+                </div>
             </div>
-        </div>
+        </cfif>
     </main>
     <footer>
-        &copy; IcedReaper und das Nephthys Team 2014 - #year(now())#
+        &copy; IcedReaper und das Nephthys Team 2015 - #year(now())#
     </footer>
     
     <cfif request.user.getUserId() NEQ 0>
