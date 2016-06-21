@@ -22,7 +22,7 @@ component interface="ADMIN.interfaces.connector" {
             }
         }
         
-        module template = "/ADMIN/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/navigation/templates/sidebar.cfm"
+        module template = "/ADMIN/themes/" & request.user.getAdminTheme().getFolderName() & "/modules/com/Nephthys/navigation/templates/sidebar.cfm"
                modules  = installedModules;
     }
 }

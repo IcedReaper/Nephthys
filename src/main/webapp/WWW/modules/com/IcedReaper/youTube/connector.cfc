@@ -18,7 +18,7 @@ component implements="WWW.interfaces.connector" {
             }
             
             saveContent variable="renderedContent" {
-                module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/youTube/templates/playlist.cfm"
+                module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/youTube/templates/playlist.cfm"
                        playlist = playlist
                        options  = duplicate(arguments.options);
             }
@@ -27,7 +27,7 @@ component implements="WWW.interfaces.connector" {
             var video = createObject("component", "API.modules.com.IcedReaper.youTube.video").init(arguments.options.videoId);
         
             saveContent variable="renderedContent" {
-                module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/youTube/templates/video.cfm"
+                module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/youTube/templates/video.cfm"
                        video    = video
                        options  = duplicate(arguments.options);
             }

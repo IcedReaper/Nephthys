@@ -8,11 +8,11 @@ component implements="WWW.interfaces.connector" {
     }
     
     public string function render(required struct options, required string childContent) {
-        var preparedOptions = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.Nephthys.container.cfc.prepareData").prepareOptions(arguments.options);
+        var preparedOptions = createObject("component", "WWW.themes." & request.user.getWwwTheme().getFolderName() & ".modules.com.Nephthys.container.cfc.prepareData").prepareOptions(arguments.options);
         var renderedContent = "";
         
         saveContent variable="renderedContent" {
-            module template     = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/container/templates/index.cfm"
+            module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/container/templates/index.cfm"
                    options      = preparedOptions
                    childContent = arguments.childContent;
         }

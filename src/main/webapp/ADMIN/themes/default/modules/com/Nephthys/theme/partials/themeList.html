@@ -33,6 +33,8 @@
         <th>ID</th>
         <th>Name</th>
         <th>Ordnername</th>
+        <th>WWW</th>
+        <th>ADMIN</th>
         <th>Aktionen</th>
     </thead>
     <tbody>
@@ -42,6 +44,14 @@
                 <a href="#/{{theme.themeId}}">{{theme.name}}</a>
             </td>
             <td>{{theme.foldername}}</td>
+            <td>
+                <i class="fa fa-check fa-border text-success" ng-if="theme.availableWww"></i>
+                <i class="fa fa-times fa-border text-danger" ng-if="! theme.availableWww"></i>
+            </td>
+            <td>
+                <i class="fa fa-check fa-border text-success" ng-if="theme.availableAdmin"></i>
+                <i class="fa fa-times fa-border text-danger" ng-if="! theme.availableAdmin"></i>
+            </td>
             <td>
                 <a href="#/{{theme.themeId}}"
                    class="btn btn-primary"

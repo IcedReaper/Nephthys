@@ -1,4 +1,6 @@
 component {
+    import "API.modules.com.Nephthys.theme.theme";
+    
     public user function init(numeric userId = 0) {
         variables.userId = arguments.userId;
         
@@ -30,8 +32,15 @@ component {
         
         return this;
     }
-    public user function setThemeId(required numeric themeId) {
-        variables.themeId = arguments.themeId;
+    public user function setWwwThemeId(required numeric wwwThemeId) {
+        variables.wwwThemeId = arguments.wwwThemeId;
+        variables.wwwTheme = new theme(variables.wwwThemeId);
+        
+        return this;
+    }
+    public user function setAdminThemeId(required numeric adminThemeId) {
+        variables.adminThemeId = arguments.adminThemeId;
+        variables.adminTheme = new theme(variables.adminThemeId);
         
         return this;
     }
@@ -67,14 +76,29 @@ component {
     public string function getPassword() {
         return variables.password; // todo: check for security reasons
     }
-    public numeric function getThemeId() {
-        return variables.themeId;
+    public numeric function getWwwThemeId() {
+        return variables.wwwThemeId;
+    }
+    public numeric function getAdminThemeId() {
+        return variables.adminThemeId;
     }
     public theme function getTheme() {
-        if(! variables.keyExists("theme")) {
-            variables.theme = createObject("component", "API.modules.com.Nephthys.theme.theme").init(variables.themeId);
+        if(! variables.keyExists("wwwTheme")) {
+            variables.wwwTheme = new theme(variables.wwwThemeId);
         }
-        return theme;
+        return wwwTheme;
+    }
+    public theme function getWwwTheme() {
+        if(! variables.keyExists("wwwTheme")) {
+            variables.wwwTheme = new theme(variables.wwwThemeId);
+        }
+        return wwwTheme;
+    }
+    public theme function getAdminTheme() {
+        if(! variables.keyExists("adminTheme")) {
+            variables.adminTheme = new theme(variables.adminThemeId);
+        }
+        return adminTheme;
     }
     public boolean function getActiveStatus() {
         return variables.active == 1;
@@ -91,7 +115,7 @@ component {
         }
         else {
             if(arguments.returnAnonymous) {
-                return "/themes/"&request.user.getTheme().getFolderName() & "/img/" & request.user.getTheme().getAnonymousAvatarFilename();
+                return "/themes/"&request.user.getWwwTheme().getFolderName() & "/img/" & request.user.getWwwTheme().getAnonymousAvatarFilename();
             }
             else {
                 return "";
@@ -124,7 +148,8 @@ component {
                                                                    eMail,
                                                                    password,
                                                                    active,
-                                                                   themeId,
+                                                                   wwwThemeId,
+                                                                   adminThemeId,
                                                                    avatarFilename
                                                                )
                                                         VALUES (
@@ -132,16 +157,18 @@ component {
                                                                    :eMail,
                                                                    :password,
                                                                    :active,
-                                                                   :themeId,
+                                                                   :wwwThemeId,
+                                                                   :adminThemeId,
                                                                    :avatarFilename
                                                                );
                                                   SELECT currval('seq_nephthys_user_id') newUserId;") // directly loading the current value of the sequence
-                                          .addParam(name = "userName",       value = variables.userName,                                          cfsqltype = "cf_sql_varchar")
-                                          .addParam(name = "eMail",          value = variables.eMail,                                             cfsqltype = "cf_sql_varchar")
-                                          .addParam(name = "password",       value = variables.password,                                          cfsqltype = "cf_sql_varchar")
-                                          .addParam(name = "active",         value = variables.active,                                            cfsqltype = "cf_sql_bit")
-                                          .addParam(name = "themeId",        value = application.system.settings.getValueOfKey("defaultThemeId"), cfsqltype = "cf_sql_numeric")
-                                          .addParam(name = "avatarFilename", value = variables.avatarFilename,                                    cfsqltype = "cf_sql_varchar", null = (variables.avatarFilename == "" || variables.avatarFileName == null))
+                                          .addParam(name = "userName",       value = variables.userName,       cfsqltype = "cf_sql_varchar")
+                                          .addParam(name = "eMail",          value = variables.eMail,          cfsqltype = "cf_sql_varchar")
+                                          .addParam(name = "password",       value = variables.password,       cfsqltype = "cf_sql_varchar")
+                                          .addParam(name = "active",         value = variables.active,         cfsqltype = "cf_sql_bit")
+                                          .addParam(name = "wwwThemeId",     value = variables.wwwThemeId,     cfsqltype = "cf_sql_numeric")
+                                          .addParam(name = "adminThemeId",   value = variables.adminThemeId,   cfsqltype = "cf_sql_numeric")
+                                          .addParam(name = "avatarFilename", value = variables.avatarFilename, cfsqltype = "cf_sql_varchar", null = (variables.avatarFilename == "" || variables.avatarFileName == null))
                                           .execute()
                                           .getResult()
                                           .newUserId[1];
@@ -151,12 +178,16 @@ component {
                                    SET email          = :eMail,
                                        password       = :password,
                                        active         = :active,
+                                       wwwThemeId     = :wwwThemeId,
+                                       adminThemeId   = :adminThemeId,
                                        avatarFilename = :avatarFilename
                                  WHERE userId = :userId")
                        .addParam(name = "userId",         value = variables.userId,         cfsqltype = "cf_sql_numeric")
                        .addParam(name = "eMail",          value = variables.eMail,          cfsqltype = "cf_sql_varchar")
                        .addParam(name = "password",       value = variables.password,       cfsqltype = "cf_sql_varchar")
                        .addParam(name = "active",         value = variables.active,         cfsqltype = "cf_sql_bit")
+                       .addParam(name = "wwwThemeId",     value = variables.wwwThemeId,     cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "adminThemeId",   value = variables.adminThemeId,   cfsqltype = "cf_sql_numeric")
                        .addParam(name = "avatarFilename", value = variables.avatarFilename, cfsqltype = "cf_sql_varchar", null = (variables.avatarFilename == "" || variables.avatarFileName == null))
                        .execute();
             
@@ -197,7 +228,8 @@ component {
                 variables.active           = qUser.active[1];
                 variables.password         = qUser.password[1];
                 variables.registrationDate = qUser.registrationDate[1];
-                variables.themeId          = qUser.themeId[1];
+                variables.wwwThemeId       = qUser.wwwThemeId[1];
+                variables.adminThemeId     = qUser.adminThemeId[1];
                 variables.avatarFilename   = qUser.avatarFilename[1];
             }
             else {
@@ -210,7 +242,8 @@ component {
             variables.password         = "";
             variables.active           = 0;
             variables.registrationDate = now();
-            variables.themeId          = application.system.settings.getValueOfKey("defaultThemeId");
+            variables.wwwThemeId       = application.system.settings.getValueOfKey("defaultWwwThemeId");
+            variables.adminThemeId     = application.system.settings.getValueOfKey("defaultAdminThemeId");
             variables.avatarFilename   = null;
         }
         

@@ -8,14 +8,14 @@ component implements="WWW.interfaces.connector" {
     }
     
     public string function render(required struct options, required string childContent) {
-        var preparedOptions = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.Nephthys.search.cfc.prepareData").prepareOptions(arguments.options);
+        var preparedOptions = createObject("component", "WWW.themes." & request.user.getWwwTheme().getFolderName() & ".modules.com.Nephthys.search.cfc.prepareData").prepareOptions(arguments.options);
         var renderedContent = "";
         
         var splitParameter = listToArray(request.page.getParameter(), "/");
         
         if(splitParameter.len() == 0 && form.isEmpty()) {
             saveContent variable="renderedContent" {
-                module template     = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/search/templates/searchForm.cfm"
+                module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/search/templates/searchForm.cfm"
                        options      = preparedOptions
                        childContent = arguments.childContent;
             }
@@ -31,7 +31,7 @@ component implements="WWW.interfaces.connector" {
                 request.page.setTitle("Suchergebnisse");
                 
                 saveContent variable="renderedContent" {
-                    module template        = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/search/templates/searchResults.cfm"
+                    module template        = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/search/templates/searchResults.cfm"
                            options         = preparedOptions
                            searchStatement = form.searchStatement
                            results         = results
@@ -43,7 +43,7 @@ component implements="WWW.interfaces.connector" {
                 request.page.setTitle("Suche - Keine Ergebnisse");
                 
                 saveContent variable="renderedContent" {
-                    module template     = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/search/templates/noResults.cfm"
+                    module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/search/templates/noResults.cfm"
                            options      = preparedOptions
                            childContent = arguments.childContent;
                 }

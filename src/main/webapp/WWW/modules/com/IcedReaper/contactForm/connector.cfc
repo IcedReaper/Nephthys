@@ -12,7 +12,7 @@ component implements="WWW.interfaces.connector" {
         
         if(form.isEmpty()) {
             saveContent variable="renderedContent" {
-                module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/contactForm/templates/form.cfm"
+                module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/contactForm/templates/form.cfm"
                        options  = arguments.options;
             }
         }
@@ -37,7 +37,7 @@ component implements="WWW.interfaces.connector" {
                 contactFormRequest.save();
                 
                 saveContent variable="renderedContent" {
-                    module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/contactForm/templates/thanks.cfm"
+                    module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/contactForm/templates/thanks.cfm"
                            options  = arguments.options;
                 }
             }

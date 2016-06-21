@@ -50,7 +50,7 @@ component implements="WWW.interfaces.connector" {
                         }
                         
                         saveContent variable="renderedContent" {
-                            module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/privateMessage/templates/newConversation.cfm";
+                            module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/privateMessage/templates/newConversation.cfm";
                         }
                         
                         break;
@@ -101,7 +101,7 @@ component implements="WWW.interfaces.connector" {
                                 
                                 if(conversation.len() == 1) {
                                     saveContent variable="renderedContent" {
-                                        module template     = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/privateMessage/templates/conversation.cfm"
+                                        module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/privateMessage/templates/conversation.cfm"
                                                conversation = conversation[1];
                                     }
                                     
@@ -117,7 +117,7 @@ component implements="WWW.interfaces.connector" {
                                 }
                                 else {
                                     saveContent variable="renderedContent" {
-                                        module template     = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/privateMessage/templates/conversationNotFound.cfm";
+                                        module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/privateMessage/templates/conversationNotFound.cfm";
                                     }
                                 }
                             }
@@ -130,7 +130,7 @@ component implements="WWW.interfaces.connector" {
                                                                .getResult();
                         
                         saveContent variable="renderedContent" {
-                            module template      = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/privateMessage/templates/overview.cfm"
+                            module template      = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/privateMessage/templates/overview.cfm"
                                    conversations = conversationOverview;
                         }
                         

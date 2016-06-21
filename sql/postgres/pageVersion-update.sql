@@ -642,3 +642,9 @@ FROM icedreaper_blog_settings bs) bs2;
 
 drop table icedreaper_blog_settings;
 drop sequence seq_icedreaper_blog_setting_id;
+
+alter table nephthys_theme add column availableWww boolean default true NOT NULL;
+alter table nephthys_theme add column availableAdmin boolean default true NOT NULL;
+
+alter table nephthys_user rename column themeId to wwwThemeId;
+alter table nephthys_user add column adminThemeId integer references nephthys_theme;

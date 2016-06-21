@@ -14,12 +14,12 @@ component implements="WWW.interfaces.connector" {
     }
     
     public void function header() {
-        module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/navigation/header.cfm"
+        module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/navigation/header.cfm"
                sitemap  = getSitemap(1);
     }
     
     public void function footer() {
-        module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/navigation/footer.cfm"
+        module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/navigation/footer.cfm"
                sitemap  = getSitemap(2);
     }
     

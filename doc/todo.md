@@ -4,7 +4,7 @@
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
 - setting in config umbenennen?
-- front end and back end only themes
+- admin module connector mit abstract class zusammenfassen | render macht aktuell immer das gleiche
 
 ## Allgemein
     1. Validierungen
@@ -214,12 +214,11 @@
     7. Verwendung von nicht Klassenattributen (z.B. request.user) aus den Klassen entfernen und als Parameter erwarten
     8. Berechtigungen (Admin, Editor, User) in Module einbauen
     9. CreateObject gegen import und new ersetzen, außer bei den dynamischen
-    10. Move Module settings to server settings
-    11. Controller zum Erstellen von Links (z.B. User) erstellen
-    12. Creator und lastEditor direkt als Objekte in Objekten erstellen
-    13. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
-    14. Charts responsive mit maxHeight!?
-    15. Checken, ob man Loading Bar und Error Message Box irgendwie Global verankern kann
+    10. Controller zum Erstellen von Links (z.B. User) erstellen
+    11. Creator und lastEditor direkt als Objekte in Objekten erstellen
+    12. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
+    13. Charts responsive mit maxHeight!?
+    14. Checken, ob man Loading Bar und Error Message Box irgendwie Global verankern kann
 
 
 

@@ -11,7 +11,7 @@ component implements="WWW.interfaces.connector" {
     
     public string function render(required struct options, required string childContent) {
         // prepare the options required for the theme
-        var themeIndividualizer = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.IcedReaper.gallery.cfc.prepareData");
+        var themeIndividualizer = createObject("component", "WWW.themes." & request.user.getWwwTheme().getFolderName() & ".modules.com.IcedReaper.gallery.cfc.prepareData");
         var preparedOptions = themeIndividualizer.prepareOptions(arguments.options);
         
         themeIndividualizer.invokeResources();
@@ -96,7 +96,7 @@ component implements="WWW.interfaces.connector" {
         var renderedContent = "";
         
         saveContent variable="renderedContent" {
-            module template          = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/gallery/templates/overview.cfm"
+            module template          = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/gallery/templates/overview.cfm"
                    options           = arguments.options
                    galleries         = arguments.galleryFilterCtrl.getResult()
                    totalGalleryCount = arguments.galleryFilterCtrl.getResultCount()
@@ -114,7 +114,7 @@ component implements="WWW.interfaces.connector" {
         statisticsCtrl.add(arguments.gallery.getGalleryId());
         
         saveContent variable="renderedContent" {
-            module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/gallery/templates/galleryDetail.cfm"
+            module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/gallery/templates/galleryDetail.cfm"
                    options  = arguments.options
                    gallery  = arguments.gallery;
         }

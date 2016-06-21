@@ -103,11 +103,11 @@ component {
                     // get theme
                     var themeFoldername = "";
                     if(request.keyExists("user")) {
-                        themeFoldername = request.user.getTheme().getFolderName();
+                        themeFoldername = request.user.getAdminTheme().getFolderName();
                     }
                     else {
                         if(application.keyExists("system") && application.system.keyExists("settings")) {
-                            themeFoldername = createObject("component", "API.modules.com.Nephthys.theme.theme").init(application.system.settings.getValueOfKey("defaultThemeId")).getFolderName();
+                            themeFoldername = createObject("component", "API.modules.com.Nephthys.theme.theme").init(application.system.settings.getValueOfKey("defaultAdminThemeId")).getFolderName();
                         }
                         else {
                             throw(type = "nephthys.critical.installation", message = "Neither the user nor the system settings are defined!");

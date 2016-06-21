@@ -38,9 +38,12 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="active">Theme</label>
-                            <select class="form-control" ng-model="user.themeId" ng-options="o.themeId as o.name for o in themes">
-                            </select>
+                            <label for="active">Theme der Website</label>
+                            <select class="form-control" ng-model="user.wwwThemeId" ng-options="o.themeId as o.name for o in themes | filter: availableWww"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="active">Theme der Adminoberfläche</label>
+                            <select class="form-control" ng-model="user.adminThemeId" ng-options="o.themeId as o.name for o in themes | filter: availableAdmin"></select>
                         </div>
                         
                         <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>

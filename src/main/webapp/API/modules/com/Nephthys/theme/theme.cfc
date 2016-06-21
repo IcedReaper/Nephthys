@@ -1,5 +1,5 @@
 component {
-    public theme function init(required numeric themeId) {
+    public theme function init(required numeric themeId = null) {
         variables.themeId = arguments.themeId;
         
         loadDetails();
@@ -15,6 +15,22 @@ component {
     }
     public theme function setActiveStatus(required boolean active) {
         variables.active = arguments.active;
+        
+        return this;
+    }
+    
+    public theme function setAvailableWww(required boolean availableWww) {
+        if(variables.themeId == null) {
+            variables.availableWww = arguments.availableWww;
+        }
+        
+        return this;
+    }
+    
+    public theme function setAvailableAdmin(required boolean availableAdmin) {
+        if(variables.themeId == null) {
+            variables.availableAdmin = arguments.availableAdmin;
+        }
         
         return this;
     }
@@ -42,7 +58,7 @@ component {
                     directoryCreate(destFolder);
                     
                     zip action      = "unzip"
-                        //charset     = "UTF-8"
+                        charset     = "UTF-8"
                         file        = tmpDirectory & uploaded.serverFile
                         destination = destFolder
                         overwrite   = true
@@ -98,6 +114,12 @@ component {
     public string function getAnonymousAvatarFilename() {
         return variables.anonymousAvatarFilename;
     }
+    public boolean function getAvailableWww() {
+        return variables.availableWww == 1;
+    }
+    public boolean function getAvailableAdmin() {
+        return variables.availableAdmin == 1;
+    }
     
     // C R U D
     public theme function save() {
@@ -107,19 +129,25 @@ component {
                                                                     name,
                                                                     active,
                                                                     folderName,
-                                                                    anonymousAvatarFilename
+                                                                    anonymousAvatarFilename,
+                                                                    availableWww,
+                                                                    availableAdmin
                                                                 )
                                                          VALUES (
                                                                     :name,
                                                                     :active,
                                                                     :folderName,
-                                                                    :anonymousAvatarFilename
+                                                                    :anonymousAvatarFilename,
+                                                                    :availableWww,
+                                                                    :availableAdmin
                                                                 );
                                                      SELECT last_value newThemeId FROM seq_nephthys_theme_id;")
                                            .addParam(name = "name",                    value = variables.name,                    cfsqltype = "cf_sql_varchar")
                                            .addParam(name = "active",                  value = variables.active,                  cfsqltype = "cf_sql_bit")
                                            .addParam(name = "folderName",              value = variables.folderName,              cfsqltype = "cf_sql_varchar")
                                            .addParam(name = "anonymousAvatarFilename", value = variables.anonymousAvatarFilename, cfsqltype = "cf_sql_varchar")
+                                           .addParam(name = "availableWww",            value = variables.availableWww,            cfsqltype = "cf_sql_numeric")
+                                           .addParam(name = "availableAdmin",          value = variables.availableAdmin,          cfsqltype = "cf_sql_numeric")
                                            .execute()
                                            .getResult()
                                            .newThemeId[1];
@@ -166,6 +194,8 @@ component {
                 variables.active                  = qTheme.active[1];
                 variables.folderName              = qTheme.folderName[1];
                 variables.anonymousAvatarFilename = qTheme.AnonymousAvatarFilename[1];
+                variables.availableWww            = qTheme.availableWww;
+                variables.availableAdmin          = qTheme.availableAdmin;
             }
             else {
                 throw(type = "themeNotFound", message = "The Theme could not be found", detail = variables.themeId);
@@ -176,6 +206,8 @@ component {
             variables.active                  = false;
             variables.folderName              = "";
             variables.anonymousAvatarFilename = null;
+            variables.availableWww            = true;
+            variables.availableAdmin          = true;
         }
     }
 }

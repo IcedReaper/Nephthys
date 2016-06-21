@@ -9,11 +9,11 @@ component {
         
         for(var user in userListCtrl.execute().getResult()) {
             data.append({
-                    "userId"   = user.getUserId(),
-                    "username" = user.getUserName(),
-                    "email"    = user.getEmail(),
-                    "active"   = user.getActiveStatus()
-                });
+                "userId"   = user.getUserId(),
+                "username" = user.getUserName(),
+                "email"    = user.getEmail(),
+                "active"   = user.getActiveStatus()
+            });
         }
         
         return data;
@@ -30,7 +30,8 @@ component {
                                 required string  eMail,
                                 required boolean active,
                                 required string  password,
-                                required numeric themeId) {
+                                required numeric wwwThemeId,
+                                required numeric adminThemeId) {
         var user = new user(arguments.userId);
         var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.security.encryptionMethodLoader").init();
         
@@ -40,7 +41,8 @@ component {
         
         user.setEmail(arguments.eMail)
             .setActiveStatus(arguments.active)
-            .setThemeId(arguments.themeId);
+            .setWwwThemeId(arguments.wwwThemeId)
+            .setAdminThemeId(arguments.adminThemeId);
         
         if(trim(arguments.password) != "") {
             user.setPassword(encrypt(arguments.password,
@@ -141,11 +143,13 @@ component {
         var themeData = [];
         for(var theme in filterCtrl.execute().getResult()) {
             themeData.append({
-                    "themeId" = theme.getThemeId(),
-                    "name"    = theme.getName(),
-                    "default" = theme.getThemeId() == application.system.settings.getValueOfKey("defaultThemeId"),
-                    "active"  = theme.getActiveStatus()
-                });
+                "themeId"        = theme.getThemeId(),
+                "name"           = theme.getName(),
+                "default"        = theme.getThemeId() == application.system.settings.getValueOfKey("defaultWwwThemeId"),
+                "active"         = theme.getActiveStatus(),
+                "availableWww"   = theme.getAvailableWww(),
+                "availableAdmin" = theme.getAvailableAdmin()
+            });
         }
         
         return themeData;
@@ -233,14 +237,15 @@ component {
     
     private struct function prepareDetailStruct(required user userObject) {
         return {
-            "userId"     = arguments.userObject.getUserId(),
-            "username"   = arguments.userObject.getUserName(),
-            "email"      = arguments.userObject.getEmail(),
-            "active"     = arguments.userObject.getActiveStatus(),
-            "password"   = "      ",
-            "avatar"     = arguments.userObject.getAvatarPath(false),
-            "actualUser" = arguments.userObject.getUserId() == request.user.getUserId(),
-            "themeId"    = arguments.userObject.getThemeId()
+            "userId"       = arguments.userObject.getUserId(),
+            "username"     = arguments.userObject.getUserName(),
+            "email"        = arguments.userObject.getEmail(),
+            "active"       = arguments.userObject.getActiveStatus(),
+            "password"     = "      ",
+            "avatar"       = arguments.userObject.getAvatarPath(false),
+            "actualUser"   = arguments.userObject.getUserId() == request.user.getUserId(),
+            "wwwThemeId"   = arguments.userObject.getWwwThemeId(),
+            "adminThemeId" = arguments.userObject.getAdminThemeId()
         };
     }
     

@@ -12,6 +12,6 @@ component interface="ADMIN.interfaces.connector" {
     }
     
     public void function render() {
-        module template = "/ADMIN/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/dashboard/templates/index.cfm";
+        include "/ADMIN/themes/" & request.user.getAdminTheme().getFolderName() & "/modules/com/Nephthys/dashboard/templates/index.cfm";
     }
 }

@@ -6,8 +6,7 @@
         </div>
         <div class="col-md-9">
             <p ng-class="serverInfo.onlineStatus ? 'text-success' : 'text-danger'">
-                <strong ng-if="serverInfo.onlineStatus">Online</strong>
-                <strong ng-if="! serverInfo.onlineStatus">Offline</strong>
+                <strong>{{serverInfo.onlineStatus ? 'Online' : 'Offline'}}</strong>
             </p>
         </div>
     </div>
@@ -18,8 +17,7 @@
         </div>
         <div class="col-md-9">
             <p ng-class="serverInfo.maintenanceMode ? 'text-danger' : 'text-success'">
-                <strong ng-if="serverInfo.maintenanceMode">Aktiv</strong>
-                <strong ng-if="! serverInfo.maintenanceMode">Inaktiv</strong>
+                <strong>{{serverInfo.maintenanceMode ? 'Aktiv' : 'Inaktiv'}}</strong>
             </p>
         </div>
     </div>

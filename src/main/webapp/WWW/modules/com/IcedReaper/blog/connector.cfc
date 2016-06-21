@@ -9,7 +9,7 @@ component implements="WWW.interfaces.connector" {
     
     public string function render(required struct options, required string childContent) {
         // prepare the options required for the theme
-        var themeIndividualizer = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.IcedReaper.blog.cfc.prepareData");
+        var themeIndividualizer = createObject("component", "WWW.themes." & request.user.getWwwTheme().getFolderName() & ".modules.com.IcedReaper.blog.cfc.prepareData");
         var preparedOptions = themeIndividualizer.prepareOptions(arguments.options);
         
         var splitParameter = listToArray(request.page.getParameter(), "/");
@@ -26,7 +26,7 @@ component implements="WWW.interfaces.connector" {
             
             var renderedContent = "";
             saveContent variable="renderedContent" {
-                module template  = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/lastEntry.cfm"
+                module template  = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/lastEntry.cfm"
                        options   = arguments.options
                        blogposts = blogpostFilterCtrl.getResult();
             }
@@ -100,7 +100,7 @@ component implements="WWW.interfaces.connector" {
         var categoryLoader = createObject("component", "API.modules.com.IcedReaper.blog.categoryLoader").init();
         
         saveContent variable="renderedContent" {
-            module template           = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/overview.cfm"
+            module template           = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/overview.cfm"
                    options            = arguments.options
                    blogposts          = arguments.blogpostFilterCtrl.getResult()
                    totalBlogpostCount = arguments.blogpostFilterCtrl.getResultCount()
@@ -120,7 +120,7 @@ component implements="WWW.interfaces.connector" {
         statisticsCtrl.add(arguments.blogpost.getBlogpostId());
         
         saveContent variable="renderedContent" {
-            module template     = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/blogpostDetail.cfm"
+            module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/blogpostDetail.cfm"
                    options      = arguments.options
                    blogpost     = arguments.blogpost
                    commentAdded = commentAdded;

@@ -14,7 +14,7 @@ component implements="WWW.interfaces.connector" {
             var channel = createObject("component", "API.modules.com.IcedReaper.twitchTv.channel").init(arguments.options.channelName);
             
             saveContent variable="renderedContent" {
-                module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/twitchTv/templates/channel.cfm"
+                module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/twitchTv/templates/channel.cfm"
                        channel  = channel
                        options  = duplicate(arguments.options);
             }
@@ -24,7 +24,7 @@ component implements="WWW.interfaces.connector" {
                 var video = createObject("component", "API.modules.com.IcedReaper.twitchTv.video").init(arguments.options.videoId);
                 
                 saveContent variable="renderedContent" {
-                    module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/twitchTv/templates/video.cfm"
+                    module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/twitchTv/templates/video.cfm"
                            video    = video
                            options  = duplicate(arguments.options);
                 }

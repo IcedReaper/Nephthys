@@ -40,7 +40,7 @@ component {
         switch(lcase(right(arguments.targetPage, 3))) {
             case "cfm": {
                 if(! application.system.settings.getValueOfKey("active")) {
-                    include template = "themes/" & request.user.getTheme().getFolderName() & "/offline.cfm";
+                    include template = "themes/" & request.user.getWwwTheme().getFolderName() & "/offline.cfm";
                     abort;
                 }
                 
@@ -61,7 +61,7 @@ component {
                     }
                 }
                 else {
-                    include template = "themes/" & request.user.getTheme().getFolderName() & "/maintenanceMode.cfm";
+                    include template = "themes/" & request.user.getWwwTheme().getFolderName() & "/maintenanceMode.cfm";
                     return false;
                 }
                 
@@ -111,7 +111,7 @@ component {
                     // get theme
                     var themeFoldername = "";
                     if(request.keyExists("user")) {
-                        themeFoldername = request.user.getTheme().getFolderName();
+                        themeFoldername = request.user.getWwwTheme().getFolderName();
                     }
                     else {
                         if(application.keyExists("system") && application.system.keyExists("settings")) {

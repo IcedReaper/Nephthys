@@ -122,7 +122,7 @@ component implements="WWW.interfaces.connector" {
         var renderedContent = "";
         
         saveContent variable="renderedContent" {
-            module template         = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/review/templates/overview.cfm"
+            module template         = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/review/templates/overview.cfm"
                    options          = arguments.options
                    reviews          = arguments.reviewFilter.getResult()
                    totalReviewCount = arguments.reviewFilter.getResultCount()
@@ -137,7 +137,7 @@ component implements="WWW.interfaces.connector" {
         var renderedContent = "";
         
         saveContent variable="renderedContent" {
-            module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/review/templates/reviewDetail.cfm"
+            module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/review/templates/reviewDetail.cfm"
                    options  = arguments.options
                    review   = arguments.review;
         }

@@ -1,6 +1,8 @@
 component {
+    import "API.modules.com.Nephthys.theme.*";
+    
     remote array function getList() {
-        var filterCtrl = createObject("component", "API.modules.com.Nephthys.theme.filter").init();
+        var filterCtrl = new filter();
         
         var themeData = [];
         for(var theme in filterCtrl.execute().getResult()) {
@@ -11,7 +13,7 @@ component {
     }
     
     remote struct function getDetails(required numeric themeId) {
-        var theme = createObject("component", "API.modules.com.Nephthys.theme.theme").init(arguments.themeId);
+        var theme = new theme(arguments.themeId);
         
         return prepareTheme(theme);
     }
@@ -20,11 +22,13 @@ component {
                                 required string  name,
                                 required string  foldername,
                                 required boolean active) {
-        var theme = createObject("component", "API.modules.com.Nephthys.theme.theme").init(arguments.themeId);
+        var theme = new theme(arguments.themeId);
         theme.setName(arguments.name);
         
         if(arguments.themeId != 0) {
-            if(arguments.active == 1 || (arguments.active == 0 && themeList[i].getThemeId() != application.system.settings.getValueOfKey("defaultThemeId"))) {
+            if(arguments.active == 1 || 
+               (arguments.active == 0 && themeList[i].getThemeId() != application.system.settings.getValueOfKey("defaultWwwThemeId") &&
+                                         themeList[i].getThemeId() != application.system.settings.getValueOfKey("defaultAdminThemeId"))) {
                 theme.setActiveStatus(arguments.active);
             }
         }
@@ -38,7 +42,7 @@ component {
     }
     
     remote boolean function activate(required numeric themeId) {
-        var theme = createObject("component", "API.modules.com.Nephthys.theme.theme").init(arguments.themeId);
+        var theme = new theme(arguments.themeId);
         
         theme.setActiveStatus(1)
              .save();
@@ -47,9 +51,10 @@ component {
     }
     
     remote boolean function deactivate(required numeric themeId) {
-        var theme = createObject("component", "API.modules.com.Nephthys.theme.theme").init(arguments.themeId);
+        var theme = new theme(arguments.themeId);
         
-        if(themeList[i].getThemeId() != application.system.settings.getValueOfKey("defaultThemeId")) {
+        if(themeList[i].getThemeId() != application.system.settings.getValueOfKey("defaultWwwThemeId") &&
+           themeList[i].getThemeId() != application.system.settings.getValueOfKey("defaultAdminThemeId")) {
             theme.setActiveStatus(0)
                  .save();
         }
@@ -61,7 +66,7 @@ component {
     }
     
     remote boolean function delete() {
-        var theme = createObject("component", "API.modules.com.Nephthys.theme.theme").init(arguments.themeId);
+        var theme = new theme(arguments.themeId);
         
         theme.delete();
         
@@ -71,11 +76,13 @@ component {
     
     private struct function prepareTheme(required theme theme) {
         return {
-            "themeId"    = arguments.theme.getThemeId(),
-            "name"       = arguments.theme.getName(),
-            "foldername" = arguments.theme.getFoldername(),
-            "default"    = arguments.theme.getThemeId() == application.system.settings.getValueOfKey("defaultThemeId"),
-            "active"     = arguments.theme.getActiveStatus()
+            "themeId"        = arguments.theme.getThemeId(),
+            "name"           = arguments.theme.getName(),
+            "foldername"     = arguments.theme.getFoldername(),
+            "default"        = arguments.theme.getThemeId() == application.system.settings.getValueOfKey("defaultWwwThemeId"),
+            "active"         = arguments.theme.getActiveStatus(),
+            "availableWww"   = arguments.theme.getAvailableWww(),
+            "availableAdmin" = arguments.theme.getAvailableAdmin()
         };
     }
 }
