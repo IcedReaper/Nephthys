@@ -25,7 +25,7 @@
     11. user => username überprüfen
     12. user => blacklist erstellen | Innerhalb des Username überprüfen
     13. F5-Raids bei Formularen unterbinden
-    14. Beim anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
+    14. Beim Anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
     15. FileUpload, etc in eine Extra-Component aus dem Model auslagern
     16. Pakete
         * Alles
@@ -69,20 +69,18 @@
         1. Was tun, wenn das Modul in einem Theme nicht vorhanden ist.
     5. DB Dump anbieten
     6. Errorlog - WORK ON HOLD
-    7. Implement "loading screen" into http interceptor
-    8. Sidebar auf Icons reduzieren
-    9. Assets weiter optimieren/reduzieren
-    10. Dashboard untermodule in andere Dateien verschieben ggf mehr übersicht schaffen => nearly done
-    11. Dashboard pro User variabel gestaltbar machen
+    7. Sidebar auf Icons reduzieren
+    8. Assets weiter optimieren/reduzieren
+    9. Dashboard pro User variabel gestaltbar machen
         * Anordnung
         * Module
-    12. Alle (asset) js Files in der index.cfm laden
-    13. Eigene Tabs gegen AngularUI Tabs ersetzen
-    14. Scss - CSS Editor
-    15. Template Editor?
-    16. Responsive anpassungen
-    17. Design schick machen
-    18. Bei gewissen Modulen easy/expert Mode?
+    10. Alle (asset) js Files in der index.cfm laden
+    11. Eigene Tabs gegen AngularUI Tabs ersetzen
+    12. Scss - CSS Editor
+    13. Template Editor?
+    14. Responsive anpassungen
+    15. Design schick machen
+    16. Bei gewissen Modulen easy/expert Mode?
 
 ## Module (in eigenen Repos/Projekten)
     1. Gallery

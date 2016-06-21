@@ -71,14 +71,16 @@
             
         </div>
     </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card card-block">
-                <h2>Aufgabenliste</h2>
-                <nephthys-page-tasklist class="tasklist-sm"
-                                        show-page-button="'false'"
-                                        combine-next-status-button="'true'"></nephthys-page-tasklist>
+    <cfif request.user.hasPermission("com.Nephthys.user", "user")>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-block">
+                    <h2>Aufgabenliste</h2>
+                    <nephthys-page-tasklist class="tasklist-sm"
+                                            show-page-button="'false'"
+                                            combine-next-status-button="'true'"></nephthys-page-tasklist>
+                </div>
             </div>
         </div>
-    </div>
+    </cfif>
 </div>
