@@ -1,7 +1,5 @@
 nephthysAdminApp
     .controller('galleryDetailCtrl', ["$scope", "$routeParams", "$q", "galleryService", function ($scope, $routeParams, $q, galleryService) {
-        var activePage = "detail";
-        // load
         $scope.load = function() {
             return galleryService
                        .getDetails($routeParams.galleryId)
@@ -19,23 +17,8 @@ nephthysAdminApp
                 .then($scope.loadPictures);
         };
         
-        // tabs and paging
-        $scope.showPage = function (page) {
-            activePage = page;
-        };
-        
-        $scope.tabClasses = function (page) {
-            return (activePage === page ? "active" : "");
-        };
-        
-        $scope.pageClasses = function (page) {
-            return (activePage === page ? "active" : "");
-        };
-        
         // init
-        $scope
-            .load()
-            .then($scope.showPage('details'));
+        $scope.load();
         
         $scope.initialized = false;
     }]);

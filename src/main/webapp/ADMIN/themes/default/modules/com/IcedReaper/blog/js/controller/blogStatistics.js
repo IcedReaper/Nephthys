@@ -1,10 +1,9 @@
 nephthysAdminApp
-    .controller('blogStatisticsCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "blogService", function ($scope, $rootScope, $routeParams, $q, blogService) {
-        var blogpostId = null;
+    .controller('blogStatisticsCtrl', ["$scope", "$routeParams", "$q", "blogService", function ($scope, $routeParams, $q, blogService) {
         $scope.load = function () {
-            if(blogpostId !== null && ! isNaN(parseInt($scope.dayCount, 10))) {
+            if($routeParams.blogpostId !== null && ! isNaN(parseInt($scope.dayCount, 10))) {
                 blogService
-                    .getLastVisitChart(blogpostId, $scope.dayCount)
+                    .getLastVisitChart($routeParams.blogpostId, $scope.dayCount)
                     .then(function (visitData) {
                         $scope.chart.labels = visitData.labels;
                         $scope.chart.data   = [visitData.data];
@@ -32,10 +31,4 @@ nephthysAdminApp
         };
         
         $scope.dayCount = 20;
-        
-        $rootScope.$on('blog-loaded', function(event, blogData) {
-            blogpostId = blogData.blogpostId;
-            
-            $scope.load();
-        });
     }]);

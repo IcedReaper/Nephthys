@@ -1,7 +1,5 @@
 nephthysAdminApp
-    .controller('reviewDetailCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "reviewService", "typeService", function ($scope, $rootScope, $routeParams, $q, reviewService, typeService) {
-        var activePage = "detail";
-        // load
+    .controller('reviewDetailCtrl', ["$scope", "$routeParams", "$q", "reviewService", "typeService", function ($scope, $routeParams, $q, reviewService, typeService) {
         $scope.load = function() {
             return $q.all([
                     reviewService.getDetails($routeParams.reviewId),
@@ -10,8 +8,6 @@ nephthysAdminApp
                 .then($q.spread(function (reviewDetails, types) {
                     $scope.review = reviewDetails;
                     $scope.types = types;
-                    
-                    $rootScope.$emit('review-loaded', {reviewId: $scope.review.reviewId});
                 }));
         };
         
@@ -34,19 +30,6 @@ nephthysAdminApp
                 });
         };
         
-        // tabs and paging
-        $scope.showPage = function (page) {
-            activePage = page;
-        };
-        
-        $scope.tabClasses = function (page) {
-            return (activePage === page ? "active" : "");
-        };
-        
-        $scope.pageClasses = function (page) {
-            return (activePage === page ? "active" : "");
-        };
-        
         $scope.imageSelect = function() {
             if($scope.newImage) {
                 return $scope.newImage;
@@ -57,8 +40,7 @@ nephthysAdminApp
         };
         
         // init
-        $scope.load()
-              .then($scope.showPage('details'));
+        $scope.load();
         
         $scope.reviewId = $routeParams.reviewId;
         $scope.initialized = false;

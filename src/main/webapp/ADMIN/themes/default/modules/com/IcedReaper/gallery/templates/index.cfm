@@ -16,6 +16,8 @@
 <link rel='stylesheet' href='/themes/default/assets/angular-tagsInput/ng-tags-input.min.css'>
 <script src='/themes/default/assets/angular-tagsInput/ng-tags-input.min.js'></script>
 
+<script src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
+
 <script type="text/javascript" src="/themes/default/directive/nephthysLoadingBar/nephthysLoadingBar.js"></script>
 
 <!--- app --->

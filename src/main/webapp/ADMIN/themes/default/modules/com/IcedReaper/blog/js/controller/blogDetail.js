@@ -3,10 +3,7 @@ var imageSizes = {};
 var fileNames  = [];
 
 nephthysAdminApp
-    .controller('blogDetailCtrl', ["$scope", "$rootScope", "$route", "$routeParams", "$q", "blogService", function ($scope, $rootScope, $route, $routeParams, $q, blogService) {
-        $rootScope.$$listeners['blog-loaded'] = null; // as the different js-files will be invoken again and again the event listeners get applied multiple times, so we reset them here
-        
-        var activePage = "detail";
+    .controller('blogDetailCtrl', ["$scope", "$route", "$routeParams", "$q", "blogService", function ($scope, $route, $routeParams, $q, blogService) {
         $scope.linkSet = false;
         // load
         $scope.load = function() {
@@ -17,8 +14,6 @@ nephthysAdminApp
                            
                            if($scope.blogpost.blogpostId != 0) {
                                $scope.linkSet = true;
-                               
-                               $rootScope.$emit('blog-loaded', {blogpostId: $scope.blogpost.blogpostId});
                            }
                            else {
                                $scope.linkSet = false;
@@ -84,19 +79,6 @@ nephthysAdminApp
             }
         };
         
-        // tabs and paging
-        $scope.showPage = function (page) {
-            activePage = page;
-        };
-        
-        $scope.tabClasses = function (page) {
-            return (activePage === page ? "active" : "");
-        };
-        
-        $scope.pageClasses = function (page) {
-            return (activePage === page ? "active" : "");
-        };
-        
         $scope.openReleaseDate = function () {
             $scope.releaseDate.isOpen = true;
         }
@@ -110,11 +92,8 @@ nephthysAdminApp
         };
         $scope.blogpost = {};
         
-        $scope
-            .load()
-            .then($scope.showPage('details'));
+        $scope.load();
         
-        $rootScope.blogpostId = $routeParams.blogpostId;
         $scope.initialized = false;
     }])
     .config(["$provide", function ($provide) {

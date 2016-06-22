@@ -1,10 +1,9 @@
 nephthysAdminApp
-    .controller('reviewStatisticsCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "reviewService", function ($scope, $rootScope, $routeParams, $q, reviewService) {
-        var reviewId = null;
+    .controller('reviewStatisticsCtrl', ["$scope", "$routeParams", "$q", "reviewService", function ($scope, $routeParams, $q, reviewService) {
         $scope.load = function () {
-            if(reviewId !== null && ! isNaN(parseInt($scope.dayCount, 10))) {
+            if($routeParams.reviewId !== null && ! isNaN(parseInt($scope.dayCount, 10))) {
                 reviewService
-                    .getLastVisitChart(reviewId, $scope.dayCount)
+                    .getLastVisitChart($routeParams.reviewId, $scope.dayCount)
                     .then(function (visitData) {
                         $scope.visitChart = {
                             labels: visitData.labels,
@@ -22,10 +21,4 @@ nephthysAdminApp
         };
         
         $scope.dayCount = 20;
-        
-        $rootScope.$on('review-loaded', function(event, reviewData) {
-            reviewId = reviewData.reviewId;
-            
-            $scope.load();
-        });
     }]);

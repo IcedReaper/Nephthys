@@ -12,16 +12,8 @@
     </div>
 </div>
 
-<ul class="nav nav-tabs">
-    <li class="nav-item">
-        <a ng-click="showPage('details')" ng-class="tabClasses('details')" class="nav-link clickable">Details</a>
-    </li>
-    <li class="nav-item">
-        <a ng-click="showPage('statistics')" ng-class="tabClasses('statistics')" class="nav-link clickable" ng-disabled="review.reviewId == 0">Statistiken</a>
-    </li>
-</ul>
-<div class="tab-content">
-    <div ng-class="pageClasses('details')" class="tab-pane">
+<uib-tabset active="active">
+    <uib-tab heading="Details">
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-block">
@@ -132,9 +124,8 @@
                 </div>
             </div>
         </div>
-    </div>
-    
-    <div ng-class="pageClasses('statistics')" class="tab-pane">
+    </uib-tab>
+    <uib-tab heading="Statistiken">
         <!--<div ng-controller="reviewStatisticsCtrl" ng-show="reviewId != 0">
             <div class="row">
                 <div class="col-md-12">
@@ -158,5 +149,5 @@
                 </div>
             </div>
         </div>-->
-    </div>
-</div>
+    </uib-tab>
+</uib-tabset>

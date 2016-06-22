@@ -1,10 +1,8 @@
 nephthysAdminApp
-    .controller('blogCategoryCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "blogService", function ($scope, $rootScope, $routeParams, $q, blogService) {
-        var blogpostId = null;
-        
+    .controller('blogCategoryCtrl', ["$scope", "$routeParams", "$q", "blogService", function ($scope, $routeParams, $q, blogService) {
         $scope.load = function () {
             return blogService
-                    .loadCategories(blogpostId)
+                    .loadCategories($routeParams.blogpostId)
                     .then(function (result) {
                         $scope.categories = [];
                         for(var c = 0; c < result.length; c++) {
@@ -17,11 +15,11 @@ nephthysAdminApp
         };
         
         $scope.add = function (category) {
-            blogService.addCategory(blogpostId, category.id, category.text);
+            blogService.addCategory($routeParams.blogpostId, category.id, category.text);
         };
         
         $scope.delete = function (category) {
-            blogService.removeCategory(blogpostId, category.id);
+            blogService.removeCategory($routeParams.blogpostId, category.id);
         };
         
         $scope.loadAutoCompleteCategories = function (queryString) {
@@ -38,10 +36,4 @@ nephthysAdminApp
                            return categories;
                        });
         };
-        
-        $rootScope.$on('blog-loaded', function(event, blogData) {
-            blogpostId = blogData.blogpostId;
-            
-            $scope.load();
-        });
     }]);

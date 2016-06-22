@@ -3,7 +3,6 @@
 ## Actual Task TODO - Reminder:
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
-- setting in config umbenennen?
 
 ## Allgemein
     1. Validierungen

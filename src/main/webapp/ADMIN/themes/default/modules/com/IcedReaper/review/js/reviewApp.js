@@ -1,6 +1,7 @@
 var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
                                                            "ngTagsInput",
                                                            "ngFileUpload",
+                                                           "ui.bootstrap",
                                                            "textAngular",
                                                            "com.nephthys.global.loadingBar"]);
     
