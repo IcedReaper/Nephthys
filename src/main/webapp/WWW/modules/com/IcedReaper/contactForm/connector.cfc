@@ -1,4 +1,6 @@
 component implements="WWW.interfaces.connector" {
+    import "API.modules.com.IcedReaper.contactForm.*";
+    
     public connector function init() {
         return this;
     }
@@ -18,7 +20,7 @@ component implements="WWW.interfaces.connector" {
         }
         else {
             try {
-                var contactFormRequest = createObject("component", "API.modules.com.IcedReaper.contactForm.request").init(0);
+                var contactFormRequest = new request(0);
                 
                 contactFormRequest.setSubject(form.subject)
                                   .setMessage(form.message);

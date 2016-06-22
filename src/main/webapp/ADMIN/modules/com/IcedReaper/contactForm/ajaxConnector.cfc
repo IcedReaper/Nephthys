@@ -1,6 +1,8 @@
 component {
+    import "API.modules.com.IcedReaper.contactForm.*";
+    
     remote array function getList() {
-        var filterCtrl = createObject("component", "API.modules.com.IcedReaper.contactForm.filter").init();
+        var filterCtrl = new filter();
         var rawRequests = filterCtrl.execute()
                                     .getResult();
         
@@ -24,7 +26,7 @@ component {
     }
     
     remote struct function getDetails(required numeric requestId) {
-        var cf_request = createObject("component", "API.modules.com.IcedReaper.contactForm.request").init(arguments.requestId);
+        var cf_request = new request(arguments.requestId);
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         if(! cf_request.getRead()) {
@@ -44,7 +46,7 @@ component {
     }
     
     remote array function getReplies(required numeric requestId) {
-        var cf_request = createObject("component", "API.modules.com.IcedReaper.contactForm.request").init(arguments.requestId);
+        var cf_request = new request(arguments.requestId);
         var rawReplies = cf_request.getReplies();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
@@ -62,7 +64,7 @@ component {
     }
     
     remote boolean function reply(required numeric requestId, required string message) {
-        var reply = createObject("component", "API.modules.com.IcedReaper.contactForm.reply").init(0);
+        var reply = new reply(0);
         
         reply.setRequestId(arguments.requestId)
              .setMessage(arguments.message)

@@ -1,4 +1,6 @@
 component {
+    import "API.modules.com.Nephthys.user.*";
+    
     public reply function init(required numeric replyId) {
         variables.replyId   = arguments.replyId;
         
@@ -38,7 +40,7 @@ component {
     }
     
     public user function getReplyUser() {
-        return createObject("component", "API.modules.com.Nephthys.user.user").init(variables.replyUserId);
+        return new user(variables.replyUserId);
     }
     
     // CRUD

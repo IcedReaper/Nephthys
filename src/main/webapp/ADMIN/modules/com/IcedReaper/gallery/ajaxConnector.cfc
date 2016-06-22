@@ -1,7 +1,8 @@
 component {
-    // Galleries and their details
+    import "API.modules.com.IcedReaper.gallery.*";
+    
     remote array function getList() {
-        var galleryFilterCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.filter").init();
+        var galleryFilterCtrl = new filter();
         
         var galleries = galleryFilterCtrl.execute().getResult();
         var data = [];
@@ -14,32 +15,32 @@ component {
     }
     
     remote struct function getDetails(required numeric galleryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = new gallery(arguments.galleryId);
         
         return prepareDetailStruct(gallery);
     }
     
     remote array function loadPictures(required numeric galleryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = new gallery(arguments.galleryId);
         
         return preparePictureStruct(gallery.getPictures(), gallery.getRelativePath() & "/");
     }
     
     remote array function loadCategories(required numeric galleryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = new gallery(arguments.galleryId);
         
         return prepareCategoryDetails(gallery.getCategories(), false);
     }
     
     remote array function loadAutoCompleteCategories(required string queryString) {
-        var categoryLoader = createObject("component", "API.modules.com.IcedReaper.gallery.categoryLoader").init();
+        var categoryLoader = new categoryLoader();
         
         var categories = categoryLoader
                              .setName(arguments.queryString)
                              .load();
         
         if(categories.len() != 1 || categories[1].getName() != arguments.queryString) {
-            var dummyCategory = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(0)
+            var dummyCategory = new category(0)
                                     .setName(arguments.queryString);
             
             categories.append(dummyCategory);
@@ -57,7 +58,7 @@ component {
                                 required string  story,
                                 required numeric active,
                                 required boolean private) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = new gallery(arguments.galleryId);
         
         if(gallery.isEditable(request.user.getUserID())) {
             if(arguments.galleryId == 0) {
@@ -81,7 +82,7 @@ component {
     }
     
     remote boolean function delete(required numeric galleryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = new gallery(arguments.galleryId);
         
         if(gallery.isEditable(request.user.getUserID())) {
             gallery.delete();
@@ -94,7 +95,7 @@ component {
     }
     
     remote boolean function activate(required numeric galleryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = new gallery(arguments.galleryId);
         
         if(gallery.isEditable(request.user.getUserID())) {
             gallery.setActiveStatus(1)
@@ -108,7 +109,7 @@ component {
     }
     
     remote boolean function deactivate(required numeric galleryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = new gallery(arguments.galleryId);
         
         if(gallery.isEditable(request.user.getUserID())) {
             gallery.setActiveStatus(0)
@@ -124,10 +125,10 @@ component {
     remote boolean function addCategory(required numeric galleryId,
                                        required numeric categoryId,
                                        required string  categoryName) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = new gallery(arguments.galleryId);
         
         if(gallery.isEditable(request.user.getUserID())) {
-            var newCategory = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
+            var newCategory = new category(arguments.categoryId);
             if(arguments.categoryId == 0) {
                 newCategory.setName(arguments.categoryName)
                            .save();
@@ -144,7 +145,7 @@ component {
     
     remote boolean function removeCategory(required numeric galleryId,
                                           required numeric categoryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = new gallery(arguments.galleryId);
         
         if(gallery.isEditable(request.user.getUserID())) {
             gallery.removeCategory(arguments.categoryId);
@@ -157,10 +158,10 @@ component {
     }
     
     remote boolean function uploadPictures(required numeric galleryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = new gallery(arguments.galleryId);
         
         if(gallery.isEditable(request.user.getUserID())) {
-            var newPicture = createObject("component", "API.modules.com.IcedReaper.gallery.picture").init(0);
+            var newPicture = new picture(0);
             newPicture.setGalleryId(arguments.galleryId)
                       .upload();
             
@@ -177,8 +178,8 @@ component {
                                           required string  caption,
                                           required string  alt,
                                           required string  title) {
-        var picture = createObject("component", "API.modules.com.IcedReaper.gallery.picture").init(arguments.pictureId);
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(picture.getGalleryId());
+        var picture = new picture(arguments.pictureId);
+        var gallery = new gallery(picture.getGalleryId());
         
         if(gallery.isEditable(request.user.getUserID())) {
             picture.setCaption(arguments.caption)
@@ -194,8 +195,8 @@ component {
     }
     
     remote array function deletePicture(required numeric pictureId) {
-        var picture = createObject("component", "API.modules.com.IcedReaper.gallery.picture").init(arguments.pictureId);
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(picture.getGalleryId());
+        var picture = new picture(arguments.pictureId);
+        var gallery = new gallery(picture.getGalleryId());
         
         if(gallery.isEditable(request.user.getUserID())) {
             gallery.removePicture(arguments.pictureId);
@@ -209,20 +210,20 @@ component {
     
     // categories and their details
     remote array function getCategoryList() {
-        var categoryLoader = createObject("component", "API.modules.com.IcedReaper.gallery.categoryLoader").init();
+        var categoryLoader = new categoryLoader();
         
         return prepareCategoryDetails(categoryLoader.load(), true);
     }
     
     remote struct function getCategoryDetails(required numeric categoryId) {
-        var category = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
+        var category = new category(arguments.categoryId);
         
         return prepareCategoryStruct(category);
     }
     
     remote boolean function saveCategory(required numeric categoryId,
                                         required string  name) {
-        var category = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
+        var category = new category(arguments.categoryId);
         
         category.setName(arguments.name)
                 .save();
@@ -231,7 +232,7 @@ component {
     }
     
     remote boolean function deleteCategory(required numeric categoryId) {
-        var category = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
+        var category = new category(arguments.categoryId);
         
         category.delete();
         
@@ -243,7 +244,7 @@ component {
             arguments.dayCount = 20;
         }
         
-        var statisticsCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.statistics").init();
+        var statisticsCtrl = new statistics();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var statisticsData = statisticsCtrl.load(arguments.galleryId, dateAdd("d", (dayCount - 1) * -1, now()), now());
@@ -307,7 +308,7 @@ component {
     
     private array function prepareCategoryDetails(required array categories, required boolean getGalleries = false) {
         var gCategories = [];
-        var galleryFilterCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.filter").init();
+        var galleryFilterCtrl = new filter();
         
         for(var c = 1; c <= arguments.categories.len(); c++) {
             gCategories.append({

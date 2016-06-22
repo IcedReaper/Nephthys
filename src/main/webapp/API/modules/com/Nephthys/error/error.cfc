@@ -1,4 +1,6 @@
 component {
+    import "API.modules.com.Nephthys.user.*";
+    
     public error function init(required numeric errorId = 0) {
         variables.errorId = arguments.errorId;
         
@@ -163,6 +165,6 @@ component {
             variables.userAgent      = "";
         }
         
-        variables.user = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.userId);
+        variables.user = new user(variables.userId);
     }
 }

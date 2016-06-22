@@ -1,6 +1,8 @@
 component {
+    import "API.modules.com.Nephthys.system.*";
+    
     remote array function getSettings() {
-        var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
+        var serverSettings = new settings();
         serverSettings.load();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
@@ -37,7 +39,7 @@ component {
     }
     
     remote boolean function saveSettings(required array settings) {
-        var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init().load();
+        var serverSettings = new settings().load();
         var resetAllPasswords = false;
         
         transaction {
@@ -82,49 +84,6 @@ component {
         
         return true;
     }
-    
-    remote boolean function activate() {
-        var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
-        
-        serverSettings.setValueOfKey("active", true)
-                      .save();
-        
-        return true;
-    }
-    
-    remote boolean function deactivate() {
-        var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
-        
-        serverSettings.setValueOfKey("active", false)
-                      .save();
-        
-        return true;
-    }
-    
-    remote boolean function activateMaintenanceMode() {
-        var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
-        
-        serverSettings.setValueOfKey("maintenanceMode", true)
-                      .save();
-        
-        return true;
-    }
-    
-    remote boolean function deactivateMaintenanceMode() {
-        var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
-        
-        serverSettings.setValueOfKey("maintenanceMode", false)
-                      .save();
-        
-        return true;
-    }
-    
-    remote array function getEncryptionMethods() {
-        var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.controller.encryptionMethodLoader").init();
-        
-        return encryptionMethodLoader.getEncryptionMethods();
-    }
-    
     
     private struct function getUserInformation(required user _user) {
         return {

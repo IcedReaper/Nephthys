@@ -338,9 +338,6 @@ component {
         return false;
     }
     
-    // TODO: Workflow
-    
-    
     
     remote struct function getAvailableSubModules() {
         var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();

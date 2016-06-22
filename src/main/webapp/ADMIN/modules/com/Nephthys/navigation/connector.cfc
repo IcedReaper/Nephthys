@@ -1,4 +1,6 @@
 component extends="ADMIN.abstractClasses.connector" {
+    import "API.modules.com.Nephthys.module.*";
+    
     public connector function init() {
         variables.moduleName = "com.Nephthys.navigation";
         
@@ -6,7 +8,7 @@ component extends="ADMIN.abstractClasses.connector" {
     }
     
     public void function render() {
-        var filterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
+        var filterCtrl = new filter();
         
         var installedModules = filterCtrl.setAvailableAdmin(true)
                                          .execute()

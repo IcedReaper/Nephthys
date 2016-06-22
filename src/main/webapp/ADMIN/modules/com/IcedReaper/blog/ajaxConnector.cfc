@@ -1,7 +1,8 @@
 component {
-    // Galleries and their details
+    import "API.modules.com.IcedReaper.blog.*";
+    
     remote array function getList() {
-        var blogpostFilterCtrl = createObject("component", "API.modules.com.IcedReaper.blog.filter").init();
+        var blogpostFilterCtrl = new filter();
         
         var blogposts = blogpostFilterCtrl.execute().getResult();
         var data = [];
@@ -14,25 +15,25 @@ component {
     }
     
     remote struct function getDetails(required numeric blogpostId) {
-        var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
+        var blogpost = new blogpost(arguments.blogpostId);
         
         return prepareDetailStruct(blogpost);
     }
     
     remote array function loadCategories(required numeric blogpostId) {
-        var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
+        var blogpost = new blogpost(arguments.blogpostId);
         
         return prepareCategoryDetails(blogpost.getCategories(), false);
     }
     
     remote array function loadAutoCompleteCategories(required string queryString) {
-        var categoryLoader = createObject("component", "API.modules.com.IcedReaper.blog.categoryLoader").init();
+        var categoryLoader = new categoryLoader();
         
         var categories = categoryLoader.setName(arguments.queryString)
                                        .load();
         
         if(categories.len() != 1 || categories[1].getName() != arguments.queryString) {
-            var dummyCategory = createObject("component", "API.modules.com.IcedReaper.blog.category").init(0)
+            var dummyCategory = new category(0)
                                     .setName(arguments.queryString);
             
             categories.append(dummyCategory);
@@ -53,7 +54,7 @@ component {
                                 required numeric commentsNeedToGetPublished,
                                 required boolean private,
                                 required string  fileNames) {
-        var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
+        var blogpost = new blogpost(arguments.blogpostId);
         
         if(blogpost.isEditable(request.user.getUserID())) {
             if(arguments.releaseDate != "") {
@@ -91,7 +92,7 @@ component {
     
     remote struct function uploadImages(required string blogpostId,
                                         required string imageSizes) { // jsonString
-        var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
+        var blogpost = new blogpost(arguments.blogpostId);
         
         if(blogpost.isEditable(request.user.getUserID())) {
             var _is = deserializeJSON(arguments.imageSizes);
@@ -118,7 +119,7 @@ component {
     }
     
     remote boolean function delete(required numeric blogpostId) {
-        var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
+        var blogpost = new blogpost(arguments.blogpostId);
         
         if(blogpost.isEditable(request.user.getUserID())) {
             blogpost.delete();
@@ -131,7 +132,7 @@ component {
     }
     
     remote boolean function activate(required numeric blogpostId) {
-        var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
+        var blogpost = new blogpost(arguments.blogpostId);
         
         if(blogpost.isEditable(request.user.getUserID())) {
             blogpost.setReleased(1)
@@ -145,7 +146,7 @@ component {
     }
     
     remote boolean function deactivate(required numeric blogpostId) {
-        var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
+        var blogpost = new blogpost(arguments.blogpostId);
         
         if(blogpost.isEditable(request.user.getUserID())) {
             blogpost.setReleased(0)
@@ -161,10 +162,10 @@ component {
     remote boolean function addCategory(required numeric blogpostId,
                                        required numeric categoryId,
                                        required string  categoryName) {
-        var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
+        var blogpost = new blogpost(arguments.blogpostId);
         
         if(blogpost.isEditable(request.user.getUserID())) {
-            var newCategory = createObject("component", "API.modules.com.IcedReaper.blog.category").init(arguments.categoryId);
+            var newCategory = new category(arguments.categoryId);
             if(arguments.categoryId == 0) {
                 newCategory.setName(arguments.categoryName)
                            .save();
@@ -181,7 +182,7 @@ component {
     
     remote boolean function removeCategory(required numeric blogpostId,
                                           required numeric categoryId) {
-        var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
+        var blogpost = new blogpost(arguments.blogpostId);
         
         if(blogpost.isEditable(request.user.getUserID())) {
             blogpost.removeCategory(arguments.categoryId);
@@ -195,20 +196,20 @@ component {
     
     // categories and their details
     remote struct function getCategoryList() {
-        var categoryLoader = createObject("component", "API.modules.com.IcedReaper.blog.categoryLoader").init();
+        var categoryLoader = new categoryLoader();
         
         return prepareCategoryDetails(categoryLoader.load(), true);
     }
     
     remote struct function getCategoryDetails(required numeric categoryId) {
-        var category = createObject("component", "API.modules.com.IcedReaper.blog.category").init(arguments.categoryId);
+        var category = new category(arguments.categoryId);
         
         return prepareCategoryStruct(category);
     }
     
     remote boolean function saveCategory(required numeric categoryId,
                                         required string  name) {
-        var category = createObject("component", "API.modules.com.IcedReaper.blog.category").init(arguments.categoryId);
+        var category = new category(arguments.categoryId);
         category.setName(arguments.name)
                 .save();
         
@@ -216,7 +217,7 @@ component {
     }
     
     remote boolean function deleteCategory(required numeric categoryId) {
-        var category = createObject("component", "API.modules.com.IcedReaper.blog.category").init(arguments.categoryId);
+        var category = new category(arguments.categoryId);
         
         category.delete();
         
@@ -228,7 +229,7 @@ component {
             arguments.dayCount = 20;
         }
         
-        var statisticsCtrl = createObject("component", "API.modules.com.IcedReaper.blog.statistics").init();
+        var statisticsCtrl = new statistics();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var statisticsData = statisticsCtrl.load(arguments.blogpostId, dateAdd("d", (dayCount - 1) * -1, now()), now());
@@ -247,7 +248,7 @@ component {
     }
     
     remote array function loadComments(required numeric blogpostId) {
-        var blogpost = createObject("component", "API.modules.com.IcedReaper.blog.blogpost").init(arguments.blogpostId);
+        var blogpost = new blogpost(arguments.blogpostId);
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var bp_comments = blogpost.getComments();
@@ -266,7 +267,7 @@ component {
     }
     
     remote boolean function publishComment(required numeric commentId) {
-        var comment = createObject("component", "API.modules.com.IcedReaper.blog.comment").init(arguments.commentId);
+        var comment = new comment(arguments.commentId);
         
         comment.publish()
                .save();
@@ -275,7 +276,7 @@ component {
     }
     
     remote boolean function deleteComment(required numeric commentId) {
-        var comment = createObject("component", "API.modules.com.IcedReaper.blog.comment").init(arguments.commentId);
+        var comment = new comment(arguments.commentId);
         
         comment.delete();
         
@@ -330,7 +331,7 @@ component {
     
     private array function prepareCategoryDetails(required array categories, required boolean getBlogposts = false) {
         var gCategories = [];
-        var blogpostFilterCtrl = createObject("component", "API.modules.com.IcedReaper.blog.filter").init();
+        var blogpostFilterCtrl = new filter();
         
         for(var c = 1; c <= arguments.categories.len(); c++) {
             gCategories.append({

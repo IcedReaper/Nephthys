@@ -212,12 +212,10 @@
     6. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
     7. Verwendung von nicht Klassenattributen (z.B. request.user) aus den Klassen entfernen und als Parameter erwarten
     8. Berechtigungen (Admin, Editor, User) in Module einbauen
-    9. CreateObject gegen import und new ersetzen, außer bei den dynamischen
-    10. Controller zum Erstellen von Links (z.B. User) erstellen
-    11. Creator und lastEditor direkt als Objekte in Objekten erstellen
-    12. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
-    13. Charts responsive mit maxHeight!?
-    14. Checken, ob man Loading Bar und Error Message Box irgendwie Global verankern kann
+    9. Creator und lastEditor direkt als Objekte in Objekten erstellen
+    10. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
+    11. Charts responsive mit maxHeight!?
+    12. Checken, ob man Loading Bar und Error Message Box irgendwie Global verankern kann
 
 
 

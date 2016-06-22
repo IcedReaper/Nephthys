@@ -1,4 +1,6 @@
 component implements="WWW.interfaces.connector" {
+    import "API.modules.com.IcedReaper.twitchTv.*";
+    
     public connector function init() {
         return this;
     }
@@ -11,7 +13,7 @@ component implements="WWW.interfaces.connector" {
         var renderedContent = "";
         
         if(arguments.options.keyExists("channelName") && arguments.options.channelName != "") {
-            var channel = createObject("component", "API.modules.com.IcedReaper.twitchTv.channel").init(arguments.options.channelName);
+            var channel = new channel(arguments.options.channelName);
             
             saveContent variable="renderedContent" {
                 module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/twitchTv/templates/channel.cfm"
@@ -21,7 +23,7 @@ component implements="WWW.interfaces.connector" {
         }
         else {
             if(arguments.options.keyExists("videoId") && arguments.options.videoId != "") {
-                var video = createObject("component", "API.modules.com.IcedReaper.twitchTv.video").init(arguments.options.videoId);
+                var video = new video(arguments.options.videoId);
                 
                 saveContent variable="renderedContent" {
                     module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/twitchTv/templates/video.cfm"

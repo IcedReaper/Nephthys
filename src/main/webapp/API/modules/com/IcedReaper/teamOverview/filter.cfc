@@ -1,4 +1,6 @@
 component implements="API.interfaces.filter" {
+    import "API.modules.com.Nephthys.user.*";
+    
     public filter function init() {
         variables.isMember = true;
         variables.userId = null;
@@ -93,7 +95,7 @@ component implements="API.interfaces.filter" {
                     variables.results.append(new member(variables.qRes.memberId[i]));
                 }
                 else {
-                    variables.results.append(createObject("component", "API.modules.com.Nephthys.user.user").init(variables.qRes.userId[i]));
+                    variables.results.append(new user(variables.qRes.userId[i]));
                 }
             }
         }

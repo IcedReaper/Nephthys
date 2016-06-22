@@ -48,13 +48,13 @@ component {
     
     public user function getCreatorUser() {
         if(! variables.keyExists("creator")) {
-            variables.creator = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.creatorUserId);
+            variables.creator = new user(variables.creatorUserId);
         }
         return creator;
     }
     public user function getLastEditorUser() {
         if(! variables.keyExists("lastEditor")) {
-            variables.lastEditor = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.lastEditorUserId);
+            variables.lastEditor = new user(variables.lastEditorUserId);
         }
         return lastEditor;
     }

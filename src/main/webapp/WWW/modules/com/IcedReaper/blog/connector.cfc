@@ -1,4 +1,6 @@
 component implements="WWW.interfaces.connector" {
+    import "API.modules.com.IcedReaper.blog.*";
+    
     public connector function init() {
         return this;
     }
@@ -13,7 +15,7 @@ component implements="WWW.interfaces.connector" {
         var preparedOptions = themeIndividualizer.prepareOptions(arguments.options);
         
         var splitParameter = listToArray(request.page.getParameter(), "/");
-        var blogpostFilterCtrl = createObject("component", "API.modules.com.IcedReaper.blog.filter").init();
+        var blogpostFilterCtrl = new filter();
         
         if(! arguments.options.keyExists("maxEntries")) {
             arguments.options.maxEntries = 5;
@@ -97,7 +99,7 @@ component implements="WWW.interfaces.connector" {
                                            required numeric actualPage,
                                                     string  activeCategory = "") {
         var renderedContent = "";
-        var categoryLoader = createObject("component", "API.modules.com.IcedReaper.blog.categoryLoader").init();
+        var categoryLoader = new categoryLoader();
         
         saveContent variable="renderedContent" {
             module template           = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/overview.cfm"
@@ -115,7 +117,7 @@ component implements="WWW.interfaces.connector" {
     
     private string function renderDetails(required struct options, required blogpost blogpost, required boolean commentAdded) {
         var renderedContent = "";
-        var statisticsCtrl = createObject("component", "API.modules.com.IcedReaper.blog.statistics").init();
+        var statisticsCtrl = new statistics();
         
         statisticsCtrl.add(arguments.blogpost.getBlogpostId());
         
@@ -135,7 +137,7 @@ component implements="WWW.interfaces.connector" {
                 if(arguments.blogpost.getCommentsActivated()) {
                     if(len(form.comment) > 0 && len(form.comment) <= 500) {
                         if(request.user.getUserId() != 0 || (arguments.blogpost.getAnonymousCommentAllowed() && validateUsername(form.anonymousUsername) && validateEmail(form.anonymousEmail))) {
-                            var newComment = createObject("component", "API.modules.com.IcedReaper.blog.comment").init(0);
+                            var newComment = new comment(0);
                             
                             newComment.setBlogpostId(arguments.blogpost.getBlogpostId())
                                       .setComment(form.comment);

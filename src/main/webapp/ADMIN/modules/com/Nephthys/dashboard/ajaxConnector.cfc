@@ -1,6 +1,8 @@
 component {
+    import "API.modules.com.Nephthys.dashboard.*";
+    
     remote struct function getServerInfo() {
-        var memoryUsageCtrl = createObject("component", "API.modules.com.Nephthys.dashboard.memoryUsage").init();
+        var memoryUsageCtrl = new memoryUsage();
         
         var memory = {
             total          = memoryUsageCtrl.getTotal(),

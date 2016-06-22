@@ -42,7 +42,7 @@ component {
             deleteFiles();
         }
         
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(variables.galleryId);
+        var gallery = new gallery(variables.galleryId);
         
         var uploaded = fileUpload(gallery.getAbsolutePath(), "picture", "image/*", "MakeUnique");
         var newFilename = uploaded.serverFile;
@@ -187,7 +187,7 @@ component {
     }
     
     private void function deleteFiles() {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(variables.galleryId);
+        var gallery = new gallery(variables.galleryId);
         fileDelete(gallery.getAbsolutePath() & "/" & variables.pictureFilename);
         fileDelete(gallery.getAbsolutePath() & "/" & variables.thumbnailFilename);
     }

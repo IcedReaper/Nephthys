@@ -9,7 +9,7 @@ component interface="API.interfaces.imageEdit" {
                                 required boolean overwrite     = true,
                                 required numeric height        = 0,
                                 required string  interpolation = "highestQuality",
-                                required numeric quality       = 0.75) {
+                                required numeric quality       = 0.95) {
         if(arguments.target == "" && arguments.overwrite == false) {
             throw(type = "Application", message = "Cannot resize the image. the target is not specified and the image should not get overwritten.");
         }

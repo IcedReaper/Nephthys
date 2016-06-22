@@ -1,4 +1,6 @@
 component implements="WWW.interfaces.connector" {
+    import "API.modules.com.Nephthys.user.*";
+    
     public connector function init() {
         return this;
     }
@@ -13,7 +15,7 @@ component implements="WWW.interfaces.connector" {
         
         var splitParameter = listToArray(request.page.getParameter(), "/");
         
-        var userListCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
+        var userListCtrl = new filter();
         
         if(splitParameter.len() == 0 && form.isEmpty()) {
             saveContent variable="renderedContent" {

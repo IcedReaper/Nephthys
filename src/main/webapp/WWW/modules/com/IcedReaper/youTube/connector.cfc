@@ -1,4 +1,6 @@
 component implements="WWW.interfaces.connector" {
+    import "API.modules.com.IcedReaper.youTube.*";
+    
     public connector function init() {
         return this;
     }
@@ -11,7 +13,7 @@ component implements="WWW.interfaces.connector" {
         var renderedContent = "";
         
         if(arguments.options.keyExists("playlistId") && arguments.options.playlistId != "") {
-            var playlist = createObject("component", "API.modules.com.IcedReaper.youTube.playlist").init(arguments.options.playlistId);
+            var playlist = new playlist(arguments.options.playlistId);
             
             if(arguments.options.keyExists("videoCount")) {
                 playlist.setMaxResults(arguments.options.videoCount);
@@ -24,7 +26,7 @@ component implements="WWW.interfaces.connector" {
             }
         }
         else if(arguments.options.keyExists("videoId") && arguments.options.videoId != "") {
-            var video = createObject("component", "API.modules.com.IcedReaper.youTube.video").init(arguments.options.videoId);
+            var video = new video(arguments.options.videoId);
         
             saveContent variable="renderedContent" {
                 module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/youTube/templates/video.cfm"

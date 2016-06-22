@@ -1,4 +1,6 @@
 component {
+    import "API.modules.com.Nephthys.user.*";
+    
     public request function init(required numeric requestId) {
         variables.requestId = arguments.requestId;
         
@@ -87,13 +89,13 @@ component {
     
     public user function getRequestorUser() {
         if(! variables.keyExists("requestorUser")) {
-            variables.requestorUser = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.requestorUserId);
+            variables.requestorUser = new user(variables.requestorUserId);
         }
         return variables.requestorUser;
     }
     public user function getReadUser() {
         if(! variables.keyExists("readUser")) {
-            variables.readUser = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.readUserId);
+            variables.readUser = new user(variables.readUserId);
         }
         return variables.readUser;
     }

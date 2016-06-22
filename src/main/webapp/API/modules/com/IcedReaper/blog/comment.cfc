@@ -1,4 +1,6 @@
 component {
+    import "API.modules.com.Nephthys.user.*";
+    
     public comment function init(required numeric commentId) {
         variables.commentId = arguments.commentId;
         
@@ -77,7 +79,7 @@ component {
     }
     public user function getCreator() {
         if(! variables.keyExists("creator")) {
-            variables.creator = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.creatorUserId);
+            variables.creator = new user(variables.creatorUserId);
         }
         return variables.creator;
     }
@@ -86,7 +88,7 @@ component {
     }
     public user function getPublisher() {
         if(! variables.keyExists("publishedUser")) {
-            variables.publishedUser = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.publishedUserId);
+            variables.publishedUser = new user(variables.publishedUserId);
         }
         return variables.publishedUser;
     }

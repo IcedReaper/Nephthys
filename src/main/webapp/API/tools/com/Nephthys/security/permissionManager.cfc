@@ -1,4 +1,6 @@
 component interface="APi.interface.permissionManager" {
+    import "API.modules.com.Nephthys.user.*";
+    
     public permissionManager function init() {
         return this;
     }
@@ -54,7 +56,7 @@ component interface="APi.interface.permissionManager" {
         for(var i = 1; i <= qGetModuleUser.getRecordCount(); i++) {
             userArray.append({
                 "permissionId" = qGetModuleUser.permissionId[i],
-                "user"         = createObject("component", "API.modules.com.Nephthys.user.user").init(qGetModuleUser.userId[i]),
+                "user"         = new user(qGetModuleUser.userId[i]),
                 "roleId"       = qGetModuleUser.roleId[i],
                 "roleName"     = qGetModuleUser.roleName[i],
                 "roleValue"    = qGetModuleUser.roleValue[i]
@@ -79,7 +81,7 @@ component interface="APi.interface.permissionManager" {
         for(var i = 1; i <= qGetUser.getRecordCount(); i++) {
             userArray.append({
                 "permissionId" = qGetUser.permissionId[i],
-                "user"         = createObject("component", "API.modules.com.Nephthys.user.user").init(qGetUser.userId[i]),
+                "user"         = new user(qGetUser.userId[i]),
                 "roleId"       = qGetUser.roleId[i]
             });
         }
@@ -155,7 +157,7 @@ component interface="APi.interface.permissionManager" {
             throw(type = "nephthys.application.notAllowed", message = "It is not allowed to set permissions for a user with ID 0");
         }
         // check if the user exists. If not the component will throw an error.
-        var user = createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.userId);
+        var user = new user(arguments.userId);
         
         if(arguments.permissionId == 0 || arguments.permissionId == null) {
             new Query().setSQL("INSERT INTO nephthys_permission

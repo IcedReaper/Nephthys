@@ -1,4 +1,6 @@
 component {
+    import "API.modules.com.Nephthys.user.*";
+    
     public genre function init(required numeric genreId) {
         variables.genreId = arguments.genreId;
         
@@ -34,13 +36,13 @@ component {
     }
     public user function getCreator() {
         if(! variables.keyExists("creator")) {
-            variables.creator = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.creatorUserId);
+            variables.creator = new user(variables.creatorUserId);
         }
         return variables.creator;
     }
     public user function getLastEditor() {
         if(! variables.keyExists("lastEditor")) {
-            variables.lastEditor = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.creatorUserId);
+            variables.lastEditor = new user(variables.creatorUserId);
         }
         return variables.lastEditor;
     }
