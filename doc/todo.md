@@ -9,36 +9,35 @@
     1. Validierungen
         1. Mehr Validierungsregeln implementieren
     2. Tableprefix variabel gestalten
-    3. Styling des Errortemplates
-    4. Formbuilder
-    5. getUserInformation zentral ablegen | Aktuell mehrfach identisch vorhanden ?
+    3. Formbuilder
+    4. getUserInformation zentral ablegen | Aktuell mehrfach identisch vorhanden ?
         * user informationen für den ajax JSON Rückweg vorbereiten
-    6. Installationssystem
+    5. Installationssystem
         * Datasources bei der Installation in einer JSON Datei ablegen und in den Applications auslesen
-    7. Updatesystem
-    8. Repairmodus ?
-    9. Lizenzen von Assets und Plugins überprüfen
-    10. Mehrsprachigkeit/Internationalisierung
+    6. Updatesystem
+    7. Repairmodus ?
+    8. Lizenzen von Assets und Plugins überprüfen
+    9. Mehrsprachigkeit/Internationalisierung
         * i18n
         * i10n
-    11. user => username überprüfen
-    12. user => blacklist erstellen | Innerhalb des Username überprüfen
-    13. F5-Raids bei Formularen unterbinden
-    14. Beim Anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
-    15. FileUpload, etc in eine Extra-Component aus dem Model auslagern
-    16. Pakete
+    10. user => username überprüfen
+    11. user => blacklist erstellen | Innerhalb des Username überprüfen
+    12. F5-Raids bei Formularen unterbinden
+    13. Beim Anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
+    14. FileUpload, etc in eine Extra-Component aus dem Model auslagern
+    15. Pakete
         * Alles
         * Blog
         * Gallerie
         * Marketing/Produkt
-    17. QueryBuilder zur Unterstützung verschiedener DB-Systeme
+    16. QueryBuilder zur Unterstützung verschiedener DB-Systeme
         * Idee und erste Doku unter QueryBuilder-idea-notes.md
-    18. Zusätzliche Optionen
+    17. Zusätzliche Optionen
         * Berechtigungssystem auf Menüpunkte ausweiten
-    19. Erweiterte Sicherheit in Modulen
+    18. Erweiterte Sicherheit in Modulen
         * Personen freischalten => Nur normales Editieren
         *
-    20. API-Statistics wie page.filter allen Modulen hinzufügen. - abwägen, und nach und nach
+    19. API-Statistics wie page.filter allen Modulen hinzufügen. - abwägen, und nach und nach
 
 ## Website
     1. Codeoptimierung

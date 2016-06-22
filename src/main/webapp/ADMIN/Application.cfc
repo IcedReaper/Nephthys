@@ -91,11 +91,11 @@ component {
             switch(request.requestType) {
                 case "cfc": {
                     writeOutput(serializeJSON({
-                            "errorMessage" = arguments.exception.message,
-                            "type"         = arguments.exception.type,
-                            "detail"       = arguments.exception.detail,
-                            "stacktrace"   = arguments.exception.stacktrace
-                        }));
+                        "errorMessage" = arguments.exception.message,
+                        "type"         = arguments.exception.type,
+                        "detail"       = arguments.exception.detail,
+                        "stacktrace"   = arguments.exception.stacktrace
+                    }));
                     header statuscode="500" statustext=arguments.exception.message;
                     break;
                 }
@@ -157,7 +157,16 @@ component {
     }
     
     private connector function getTargetModule(required string moduleName) {
-        return createObject("component", "modules." & arguments.moduleName & ".connector").init();
+        var moduleConnector = "modules." & arguments.moduleName & ".connector";
+        moduleConnector = moduleConnector.replace(".", "/", "ALL");
+        moduleConnector &= ".cfc";
+        
+        if(fileExists(expandPath(moduleConnector))) {
+            return createObject("component", "modules." & arguments.moduleName & ".connector").init();
+        }
+        else {
+            throw(type = "404", message = "Could not find the connector for module " & arguments.moduleName);
+        }
     }
     
     private boolean function checkReferer(required string refererModule) {
