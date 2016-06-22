@@ -31,6 +31,10 @@
             </cfswitch>
             <a href="/">Zurück zur Startseite</a>
         </div>
+        
+        <cfif application.system.settings.getValueOfKey("showDumpOnError")>
+            <cfdump var="#attributes.error#">
+        </cfif>
     </main>
     <footer>
         &copy; IcedReaper und das Nephthys Team 2015 - <cfoutput>#year(now())#</cfoutput>

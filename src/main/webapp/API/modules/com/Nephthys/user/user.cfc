@@ -240,7 +240,7 @@ component {
             variables.userName         = "Not registrated";
             variables.eMail            = "";
             variables.password         = "";
-            variables.active           = 0;
+            variables.active           = false;
             variables.registrationDate = now();
             variables.wwwThemeId       = application.system.settings.getValueOfKey("defaultWwwThemeId");
             variables.adminThemeId     = application.system.settings.getValueOfKey("defaultAdminThemeId");

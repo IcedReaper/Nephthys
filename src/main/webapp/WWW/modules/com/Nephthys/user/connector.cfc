@@ -40,26 +40,82 @@ component implements="WWW.interfaces.connector" {
             }
         }
         else if(splitParameter.len() == 1) {
-            var user = userListCtrl.setUserName(splitParameter[1])
-                                   .execute()
-                                   .getResult();
-            
-            if(user.len() == 1) {
-                request.page.setTitle("Benutzersuche - " & user[1].getUsername());
+            if(splitParameter[1] == "registrieren") {
+                var errors = {
+                    error                  = false,
+                    registrationSuccessful = false,
+                    email                  = false,
+                    emailUsed              = false,
+                    username               = false,
+                    usernameUsed           = false,
+                    password               = false
+                };
                 
+                if(url.keyExists("register") && ! form.isEmpty() && form.keyExists("username") && form.keyExists("email") && form.keyExists("password")) {
+                    var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.security.encryptionMethodLoader").init();
+                    var validator = application.system.settings.getValueOfKey("validator");
+                    
+                    if(! validator.validate(form.email, "Email")) {
+                        errors.email = true;
+                        errors.error = true;
+                    }
+                    if(form.password == "") {
+                        errors.password = true;
+                        errors.error = true;
+                    }
+                    if(form.username == "") {
+                        errors.username = true;
+                        errors.error = true;
+                    }
+                    if(new filter().setUsername(form.username).execute().getResultCount() != 0) {
+                        errors.usernameUsed = true;
+                        errors.error = true;
+                    }
+                    if(new filter().setEmail(form.email).execute().getResultCount() != 0) {
+                        errors.emailUsed = true;
+                        errors.error = true;
+                    }
+                    
+                    if(! errors.error) {
+                        var user = new user().setUserName(form.username)
+                                             .setEmail(form.email)
+                                             .setPassword(encrypt(form.password,
+                                                          application.system.settings.getValueOfKey("encryptionKey"),
+                                                          encryptionMethodLoader.getAlgorithm(application.system.settings.getValueOfKey("encryptionMethodId"))))
+                                             .save();
+                        
+                        errors.registrationSuccessful = true;
+                    }
+                }
+                
+                request.page.setTitle("Registriere Dich noch heute!");
                 saveContent variable="renderedContent" {
-                    module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/user/templates/userDetails.cfm"
-                           options      = preparedOptions
-                           user         = user[1]
-                           childContent = arguments.childContent;
+                    module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/user/templates/register.cfm"
+                           errors   = errors;
                 }
             }
             else {
-                request.page.setTitle("Benutzersuche - Keine Ergebnisse");
-                saveContent variable="renderedContent" {
-                    module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/user/templates/noResults.cfm"
-                           options      = preparedOptions
-                           childContent = arguments.childContent;
+                var user = userListCtrl.setUserName(splitParameter[1])
+                                       .execute()
+                                       .getResult();
+                
+                if(user.len() == 1) {
+                    request.page.setTitle("Benutzersuche - " & user[1].getUsername());
+                    
+                    saveContent variable="renderedContent" {
+                        module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/user/templates/userDetails.cfm"
+                               options      = preparedOptions
+                               user         = user[1]
+                               childContent = arguments.childContent;
+                    }
+                }
+                else {
+                    request.page.setTitle("Benutzersuche - Keine Ergebnisse");
+                    saveContent variable="renderedContent" {
+                        module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/user/templates/noResults.cfm"
+                               options      = preparedOptions
+                               childContent = arguments.childContent;
+                    }
                 }
             }
         }

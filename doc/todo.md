@@ -198,9 +198,6 @@
                 * Abgelehnt 
             * Kommentar
     
-    17. Usermodul
-        * Registrierung
-    
 
 ## Optimierungen
     1. Datenbank optimieren

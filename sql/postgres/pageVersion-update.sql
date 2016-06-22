@@ -648,3 +648,8 @@ alter table nephthys_theme add column availableAdmin boolean default true NOT NU
 
 alter table nephthys_user rename column themeId to wwwThemeId;
 alter table nephthys_user add column adminThemeId integer references nephthys_theme;
+
+-- 22.6.16
+
+GRANT SELECT, INSERT ON TABLE nephthys_user TO nephthys_user;
+GRANT SELECT, UPDATE ON SEQUENCE seq_nephthys_user_id TO nephthys_user;

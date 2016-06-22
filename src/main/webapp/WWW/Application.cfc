@@ -114,14 +114,15 @@ component {
                     }
                     else {
                         if(application.keyExists("system") && application.system.keyExists("settings")) {
-                            themeFoldername = createObject("component", "API.modules.com.Nephthys.theme.theme").init(application.system.settings.getValueOfKey("defaultThemeId")).getFolderName();
+                            themeFoldername = createObject("component", "API.modules.com.Nephthys.theme.theme").init(application.system.settings.getValueOfKey("defaultWwwThemeId")).getFolderName();
                         }
                         else {
                             throw(type = "nephthys.critical.installation", message = "Neither the user nor the system settings are defined!");
                         }
                     }
-                    errorLogger.setThemePath("/ADMIN/themes/" & themeFoldername)
-                                .show();
+                    
+                    errorLogger.setThemePath("/WWW/themes/" & themeFoldername)
+                               .show();
                     
                     break;
                 }

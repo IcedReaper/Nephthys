@@ -14,7 +14,8 @@
                     <label for="password">Passwort</label>
                     <input type="password" name="Password" id="password" class="form-control">
                 </fieldset>
-                <button type="submit" class="btn btn-success m-t-1"><i class="fa fa-sign-in"></i> Einloggen</button>
+                <button type="submit" class="btn btn-success btn-block m-t-1"><i class="fa fa-sign-in"></i> Einloggen</button>
+                <a href="/user/registrieren" class="btn btn-secondary btn-block m-t-1"><i class="fa fa-user-plus"></i> Registieren</a>
             </form>
         </div>
     </div>

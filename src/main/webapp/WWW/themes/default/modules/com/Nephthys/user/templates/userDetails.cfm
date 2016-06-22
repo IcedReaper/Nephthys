@@ -4,7 +4,7 @@
         <h1>Userdetails</h1>
     </header>
 
-    <section class="well userDetails">
+    <section class="userDetails">
         <h4>#attributes.user.getUsername()#</h4>
         <div class="row">
             <div class="col-md-3">

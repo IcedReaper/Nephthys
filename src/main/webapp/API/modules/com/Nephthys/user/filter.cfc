@@ -5,6 +5,8 @@ component implements="API.interfaces.filter" {
         variables.userName     = null;
         variables.userNameLike = false;
         
+        variables.email = null;
+        
         variables.registerFromDate = null;
         variables.registerToDate   = null;
         
@@ -26,6 +28,10 @@ component implements="API.interfaces.filter" {
     }
     public filter function setUserNameLike(required boolean like) {
         variables.userNameLike = arguments.like;
+        return this;
+    }
+    public filter function setEmail(required string email) {
+        variables.email = arguments.email;
         return this;
     }
     public filter function setRegistrationFromDate(required date fromDate) {
@@ -80,6 +86,11 @@ component implements="API.interfaces.filter" {
         if(variables.active != null) {
             where &= (where == "" ? " WHERE " : " AND ") & "active = :active";
             qryFilter.addParam(name = "active", value = variables.active, cfsqltype = "cf_sql_bit");
+        }
+        
+        if(variables.email != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & "email = :email";
+            qryFilter.addParam(name = "email", value = variables.email, cfsqltype = "cf_sql_varchar");
         }
         
         sql &= where & " ORDER BY userName ASC";
