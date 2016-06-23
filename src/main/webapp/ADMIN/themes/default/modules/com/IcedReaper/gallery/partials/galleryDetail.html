@@ -166,30 +166,14 @@
         </div>
     </uib-tab>
     <uib-tab heading="Statistiken">
-        <div ng-controller="galleryStatisticsCtrl" ng-show="galleryId != 0">
+        <div ng-show="galleryId != 0">
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-block">
-                        <button ng-click="load()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> Aktualisieren</button>
-                        
-                        <h3>Statistiken</h3>
-                        
-                        <h4>Aufrufe der letzten {{dayCount}} Tage</h4>
-                        <form novalidate>
-                            <div class="form-group row">
-                                <label for="dayCount" class="col-sm-5 col-md-3 form-control-label">Anzahl Tage</label>
-                                <div class="col-sm-7 col-md-9">
-                                    <input type="text" class="form-control" id="dayCount" placeholder="dayCount" ng-model="dayCount">
-                                </div>
-                            </div>
-                        </form>
-                        
-                        <canvas chart-options="chart.options"
-                                chart-series="chart.series"
-                                chart-labels="chart.labels"
-                                chart-data="chart.data"
-                                chart-type="chart.type"
-                                class="chart chart-base"></canvas>
+                        <icedreaper-gallery-statistics gallery-id="gallery.galleryId"
+                                                       chart-type="'line'"
+                                                       request-type="'total'"
+                                                       headline="Statistiken zu dieser Gallerie"></icedreaper-gallery-statistics>
                     </div>
                 </div>
             </div>

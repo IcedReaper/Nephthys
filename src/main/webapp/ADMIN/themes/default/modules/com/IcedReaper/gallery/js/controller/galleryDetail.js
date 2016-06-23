@@ -18,6 +18,7 @@ nephthysAdminApp
         };
         
         // init
+        $scope.gallery = {};
         $scope.load();
         
         $scope.initialized = false;

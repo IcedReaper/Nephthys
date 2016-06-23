@@ -653,3 +653,6 @@ alter table nephthys_user add column adminThemeId integer references nephthys_th
 
 GRANT SELECT, INSERT ON TABLE nephthys_user TO nephthys_user;
 GRANT SELECT, UPDATE ON SEQUENCE seq_nephthys_user_id TO nephthys_user;
+
+-- 23.6.16
+alter table icedreaper_gallery_statistics rename column opendate to visitDate;

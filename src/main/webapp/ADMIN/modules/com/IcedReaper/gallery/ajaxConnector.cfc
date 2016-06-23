@@ -257,11 +257,29 @@ component {
         }
         
         return {
-            "labels"  = labels,
-            "data"    = data
+            "labels" = labels,
+            "data"   = data
         };
     }
     
+    remote struct function getGalleryStatistics(required numeric galleryId = null, required string sortOrder, required string fromDate, required string toDate) {
+        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
+        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+
+        return new statistics().getTotal(arguments.galleryId,
+                                         arguments.sortOrder,
+                                         _fromDate,
+                                         _toDate);
+    }
+    
+    remote struct function getStatisticsSeparatedByGallery(required string sortOrder, required string fromDate, required string toDate) {
+        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
+        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+
+        return new statistics().getSplitPerGallery(arguments.sortOrder,
+                                                   _fromDate,
+                                                   _toDate);
+    }
     
     // private
     private struct function prepareDetailStruct(required gallery gallery) {

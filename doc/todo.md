@@ -87,7 +87,6 @@
             * Bewertungen
                 * Anonym per Option
                 * Als eingeloggter User
-        2. Statistiken mit dem Datepicker aufbereiten
         3. Workflow der Seiten adaptieren?
         4. Alles prüfen
         5. Statistiken pro Bild
