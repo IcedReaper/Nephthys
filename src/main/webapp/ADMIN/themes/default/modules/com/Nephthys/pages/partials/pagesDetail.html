@@ -94,9 +94,10 @@
                                             ng-click="pushToStatus(ps.statusId);">{{ps.name}}</button>
                                 </div>
                             </div>
-                            <div class="col-md-6" ng-if="isEditable()">
+                            <div class="col-md-6">
                                 <div class="pull-right">
-                                    <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
+                                    <button type="submit" class="btn btn-success" ng-click="save()" ng-if="isEditable()"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
+                                    <a href="{{page.versions[selectedVersion.major][selectedVersion.minor].completeLink}}?pageVersionId={{page.versions[selectedVersion.major][selectedVersion.minor].pageVersionId}}" class="btn btn-info" target="_blank"><i class="fa fa-eye"></i> Vorschau</a>
                                 </div>
                             </div>
                         </div>

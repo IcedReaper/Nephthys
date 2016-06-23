@@ -696,7 +696,8 @@ component {
             "lastEditor"         = getUserInformation(arguments.pageVersion.getLastEditor()),
             "lastEditDate"       = formatCtrl.formatDate(arguments.pageVersion.getLastEditDate()),
             "statusId"           = arguments.pageVersion.getStatusId(),
-            "approvalList"       = preparedApprovalList
+            "approvalList"       = preparedApprovalList,
+            "completeLink"       = application.system.settings.getValueOfKey("wwwDomain") & arguments.pageVersion.getLink()
         };
     }
     

@@ -1,7 +1,7 @@
 component {
     import "API.modules.com.Nephthys.user.*";
     
-    public pageRequest function init(required string link, required string version = "actual") {
+    public pageRequest function init(required string link) {
         variables.resources = {
             "css" = [],
             "js"  = []
@@ -16,7 +16,7 @@ component {
             "footer" = ""
         };
         
-        variables.version = arguments.version;
+        variables.versionLoaded = false;
         loadPage(arguments.link);
         
         return this;
@@ -209,58 +209,79 @@ component {
     public boolean function isOffline() {
         return ! isOnline();
     }
+    public boolean function isPreview() {
+        return variables.versionLoaded;
+    }
     
     public pageRequest function saveToStatistics() {
-        // TODO: Move to separate statistics component
-        new Query().setSQL("INSERT INTO nephthys_page_statistics
-                                        (
-                                            pageId,
-                                            completeLink
-                                        )
-                                 VALUES (
-                                            :pageId,
-                                            :link
-                                        )")
-                   .addParam(name = "pageId", value = variables.page.getPageId(),      cfsqltype = "cf_sql_numeric")
-                   .addParam(name = "link",   value = getLink() & variables.parameter, cfsqltype = "cf_sql_varchar")
-                   .execute();
-        
+        if(! variables.versionLoaded) {
+            // TODO: Move to separate statistics component
+            new Query().setSQL("INSERT INTO nephthys_page_statistics
+                                            (
+                                                pageId,
+                                                completeLink
+                                            )
+                                     VALUES (
+                                                :pageId,
+                                                :link
+                                            )")
+                       .addParam(name = "pageId", value = variables.page.getPageId(),      cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "link",   value = getLink() & variables.parameter, cfsqltype = "cf_sql_varchar")
+                       .execute();
+        }
         return this;
     }
     
     private void function loadPage(required string link) {
-        var pageRequestFilter = new filter().setFor("pageRequest")
-                                            .setLink(arguments.link)
-                                            .execute();
-        
-        if(pageRequestFilter.getResultCount() == 1) {
-            var filterResult = pageRequestFilter.getResult()[1];
-            variables.page = filterResult.page;
-            variables.parameter = filterResult.parameter;
+        if(url.keyExists("pageVersionId")) {
+            var adminLink = application.system.settings.getValueOfKey("adminDomain");
+            if(left(cgi.HTTP_REFERER, adminLink.len()) == adminLink) {
+                variables.pageVersion = new pageVersion(url.pageVersionId);
+                variables.page        = new page(variables.pageVersion.getPageId());
+                variables.parameter   = replaceNoCase(arguments.link, variables.pageVersion.getLink(), "");
+                
+                variables.versionLoaded = true;
+            }
+            else {
+                throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = arguments.link);
+            }
         }
         else {
-            if(application.system.settings.getValueOfKey("useFirstPageAsStartPage") && 
-               pageRequestFilter.getResultCount() == 0 && arguments.link == "/") {
-                // if we have the root page and it doesn't exist we'll get the first existing page
-                variables.parameter = "";
-                
-                var sitemap = new filter().setFor("sitemap")
-                                          .setOnline(true)
-                                          .execute()
-                                          .getResult();
-                if(sitemap.len() >= 1) {
-                    var sitemapId = sitemap[1].getSitemapId();
+            var pageRequestFilter = new filter().setFor("pageRequest")
+                                                .setLink(arguments.link);
+            
+            if(pageRequestFilter.execute().getResultCount() == 1) {
+                var filterResult = pageRequestFilter.getResult()[1];
+                variables.page = filterResult.page;
+                variables.parameter = filterResult.parameter;
+            }
+            else {
+                if(application.system.settings.getValueOfKey("useFirstPageAsStartPage") && 
+                   pageRequestFilter.getResultCount() == 0 && arguments.link == "/") {
+                    // if we have the root page and it doesn't exist we'll get the first existing page
+                    variables.parameter = "";
                     
-                    var sitemapPages = new filter().setFor("sitemapPage")
-                                                   .setSitemapId(sitemapId)
-                                                   .execute()
-                                                   .getResult();
-                    
-                    if(sitemapPages.len() >= 1) {
-                        variables.page = sitemapPages[1].getPage();
+                    var sitemap = new filter().setFor("sitemap")
+                                              .setOnline(true)
+                                              .execute()
+                                              .getResult();
+                    if(sitemap.len() >= 1) {
+                        var sitemapId = sitemap[1].getSitemapId();
                         
-                        if(application.system.settings.getValueOfKey("redirectToFirstPage")) {
-                            location(addtoken = false, statuscode = "301", url = variables.page.getActualPageVersion().getLink());
+                        var sitemapPages = new filter().setFor("sitemapPage")
+                                                       .setSitemapId(sitemapId)
+                                                       .execute()
+                                                       .getResult();
+                        
+                        if(sitemapPages.len() >= 1) {
+                            variables.page = sitemapPages[1].getPage();
+                            
+                            if(application.system.settings.getValueOfKey("redirectToFirstPage")) {
+                                location(addtoken = false, statuscode = "301", url = variables.page.getActualPageVersion().getLink());
+                            }
+                        }
+                        else {
+                            throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = arguments.link);
                         }
                     }
                     else {
@@ -271,23 +292,8 @@ component {
                     throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = arguments.link);
                 }
             }
-            else {
-                throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = arguments.link);
-            }
-        }
         
-        if(variables.version == "actual") {
             variables.pageVersion = variables.page.getActualPageVersion();
-        }
-        else {
-            // TODO: security check - only from admin panel
-            // TODO: check - should fail at the moment
-            /*if(variables.page.versionExists(variables.version)) {
-                variables.pageVersion = variables.page.getPageVersion(variables.version);
-            }
-            else {
-                throw(type = "nephthys.notFound.page", message = "The version of the page could not be found.", detail = variables.version);
-            }*/
         }
     }
 }

@@ -52,7 +52,7 @@ component {
                     }
                     
                     request.page = createObject("component", "API.modules.com.Nephthys.page.pageRequest").init(url.pageLink);
-                    if(request.page.isOnline()) {
+                    if(request.page.isOnline() || request.page.isPreview()) {
                         request.content = application.page.renderer.renderPageContent(request.page.getContent(), request.page.getParameter());
                         request.page.saveToStatistics();
                     }

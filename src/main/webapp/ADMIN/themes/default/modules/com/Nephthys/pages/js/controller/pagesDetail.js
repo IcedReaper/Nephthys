@@ -256,7 +256,7 @@ nephthysAdminApp
         };
         
         $scope.isReadonly = function () {
-            return ! $scope.isEditable;
+            return ! $scope.isEditable();
         };
         
         $scope.getStatisticsChartType = function () {

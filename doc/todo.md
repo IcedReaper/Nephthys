@@ -22,21 +22,20 @@
     10. user => username überprüfen
     11. user => blacklist erstellen | Innerhalb des Username überprüfen
     12. F5-Raids bei Formularen unterbinden
-    13. Beim Anlegen von neuen Datensätzen werden die UserIds und die Datumfelder im variables scope nicht aktualisiert
-    14. FileUpload, etc in eine Extra-Component aus dem Model auslagern
-    15. Pakete
+    13. FileUpload, etc in eine Extra-Component aus dem Model auslagern
+    14. Pakete
         * Alles
         * Blog
         * Gallerie
         * Marketing/Produkt
-    16. QueryBuilder zur Unterstützung verschiedener DB-Systeme
+    15. QueryBuilder zur Unterstützung verschiedener DB-Systeme
         * Idee und erste Doku unter QueryBuilder-idea-notes.md
-    17. Zusätzliche Optionen
+    16. Zusätzliche Optionen
         * Berechtigungssystem auf Menüpunkte ausweiten
-    18. Erweiterte Sicherheit in Modulen
+    17. Erweiterte Sicherheit in Modulen
         * Personen freischalten => Nur normales Editieren
         *
-    19. API-Statistics wie page.filter allen Modulen hinzufügen. - abwägen, und nach und nach
+    18. API-Statistics wie page.filter allen Modulen hinzufügen. - abwägen, und nach und nach
 
 ## Website
     1. Codeoptimierung
@@ -51,14 +50,12 @@
 ## Adminbereich
     1. Modulinstallation
         1. Fileupload von einer zip/rar-Datei (siehe theme installation)
-            * Entpacken dieser in die 4 nötigen Ordner Frontend/Backend Admin/Website
         2. Installation per git-repository
         3. Module-Modul überarbeiten: Neues Modul => Installation
     2. Seitenmanagement
         1. Mehrsprachigkeit des Contents
-        2. Autospeichern (Setzt Versionierung voraus)
-        3. Vorschau
-            * Template in ADMIN, welches ein Template in WWW inkludiert, wo dann die richtigen Sachen angezeigt werden; dann halt nur auch schon nicht veröffentlichte Sachen.
+        2. Autospeichern (Setzt Versionierung voraus | Problem: Bei normalem Vorgehen wird die Aktuelle Version überschrieben. Es sollte allerdings eine temporäre Version angelegt werden, die nach normalem Speichern wieder gelöscht wird.)
+        3. Vorschau funktioniert aktuell nur für die Seite und nicht auh für Unterseiten
     3. Thememanagement
         1. Themeinstallation per git repository
             * Check ob alle Module in dem Theme vorhanden sind. Sonst Warnung
@@ -72,12 +69,11 @@
         * Anordnung
         * Module
     10. Alle (asset) js Files in der index.cfm laden
-    11. Eigene Tabs gegen AngularUI Tabs ersetzen
-    12. Scss - CSS Editor
-    13. Template Editor?
-    14. Responsive anpassungen
-    15. Design schick machen
-    16. Bei gewissen Modulen easy/expert Mode?
+    11. Scss - CSS Editor
+    12. Template Editor?
+    13. Responsive anpassungen
+    14. Design schick machen
+    15. Bei gewissen Modulen easy/expert Mode?
 
 ## Module (in eigenen Repos/Projekten)
     1. Gallery
@@ -94,10 +90,11 @@
         2. Statistiken mit dem Datepicker aufbereiten
         3. Workflow der Seiten adaptieren?
         4. Alles prüfen
+        5. Statistiken pro Bild
     2. Blog
         1. Mögliche Verbesserungen:
             * File resizing after upload is only applied by width and height attributes
-            * F5-Raiding beim Abschicken des Kommentars möglich (Siehe Allgemein 17)
+            * F5-Raiding beim Abschicken des Kommentars möglich (Siehe Allgemein 12)
         2. Kommentarmöglichkeit
             * Verschachtelte Kommentarmöglichkeit
         3. Adaptionen in der Übersicht
@@ -105,7 +102,6 @@
         4. Statistiken mit dem Datepicker aufbereiten
         5. Workflow der Seiten adaptieren?
         6. Alles prüfen
-        7. Statistiken pro Bild
     3. Reviewsystem
         => genre in tags umbenennen
         => Type in Kategorie umbennen
