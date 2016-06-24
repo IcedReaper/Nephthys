@@ -4,8 +4,8 @@ var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
                                                            "ui.bootstrap",
                                                            "textAngular",
                                                            "ui.bootstrap",
-                                                           "chart.js",
-                                                           "com.nephthys.global.loadingBar"]);
+                                                           "com.nephthys.global.loadingBar",
+                                                           "com.IcedReaper.blog.statistics"]);
     
 nephthysAdminApp
     .config(["$routeProvider", function ($routeProvider) {
@@ -14,6 +14,11 @@ nephthysAdminApp
                 templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/blogList.html",
                 controller:  "blogListCtrl"
             })
+                
+            .when("/statistics", {
+                templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/statistics.html"
+            })
+            
             .when("/categories", {
                 templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/categoryList.html",
                 controller:  "categoryListCtrl"
@@ -22,10 +27,12 @@ nephthysAdminApp
                 templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/categoryDetail.html",
                 controller:  "categoryDetailCtrl"
             })
+            
             .when("/settings", {
                 templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/settings.html",
                 controller: "settingsCtrl"
             })
+            
             .when("/:blogpostId", {
                 templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/blogDetail.html",
                 controller:  "blogDetailCtrl"

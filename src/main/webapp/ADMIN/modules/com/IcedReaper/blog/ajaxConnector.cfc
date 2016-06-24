@@ -301,6 +301,25 @@ component {
         return true;
     }
     
+    remote struct function getBlogStatistics(required numeric blogpostId = null, required string sortOrder, required string fromDate, required string toDate) {
+        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
+        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+
+        return new statistics().getTotal(arguments.blogpostId,
+                                         arguments.sortOrder,
+                                         _fromDate,
+                                         _toDate);
+    }
+    
+    remote struct function getStatisticsSeparatedByBlog(required string sortOrder, required string fromDate, required string toDate) {
+        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
+        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+
+        return new statistics().getSplitPerGallery(arguments.sortOrder,
+                                                   _fromDate,
+                                                   _toDate);
+    }
+    
     // private
     private struct function prepareDetailStruct(required blogpost blogpost) {
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");

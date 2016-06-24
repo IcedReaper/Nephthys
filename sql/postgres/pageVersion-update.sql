@@ -656,3 +656,4 @@ GRANT SELECT, UPDATE ON SEQUENCE seq_nephthys_user_id TO nephthys_user;
 
 -- 23.6.16
 alter table icedreaper_gallery_statistics rename column opendate to visitDate;
+alter table icedreaper_blog_statistics rename column opendate to visitDate;

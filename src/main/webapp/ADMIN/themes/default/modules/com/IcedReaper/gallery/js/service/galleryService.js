@@ -99,15 +99,6 @@ nephthysAdminApp
                         pictureId: pictureId
                     }
                 });
-            },
-            
-            getLastVisitChart: function(galleryId, dayCount) {
-                return $http.get('/ajax/com/IcedReaper/gallery/getLastVisitChart', {
-                    params: {
-                        galleryId: galleryId,
-                        dayCount:  dayCount
-                    }
-                });
             }
         };
     });

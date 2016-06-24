@@ -239,29 +239,6 @@ component {
         return true;
     }
     
-    remote struct function getLastVisitChart(required numeric galleryId, required numeric dayCount) {
-        if(arguments.dayCount == 0) {
-            arguments.dayCount = 20;
-        }
-        
-        var statisticsCtrl = new statistics();
-        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
-        
-        var statisticsData = statisticsCtrl.load(arguments.galleryId, dateAdd("d", (dayCount - 1) * -1, now()), now());
-        
-        var labels = [];
-        var data = [];
-        for(var i = 1; i <= statisticsData.len(); i++) {
-            labels.append(formatCtrl.formatDate(statisticsData[i].date, false));
-            data.append(statisticsData[i].count);
-        }
-        
-        return {
-            "labels" = labels,
-            "data"   = data
-        };
-    }
-    
     remote struct function getGalleryStatistics(required numeric galleryId = null, required string sortOrder, required string fromDate, required string toDate) {
         var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
         var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");

@@ -157,32 +157,14 @@
             </div>
         </div>
     </uib-tab>
-    <uib-tab heading="Statistiken">
-        <div ng-controller="blogStatisticsCtrl" ng-show="blogpostId != 0">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card card-block">
-                        <button ng-click="load()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> Aktualisieren</button>
-                        
-                        <h3>Statistiken</h3>
-                        
-                        <h4>Aufrufe der letzten {{dayCount}} Tage</h4>
-                        <form novalidate>
-                            <div class="form-group row">
-                                <label for="dayCount" class="col-sm-5 col-md-3 form-control-label">Anzahl Tage</label>
-                                <div class="col-sm-7 col-md-9">
-                                    <input type="text" class="form-control" id="dayCount" placeholder="dayCount" ng-model="dayCount">
-                                </div>
-                            </div>
-                        </form>
-                        
-                        <canvas chart-options="chart.options"
-                                chart-series="chart.series"
-                                chart-labels="chart.labels"
-                                chart-data="chart.data"
-                                chart-type="chart.type"
-                                class="chart chart-base"></canvas>
-                    </div>
+    <uib-tab heading="Statistiken" diabled="blogpost.blogpostId == 0">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-block">
+                    <icedreaper-blog-statistics blogpost-id="blogpost.blogpostId"
+                                                chart-type="'line'"
+                                                request-type="'total'"
+                                                headline="Statistiken zu dieser Gallerie"></icedreaper-blog-statistics>
                 </div>
             </div>
         </div>

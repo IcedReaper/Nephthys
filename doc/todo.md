@@ -3,6 +3,7 @@
 ## Actual Task TODO - Reminder:
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
+- Checken ob man die redundanten Statistics zentralisieren kann
 
 ## Allgemein
     1. Validierungen
@@ -98,9 +99,8 @@
             * Verschachtelte Kommentarmöglichkeit
         3. Adaptionen in der Übersicht
             * Kalenderübersicht hinzufügen => Klick auf Datum => zeigt alle Posts des Tages
-        4. Statistiken mit dem Datepicker aufbereiten
-        5. Workflow der Seiten adaptieren?
-        6. Alles prüfen
+        4. Workflow der Seiten adaptieren?
+        5. Alles prüfen
     3. Reviewsystem
         => genre in tags umbenennen
         => Type in Kategorie umbennen

@@ -1,33 +1,32 @@
-component extends="abstractPerGallery" {
+component extends="abstractPerBlogpost" {
     public statistic function execute() {
-        // Get galleryRequestCount per galleryId and date for a specific month
         if(variables.fromDate != null && variables.toDate != null) {
-            var qGalleryRequests = new Query();
+            var qblogpostRequests = new Query();
             
-            sql = "         SELECT gallery._date,
+            sql = "         SELECT blogpost._date,
                                    CASE 
                                      WHEN stats.requestCount IS NOT NULL THEN 
                                        stats.requestCount
                                      ELSE
                                        0
                                    END requestCount,
-                                   gallery.galleryId
+                                   blogpost.blogpostId
                               FROM (  SELECT COUNT(s.*) requestCount,
                                              date_trunc('day', s.visitDate) _date,
-                                             s.galleryId
-                                        FROM IcedReaper_gallery_statistics s
+                                             s.blogpostId
+                                        FROM IcedReaper_blog_statistics s
                                        WHERE date_trunc('day', s.visitDate) >= :fromDate
                                          AND date_trunc('day', s.visitDate) <= :toDate
-                                    GROUP BY date_trunc('day', s.visitDate), s.galleryId
+                                    GROUP BY date_trunc('day', s.visitDate), s.blogpostId
                                    ) stats
                    FULL OUTER JOIN (SELECT i :: date _date,
-                                           gallery.galleryId
+                                           blogpost.blogpostId
                                       FROM generate_series(:fromDate, :toDate, '1 day' :: interval) i,
-                                           IcedReaper_gallery_gallery gallery
-                                   ) gallery ON stats.galleryId = gallery.galleryId AND gallery._date = stats._date
-                          ORDER BY gallery._date " & variables.sortOrder & ", gallery.galleryId ASC";
+                                           IcedReaper_blog_blogpost blogpost
+                                   ) blogpost ON stats.blogpostId = blogpost.blogpostId AND blogpost._date = stats._date
+                          ORDER BY blogpost._date " & variables.sortOrder & ", blogpost.blogpostId ASC";
             
-            variables.qRes = qGalleryRequests.setSQL(sql)
+            variables.qRes = qblogpostRequests.setSQL(sql)
                                           .addParam(name = "fromDate", value = variables.fromDate, cfsqltype = "cf_sql_date")
                                           .addParam(name = "toDate",   value = variables.toDate,   cfsqltype = "cf_sql_date")
                                           .execute()

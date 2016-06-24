@@ -15,7 +15,7 @@ component extends="abstractPerGallery" {
                               FROM (  SELECT COUNT(s.*) requestCount,
                                              date_trunc('month', s.visitDate) _date,
                                              s.galleryId
-                                        FROM icedreaper_gallery_statistics s
+                                        FROM IcedReaper_gallery_statistics s
                                        WHERE date_trunc('day', s.visitDate) >= :fromDate
                                          AND date_trunc('day', s.visitDate) <= :toDate
                                     GROUP BY date_trunc('month', s.visitDate), s.galleryId
@@ -23,7 +23,7 @@ component extends="abstractPerGallery" {
                    FULL OUTER JOIN (SELECT i :: date _date,
                                            gallery.galleryId
                                       FROM generate_series(:fromDate, :toDate, '1 month' :: interval) i,
-                                           icedreaper_gallery_gallery gallery
+                                           IcedReaper_gallery_gallery gallery
                                    ) gallery ON stats.galleryId = gallery.galleryId AND gallery._date = stats._date
                           ORDER BY gallery._date " & variables.sortOrder & ", gallery.galleryId ASC";
             

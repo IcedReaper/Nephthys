@@ -20,6 +20,9 @@
 <script src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
 
 <script type="text/javascript" src="/themes/default/directive/nephthysLoadingBar/nephthysLoadingBar.js"></script>
+<script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
+
+<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/directives/statistics/statistics.js"></script>
 
 <!--- app --->
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/blogApp.js"></script>
@@ -33,7 +36,6 @@
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogList.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogDetail.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogCategory.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogStatistics.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogComments.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/UploadImageModal.js"></script> <!--- Image Add Dialog --->
 

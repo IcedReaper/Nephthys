@@ -109,15 +109,6 @@ nephthysAdminApp
                 return $http.post('/ajax/com/IcedReaper/blog/publishComment', {
                     commentId: commentId
                 });
-            },
-            
-            getLastVisitChart: function(blogpostId, dayCount) {
-                return $http.get('/ajax/com/IcedReaper/blog/getLastVisitChart', {
-                    params: {
-                        blogpostId: blogpostId,
-                        dayCount:   dayCount
-                    }
-                });
             }
         };
     });

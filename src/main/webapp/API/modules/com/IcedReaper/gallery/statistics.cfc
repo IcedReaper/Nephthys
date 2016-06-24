@@ -1,5 +1,5 @@
 component {
-    import "statistics.*";
+    import "API.modules.com.IcedReaper.gallery.statistics.*";
     
     public statistics function init(string locale = 'de-DE', string dateFormat = "DD.MM.YYYY") {
         variables.locale     = arguments.locale;
