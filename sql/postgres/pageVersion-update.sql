@@ -732,3 +732,5 @@ alter table IcedReaper_gallery_gallery drop column activeStatus;
 alter table IcedReaper_gallery_status rename column galleriesRequireAction to showInTasklist;
 alter table IcedReaper_gallery_status rename column galleriesAreDeleteable to deleteable;
 alter table IcedReaper_gallery_status rename column galleriesAreEditable   to editable;
+
+alter table nephthys_module_option add column multiple boolean default false NOT NULL;

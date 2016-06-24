@@ -16,75 +16,108 @@ component implements="WWW.interfaces.connector" {
         
         themeIndividualizer.invokeResources();
         
-        if(arguments.options.keyExists("galleryId") && isNumeric(arguments.options.galleryId)) {
-            var gallery = new gallery(arguments.options.galleryId);
-            
-            gallery.incrementViewCounter();
+        var splitParameter = listToArray(request.page.getParameter(), "/");
         
-            return renderDetails(arguments.options, gallery);
-        }
-        else {
-            var splitParameter = listToArray(request.page.getParameter(), "/");
-            var galleryFilterCtrl = new filter().setFor("gallery");
-            
-            if(! arguments.options.keyExists("maxEntries")) {
-                arguments.options.maxEntries = 5;
-            }
-            
-            if(splitParameter.len() == 0) {
-                galleryFilterCtrl.setOnline(true)
-                                 .setCount(arguments.options.maxEntries)
-                                 .execute();
-                
-                return renderOverview(arguments.options, galleryFilterCtrl, 1);
-            }
-            else {
-                if(splitParameter[1] == "Seite" && splitParameter.len() == 2) {
-                    galleryFilterCtrl.setOnline(true)
-                                   .setCount(arguments.options.maxEntries)
-                                   .setOffset((splitParameter[2]-1) * arguments.options.maxEntries)
-                                   .execute();
+        if(splitParameter.len() == 0) {
+            if(arguments.options.keyExists("galleryId")) {
+                if(isArray(arguments.options.galleryId)) {
+                    if(arguments.options.galleryId.len() == 1) {
+                        var gallery = new gallery(arguments.options.galleryId[1]);
+                        
+                        gallery.incrementViewCounter();
                     
-                    return renderOverview(arguments.options, galleryFilterCtrl, splitParameter[2]);
-                }
-                else if(splitParameter[1] == "Kategorie") {
-                    if(splitParameter.len() == 2) {
+                        return renderDetails(arguments.options, gallery);
+                    }
+                    else if(arguments.options.galleryId.len() > 1) {
+                        var galleryFilterCtrl = new filter().setFor("gallery");
+                        if(! arguments.options.keyExists("maxEntries")) {
+                            arguments.options.maxEntries = 5;
+                        }
                         galleryFilterCtrl.setOnline(true)
-                                         .setCategory(splitParameter[2])
+                                         .setGalleryIdList(arguments.options.galleryId.toList(","))
                                          .setCount(arguments.options.maxEntries)
                                          .execute();
                         
                         return renderOverview(arguments.options, galleryFilterCtrl, 1);
                     }
-                    else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") {
-                        galleryFilterCtrl.setOnline(true)
-                                         .setCategory(splitParameter[2])
-                                         .setCount(arguments.options.maxEntries)
-                                         .setOffset((splitParameter[4]-1) * arguments.options.maxEntries)
-                                         .execute();
-                        
-                        return renderOverview(arguments.options, galleryFilterCtrl, splitParameter[2]);
+                }
+            }
+            
+            if(arguments.options.keyExists("categoryId")) {
+                if(isArray(arguments.options.categoryId)) {
+                    var galleryFilterCtrl = new filter().setFor("gallery");
+                    if(! arguments.options.keyExists("maxEntries")) {
+                        arguments.options.maxEntries = 5;
                     }
+                    galleryFilterCtrl.setOnline(true)
+                                     .setCategoryIdList(arguments.options.categoryId.toList(","))
+                                     .setCount(arguments.options.maxEntries)
+                                     .execute();
+                    
+                    return renderOverview(arguments.options, galleryFilterCtrl, 1);
+                }
+            }
+        }
+        
+        var galleryFilterCtrl = new filter().setFor("gallery");
+        
+        if(! arguments.options.keyExists("maxEntries")) {
+            arguments.options.maxEntries = 5;
+        }
+        
+        if(splitParameter.len() == 0) {
+            galleryFilterCtrl.setOnline(true)
+                             .setCount(arguments.options.maxEntries)
+                             .execute();
+            
+            return renderOverview(arguments.options, galleryFilterCtrl, 1);
+        }
+        else {
+            if(splitParameter[1] == "Seite" && splitParameter.len() == 2) {
+                galleryFilterCtrl.setOnline(true)
+                               .setCount(arguments.options.maxEntries)
+                               .setOffset((splitParameter[2]-1) * arguments.options.maxEntries)
+                               .execute();
+                
+                return renderOverview(arguments.options, galleryFilterCtrl, splitParameter[2]);
+            }
+            else if(splitParameter[1] == "Kategorie") {
+                if(splitParameter.len() == 2) {
+                    galleryFilterCtrl.setOnline(true)
+                                     .setCategory(splitParameter[2])
+                                     .setCount(arguments.options.maxEntries)
+                                     .execute();
+                    
+                    return renderOverview(arguments.options, galleryFilterCtrl, 1);
+                }
+                else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") {
+                    galleryFilterCtrl.setOnline(true)
+                                     .setCategory(splitParameter[2])
+                                     .setCount(arguments.options.maxEntries)
+                                     .setOffset((splitParameter[4]-1) * arguments.options.maxEntries)
+                                     .execute();
+                    
+                    return renderOverview(arguments.options, galleryFilterCtrl, splitParameter[2]);
+                }
+            }
+            else {
+                var galleries = galleryFilterCtrl.setOnline(true)
+                                                 .setLink(request.page.getParameter())
+                                                 .execute()
+                                                 .getResult();
+                
+                if(galleries.len() == 1) {
+                    var gallery = galleries[1];
+                    
+                    gallery.incrementViewCounter();
+                    
+                    request.page.setDescription(gallery.getDescription())
+                                .setTitle(gallery.getHeadline());
+                
+                    return renderDetails(arguments.options, gallery);
                 }
                 else {
-                    var galleries = galleryFilterCtrl.setOnline(true)
-                                                     .setLink(request.page.getParameter())
-                                                     .execute()
-                                                     .getResult();
-                    
-                    if(galleries.len() == 1) {
-                        var gallery = galleries[1];
-                        
-                        gallery.incrementViewCounter();
-                        
-                        request.page.setDescription(gallery.getDescription())
-                                    .setTitle(gallery.getHeadline());
-                    
-                        return renderDetails(arguments.options, gallery);
-                    }
-                    else {
-                        throw(type = "icedreaper.gallery.notFound", message = "Could not find the gallery " & request.page.getParameter(), detail = request.page.getParameter());
-                    }
+                    throw(type = "icedreaper.gallery.notFound", message = "Could not find the gallery " & request.page.getParameter(), detail = request.page.getParameter());
                 }
             }
         }

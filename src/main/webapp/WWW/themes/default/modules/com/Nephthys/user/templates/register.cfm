@@ -36,16 +36,16 @@
                     <form action="?register" autocomplete="off" method="POST">
                         <fieldset class="form-group<cfif attributes.errors.username OR attributes.errors.usernameUsed> has-danger</cfif>">
                             <label for="username">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" placeholder="Enter Username" maxlength="20" required <cfif attributes.errors.error>value="#form.username#"</cfif>>
+                            <input type="text" class="form-control<cfif attributes.errors.username OR attributes.errors.usernameUsed> form-control-danger</cfif>" id="username" name="username" placeholder="Enter Username" maxlength="20" required <cfif attributes.errors.error>value="#form.username#"</cfif>>
                         </fieldset>
                         <fieldset class="form-group<cfif attributes.errors.email OR attributes.errors.emailUsed> has-danger</cfif>">
                             <label for="eMail">E-Mail Adresse</label>
-                            <input type="email" class="form-control" id="eMail" name="eMail" placeholder="Enter email" maxlength="128" required <cfif attributes.errors.error>value="#form.email#"</cfif>>
+                            <input type="email" class="form-control<cfif attributes.errors.email OR attributes.errors.emailUsed> form-control-danger</cfif>" id="eMail" name="eMail" placeholder="Enter email" maxlength="128" required <cfif attributes.errors.error>value="#form.email#"</cfif>>
                             <small class="text-muted">We'll never share your email with anyone else.</small>
                         </fieldset>
                         <fieldset class="form-group<cfif attributes.errors.password> has-danger</cfif>">
                             <label for="password">Password</label>
-                            <input type="password" class="form-control" id="password" name="password" placeholder="Password" required <cfif attributes.errors.error>value="#form.password#"</cfif>>
+                            <input type="password" class="form-control<cfif attributes.errors.password> form-control-danger</cfif>" id="password" name="password" placeholder="Password" required <cfif attributes.errors.error>value="#form.password#"</cfif>>
                         </fieldset>
                         
                         <button type="submit" class="btn btn-primary"><i class="fa fa-user-plus"></i> Abschicken</button>

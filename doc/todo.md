@@ -4,7 +4,7 @@
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
 - Checken ob man die redundanten Statistics zentralisieren kann
-- Status: (pages|galleries)RequireAction (etc) in requireAction umbennen
+- Status: pagesRequireAction (etc) in requireAction umbennen
 
 ## Allgemein
     1. Validierungen
@@ -85,14 +85,12 @@
             * Kommentarmöglichkeit
             * teilen einer Gallerie oder eines Bilder per Soziale Medien
                 * Per Option ein oder ausschaltbar (jeweils)
-            * Release Date
+            * Release Date - Was machen wenn die Gallerie bis dahin noch nicht im Status online ist?
             * Bewertungen
                 * Anonym per Option
                 * Als eingeloggter User
         3. Alles prüfen
         4. Statistiken pro Bild
-        5. Gallerieauswahl für Seite (Seite soll nur diese, jene und welche Gallerie anzeigen)
-        6. Zeige nur Gallerien der Kategorie XYZ, ZYX und YXZ.
     2. Blog
         1. Mögliche Verbesserungen:
             * File resizing after upload is only applied by width and height attributes

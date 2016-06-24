@@ -64,6 +64,11 @@ component {
         
         return this;
     }
+    public option function setMultiple(required boolean multiple) {
+        variables.multiple = arguments.multiple;
+        
+        return this;
+    }
     
     
     public numeric function getOptionId() {
@@ -86,6 +91,9 @@ component {
     }
     public numeric function getSortOrder() {
         return variables.sortOrder;
+    }
+    public boolean function isMultiple() {
+        return variables.multiple == 1;
     }
     
     
@@ -118,7 +126,8 @@ component {
                                                                      description,
                                                                      type,
                                                                      selectOptions,
-                                                                     sortOrder
+                                                                     sortOrder,
+                                                                     multiple
                                                                  )
                                                           VALUES (
                                                                      :moduleId,
@@ -126,7 +135,8 @@ component {
                                                                      :description,
                                                                      :type,
                                                                      :selectOptions,
-                                                                     :sortOrder
+                                                                     :sortOrder,
+                                                                     :multiple
                                                                  );
                                                     SELECT currval('seq_nephthys_module_option_id') newOptionId;")
                                             .addParam(name = "moduleId",      value = variables.moduleId,    cfsqltype = "cf_sql_numeric")
@@ -135,6 +145,7 @@ component {
                                             .addparam(name = "type",          value = variables.type,        cfsqltype = "cf_sql_varchar")
                                             .addParam(name = "selectOptions", value = jsonSelectOptions,     cfsqltype = "cf_sql_varchar", null = jsonSelectOptions == "")
                                             .addParam(name = "sortOrder",     value = variables.sortOrder,   cfsqltype = "cf_sql_numeric")
+                                            .addParam(name = "multiple",      value = variables.multiple,    cfsqltype = "cf_sql_bit")
                                             .execute()
                                             .getResult()
                                             .newOptionId[1];
@@ -146,7 +157,8 @@ component {
                                            description   = :description,
                                            type          = :type,
                                            selectOptions = :selectOptions,
-                                           sortOrder     = :sortOrder
+                                           sortOrder     = :sortOrder,
+                                           multiple      = :multiple
                                        )
                                  WHERE optionId = :optionId")
                        .addParam(name = "optionId",      value = variables.optionId,    cfsqltype = "cf_sql_numeric")
@@ -155,6 +167,7 @@ component {
                        .addparam(name = "type",          value = variables.type,        cfsqltype = "cf_sql_varchar")
                        .addParam(name = "selectOptions", value = jsonSelectOptions,     cfsqltype = "cf_sql_varchar", null = jsonSelectOptions == "")
                        .addParam(name = "sortOrder",     value = variables.sortOrder,   cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "multiple",      value = variables.multiple,    cfsqltype = "cf_sql_bit")
                        .execute();
         }
         
@@ -179,16 +192,18 @@ component {
                                         .getResult();
             
             if(qGetOption.getRecordCount() == 1) {
-                variables.optionName    = qGetOption.optionName[1];
-                variables.description   = qGetOption.description[1];
-                variables.type          = qGetOption.type[1].getValue();
+                variables.optionName  = qGetOption.optionName[1];
+                variables.description = qGetOption.description[1];
+                variables.type        = qGetOption.type[1].getValue();
+                variables.sortOrder   = qGetOption.sortOrder[1];
+                variables.multiple    = qGetOption.multiple[1];
+                
                 if(variables.type == "query") {
                     variables.selectOptions = getSelectOptionsForQuery(deserializeJSON(qGetOption.selectOptions[1]));
                 }
                 else {
                     variables.selectOptions = qGetOption.selectOptions[1] != null ? deserializeJSON(qGetOption.selectOptions[1]) : [];
                 }
-                variables.sortOrder     = qGetOption.sortOrder[1];
             }
             else {
                 throw(type = "nephthys.notFound.module", message = "Could not find the option with the ID " & variables.optionId);
@@ -200,6 +215,7 @@ component {
             variables.type          = "text";
             variables.selectOptions = [];
             variables.sortOrder     = 0;
+            variables.multiple      = false;
         }
     }
     

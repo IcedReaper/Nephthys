@@ -145,10 +145,19 @@
                         </select>
                         <select ng-model="child.options[option.dbName]"
                                 class="form-control"
-                                ng-if="option.type == 'select' || option.type == 'query'"
+                                ng-if="(option.type == 'select' || option.type == 'query') && ! option.multiple"
                                 ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
                                 ng-disabled="isReadonly()"
                                 ng-options="o.value as o.description for o in option.selectOptions">
+                            <option value="">Option entfernen/Nicht gesetzt</option>
+                        </select>
+                        <select ng-model="child.options[option.dbName]"
+                                class="form-control"
+                                ng-if="(option.type == 'select' || option.type == 'query') && option.multiple"
+                                ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
+                                ng-disabled="isReadonly()"
+                                ng-options="o.value as o.description for o in option.selectOptions"
+                                multiple="multiple">
                             <option value="">Option entfernen/Nicht gesetzt</option>
                         </select>
                         <div ng-model="child.options[option.dbName]"

@@ -378,7 +378,8 @@ component {
                     "dbName"        = options[j].getOptionName(),
                     "description"   = options[j].getDescription(),
                     "type"          = options[j].getType(),
-                    "selectOptions" = options[j].getSelectOptions()
+                    "selectOptions" = options[j].getSelectOptions(),
+                    "multiple"      = options[j].isMultiple()
                 };
             }
         }
