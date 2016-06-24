@@ -61,11 +61,6 @@ component {
             }
         }
     }
-    public gallery function setActiveStatus(required numeric activeStatus) {
-        variables.activeStatus = arguments.activeStatus;
-        
-        return this;
-    }
     public gallery function setIntroduction(required string introduction) {
         variables.introduction = arguments.introduction;
         
@@ -186,9 +181,6 @@ component {
     public string function getStory() {
         return variables.story;
     }
-    public boolean function getActiveStatus() {
-        return variables.activeStatus == 1;
-    }
     public array function getPictures() {
         return variables.pictures;
     }
@@ -233,7 +225,7 @@ component {
             }
         }
         
-        return variables.status.areGalleriesEditable();
+        return variables.status.getEditable();
     }
     
     public string function getAbsolutePath() {
@@ -243,7 +235,6 @@ component {
     public status function getStatus() {
         return variables.status;
     }
-    
     
     public gallery function pushToStatus(required numeric newStatusId, required user user) {
         var newStatus    = new status(arguments.newStatusId);
@@ -293,7 +284,6 @@ component {
                                                                       folderName,
                                                                       introduction,
                                                                       story,
-                                                                      activeStatus,
                                                                       private,
                                                                       statusId,
                                                                       creatorUserId,
@@ -307,7 +297,6 @@ component {
                                                                       :folderName,
                                                                       :introduction,
                                                                       :story,
-                                                                      :activeStatus,
                                                                       :private,
                                                                       :statusId,
                                                                       :creatorUserId,
@@ -321,7 +310,6 @@ component {
                                              .addParam(name = "folderName",       value = variables.folderName,           cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "introduction",     value = variables.introduction,         cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "story",            value = variables.story,                cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "activeStatus",     value = variables.activeStatus,         cfsqltype = "cf_sql_bit")
                                              .addParam(name = "private",          value = variables.private,              cfsqltype = "cf_sql_bit")
                                              .addParam(name = "statusId",         value = variables.status.getStatusId(), cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "creatorUserId",    value = request.user.getUserId(),       cfsqltype = "cf_sql_numeric")
@@ -338,7 +326,6 @@ component {
                                            folderName       = :folderName,
                                            introduction     = :introduction,
                                            story            = :story,
-                                           activeStatus     = :activeStatus,
                                            private          = :private,
                                            statusId         = :statusId,
                                            lastEditorUserId = :lastEditorUserId,
@@ -351,7 +338,6 @@ component {
                            .addParam(name = "folderName",       value = variables.folderName,           cfsqltype = "cf_sql_varchar")
                            .addParam(name = "introduction",     value = variables.introduction,         cfsqltype = "cf_sql_varchar", null = variables.introduction == "")
                            .addParam(name = "story",            value = variables.story,                cfsqltype = "cf_sql_varchar", null = variables.story == "")
-                           .addParam(name = "activeStatus",     value = variables.activeStatus,         cfsqltype = "cf_sql_bit")
                            .addParam(name = "private",          value = variables.private,              cfsqltype = "cf_sql_bit")
                            .addParam(name = "statusId",         value = variables.status.getStatusId(), cfsqltype = "cf_sql_numeric")
                            .addParam(name = "lastEditorUserId", value = request.user.getUserId(),       cfsqltype = "cf_sql_numeric")
@@ -443,7 +429,6 @@ component {
                 variables.folderName       = qGallery.folderName[1];
                 variables.introduction     = qGallery.introduction[1];
                 variables.story            = qGallery.story[1];
-                variables.activeStatus     = qGallery.activeStatus[1];
                 variables.creatorUserId    = qGallery.creatorUserId[1];
                 variables.creationDate     = qGallery.creationDate[1];
                 variables.lastEditorUserId = qGallery.lastEditorUserId[1];
@@ -468,7 +453,6 @@ component {
             variables.folderName       = createUUID();
             variables.introduction     = "";
             variables.story            = "";
-            variables.activeStatus     = false;
             variables.creatorUserId    = null;
             variables.creationDate     = null;
             variables.lastEditorUserId = null;
@@ -477,7 +461,7 @@ component {
             variables.categories       = [];
             variables.viewCounter      = 0;
             variables.private          = false;
-            variables.status           = new status(application.system.settings.getValueOfKey("com.IcedReaper.gallery.startStatus"));
+            variables.status           = new status(application.system.settings.getValueOfKey("com.IcedReaper.gallery.defaultStatus"));
         }
     }
     

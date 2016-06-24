@@ -55,5 +55,10 @@
                 </ul>
             </nav>
         </cfif>
+        
+        <cfif attributes.galleries.len() EQ 1>
+            <h2>Wir konnten leider aktuell keine Gallerien finden</h2>
+            <p>Es tut uns leid und würden Dich bitten später noch einmal vorbeizuschauen</p>
+        </cfif>
     </section>
 </cfoutput>

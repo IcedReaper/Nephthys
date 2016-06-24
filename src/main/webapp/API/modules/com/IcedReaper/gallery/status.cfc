@@ -37,22 +37,22 @@ component {
         return this;
     }
     
-    public status function setGalleriesAreEditable(required boolean galleriesAreEditable) {
-        variables.galleriesAreEditable = arguments.galleriesAreEditable;
+    public status function setEditable(required boolean editable) {
+        variables.editable = arguments.editable;
         variables.attributesChanged = true;
         
         return this;
     }
     
-    public status function setGalleriesAreDeleteable(required boolean galleriesAreDeleteable) {
-        variables.galleriesAreDeleteable = arguments.galleriesAreDeleteable;
+    public status function setDeleteable(required boolean deleteable) {
+        variables.deleteable = arguments.deleteable;
         variables.attributesChanged = true;
         
         return this;
     }
     
-    public status function setGalleriesRequireAction(required boolean galleriesRequireAction) {
-        variables.galleriesRequireAction = arguments.galleriesRequireAction;
+    public status function setShowInTasklist(required boolean showInTasklist) {
+        variables.showInTasklist = arguments.showInTasklist;
         variables.attributesChanged = true;
         
         return this;
@@ -160,14 +160,14 @@ component {
         return variables.nextStatus;
     }
     
-    public boolean function areGalleriesEditable() {
-        return variables.galleriesAreEditable == 1;
+    public boolean function getEditable() {
+        return variables.editable == 1;
     }
-    public boolean function areGalleriesDeleteable() {
-        return variables.galleriesAreDeleteable == 1;
+    public boolean function getDeleteable() {
+        return variables.deleteable == 1;
     }
-    public boolean function requireGalleriesAction() {
-        return variables.galleriesRequireAction == 1;
+    public boolean function getShowInTasklist() {
+        return variables.showInTasklist == 1;
     }
     public boolean function isActive() {
         return variables.active == 1;
@@ -197,9 +197,9 @@ component {
             var qUpdate = new Query().addParam(name = "name",               value = variables.name,                   cfsqltype = "cf_sql_varchar")
                                      .addParam(name = "active",             value = variables.active,                 cfsqltype = "cf_sql_bit")
                                      .addParam(name = "online",             value = variables.online,                 cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "galleriesAreEditable",   value = variables.galleriesAreEditable,       cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "galleriesAreDeleteable", value = variables.galleriesAreDeleteable,     cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "galleriesRequireAction", value = variables.galleriesRequireAction,     cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "editable",   value = variables.editable,       cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "deleteable",         value = variables.deleteable,             cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "showInTasklist",     value = variables.showInTasklist,         cfsqltype = "cf_sql_bit")
                                      .addParam(name = "creationUserId",     value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
                                      .addParam(name = "lastEditUserId",     value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
             
@@ -209,9 +209,9 @@ component {
                                                                          name,
                                                                          active,
                                                                          online,
-                                                                         galleriesAreEditable,
-                                                                         galleriesAreDeleteable,
-                                                                         galleriesRequireAction,
+                                                                         editable,
+                                                                         deleteable,
+                                                                         showInTasklist,
                                                                          creationUserId,
                                                                          lastEditUserId
                                                                      )
@@ -219,9 +219,9 @@ component {
                                                                          :name,
                                                                          :active,
                                                                          :online,
-                                                                         :galleriesAreEditable,
-                                                                         :galleriesAreDeleteable,
-                                                                         :galleriesRequireAction,
+                                                                         :editable,
+                                                                         :deleteable,
+                                                                         :showInTasklist,
                                                                          :creationUserId,
                                                                          :lastEditUserId
                                                                      );
@@ -236,13 +236,13 @@ component {
                                        SET name               = :name,
                                            active             = :active,
                                            online             = :online,
-                                           galleriesAreEditable   = :galleriesAreEditable,
-                                           galleriesAreDeleteable = :galleriesAreDeleteable,
-                                           galleriesRequireAction = :galleriesRequireAction,
+                                           editable   = :editable,
+                                           deleteable         = :deleteable,
+                                           showInTasklist     = :showInTasklist,
                                            lastEditUserId     = :lastEditUserId,
                                            lastEditDate       = now()
                                      WHERE statusId = :statusId")
-                           .addParam(name = "statusId", value = variables.statusId,   cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric")
                            .execute();
                 }
             }
@@ -259,7 +259,7 @@ component {
                                                     :nextStatusId
                                                 )")
                            .addParam(name = "statusId",     value = variables.statusId, cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "nextStatusId", value = nextStatusId,           cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "nextStatusId", value = nextStatusId,       cfsqltype = "cf_sql_numeric")
                            .execute();
             }
             for(var removedStatusId in variables.nextStatusRemoved) {
@@ -267,7 +267,7 @@ component {
                                           WHERE statusId     = :statusId
                                             AND nextStatusId = :nextStatusId")
                            .addParam(name = "statusId",     value = variables.statusId, cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "nextStatusId", value = removedStatusId,        cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "nextStatusId", value = removedStatusId,    cfsqltype = "cf_sql_numeric")
                            .execute();
             }
             
@@ -301,9 +301,9 @@ component {
                 variables.name               = qStatus.name[1];
                 variables.active             = qStatus.active[1];
                 variables.online             = qStatus.online[1];
-                variables.galleriesAreEditable   = qStatus.galleriesAreEditable[1];
-                variables.galleriesAreDeleteable = qStatus.galleriesAreDeleteable[1];
-                variables.galleriesRequireAction = qStatus.galleriesRequireAction[1];
+                variables.editable   = qStatus.editable[1];
+                variables.deleteable         = qStatus.deleteable[1];
+                variables.showInTasklist     = qStatus.showInTasklist[1];
                 variables.creator            = new user(qStatus.creationUserId[1]);
                 variables.creationDate       = qStatus.creationDate[1];
                 variables.lastEditor         = new user(qStatus.lastEditUserId[1]);
@@ -317,9 +317,9 @@ component {
             variables.name               = "";
             variables.active             = false;
             variables.online             = true;
-            variables.galleriesAreEditable   = true;
-            variables.galleriesAreDeleteable = false;
-            variables.galleriesRequireAction = false;
+            variables.editable   = true;
+            variables.deleteable         = false;
+            variables.showInTasklist     = false;
             variables.creator            = new user(request.user.getUserId());
             variables.creationDate       = now();
             variables.lastEditor         = new user(request.user.getUserId());

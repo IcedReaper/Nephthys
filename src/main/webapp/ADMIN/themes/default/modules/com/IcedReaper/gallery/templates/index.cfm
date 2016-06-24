@@ -22,9 +22,11 @@
 <script src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
 
 <script type="text/javascript" src="/themes/default/directive/nephthysLoadingBar/nephthysLoadingBar.js"></script>
+<script type="text/javascript" src="/themes/default/directive/nephthysUserInfo/nephthysUserInfo.js"></script>
 <script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
 
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/gallery/directives/statistics/statistics.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/gallery/directives/tasklist/tasklist.js"></script>
 
 <!--- app --->
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/gallery/js/galleryApp.js"></script>

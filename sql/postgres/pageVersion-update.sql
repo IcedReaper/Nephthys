@@ -723,3 +723,12 @@ INSERT INTO IcedReaper_gallery_status VALUES
 update IcedReaper_gallery_gallery SET statusId = 1;
 
 alter table IcedReaper_gallery_gallery alter column statusId SET NOT NULL;
+
+
+GRANT SELECT ON TABLE IcedReaper_gallery_status TO nephthys_user;
+
+alter table IcedReaper_gallery_gallery drop column activeStatus;
+
+alter table IcedReaper_gallery_status rename column galleriesRequireAction to showInTasklist;
+alter table IcedReaper_gallery_status rename column galleriesAreDeleteable to deleteable;
+alter table IcedReaper_gallery_status rename column galleriesAreEditable   to editable;

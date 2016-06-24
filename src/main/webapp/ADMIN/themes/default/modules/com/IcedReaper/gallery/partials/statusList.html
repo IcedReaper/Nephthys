@@ -1,11 +1,10 @@
 <div class="row m-b-2">
     <div class="col-md-10 col-sm-8">
-        <!--<a href="#/" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>
-        <a href="#/pages/list" class="btn btn-secondary"><i class="fa fa-list"></i> Seitenübersicht</a>-->
-        <a href="#/" class="btn btn-secondary"><i class="fa fa-tags"></i> Gallerieübersicht</a>
+        <a href="#/tasklist" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>
+        <a href="#/gallery/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Gallerieübersicht</a>
         <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
-        <a href="#/categories" class="btn btn-secondary"><i class="fa fa-tags"></i> Kategorieübersicht</a>
-        <a href="#/statistic" class="btn btn-secondary"><i class="fa fa-area-chart"></i> Gesamt Statistiken</a>
+        <a href="#/category/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Kategorieübersicht</a>
+        <a href="#/statistics" class="btn btn-secondary"><i class="fa fa-area-chart"></i> Gesamtstatistik</a>
     </div>
     <div class="col-md-2 col-sm-4">
         <div class="pull-right">
@@ -74,30 +73,24 @@
                     <td>
                         <a href="#/status/{{status.statusId}}">{{status.name}}</a>
                     </td>
-                    <td ng-if="status.offline" class="text-danger">Nein</td>
-                    <td ng-if="! status.offline" class="text-success">Ja</td>
+                    <td ng-if="! status.online" class="text-danger">Nein</td>
+                    <td ng-if="status.online" class="text-success">Ja</td>
                     <td>
                         <span class="m-r-1" ng-repeat="ps in status.nextStatus">{{ps.name}}</span>
                     </td>
                     <td>
-                        <i ng-if="status.pagesAreEditable" class="fa fa-pencil fa-border text-success" title="In diesem Status bearbeitbar"></i>
-                        <i ng-if="! status.pagesAreEditable" class="fa fa-pencil fa-border text-danger" title="In diesem Status nicht bearbeitbar"></i>
+                        <i ng-if="status.editable" class="fa fa-pencil fa-border text-success" title="In diesem Status bearbeitbar"></i>
+                        <i ng-if="! status.editable" class="fa fa-pencil fa-border text-danger" title="In diesem Status nicht bearbeitbar"></i>
                     </td>
                     <td>
-                        <i ng-if="status.pagesAreDeleteable" class="fa fa-trash fa-border text-success" title="In diesem Status permanent löschbar"></i>
-                        <i ng-if="! status.pagesAreDeleteable" class="fa fa-trash fa-border text-danger" title="In diesem Status nicht permanent löschbar"></i>
+                        <i ng-if="status.deleteable" class="fa fa-trash fa-border text-success" title="In diesem Status permanent löschbar"></i>
+                        <i ng-if="! status.deleteable" class="fa fa-trash fa-border text-danger" title="In diesem Status nicht permanent löschbar"></i>
                     </td>
                     <td>
-                        <i ng-if="status.pagesRequireAction" class="fa fa-cogs fa-border text-success" title="In diesem Status in der Aufgabenliste aufführen"></i>
-                        <i ng-if="! status.pagesRequireAction" class="fa fa-cogs fa-border text-danger" title="In diesem Status nicht in der Aufgabenliste aufführen"></i>
+                        <i ng-if="status.showInTasklist" class="fa fa-cogs fa-border text-success" title="In diesem Status in der Aufgabenliste aufführen"></i>
+                        <i ng-if="! status.showInTasklist" class="fa fa-cogs fa-border text-danger" title="In diesem Status nicht in der Aufgabenliste aufführen"></i>
                     </td>
                     <td>
-                        <a href="#/status/{{status.statusId}}"
-                           class="btn btn-primary"
-                           title="Statusdetails">
-                            <span class="fa fa-cog"></span>
-                        </a>
-                        
                         <button class="btn btn-warning"
                                 ng-click="activate(status.statusId)"
                                 ng-show="! status.active"

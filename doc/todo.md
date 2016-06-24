@@ -4,6 +4,7 @@
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
 - Checken ob man die redundanten Statistics zentralisieren kann
+- Status: (pages|galleries)RequireAction (etc) in requireAction umbennen
 
 ## Allgemein
     1. Validierungen
@@ -88,11 +89,10 @@
             * Bewertungen
                 * Anonym per Option
                 * Als eingeloggter User
-        3. Taskliste
-        4. Alles prüfen
-        5. Statistiken pro Bild
-        6. Gallerieauswahl für Seite (Seite soll nur diese, jene und welche Gallerie anzeigen)
-        7. Zeige nur Gallerien der Kategorie XYZ, ZYX und YXZ.
+        3. Alles prüfen
+        4. Statistiken pro Bild
+        5. Gallerieauswahl für Seite (Seite soll nur diese, jene und welche Gallerie anzeigen)
+        6. Zeige nur Gallerien der Kategorie XYZ, ZYX und YXZ.
     2. Blog
         1. Mögliche Verbesserungen:
             * File resizing after upload is only applied by width and height attributes

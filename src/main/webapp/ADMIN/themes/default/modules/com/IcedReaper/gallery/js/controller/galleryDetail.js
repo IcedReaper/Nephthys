@@ -5,7 +5,7 @@ nephthysAdminApp
                 galleryService.getDetails($routeParams.galleryId),
                 galleryService.getStatus()
             ])
-            .then($q.spread(function (galleryDetails, status, availableSubModules, availableOptions, actualUser) {
+            .then($q.spread(function (galleryDetails, status) {
                 $scope.gallery = galleryDetails;
                 $scope.status  = status;
             }));
@@ -28,6 +28,23 @@ nephthysAdminApp
                         $scope.gallery.statusId = newStatusId;
                     });
             }
+        };
+        
+        $scope.statusButtonClass = function (actualOnline, nextOnline) {
+            if(! actualOnline && nextOnline) {
+                return "btn-success";
+            }
+            if(actualOnline && ! nextOnline) {
+                return "btn-danger";
+            }
+            if(! actualOnline && ! nextOnline) {
+                return "btn-primary";
+            }
+            if(actualOnline && nextOnline) {
+                return "btn-secondary";
+            }
+            
+            return "btn-warning";
         };
         
         // init

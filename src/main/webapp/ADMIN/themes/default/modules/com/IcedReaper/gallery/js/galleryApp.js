@@ -5,22 +5,31 @@ var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
                                                            "ui.bootstrap",
                                                            "ui.tree",
                                                            "com.nephthys.global.loadingBar",
-                                                           "com.IcedReaper.gallery.statistics"]);
+                                                           "com.IcedReaper.gallery.statistics",
+                                                           "com.IcedReaper.gallery.tasklist"]);
     
 nephthysAdminApp
     .config(["$routeProvider",
         function ($routeProvider) {
             $routeProvider
-                .when("/", {
+                .when("/tasklist", {
+                    templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/tasklist.html"
+                })
+                
+                .when("/gallery/list", {
                     templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/galleryList.html",
                     controller:  "galleryListCtrl"
+                })
+                .when("/gallery/:galleryId", {
+                    templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/galleryDetail.html",
+                    controller:  "galleryDetailCtrl"
                 })
                 
                 .when("/statistics", {
                     templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/statistics.html"
                 })
                 
-                .when("/categories", {
+                .when("/category/list", {
                     templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/categoryList.html",
                     controller:  "categoryListCtrl"
                 })
@@ -42,13 +51,9 @@ nephthysAdminApp
                     controller:  "statusDetailCtrl"
                 })
                 
-                .when("/:galleryId", {
-                    templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/galleryDetail.html",
-                    controller:  "galleryDetailCtrl"
-                })
                 
                 .otherwise({
-                    redirectTo: "/"
+                    redirectTo: "/tasklist"
                 });
         }
     ])

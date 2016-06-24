@@ -74,8 +74,8 @@
                     <td>
                         <a href="#/status/{{status.statusId}}">{{status.name}}</a>
                     </td>
-                    <td ng-if="status.offline" class="text-danger">Nein</td>
-                    <td ng-if="! status.offline" class="text-success">Ja</td>
+                    <td ng-if="! status.online" class="text-danger">Nein</td>
+                    <td ng-if="status.online" class="text-success">Ja</td>
                     <td>
                         <span class="m-r-1" ng-repeat="ps in status.nextStatus">{{ps.name}}</span>
                     </td>

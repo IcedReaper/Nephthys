@@ -1,6 +1,8 @@
 component {
     import "API.modules.com.IcedReaper.gallery.*";
     
+    formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
+    
     remote array function getList() {
         var galleryFilterCtrl = new filter().setFor("gallery");
         
@@ -56,7 +58,6 @@ component {
                                 required string  foldername,
                                 required string  introduction,
                                 required string  story,
-                                required numeric active,
                                 required boolean private) {
         var gallery = new gallery(arguments.galleryId);
         
@@ -70,7 +71,6 @@ component {
                    .setLink(arguments.link)
                    .setIntroduction(arguments.introduction)
                    .setStory(arguments.story)
-                   .setActiveStatus(arguments.active)
                    .setPrivate(arguments.private)
                    .save();
             
@@ -86,34 +86,6 @@ component {
         
         if(gallery.isEditable(request.user.getUserID())) {
             gallery.delete();
-            
-            return true;
-        }
-        else {
-            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
-        }
-    }
-    
-    remote boolean function activate(required numeric galleryId) {
-        var gallery = new gallery(arguments.galleryId);
-        
-        if(gallery.isEditable(request.user.getUserID())) {
-            gallery.setActiveStatus(1)
-                   .save();
-            
-            return true;
-        }
-        else {
-            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
-        }
-    }
-    
-    remote boolean function deactivate(required numeric galleryId) {
-        var gallery = new gallery(arguments.galleryId);
-        
-        if(gallery.isEditable(request.user.getUserID())) {
-            gallery.setActiveStatus(0)
-                   .save();
             
             return true;
         }
@@ -298,11 +270,11 @@ component {
             var status = new status(arguments.status.statusId);
             
             status.setActiveStatus(arguments.status.active)
-                  .setGalleriesAreEditable(arguments.status.galleriesAreEditable)
+                  .setEditable(arguments.status.editable)
                   .setName(arguments.status.name)
                   .setOnlineStatus(arguments.status.online)
-                  .setGalleriesAreDeleteable(arguments.status.galleriesAreDeleteable)
-                  .setGalleriesRequireAction(arguments.status.galleriesRequireAction)
+                  .setDeleteable(arguments.status.deleteable)
+                  .setShowInTasklist(arguments.status.showInTasklist)
                   .setLastEditor(request.user)
                   .save();
             
@@ -320,9 +292,9 @@ component {
         }
         
         var galleriesStillWithThisStatus = new filter().setFor("gallery")
-                                                   .setStatusId(arguments.statusId)
-                                                   .execute()
-                                                   .getResultCount();
+                                                       .setStatusId(arguments.statusId)
+                                                       .execute()
+                                                       .getResultCount();
         
         if(galleriesStillWithThisStatus == 0) {
             new status(arguments.statusId).delete();
@@ -396,10 +368,30 @@ component {
         return false;
     }
     
+    remote array function getGalleriesInTasklist() {
+        var statusFilterCtrl = new filter().setFor("status")
+                                           .setShowInTasklist(true)
+                                           .execute();
+        
+        var galleryFilterCtrl = new filter().setFor("gallery");
+        
+        var statusData = [];
+        var index = 0;
+        for(var status in statusFilterCtrl.execute().getResult()) {
+            index++;
+            statusData[index] = prepareStatusAsArray(status);
+            statusData[index]["galleries"] = [];
+            
+            for(var gallery in galleryFilterCtrl.setStatusId(status.getStatusId()).execute().getResult()) {
+                statusData[index]["galleries"].append(prepareDetailStruct(gallery));
+            }
+        }
+        
+        return statusData;
+    }
+    
     // private
     private struct function prepareDetailStruct(required gallery gallery) {
-        //var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
-        
         var categories = [];
         var gCategories = arguments.gallery.getCategories();
         for(var c = 1; c <= gCategories.len(); c++) {
@@ -414,13 +406,15 @@ component {
             "foldername"   = arguments.gallery.getFoldername(),
             "introduction" = arguments.gallery.getIntroduction(),
             "story"        = arguments.gallery.getStory(),
-            //"releaseDate"  = formatCtrl.formatDate(arguments.gallery.getReleaseDate(), false),
-            "active"       = arguments.gallery.getActiveStatus(),
             "pictureCount" = arguments.gallery.getPictureCount(),
             "categories"   = categories,
             "private"      = arguments.gallery.getPrivate(),
             "isEditable"   = arguments.gallery.isEditable(request.user.getUserId()),
-            "statusId"     = arguments.gallery.getStatus().getStatusId()
+            "statusId"     = arguments.gallery.getStatus().getStatusId(),
+            "creator"      = getUserInformation(arguments.gallery.getCreator()),
+            "creationDate" = formatCtrl.formatDate(arguments.gallery.getCreationDate()),
+            "lastEditor"   = getUserInformation(arguments.gallery.getLastEditor()),
+            "lastEditDate" = formatCtrl.formatDate(arguments.gallery.getLastEditDate()),
         };
     }
     
@@ -428,13 +422,13 @@ component {
         var gPictures = [];
         for(var p = 1; p <= arguments.pictures.len(); p++) {
             gPictures.append({
-                    "pictureId"         = arguments.pictures[p].getPictureId(),
-                    "pictureFilename"   = arguments.relativePath & arguments.pictures[p].getPictureFilename(),
-                    "thumbnailFilename" = arguments.relativePath & arguments.pictures[p].getThumbnailFilename(),
-                    "title"             = arguments.pictures[p].getTitle(),
-                    "alt"               = arguments.pictures[p].getAlt(),
-                    "caption"           = arguments.pictures[p].getCaption()
-                });
+                "pictureId"         = arguments.pictures[p].getPictureId(),
+                "pictureFilename"   = arguments.relativePath & arguments.pictures[p].getPictureFilename(),
+                "thumbnailFilename" = arguments.relativePath & arguments.pictures[p].getThumbnailFilename(),
+                "title"             = arguments.pictures[p].getTitle(),
+                "alt"               = arguments.pictures[p].getAlt(),
+                "caption"           = arguments.pictures[p].getCaption()
+            });
         }
         
         return gPictures;
@@ -493,24 +487,24 @@ component {
         for(var nextStatus in arguments.status.getNextStatus()) {
             if(nextStatus.isActive()) {
                 nextStatusList[nextStatus.getStatusId()] = {
-                    "statusId"             = nextStatus.getStatusId(),
-                    "name"                 = nextStatus.getName(),
-                    "active"               = nextStatus.isActive(),
-                    "online"               = nextStatus.isOnline(),
-                    "galleriesAreEditable" = nextStatus.areGalleriesEditable()
+                    "statusId" = nextStatus.getStatusId(),
+                    "name"     = nextStatus.getName(),
+                    "active"   = nextStatus.isActive(),
+                    "online"   = nextStatus.isOnline(),
+                    "editable" = nextStatus.getEditable()
                 };
             }
         }
         
         return {
-            "statusId"               = arguments.status.getStatusId(),
-            "name"                   = arguments.status.getName(),
-            "active"                 = arguments.status.isActive(),
-            "online"                 = arguments.status.isOnline(),
-            "galleriesAreEditable"   = arguments.status.areGalleriesEditable(),
-            "galleriesAreDeleteable" = arguments.status.areGalleriesDeleteable(),
-            "galleriesRequireAction" = arguments.status.requireGalleriesAction(),
-            "nextStatus"             = nextStatusList
+            "statusId"       = arguments.status.getStatusId(),
+            "name"           = arguments.status.getName(),
+            "active"         = arguments.status.isActive(),
+            "online"         = arguments.status.isOnline(),
+            "editable"       = arguments.status.getEditable(),
+            "deleteable"     = arguments.status.getDeleteable(),
+            "showInTasklist" = arguments.status.getShowInTasklist(),
+            "nextStatus"     = nextStatusList
         };
     }
     
@@ -519,24 +513,24 @@ component {
         for(var nextStatus in arguments.status.getNextStatus()) {
             if(nextStatus.isActive()) {
                 nextStatusList.append({
-                    "statusId"             = nextStatus.getStatusId(),
-                    "name"                 = nextStatus.getName(),
-                    "active"               = nextStatus.isActive(),
-                    "online"               = nextStatus.isOnline(),
-                    "galleriesAreEditable" = nextStatus.areGalleriesEditable()
+                    "statusId" = nextStatus.getStatusId(),
+                    "name"     = nextStatus.getName(),
+                    "active"   = nextStatus.isActive(),
+                    "online"   = nextStatus.isOnline(),
+                    "editable" = nextStatus.getEditable()
                 });
             }
         }
         
         return {
-            "statusId"               = arguments.status.getStatusId(),
-            "name"                   = arguments.status.getName(),
-            "active"                 = arguments.status.isActive(),
-            "online"                 = arguments.status.isOnline(),
-            "galleriesAreEditable"   = arguments.status.areGalleriesEditable(),
-            "galleriesAreDeleteable" = arguments.status.areGalleriesDeleteable(),
-            "galleriesRequireAction" = arguments.status.requireGalleriesAction(),
-            "nextStatus"             = nextStatusList
+            "statusId"       = arguments.status.getStatusId(),
+            "name"           = arguments.status.getName(),
+            "active"         = arguments.status.isActive(),
+            "online"         = arguments.status.isOnline(),
+            "editable"       = arguments.status.getEditable(),
+            "deleteable"     = arguments.status.getDeleteable(),
+            "showInTasklist" = arguments.status.getShowInTasklist(),
+            "nextStatus"     = nextStatusList
         };
     }
     
@@ -552,5 +546,13 @@ component {
         }
         
         return preparedApprovalList;
+    }
+    
+    private struct function getUserInformation(required user _user) {
+        return {
+            "userId"   = arguments._user.getUserId(),
+            "userName" = arguments._user.getUserName(),
+            "avatar"   = arguments._user.getAvatarPath()
+        };
     }
 }

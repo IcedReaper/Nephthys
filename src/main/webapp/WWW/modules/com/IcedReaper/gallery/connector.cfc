@@ -25,14 +25,14 @@ component implements="WWW.interfaces.connector" {
         }
         else {
             var splitParameter = listToArray(request.page.getParameter(), "/");
-            var galleryFilterCtrl = new filter();
+            var galleryFilterCtrl = new filter().setFor("gallery");
             
             if(! arguments.options.keyExists("maxEntries")) {
                 arguments.options.maxEntries = 5;
             }
             
             if(splitParameter.len() == 0) {
-                galleryFilterCtrl.setPublished(1)
+                galleryFilterCtrl.setOnline(true)
                                  .setCount(arguments.options.maxEntries)
                                  .execute();
                 
@@ -40,7 +40,7 @@ component implements="WWW.interfaces.connector" {
             }
             else {
                 if(splitParameter[1] == "Seite" && splitParameter.len() == 2) {
-                    galleryFilterCtrl.setPublished(1)
+                    galleryFilterCtrl.setOnline(true)
                                    .setCount(arguments.options.maxEntries)
                                    .setOffset((splitParameter[2]-1) * arguments.options.maxEntries)
                                    .execute();
@@ -49,7 +49,7 @@ component implements="WWW.interfaces.connector" {
                 }
                 else if(splitParameter[1] == "Kategorie") {
                     if(splitParameter.len() == 2) {
-                        galleryFilterCtrl.setPublished(1)
+                        galleryFilterCtrl.setOnline(true)
                                          .setCategory(splitParameter[2])
                                          .setCount(arguments.options.maxEntries)
                                          .execute();
@@ -57,7 +57,7 @@ component implements="WWW.interfaces.connector" {
                         return renderOverview(arguments.options, galleryFilterCtrl, 1);
                     }
                     else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") {
-                        galleryFilterCtrl.setPublished(1)
+                        galleryFilterCtrl.setOnline(true)
                                          .setCategory(splitParameter[2])
                                          .setCount(arguments.options.maxEntries)
                                          .setOffset((splitParameter[4]-1) * arguments.options.maxEntries)
@@ -67,7 +67,7 @@ component implements="WWW.interfaces.connector" {
                     }
                 }
                 else {
-                    var galleries = galleryFilterCtrl.setPublished(1)
+                    var galleries = galleryFilterCtrl.setOnline(true)
                                                      .setLink(request.page.getParameter())
                                                      .execute()
                                                      .getResult();

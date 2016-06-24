@@ -25,18 +25,6 @@ nephthysAdminApp
                 });
             },
             
-            activate: function (galleryId) {
-                return $http.post('/ajax/com/IcedReaper/gallery/activate', {
-                    galleryId: galleryId
-                });
-            },
-            
-            deactivate: function (galleryId) {
-                return $http.post('/ajax/com/IcedReaper/gallery/deactivate', {
-                    galleryId: galleryId
-                });
-            },
-            
             loadPictures: function (galleryId) {
                 return $http.get('/ajax/com/IcedReaper/gallery/loadPictures', {
                     params: {

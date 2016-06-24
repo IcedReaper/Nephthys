@@ -1,15 +1,14 @@
 <div class="row m-b-2">
     <div class="col-md-10 col-sm-8">
-        <!--<a href="#/" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>-->
-        <!--<a href="#/pages/list" class="btn btn-secondary"><i class="fa fa-list"></i> Seitenübersicht</a>-->
-        <a href="#/" class="btn btn-secondary"><i class="fa fa-tags"></i> Gallerieübersicht</a>
+        <a href="#/tasklist" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>
+        <a href="#/gallery/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Gallerieübersicht</a>
         <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
         <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
         <a href="#/statistics" class="btn btn-secondary"><i class="fa fa-area-chart"></i> Gesamtstatistik</a>
     </div>
     <div class="col-md-2 col-sm-4">
         <div class="pull-right">
-            <a href="#/category/0" class="btn btn-primary"><i class="fa fa-tag"></i> Neue Kategorie anlegen</a>
+            <a href="#/category/0" class="btn btn-primary">Neue Kategorie anlegen</a>
         </div>
     </div>
 </div>
@@ -37,12 +36,6 @@
                     </td>
                     <td>{{category.galleries.join(', ')}}</td>
                     <td>
-                        <a href="#/category/{{category.categoryId}}"
-                           class="btn btn-primary"
-                           title="Kategoriedetails">
-                            <i class="fa fa-cog"></i>
-                        </a>
-                        
                         <button class="btn btn-danger"
                                 ng-click="delete(category.categoryId)"
                                 title="Kategorie löschen">

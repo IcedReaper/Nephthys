@@ -3,7 +3,7 @@ component implements="API.interfaces.filter" {
     
     public filter function init() {
         variables.userId            = 0; // 0 => all | other => specific userId
-        variables.published         = -1; // -1 => all | 0 | 1
+        variables.online            = null;
         variables.sortBy            = "creationDate";
         variables.sortDirection     = "DESC";
         variables.link              = "";
@@ -32,16 +32,8 @@ component implements="API.interfaces.filter" {
         return this;
     }
     
-    public filter function setPublished(required numeric published) {
-        switch(arguments.published) {
-            case -1:
-            case 0:
-            case 1: {
-                variables.published = arguments.published;
-                
-                break;
-            }
-        }
+    public filter function setOnline(required boolean online) {
+        variables.online = arguments.online;
         
         return this;
     }
@@ -109,6 +101,9 @@ component implements="API.interfaces.filter" {
     }
     
     public filter function execute() {
+        variables.results = [];
+        variables.qRes = null;
+        
         var qryFilter = new Query();
         
         var sql = "SELECT galleryId 
@@ -116,9 +111,11 @@ component implements="API.interfaces.filter" {
         var where = "";
         var orderBy = " ORDER BY " & variables.sortBy & " " & variables.sortDirection;
         
-        if(variables.published != -1) {
-            where &= ((where != "") ? " AND " : " WHERE ") & " activeStatus = :activeStatus";
-            qryFilter.addParam(name = "activeStatus", value = variables.published, cfsqltype = "cf_sql_bit");
+        if(variables.online != null) {
+            where &= ((where != "") ? " AND " : " WHERE ") & " statusId IN (SELECT statusId
+                                                                              FROM IcedReaper_gallery_status
+                                                                             WHERE online = :online) ";
+            qryFilter.addParam(name = "online", value = variables.online, cfsqltype = "cf_sql_bit");
         }
         
         if(variables.userId != 0 && variables.userId != null) {
@@ -138,7 +135,7 @@ component implements="API.interfaces.filter" {
         
         if(variables.statusId != "") {
             where &= ((where != "") ? " AND " : " WHERE ") & " statusId = :statusId";
-            qryFilter.addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_varchar");
+            qryFilter.addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_integer");
         }
         
         if(variables.categoryName != "") {

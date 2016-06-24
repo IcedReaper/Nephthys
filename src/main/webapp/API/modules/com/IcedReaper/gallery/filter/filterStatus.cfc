@@ -2,7 +2,7 @@ component implements="API.interfaces.filter" {
     import "API.modules.com.IcedReaper.gallery.*";
     
     public filter function init() {
-        variables.pagesRequireAction = null;
+        variables.showInTasklist = null;
         
         variables.qRes    = null;
         variables.results = null;
@@ -10,8 +10,8 @@ component implements="API.interfaces.filter" {
         return this;
     }
     
-    public filter function setPagesRequireAction(required numeric pagesRequireAction) {
-        variables.pagesRequireAction = arguments.pagesRequireAction
+    public filter function setShowInTasklist(required numeric showInTasklist) {
+        variables.showInTasklist = arguments.showInTasklist
         
         return this;
     }
@@ -28,9 +28,9 @@ component implements="API.interfaces.filter" {
                  FROM IcedReaper_gallery_status s ";
         
         where = "";
-        if(variables.pagesRequireAction != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "s.pagesRequireAction = :pagesRequireAction";
-            qryFilter.addParam(name = "pagesRequireAction", value = variables.pagesRequireAction, cfsqltype = "cf_sql_bit");
+        if(variables.showInTasklist != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & "s.showInTasklist = :showInTasklist";
+            qryFilter.addParam(name = "showInTasklist", value = variables.showInTasklist, cfsqltype = "cf_sql_bit");
         }
         
         orderBy = " ORDER BY statusId";

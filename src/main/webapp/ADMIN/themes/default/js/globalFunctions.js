@@ -8,6 +8,20 @@ Array.prototype.move = function (old_index, new_index) {
     this.splice(new_index, 0, this.splice(old_index, 1)[0]);
     return this;
 };
+Array.prototype.sum = function (prop) {
+    var total = 0;
+    for(var i = 0, _len = this.length; i < _len; i++) {
+        total += this[i][prop];
+    }
+    return total;
+};
+Array.prototype.sumOfSubArrayLength = function (prop) {
+    var total = 0;
+    for(var i = 0, _len = this.length; i < _len; i++) {
+        total += this[i][prop].length;
+    }
+    return total;
+}
 
 structDeepCopy = function (struct) {
     return JSON.parse(JSON.stringify(struct));
