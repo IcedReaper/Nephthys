@@ -4,9 +4,9 @@ component {
     public gallery function init(required numeric galleryId) {
         variables.galleryId = arguments.galleryId;
         
-        variables.attributesChanged = false;
         variables.categoriesChanged = false;
         variables.picturesChanged   = false;
+        variables.statusChanged = false;
         
         loadDetails();
         
@@ -17,19 +17,16 @@ component {
     
     public gallery function setHeadline(required string headline) {
         variables.headline = arguments.headline;
-        variables.attributesChanged = true;
         
         return this;
     }
     public gallery function setDescription(required string description) {
         variables.description = arguments.description;
-        variables.attributesChanged = true;
         
         return this;
     }
     public gallery function setLink(required string link) {
         variables.link = arguments.link;
-        variables.attributesChanged = true;
         
         return this;
     }
@@ -46,8 +43,6 @@ component {
             else {
                 throw(type = "nephthys.application.alreadyExists", message = "The Folder already exists!");
             }
-            
-            variables.attributesChanged = true;
             
             return this;
         }
@@ -66,27 +61,18 @@ component {
             }
         }
     }
-    /*public gallery function setReleaseDate(required date releaseDate) {
-        variables.releaseDate = arguments.releaseDate;
-        variables.attributesChanged = true;
-        
-        return this;
-    }*/
     public gallery function setActiveStatus(required numeric activeStatus) {
         variables.activeStatus = arguments.activeStatus;
-        variables.attributesChanged = true;
         
         return this;
     }
     public gallery function setIntroduction(required string introduction) {
         variables.introduction = arguments.introduction;
-        variables.attributesChanged = true;
         
         return this;
     }
     public gallery function setStory(required string story) {
         variables.story = arguments.story;
-        variables.attributesChanged = true;
         
         return this;
     }
@@ -112,7 +98,6 @@ component {
     }
     public gallery function setPrivate(required boolean private) {
         variables.private = arguments.private;
-        variables.attributesChanged = true;
         
         return this;
     }
@@ -173,6 +158,11 @@ component {
         return this;
     }
     
+    public gallery function setStatus(required status newStatus) {
+        variables.status = arguments.newStatus;
+        return this;
+    }
+    
     // G E T T E R
     
     public numeric function getGalleryId() {
@@ -199,9 +189,6 @@ component {
     public boolean function getActiveStatus() {
         return variables.activeStatus == 1;
     }
-    /*public date function getReleaseDate() {
-        return variables.releaseDate;
-    }*/
     public array function getPictures() {
         return variables.pictures;
     }
@@ -241,20 +228,59 @@ component {
     
     public boolean function isEditable(required numeric userId) {
         if(variables.private) {
-            return variables.creatorUserId == arguments.userId;
+            if(! variables.creatorUserId == arguments.userId) {
+                return false;
+            }
         }
-        else {
-            return true;
-        }
+        
+        return variables.status.areGalleriesEditable();
     }
     
     public string function getAbsolutePath() {
         return expandPath("/upload/com.IcedReaper.gallery/" & variables.folderName);
     }
     
-    /*public boolean function isPublished() {
-        return variables.releaseDate == null || variables.releaseDate < now();
-    }*/
+    public status function getStatus() {
+        return variables.status;
+    }
+    
+    
+    public gallery function pushToStatus(required numeric newStatusId, required user user) {
+        var newStatus    = new status(arguments.newStatusId);
+        var actualStatus = duplicate(variables.status);
+        
+        var newStatusOK = false;
+        for(var nextStatus in actualStatus.getNextStatus()) {
+            if(nextStatus.getStatusId() == newStatus.getStatusId()) {
+                newStatusOk = true;
+            }
+        }
+        
+        if(newStatusOk) {
+            if(newStatus.isApprovalValid(arguments.user.getUserId())) {
+                transaction {
+                    setStatus(newStatus);
+                    save();
+                    
+                    new approval(variables.galleryId).approve(actualStatus.getStatusId(),
+                                                              newStatus.getStatusId(),
+                                                              arguments.user.getUserId());
+                    
+                    transactionCommit();
+                }
+                
+                variables.statusChanged = true;
+                
+                return this;
+            }
+            else {
+                throw(type = "nephthys.application.notAllowed", message = "You don't have the required permissions for this operation");
+            }
+        }
+        else {
+            throw(type = "nephthys.application.notAllowed", message = "The new status isn't allowed!");
+        }
+    }
     
     // C R U D
     public gallery function save() {
@@ -269,6 +295,7 @@ component {
                                                                       story,
                                                                       activeStatus,
                                                                       private,
+                                                                      statusId,
                                                                       creatorUserId,
                                                                       lastEditorUserId,
                                                                       lastEditDate
@@ -282,26 +309,28 @@ component {
                                                                       :story,
                                                                       :activeStatus,
                                                                       :private,
+                                                                      :statusId,
                                                                       :creatorUserId,
                                                                       :lastEditorUserId,
                                                                       now()
                                                                   );
                                                       SELECT currval('seq_icedreaper_gallery_gallery_id') newGalleryId;")
-                                             .addParam(name = "headline",         value = variables.headline,       cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "description",      value = variables.description,    cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "link",             value = variables.link,           cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "folderName",       value = variables.folderName,     cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "introduction",     value = variables.introduction,   cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "story",            value = variables.story,          cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "activeStatus",     value = variables.activeStatus,   cfsqltype = "cf_sql_bit")
-                                             .addParam(name = "private",          value = variables.private,        cfsqltype = "cf_sql_bit")
-                                             .addParam(name = "creatorUserId",    value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                                             .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                                             .addParam(name = "headline",         value = variables.headline,             cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "description",      value = variables.description,          cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "link",             value = variables.link,                 cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "folderName",       value = variables.folderName,           cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "introduction",     value = variables.introduction,         cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "story",            value = variables.story,                cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "activeStatus",     value = variables.activeStatus,         cfsqltype = "cf_sql_bit")
+                                             .addParam(name = "private",          value = variables.private,              cfsqltype = "cf_sql_bit")
+                                             .addParam(name = "statusId",         value = variables.status.getStatusId(), cfsqltype = "cf_sql_numeric")
+                                             .addParam(name = "creatorUserId",    value = request.user.getUserId(),       cfsqltype = "cf_sql_numeric")
+                                             .addParam(name = "lastEditorUserId", value = request.user.getUserId(),       cfsqltype = "cf_sql_numeric")
                                              .execute()
                                              .newGalleryId[1];
         }
         else {
-            if(variables.attributesChanged) {
+            if(variables.status.areGalleriesEditable()) {
                 new Query().setSQL("UPDATE IcedReaper_gallery_gallery
                                        SET headline         = :headline,
                                            description      = :description,
@@ -311,25 +340,40 @@ component {
                                            story            = :story,
                                            activeStatus     = :activeStatus,
                                            private          = :private,
+                                           statusId         = :statusId,
                                            lastEditorUserId = :lastEditorUserId,
                                            lastEditDate     = now()
                                      WHERE galleryId = :galleryId")
-                           .addParam(name = "galleryId",        value = variables.galleryId,      cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "headline",         value = variables.headline,       cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "description",      value = variables.description,    cfsqltype = "cf_sql_varchar", null = variables.description == "")
-                           .addParam(name = "link",             value = variables.link,           cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "folderName",       value = variables.folderName,     cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "introduction",     value = variables.introduction,   cfsqltype = "cf_sql_varchar", null = variables.introduction == "")
-                           .addParam(name = "story",            value = variables.story,          cfsqltype = "cf_sql_varchar", null = variables.story == "")
-                           .addParam(name = "activeStatus",     value = variables.activeStatus,   cfsqltype = "cf_sql_bit")
-                           .addParam(name = "private",          value = variables.private,        cfsqltype = "cf_sql_bit")
-                           .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "galleryId",        value = variables.galleryId,            cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "headline",         value = variables.headline,             cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "description",      value = variables.description,          cfsqltype = "cf_sql_varchar", null = variables.description == "")
+                           .addParam(name = "link",             value = variables.link,                 cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "folderName",       value = variables.folderName,           cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "introduction",     value = variables.introduction,         cfsqltype = "cf_sql_varchar", null = variables.introduction == "")
+                           .addParam(name = "story",            value = variables.story,                cfsqltype = "cf_sql_varchar", null = variables.story == "")
+                           .addParam(name = "activeStatus",     value = variables.activeStatus,         cfsqltype = "cf_sql_bit")
+                           .addParam(name = "private",          value = variables.private,              cfsqltype = "cf_sql_bit")
+                           .addParam(name = "statusId",         value = variables.status.getStatusId(), cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "lastEditorUserId", value = request.user.getUserId(),       cfsqltype = "cf_sql_numeric")
                            .execute();
+                
+                if(variables.picturesChanged) {
+                    for(var p = 1; p <= variables.pictures.len(); p++) {
+                        variables.pictures[p].save();
+                    }
+                }
             }
-            
-            if(variables.picturesChanged) {
-                for(var p = 1; p <= variables.pictures.len(); p++) {
-                    variables.pictures[p].save();
+            else {
+                if(variables.statusChanged) {
+                    new Query().setSQL("UPDATE nephthys_page_pageVersion
+                                           SET statusId = :statusId
+                                         WHERE pageVersionId = :pageVersionId")
+                               .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "statusId",  value = variables.statusId,  cfsqltype = "cf_sql_numeric")
+                               .execute();
+                }
+                else {
+                    throw(type = "nephthys.application.notAllowed", message = "You're not allowed to update the version that is online");
                 }
             }
         }
@@ -363,7 +407,6 @@ component {
             }
         }
         
-        variables.attributesChanged = false;
         variables.categoriesChanged = false;
         variables.picturesChanged   = false;
         
@@ -400,7 +443,6 @@ component {
                 variables.folderName       = qGallery.folderName[1];
                 variables.introduction     = qGallery.introduction[1];
                 variables.story            = qGallery.story[1];
-                //variables.releaseDate      = qGallery.releaseDate[1];
                 variables.activeStatus     = qGallery.activeStatus[1];
                 variables.creatorUserId    = qGallery.creatorUserId[1];
                 variables.creationDate     = qGallery.creationDate[1];
@@ -410,6 +452,7 @@ component {
                 variables.categories       = [];
                 variables.viewCounter      = qGallery.viewCounter[1];
                 variables.private          = qGallery.private[1];
+                variables.status           = new status(qGallery.statusId[1]);
                 
                 loadPictures();
                 loadCategories();
@@ -425,7 +468,6 @@ component {
             variables.folderName       = createUUID();
             variables.introduction     = "";
             variables.story            = "";
-            //variables.releaseDate      = null;
             variables.activeStatus     = false;
             variables.creatorUserId    = null;
             variables.creationDate     = null;
@@ -435,6 +477,7 @@ component {
             variables.categories       = [];
             variables.viewCounter      = 0;
             variables.private          = false;
+            variables.status           = new status(application.system.settings.getValueOfKey("com.IcedReaper.gallery.startStatus"));
         }
     }
     

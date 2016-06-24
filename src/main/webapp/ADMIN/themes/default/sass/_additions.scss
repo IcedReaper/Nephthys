@@ -225,6 +225,67 @@ body {
             border: $btn-danger-border;
         }
     }
+    
+    .angular-ui-tree {
+        .btn {
+            margin-right: 8px;
+        }
+        .angular-ui-tree-handle {
+            background: #f8faff none repeat scroll 0 0;
+            border: 1px solid #dae2ea;
+            padding: 10px;
+        }
+        .angular-ui-tree-handle:hover {
+            background: #f4f6f7 none repeat scroll 0 0;
+            border-color: #dce2e8;
+            color: #438eb9;
+        }
+        .angular-ui-tree-placeholder {
+            background: #f0f9ff none repeat scroll 0 0;
+            border: 2px dashed #bed2db;
+            box-sizing: border-box;
+        }
+        tr.angular-ui-tree-empty {
+            height: 100px;
+        }
+        .group-title {
+            background-color: #687074 !important;
+            color: #fff !important;
+        }
+        .tree-node {
+            background: #f8faff none repeat scroll 0 0;
+            border: 1px solid #dae2ea;
+        }
+        .nodrop {
+            background-color: #f2dede;
+        }
+        .tree-node-content {
+            margin: 10px 0;
+            height: 50px;
+        }
+        .tree-handle {
+            background: #428bca none repeat scroll 0 0;
+            color: #fff;
+            margin-right: 10px;
+            padding: 10px;
+        }
+        .angular-ui-tree-handle:hover {
+        }
+        .angular-ui-tree-placeholder {
+            background: #f0f9ff none repeat scroll 0 0;
+            border: 2px dashed #bed2db;
+            box-sizing: border-box;
+        }
+        
+        .title {
+            color: #000000;
+        }
+        
+        
+        [data-no-drag="true"].angular-ui-tree-handle {
+            cursor: auto;
+        }
+    }
 }
 
 html.error {

@@ -1,11 +1,14 @@
 nephthysAdminApp
     .controller('galleryDetailCtrl', ["$scope", "$routeParams", "$q", "galleryService", function ($scope, $routeParams, $q, galleryService) {
         $scope.load = function() {
-            return galleryService
-                       .getDetails($routeParams.galleryId)
-                       .then(function (galleryDetails) {
-                           $scope.gallery = galleryDetails;
-                       });
+            $q.all([
+                galleryService.getDetails($routeParams.galleryId),
+                galleryService.getStatus()
+            ])
+            .then($q.spread(function (galleryDetails, status, availableSubModules, availableOptions, actualUser) {
+                $scope.gallery = galleryDetails;
+                $scope.status  = status;
+            }));
         };
         
         $scope.save = function () {
@@ -13,8 +16,18 @@ nephthysAdminApp
                 .save($scope.gallery)
                 .then(function (result) {
                     $scope.gallery = result;
-                })
-                .then($scope.loadPictures);
+                });
+        };
+        
+        $scope.pushToStatus = function (newStatusId) {
+            if(newStatusId) {
+                galleryService
+                    .pushToStatus($routeParams.galleryId,
+                                  newStatusId)
+                    .then(function() {
+                        $scope.gallery.statusId = newStatusId;
+                    });
+            }
         };
         
         // init

@@ -37,22 +37,22 @@ component {
         return this;
     }
     
-    public status function setPagesAreEditable(required boolean pagesAreEditable) {
-        variables.pagesAreEditable = arguments.pagesAreEditable;
+    public status function setGalleriesAreEditable(required boolean galleriesAreEditable) {
+        variables.galleriesAreEditable = arguments.galleriesAreEditable;
         variables.attributesChanged = true;
         
         return this;
     }
     
-    public status function setPagesAreDeleteable(required boolean pagesAreDeleteable) {
-        variables.pagesAreDeleteable = arguments.pagesAreDeleteable;
+    public status function setGalleriesAreDeleteable(required boolean galleriesAreDeleteable) {
+        variables.galleriesAreDeleteable = arguments.galleriesAreDeleteable;
         variables.attributesChanged = true;
         
         return this;
     }
     
-    public status function setPagesRequireAction(required boolean pagesRequireAction) {
-        variables.pagesRequireAction = arguments.pagesRequireAction;
+    public status function setGalleriesRequireAction(required boolean galleriesRequireAction) {
+        variables.galleriesRequireAction = arguments.galleriesRequireAction;
         variables.attributesChanged = true;
         
         return this;
@@ -160,14 +160,14 @@ component {
         return variables.nextStatus;
     }
     
-    public boolean function arePagesEditable() {
-        return variables.pagesAreEditable == 1;
+    public boolean function areGalleriesEditable() {
+        return variables.galleriesAreEditable == 1;
     }
-    public boolean function arePagesDeleteable() {
-        return variables.pagesAreDeleteable == 1;
+    public boolean function areGalleriesDeleteable() {
+        return variables.galleriesAreDeleteable == 1;
     }
-    public boolean function requirePagesAction() {
-        return variables.pagesRequireAction == 1;
+    public boolean function requireGalleriesAction() {
+        return variables.galleriesRequireAction == 1;
     }
     public boolean function isActive() {
         return variables.active == 1;
@@ -197,21 +197,21 @@ component {
             var qUpdate = new Query().addParam(name = "name",               value = variables.name,                   cfsqltype = "cf_sql_varchar")
                                      .addParam(name = "active",             value = variables.active,                 cfsqltype = "cf_sql_bit")
                                      .addParam(name = "online",             value = variables.online,                 cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "pagesAreEditable",   value = variables.pagesAreEditable,       cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "pagesAreDeleteable", value = variables.pagesAreDeleteable,     cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "pagesRequireAction", value = variables.pagesRequireAction,     cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "galleriesAreEditable",   value = variables.galleriesAreEditable,       cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "galleriesAreDeleteable", value = variables.galleriesAreDeleteable,     cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "galleriesRequireAction", value = variables.galleriesRequireAction,     cfsqltype = "cf_sql_bit")
                                      .addParam(name = "creationUserId",     value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
                                      .addParam(name = "lastEditUserId",     value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
             
             if(variables.statusId == 0 || variables.statusId == null) {
-                variables.statusId = qUpdate.setSQL("INSERT INTO nephthys_page_status
+                variables.statusId = qUpdate.setSQL("INSERT INTO IcedReaper_gallery_status
                                                                      (
                                                                          name,
                                                                          active,
                                                                          online,
-                                                                         pagesAreEditable,
-                                                                         pagesAreDeleteable,
-                                                                         pagesRequireAction,
+                                                                         galleriesAreEditable,
+                                                                         galleriesAreDeleteable,
+                                                                         galleriesRequireAction,
                                                                          creationUserId,
                                                                          lastEditUserId
                                                                      )
@@ -219,26 +219,26 @@ component {
                                                                          :name,
                                                                          :active,
                                                                          :online,
-                                                                         :pagesAreEditable,
-                                                                         :pagesAreDeleteable,
-                                                                         :pagesRequireAction,
+                                                                         :galleriesAreEditable,
+                                                                         :galleriesAreDeleteable,
+                                                                         :galleriesRequireAction,
                                                                          :creationUserId,
                                                                          :lastEditUserId
                                                                      );
-                                                         SELECT currval('nephthys_page_status_statusId_seq') newStatusId;")
+                                                         SELECT currval('IcedReaper_gallery_status_statusId_seq') newStatusId;")
                                                 .execute()
                                                 .getResult()
                                                 .newStatusId[1];
             }
             else {
                 if(variables.attributesChanged) {
-                    qUpdate.setSQL("UPDATE nephthys_page_status
+                    qUpdate.setSQL("UPDATE IcedReaper_gallery_status
                                        SET name               = :name,
                                            active             = :active,
                                            online             = :online,
-                                           pagesAreEditable   = :pagesAreEditable,
-                                           pagesAreDeleteable = :pagesAreDeleteable,
-                                           pagesRequireAction = :pagesRequireAction,
+                                           galleriesAreEditable   = :galleriesAreEditable,
+                                           galleriesAreDeleteable = :galleriesAreDeleteable,
+                                           galleriesRequireAction = :galleriesRequireAction,
                                            lastEditUserId     = :lastEditUserId,
                                            lastEditDate       = now()
                                      WHERE statusId = :statusId")
@@ -249,7 +249,7 @@ component {
             
             // update next status
             for(var nextStatusId in variables.nextStatusAdded) {
-                new Query().setSQL("INSERT INTO nephthys_page_statusFlow
+                new Query().setSQL("INSERT INTO IcedReaper_gallery_statusFlow
                                                 (
                                                     statusId,
                                                     nextStatusId
@@ -263,7 +263,7 @@ component {
                            .execute();
             }
             for(var removedStatusId in variables.nextStatusRemoved) {
-                new Query().setSQL("DELETE FROM nephthys_page_statusFlow
+                new Query().setSQL("DELETE FROM IcedReaper_gallery_statusFlow
                                           WHERE statusId     = :statusId
                                             AND nextStatusId = :nextStatusId")
                            .addParam(name = "statusId",     value = variables.statusId, cfsqltype = "cf_sql_numeric")
@@ -280,7 +280,7 @@ component {
     }
     
     public void function delete() {
-        new Query().setSQL("DELETE FROM nephthys_page_status WHERE statusId = :statusId")
+        new Query().setSQL("DELETE FROM IcedReaper_gallery_status WHERE statusId = :statusId")
                    .addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric")
                    .execute();
         
@@ -291,7 +291,7 @@ component {
     private void function loadDetails() {
         if(variables.statusId != 0 && variables.statusId != null) {
             var qStatus = new Query().setSQL("SELECT *
-                                                    FROM nephthys_page_status
+                                                    FROM IcedReaper_gallery_status
                                                    WHERE statusId = :statusId")
                                          .addParam(name="statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric")
                                          .execute()
@@ -301,9 +301,9 @@ component {
                 variables.name               = qStatus.name[1];
                 variables.active             = qStatus.active[1];
                 variables.online             = qStatus.online[1];
-                variables.pagesAreEditable   = qStatus.pagesAreEditable[1];
-                variables.pagesAreDeleteable = qStatus.pagesAreDeleteable[1];
-                variables.pagesRequireAction = qStatus.pagesRequireAction[1];
+                variables.galleriesAreEditable   = qStatus.galleriesAreEditable[1];
+                variables.galleriesAreDeleteable = qStatus.galleriesAreDeleteable[1];
+                variables.galleriesRequireAction = qStatus.galleriesRequireAction[1];
                 variables.creator            = new user(qStatus.creationUserId[1]);
                 variables.creationDate       = qStatus.creationDate[1];
                 variables.lastEditor         = new user(qStatus.lastEditUserId[1]);
@@ -317,9 +317,9 @@ component {
             variables.name               = "";
             variables.active             = false;
             variables.online             = true;
-            variables.pagesAreEditable   = true;
-            variables.pagesAreDeleteable = false;
-            variables.pagesRequireAction = false;
+            variables.galleriesAreEditable   = true;
+            variables.galleriesAreDeleteable = false;
+            variables.galleriesRequireAction = false;
             variables.creator            = new user(request.user.getUserId());
             variables.creationDate       = now();
             variables.lastEditor         = new user(request.user.getUserId());
@@ -331,7 +331,7 @@ component {
         variables.nextStatus = [];
         
         var qGetNextStatus = new Query().setSQL("SELECT nextStatusId
-                                                   FROM nephthys_page_statusFlow
+                                                   FROM IcedReaper_gallery_statusFlow
                                                   WHERE statusId = :statusId")
                                         .addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric")
                                         .execute()

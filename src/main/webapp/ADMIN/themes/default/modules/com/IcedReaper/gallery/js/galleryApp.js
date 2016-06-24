@@ -3,6 +3,7 @@ var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
                                                            "ngFileUpload",
                                                            "textAngular",
                                                            "ui.bootstrap",
+                                                           "ui.tree",
                                                            "com.nephthys.global.loadingBar",
                                                            "com.IcedReaper.gallery.statistics"]);
     
@@ -26,6 +27,19 @@ nephthysAdminApp
                 .when("/category/:categoryId", {
                     templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/categoryDetail.html",
                     controller:  "categoryDetailCtrl"
+                })
+                
+                .when("/status/list", {
+                    templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/statusList.html",
+                    controller:  "statusListCtrl"
+                })
+                .when("/status/flow", {
+                    templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/statusFlow.html",
+                    controller:  "statusFlowCtrl"
+                })
+                .when("/status/:statusId", {
+                    templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/statusDetail.html",
+                    controller:  "statusDetailCtrl"
                 })
                 
                 .when("/:galleryId", {

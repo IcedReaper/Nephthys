@@ -656,4 +656,70 @@ GRANT SELECT, UPDATE ON SEQUENCE seq_nephthys_user_id TO nephthys_user;
 
 -- 23.6.16
 alter table icedreaper_gallery_statistics rename column opendate to visitDate;
+
+-- 24.6.2016
 alter table icedreaper_blog_statistics rename column opendate to visitDate;
+
+
+create table IcedReaper_gallery_status
+(
+    statusId serial primary key,
+    name character varying(100) not null unique,
+    active boolean not null default true,
+    online boolean not null default false,
+    
+    galleriesAreEditable boolean not null default false,
+    galleriesAreDeleteable boolean not null default false,
+    galleriesRequireAction boolean not null default false,
+    
+    creationUserId integer not null references nephthys_user,
+    creationDate timestamp with time zone not null default now(),
+    
+    lastEditUserId integer not null references nephthys_user,
+    lastEditDate timestamp with time zone not null default now()
+);
+
+create table IcedReaper_gallery_statusFlow
+(
+    statusFlowId serial primary key,
+    statusId integer not null references IcedReaper_gallery_status,
+    nextStatusId integer not null references IcedReaper_gallery_status
+);
+
+create table IcedReaper_gallery_approval
+(
+    approvalId serial primary key,
+    galleryId integer references IcedReaper_gallery_gallery,
+    
+    prevStatusId integer references IcedReaper_gallery_status,
+    nextStatusId integer not null references IcedReaper_gallery_status,
+    
+    userId integer not null references nephthys_user,
+    approvalDate timestamp with time zone not null default now(),
+    
+    check (galleryId IS NOT NULL)
+);
+
+alter table IcedReaper_gallery_gallery add column statusId integer references IcedReaper_gallery_status;
+
+INSERT INTO IcedReaper_gallery_status VALUES
+(
+    1,
+    'In Erstellung',
+    true,
+    true,
+    
+    true,
+    true,
+    true,
+    
+    1,
+    now(),
+    
+    1,
+    now()
+);
+
+update IcedReaper_gallery_gallery SET statusId = 1;
+
+alter table IcedReaper_gallery_gallery alter column statusId SET NOT NULL;

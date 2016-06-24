@@ -16,6 +16,9 @@
 <link rel='stylesheet' href='/themes/default/assets/angular-tagsInput/ng-tags-input.min.css'>
 <script src='/themes/default/assets/angular-tagsInput/ng-tags-input.min.js'></script>
 
+<script type="text/javascript" src="/themes/default/assets/angular-ui-tree/angular-ui-tree.min.js"></script>
+<link rel="stylesheet" href="/themes/default/assets/angular-ui-tree/angular-ui-tree.min.css">
+
 <script src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
 
 <script type="text/javascript" src="/themes/default/directive/nephthysLoadingBar/nephthysLoadingBar.js"></script>
@@ -38,6 +41,11 @@
 
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/gallery/js/controller/categoryList.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/gallery/js/controller/categoryDetail.js"></script>
+
+<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/gallery/js/controller/statusDetail.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/gallery/js/controller/statusFlow.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/gallery/js/controller/statusList.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/gallery/js/service/statusService.js"></script>
 
 <nephthys-loading-bar></nephthys-loading-bar>
 <div ng-view></div>

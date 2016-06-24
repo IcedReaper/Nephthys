@@ -88,9 +88,11 @@
             * Bewertungen
                 * Anonym per Option
                 * Als eingeloggter User
-        3. Workflow der Seiten adaptieren?
+        3. Taskliste
         4. Alles prüfen
         5. Statistiken pro Bild
+        6. Gallerieauswahl für Seite (Seite soll nur diese, jene und welche Gallerie anzeigen)
+        7. Zeige nur Gallerien der Kategorie XYZ, ZYX und YXZ.
     2. Blog
         1. Mögliche Verbesserungen:
             * File resizing after upload is only applied by width and height attributes

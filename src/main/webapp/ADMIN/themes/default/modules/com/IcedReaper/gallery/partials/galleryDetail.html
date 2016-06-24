@@ -1,5 +1,13 @@
-<div class="row">
-    <div class="col-md-12">
+<div class="row m-b-2">
+    <div class="col-md-10 col-sm-8">
+        <!--<a href="#/" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>-->
+        <!--<a href="#/pages/list" class="btn btn-secondary"><i class="fa fa-list"></i> Seitenübersicht</a>-->
+        <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
+        <a href="#/categories" class="btn btn-secondary"><i class="fa fa-tags"></i> Kategorieübersicht</a>
+        <a href="#/statistics" class="btn btn-secondary"><i class="fa fa-area-chart"></i> Gesamtstatistik</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
         <div class="pull-right">
             <a href="#/" class="btn btn-primary"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
         </div>
@@ -80,6 +88,23 @@
                         <div class="row">
                             <div class="col-md-12 m-t-1">
                                 <button class="btn btn-success" ng-click="save()" ng-disabled="! gallery.isEditable"><i class="fa fa-floppy-o"></i> Speichern</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div ng-if="status[ gallery.statusId ].nextStatus && gallery.galleryId">
+                                    <h4>Status ändern in</h4>
+                                    <button type="submit"
+                                            class="btn m-r-1"
+                                            ng-repeat="ps in status[ gallery.statusId ].nextStatus"
+                                            ng-class="statusButtonClass(status[ gallery.statusId ].isOnline, ps.online)"
+                                            ng-click="pushToStatus(ps.statusId);">{{ps.name}}</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="pull-right">
+                                    <button type="submit" class="btn btn-success" ng-click="save()" ng-if="gallery.isEditable"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
+                                </div>
                             </div>
                         </div>
                     </form>

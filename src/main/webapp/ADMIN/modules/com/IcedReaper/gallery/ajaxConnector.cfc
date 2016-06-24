@@ -2,7 +2,7 @@ component {
     import "API.modules.com.IcedReaper.gallery.*";
     
     remote array function getList() {
-        var galleryFilterCtrl = new filter();
+        var galleryFilterCtrl = new filter().setFor("gallery");
         
         var galleries = galleryFilterCtrl.execute().getResult();
         var data = [];
@@ -258,6 +258,144 @@ component {
                                                    _toDate);
     }
     
+    // STATUS 
+    remote boolean function pushToStatus(required numeric galleryId, required numeric statusId) {
+        new gallery(arguments.galleryId).pushToStatus(arguments.statusId, request.user);
+        
+        return true;
+    }
+    
+    remote struct function getStatusList() {
+        var statusLoader = new filter().setFor("status");
+        
+        var prepStatus = {};
+        
+        for(var status in statusLoader.execute().getResult()) {
+            prepStatus[status.getStatusId()] = prepareStatus(status);
+        }
+        
+        return prepStatus;
+    }
+    
+    remote array function getStatusListAsArray() {
+        var statusLoader = new filter().setFor("status");
+        
+        var prepStatus = [];
+        
+        for(var status in statusLoader.execute().getResult()) {
+            prepStatus.append(prepareStatusAsArray(status));
+        }
+        
+        return prepStatus;
+    }
+    
+    remote struct function getStatusDetails(required numeric statusId) {
+        return prepareStatus(new status(arguments.statusId));
+    }
+    
+    remote boolean function saveStatus(required struct status) {
+        transaction {
+            var status = new status(arguments.status.statusId);
+            
+            status.setActiveStatus(arguments.status.active)
+                  .setGalleriesAreEditable(arguments.status.galleriesAreEditable)
+                  .setName(arguments.status.name)
+                  .setOnlineStatus(arguments.status.online)
+                  .setGalleriesAreDeleteable(arguments.status.galleriesAreDeleteable)
+                  .setGalleriesRequireAction(arguments.status.galleriesRequireAction)
+                  .setLastEditor(request.user)
+                  .save();
+            
+            transactionCommit();
+            return true;
+        }
+    }
+    
+    remote boolean function deleteStatus(required numeric statusId) {
+        if(arguments.statusId == application.system.settings.getValueOfKey("startStatus")) {
+            throw(type = "nephthys.application.notAllowed", message = "You cannot delete the start status. Please reset the start status in the system settings");
+        }
+        if(arguments.statusId == application.system.settings.getValueOfKey("endStatus")) {
+            throw(type = "nephthys.application.notAllowed", message = "You cannot remove the end status. Please reset the end status in the system settings");
+        }
+        
+        var galleriesStillWithThisStatus = new filter().setFor("gallery")
+                                                   .setStatusId(arguments.statusId)
+                                                   .execute()
+                                                   .getResultCount();
+        
+        if(galleriesStillWithThisStatus == 0) {
+            new status(arguments.statusId).delete();
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.application.notAllowed", message = "You cannot delete a status that is still used. There are still " & galleriesStillWithThisStatus & " galleries on this status.");
+        }
+    }
+    
+    remote boolean function activateStatus(required numeric statusId) {
+        var status = new status(arguments.statusId);
+        
+        status.setActiveStatus(true)
+              .save();
+        
+        return true;
+    }
+    
+    remote boolean function deactivateStatus(required numeric statusId) {
+        new status(arguments.statusId).setActiveStatus(false)
+                                      .save();
+        
+        return true;
+    }
+    
+    remote boolean function saveStatusFlow(required array statusFlow) {
+        var i = 0;
+        var j = 0;
+        var k = 0;
+        var found = false;
+        transaction {
+            for(i = 1; i <= arguments.statusFlow.len(); ++i) {
+                var status = new status(arguments.statusFlow[i].statusId);
+                
+                var nextStatus = status.getNextStatus();
+                
+                for(j = 1; j <= nextStatus.len(); ++j) {
+                    found = false;
+                    for(k = 1; k <= arguments.statusFlow[i].nextStatus.len() && ! found; ++k) {
+                        if(nextStatus[j].getStatusId() == arguments.statusFlow[i].nextStatus[k].statusId) {
+                            found = true;
+                        }
+                    }
+                    
+                    if(! found) {
+                        status.removeNextStatus(nextStatus[j].getStatusId());
+                    }
+                }
+                
+                for(j = 1; j <= arguments.statusFlow[i].nextStatus.len(); ++j) {
+                    found = false;
+                    for(k = 1; k <= nextStatus.len() && ! found; ++k) {
+                        if(nextStatus[k].getStatusId() == arguments.statusFlow[i].nextStatus[j].statusId) {
+                            found = true;
+                        }
+                    }
+                    
+                    if(! found) {
+                        status.addNextStatus(arguments.statusFlow[i].nextStatus[j].statusId);
+                    }
+                }
+                
+                status.save();
+            }
+            
+            transactionCommit();
+        }
+        
+        return false;
+    }
+    
     // private
     private struct function prepareDetailStruct(required gallery gallery) {
         //var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
@@ -281,7 +419,8 @@ component {
             "pictureCount" = arguments.gallery.getPictureCount(),
             "categories"   = categories,
             "private"      = arguments.gallery.getPrivate(),
-            "isEditable"   = arguments.gallery.isEditable(request.user.getUserId())
+            "isEditable"   = arguments.gallery.isEditable(request.user.getUserId()),
+            "statusId"     = arguments.gallery.getStatus().getStatusId()
         };
     }
     
@@ -303,7 +442,7 @@ component {
     
     private array function prepareCategoryDetails(required array categories, required boolean getGalleries = false) {
         var gCategories = [];
-        var galleryFilterCtrl = new filter();
+        var galleryFilterCtrl = new filter().setFor("gallery");
         
         for(var c = 1; c <= arguments.categories.len(); c++) {
             gCategories.append({
@@ -346,5 +485,72 @@ component {
             'userId'   = arguments._user.getUserId(),
             'userName' = arguments._user.getUserName()
         };
+    }
+    
+    
+    private struct function prepareStatus(required status status) {
+        var nextStatusList = {};
+        for(var nextStatus in arguments.status.getNextStatus()) {
+            if(nextStatus.isActive()) {
+                nextStatusList[nextStatus.getStatusId()] = {
+                    "statusId"             = nextStatus.getStatusId(),
+                    "name"                 = nextStatus.getName(),
+                    "active"               = nextStatus.isActive(),
+                    "online"               = nextStatus.isOnline(),
+                    "galleriesAreEditable" = nextStatus.areGalleriesEditable()
+                };
+            }
+        }
+        
+        return {
+            "statusId"               = arguments.status.getStatusId(),
+            "name"                   = arguments.status.getName(),
+            "active"                 = arguments.status.isActive(),
+            "online"                 = arguments.status.isOnline(),
+            "galleriesAreEditable"   = arguments.status.areGalleriesEditable(),
+            "galleriesAreDeleteable" = arguments.status.areGalleriesDeleteable(),
+            "galleriesRequireAction" = arguments.status.requireGalleriesAction(),
+            "nextStatus"             = nextStatusList
+        };
+    }
+    
+    private struct function prepareStatusAsArray(required status status) {
+        var nextStatusList = [];
+        for(var nextStatus in arguments.status.getNextStatus()) {
+            if(nextStatus.isActive()) {
+                nextStatusList.append({
+                    "statusId"             = nextStatus.getStatusId(),
+                    "name"                 = nextStatus.getName(),
+                    "active"               = nextStatus.isActive(),
+                    "online"               = nextStatus.isOnline(),
+                    "galleriesAreEditable" = nextStatus.areGalleriesEditable()
+                });
+            }
+        }
+        
+        return {
+            "statusId"               = arguments.status.getStatusId(),
+            "name"                   = arguments.status.getName(),
+            "active"                 = arguments.status.isActive(),
+            "online"                 = arguments.status.isOnline(),
+            "galleriesAreEditable"   = arguments.status.areGalleriesEditable(),
+            "galleriesAreDeleteable" = arguments.status.areGalleriesDeleteable(),
+            "galleriesRequireAction" = arguments.status.requireGalleriesAction(),
+            "nextStatus"             = nextStatusList
+        };
+    }
+    
+    private array function prepareApprovalList(required array approvalList) {
+        var preparedApprovalList = [];
+        for(var approval in arguments.approvalList) {
+            preparedApprovalList.append({
+                "user"               = getUserInformation(approval.user),
+                "approvalDate"       = formatCtrl.formatDate(approval.approvalDate),
+                "previousStatusName" = approval.previousStatus.getName(),
+                "newStatusName"      = approval.newStatus.getName()
+            });
+        }
+        
+        return preparedApprovalList;
     }
 }

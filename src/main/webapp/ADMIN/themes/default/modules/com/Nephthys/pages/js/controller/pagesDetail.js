@@ -85,12 +85,12 @@ nephthysAdminApp
                 });
         };
         
-        $scope.pushToStatus = function (newstatusId) {
-            if(newstatusId) {
+        $scope.pushToStatus = function (newStatusId) {
+            if(newStatusId) {
                 pagesService
                     .pushToStatus($routeParams.pageId,
                                   $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageVersionId,
-                                  newstatusId)
+                                  newStatusId)
                     .then(function() {
                         return pagesService.getDetailsForVersion($routeParams.pageId,
                                                                  $scope.selectedVersion.major,

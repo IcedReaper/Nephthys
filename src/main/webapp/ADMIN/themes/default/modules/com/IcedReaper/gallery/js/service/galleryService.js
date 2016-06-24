@@ -99,6 +99,17 @@ nephthysAdminApp
                         pictureId: pictureId
                     }
                 });
+            },
+            
+            getStatus: function () {
+                return $http.get("/ajax/com/IcedReaper/gallery/getStatusList");
+            },
+            
+            pushToStatus: function (galleryId, statusId) {
+                return $http.post('/ajax/com/IcedReaper/gallery/pushToStatus', {
+                    galleryId: galleryId,
+                    statusId:  statusId
+                });
             }
         };
     });

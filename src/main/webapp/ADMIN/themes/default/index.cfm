@@ -23,6 +23,7 @@
     <script type="text/javascript" src="/themes/default/assets/angularJs/angular-route.min.js"></script>
     <script type="text/javascript" src="/themes/default/assets/angularJs/$QDecorator.js"></script>
     
+    <script type="text/javascript" src="/themes/default/js/globalFunctions.js"></script>
     <script type="text/javascript" src="/themes/default/js/globalAngularAjaxSettings.js"></script>
 </head>
 <body<cfif request.user.getUserId() NEQ 0> ng-app="nephthysAdminApp"</cfif>>
