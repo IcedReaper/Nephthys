@@ -302,14 +302,14 @@ angular.module("com.IcedReaper.blog.statistics", ["chart.js",
             }
         }, true);
         
-        var dateChagedEvent = $rootScope.$on('nephthys-date-picker-date-changed', function(evt, data) {
+        var dateChangedEvent = $rootScope.$on('nephthys-date-picker-date-changed', function(evt, data) {
             $scope.selectedDate.fromDate = data.fromDate;
             $scope.selectedDate.toDate   = data.toDate;
         });
         var refreshEvent = $rootScope.$on('nephthys-statistics-refresh', $scope.refresh);
         
         $scope.$on('$destroy', function() {
-            dateChagedEvent();
+            dateChangedEvent();
             refreshEvent();
         });
     }])

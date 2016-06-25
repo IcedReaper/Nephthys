@@ -3,12 +3,14 @@ nephthysAdminApp
         $scope.load = function() {
             $q.all([
                 userService.getDetails($routeParams.userId),
-                userService.getThemes()
+                userService.getThemes(),
+                userService.getPermissionsOfActualUser()
             ])
             // and merging them
-            .then($q.spread(function (userDetails, themes) {
-                $scope.user   = userDetails;
-                $scope.themes = themes;
+            .then($q.spread(function (userDetails, themes, actualPermissions) {
+                $scope.user              = userDetails;
+                $scope.themes            = themes;
+                $scope.actualPermissions = actualPermissions;
                 
                 $rootScope.$emit('user-loaded', {userId: userDetails.userId});
             }));
@@ -32,6 +34,8 @@ nephthysAdminApp
         };
         
         $scope.user = {};
+        
+        $scope.actualPermissions = {};
         
         $scope.load();
     }]);

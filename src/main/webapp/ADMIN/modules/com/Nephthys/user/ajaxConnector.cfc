@@ -3,7 +3,7 @@ component {
     import "API.modules.com.Nephthys.user.statistics.*";
     
     remote array function getList() {
-        var userListCtrl = new filter();
+        var userListCtrl = new filter().setFor("user");
         
         var data = [];
         
@@ -111,27 +111,34 @@ component {
     }
     
     remote boolean function savePermissions(required numeric userId, required array permissions) {
-        var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
-        
-        transaction {
-            for(var i = 1; i <= arguments.permissions.len(); i++) {
-                if(arguments.permissions[i].roleId != 0 && arguments.permissions[i].roleId != null) {
-                    permissionHandlerCtrl.setPermission(arguments.permissions[i].permissionId,
-                                                        arguments.userId,
-                                                        arguments.permissions[i].roleId,
-                                                        arguments.permissions[i].moduleId);
-                }
-                else {
-                    if(arguments.permissions[i].permissionId != 0 && arguments.permissions[i].roleId == null) {
-                        permissionHandlerCtrl.removePermission(arguments.permissions[i].permissionId);
+        if(request.user.hasPermission("com.Nephthys.user", "admin")) {
+            var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
+            
+            transaction {
+                for(var i = 1; i <= arguments.permissions.len(); i++) {
+                    if(arguments.permissions[i].roleId != 0 && arguments.permissions[i].roleId != null) {
+                        permissionHandlerCtrl.setPermission(arguments.permissions[i].permissionId,
+                                                            arguments.userId,
+                                                            arguments.permissions[i].roleId,
+                                                            arguments.permissions[i].moduleId);
                     }
                     else {
-                        continue;
+                        if(arguments.permissions[i].permissionId != 0 && arguments.permissions[i].roleId == null) {
+                            permissionHandlerCtrl.removePermission(arguments.permissions[i].permissionId);
+                        }
+                        else {
+                            continue;
+                        }
                     }
                 }
+                
+                transactionCommit();
             }
             
-            transactionCommit();
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You don't have the permission to edit permissions.");
         }
         
         return true;
@@ -231,6 +238,17 @@ component {
                                          arguments.sortOrder,
                                          _fromDate,
                                          _toDate);
+    }
+    
+    remote struct function getPermissionsOfActualUser() {
+        var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
+        
+        var userRoles = {};
+        for(var role in permissionHandlerCtrl.loadRoles()) {
+            userRoles[role.name] = request.user.hasPermission("com.Nephthys.user", role.name);
+        }
+        
+        return userRoles;
     }
     
     // P R I V A T E   M E T H O D S

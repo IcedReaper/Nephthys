@@ -286,7 +286,7 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
         var refreshEvent = $rootScope.$on('nephthys-statistics-refresh', $scope.refresh);
         
         $scope.$on('$destroy', function() {
-            dateChagedEvent();
+            dateChangedEvent();
             refreshEvent();
         });
     }])

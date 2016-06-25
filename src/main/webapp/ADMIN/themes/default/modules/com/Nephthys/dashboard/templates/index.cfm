@@ -71,7 +71,7 @@
             
         </div>
     </div>
-    <cfif request.user.hasPermission("com.Nephthys.user", "user")>
+    <cfif request.user.hasPermission("com.Nephthys.pages", "user")>
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-block">

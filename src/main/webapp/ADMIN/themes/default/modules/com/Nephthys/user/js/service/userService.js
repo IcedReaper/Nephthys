@@ -81,6 +81,10 @@ nephthysAdminApp
                     userId: userId,
                     extProperties: extProperties
                 });
+            },
+            
+            getPermissionsOfActualUser: function () {
+                return $http.get("/ajax/com/Nephthys/user/getPermissionsOfActualUser");
             }
         };
     });

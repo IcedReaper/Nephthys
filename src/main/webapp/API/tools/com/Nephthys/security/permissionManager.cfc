@@ -210,9 +210,9 @@ component interface="APi.interface.permissionManager" {
         return new Query().setSQL("    SELECT p.permissionId
                                          FROM nephthys_permission p
                                    INNER JOIN nephthys_module m ON p.moduleId = m.moduleId AND m.moduleName = :moduleName
-                                   INNER JOIN nephthys_role r ON p.roleId = r.roleId AND r.value > (SELECT r2.value
-                                                                                                      FROM nephthys_role r2
-                                                                                                     WHERE r2.name = :roleName)
+                                   INNER JOIN nephthys_role r ON p.roleId = r.roleId AND r.value >= (SELECT r2.value
+                                                                                                       FROM nephthys_role r2
+                                                                                                      WHERE r2.name = :roleName)
                                         WHERE p.userId = :userId")
                           .addParam(name = "userId",     value = arguments.userId,     cfsqltype = "cf_sql_numeric")
                           .addParam(name = "moduleName", value = arguments.moduleName, cfsqltype = "cf_sql_varchar")

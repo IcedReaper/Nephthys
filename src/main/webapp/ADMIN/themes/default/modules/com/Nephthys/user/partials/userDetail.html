@@ -74,15 +74,19 @@
                                     <input type="file" ngf-select required accept="image/*" ng-model="user.newAvatar" ngf-fix-orientation="false" class="form-control">
                                 </div>
                                 
-                                <button type="submit" class="btn btn-success" ng-click="uploadAvatar()"><i class="fa fa-upload"></i> Hochladen</button>
                             </form>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                           <button type="submit" class="btn btn-success" ng-click="uploadAvatar()"><i class="fa fa-upload"></i> Hochladen</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </uib-tab>
-    <uib-tab heading="Erweiterte Angaben" disable="userId == 0">
+    <uib-tab heading="Erweiterte Angaben" disabled="userId == 0">
         <div class="row">
             <div class="col-md-12" ng-controller="userExtPropertiesCtrl">
                 <div class="card card-block">
@@ -120,7 +124,7 @@
             </div>
         </div>
     </uib-tab>
-    <uib-tab heading="Berechtigungen" disable="userId == 0">
+    <uib-tab heading="Berechtigungen" ng-if="actualPermissions.admin" disabled="userId == 0">
         <div class="row">
             <div class="col-md-12" ng-controller="userPermissionCtrl">
                 <div class="card card-block">
@@ -141,7 +145,7 @@
             </div>
         </div>
     </uib-tab>
-    <uib-tab heading="Statistiken" disable="userId == 0">
+    <uib-tab heading="Statistiken" disabled="userId == 0">
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-block">
