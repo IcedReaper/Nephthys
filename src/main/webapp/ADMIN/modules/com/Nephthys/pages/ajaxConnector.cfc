@@ -17,7 +17,7 @@ component {
                 "link"               = actualPageVersion.getLink(),
                 "title"              = actualPageVersion.getTitle(),
                 "description"        = actualPageVersion.getDescription(),
-                "useDynamicSuffixes" = actualPageVersion.getUseDynamicSuffixes(),
+                "useDynamicUrlSuffix" = actualPageVersion.getuseDynamicUrlSuffix(),
                 "creator"            = getUserInformation(actualPageVersion.getCreator()),
                 "creationDate"       = formatCtrl.formatDate(actualPageVersion.getCreationDate()),
                 "lastEditor"         = getUserInformation(actualPageVersion.getLastEditor()),
@@ -159,7 +159,7 @@ component {
                            .setTitle(arguments.pageVersion.title)
                            .setDescription(arguments.pageVersion.description)
                            .setContent(arguments.pageVersion.content)
-                           .setUseDynamicSuffixes(arguments.pageVersion.useDynamicSuffixes)
+                           .setuseDynamicUrlSuffix(arguments.pageVersion.useDynamicUrlSuffix)
                            .setLastEditorById(request.user.getUserId())
                            .setLastEditDate(now())
                            .setStatusId(arguments.pageVersion.statusId);
@@ -338,53 +338,37 @@ component {
         return false;
     }
     
-    
-    remote struct function getAvailableSubModules() {
+    remote struct function getModule() {
         var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
         
-        var modules = moduleFilterCtrl.setAvailableWWW(true)
-                                      .execute()
-                                      .getResult();
+        moduleFilterCtrl.setAvailableWWW(true)
+                        .execute();
         
-        var _modules = {};
+        var modules = {};
         
-        for(var i = 1; i <= modules.len(); ++i) {
-            _modules[modules[i].getModuleName()] = [];
+        for(var module in moduleFilterCtrl.getResult()) {
+            modules[module.getModuleName()] = {
+                "useDynamicUrlSuffix" = module.getUseDynamicUrlSuffix(),
+                "options"             = [],
+                "subModules"          = []
+            };
             
-            var subModules = modules[i].getSubModules();
-            for(var j = 1; j <= subModules.len(); ++j) {
-                _modules[modules[i].getModuleName()].append(subModules[j].getModuleName());
+            for(var subModule in module.getSubModules()) {
+                modules[module.getModuleName()].subModules.append(subModule.getModuleName());
+            }
+            
+            for(var option in module.getOptions()) {
+                modules[module.getModuleName()].options.append({
+                    "dbName"        = option.getOptionName(),
+                    "description"   = option.getDescription(),
+                    "type"          = option.getType(),
+                    "selectOptions" = option.getSelectOptions(),
+                    "multiple"      = option.isMultiple()
+                });
             }
         }
         
-        return _modules;
-    }
-    
-    remote struct function getAvailableOptions() {
-        var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
-        
-        var modules = moduleFilterCtrl.setAvailableWWW(true)
-                                      .execute()
-                                      .getResult();
-        
-        var _modules = {};
-        
-        for(var i = 1; i <= modules.len(); ++i) {
-            _modules[modules[i].getModuleName()] = [];
-            
-            var options = modules[i].getOptions();
-            for(var j = 1; j <= options.len(); ++j) {
-                _modules[modules[i].getModuleName()][j] = {
-                    "dbName"        = options[j].getOptionName(),
-                    "description"   = options[j].getDescription(),
-                    "type"          = options[j].getType(),
-                    "selectOptions" = options[j].getSelectOptions(),
-                    "multiple"      = options[j].isMultiple()
-                };
-            }
-        }
-        
-        return _modules;
+        return modules;
     }
     
     remote array function getSitemap() {
@@ -690,7 +674,7 @@ component {
             "title"              = arguments.pageVersion.getTitle(),
             "description"        = arguments.pageVersion.getDescription(),
             "content"            = arguments.pageVersion.getContent(),
-            "useDynamicSuffixes" = arguments.pageVersion.getUseDynamicSuffixes(),
+            "useDynamicUrlSuffix" = arguments.pageVersion.getuseDynamicUrlSuffix(),
             "isOnline"           = arguments.pageVersion.isOnline(),
             "creator"            = getUserInformation(arguments.pageVersion.getCreator()),
             "creationDate"       = formatCtrl.formatDate(arguments.pageVersion.getCreationDate()),

@@ -47,21 +47,16 @@ nephthysAdminApp
             $q.all([
                 pagesService.getDetails($routeParams.pageId),
                 pagesService.getStatus(),
-                pagesService.getAvailableSubModules(),
-                pagesService.getAvailableOptions(),
+                pagesService.getModule(),
                 pagesService.getActualUser()
             ])
-            .then($q.spread(function (pageDetails, status, availableSubModules, availableOptions, actualUser) {
-                $scope.page.availableVersions = pageDetails.availableVersions;
-                $scope.page.actualVersion     = pageDetails.actualVersion;
-                $scope.page.pageId            = pageDetails.pageId;
-                $scope.page.versions          = pageDetails.versions;
-                $scope.status              = status;
-                $scope.availableSubModules = availableSubModules;
-                $scope.availableOptions    = availableOptions;
+            .then($q.spread(function (pageDetails, status, module, actualUser) {
+                $scope.page   = pageDetails;
+                $scope.status = status;
+                $scope.module = module;
                 
-                $scope.selectedVersion.major = pageDetails.actualVersion.major;
-                $scope.selectedVersion.minor = pageDetails.actualVersion.minor;
+                $scope.selectedVersion.major    = pageDetails.actualVersion.major;
+                $scope.selectedVersion.minor    = pageDetails.actualVersion.minor;
                 $scope.selectedVersion.complete = $scope.selectedVersion.major + '.' + $scope.selectedVersion.minor;
                 
                 _actualUser = actualUser;
@@ -261,7 +256,7 @@ nephthysAdminApp
         
         $scope.getStatisticsChartType = function () {
             if(! structIsEmpty($scope.page)) {
-                if($scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].useDynamicSuffixes) {
+                if($scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].useDynamicUrlSuffix) {
                     return "line";
                 }
             }
@@ -270,12 +265,38 @@ nephthysAdminApp
         
         $scope.getStatisticsRequestType = function () {
             if(! structIsEmpty($scope.page)) {
-                if($scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].useDynamicSuffixes) {
+                if($scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].useDynamicUrlSuffix) {
                     return "splitPerPage";
                 }
             }
             return "total";
         };
+        
+        $scope.$watch(function () {
+            if($scope.page.versions) {
+                return {
+                    content: $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].content
+                };
+            }
+        }, function(newValues, oldValues) {
+            if($scope.page.versions) {
+                var searchSub = function(subElements) {
+                    for(var i = 0; i < subElements.length; ++i) {
+                        if($scope.module[ subElements[i].type ].useDynamicUrlSuffix) {
+                            return true;
+                        }
+                        
+                        if(searchSub(subElements[i].children)) {
+                            return true;
+                        }
+                    }
+                    
+                    return false;
+                };
+                
+                $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].useDynamicUrlSuffix = searchSub($scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].content);
+            }
+        }, true);
         
         // init values
         $scope.page = {};

@@ -128,6 +128,11 @@ component {
         
         return this;
     }
+    public module function setUseDynamicUrlSuffix(required boolean useDynamicUrlSuffix) {
+        variables.useDynamicUrlSuffix = arguments.useDynamicUrlSuffix;
+        
+        return this;
+    }
     
     
     public numeric function getModuleId() {
@@ -168,6 +173,9 @@ component {
         
         return variables.options;
     }
+    public boolean function getUseDynamicUrlSuffix() {
+        return variables.useDynamicUrlSuffix == 1;
+    }
     
     
     public module function save() {
@@ -181,7 +189,8 @@ component {
                                                                          systemModule,
                                                                          sortOrder,
                                                                          availableWWW,
-                                                                         availableADMIN
+                                                                         availableADMIN,
+                                                                         useDynamicUrlSuffix
                                                                      )
                                                               VALUES (
                                                                          :moduleName,
@@ -190,29 +199,32 @@ component {
                                                                          :systemModule,
                                                                          :sortOrder,
                                                                          :availableWWW,
-                                                                         :availableADMIN
+                                                                         :availableADMIN,
+                                                                         :useDynamicUrlSuffix
                                                                      );
                                                         SELECT currval('seq_nephthys_module_id') newModuleId;")
-                                                .addParam(name = "moduleName",     value = variables.moduleName,     cfsqltype = "cf_sql_varchar")
-                                                .addParam(name = "description",    value = variables.description,    cfsqltype = "cf_sql_varchar")
-                                                .addParam(name = "active",         value = variables.active,         cfsqltype = "cf_sql_bit")
-                                                .addParam(name = "systemModule",   value = variables.systemModule,   cfsqltype = "cf_sql_bit")
-                                                .addparam(name = "sortOrder",      value = variables.sortOrder,      cfsqltype = "cf_sql_numeric")
-                                                .addParam(name = "availableWWW",   value = variables.availableWWW,   cfsqltype = "cf_sql_bit")
-                                                .addParam(name = "availableADMIN", value = variables.availableADMIN, cfsqltype = "cf_sql_bit")
+                                                .addParam(name = "moduleName",          value = variables.moduleName,          cfsqltype = "cf_sql_varchar")
+                                                .addParam(name = "description",         value = variables.description,         cfsqltype = "cf_sql_varchar")
+                                                .addParam(name = "active",              value = variables.active,              cfsqltype = "cf_sql_bit")
+                                                .addParam(name = "systemModule",        value = variables.systemModule,        cfsqltype = "cf_sql_bit")
+                                                .addparam(name = "sortOrder",           value = variables.sortOrder,           cfsqltype = "cf_sql_numeric")
+                                                .addParam(name = "availableWWW",        value = variables.availableWWW,        cfsqltype = "cf_sql_bit")
+                                                .addParam(name = "availableADMIN",      value = variables.availableADMIN,      cfsqltype = "cf_sql_bit")
+                                                .addParam(name = "useDynamicUrlSuffix", value = variables.useDynamicUrlSuffix, cfsqltype = "cf_sql_bit")
                                                 .execute()
                                                 .getResult()
                                                 .newModuleId[1];
             }
             else {
                 new Query().setSQL("UPDATE nephthys_module
-                                       SET moduleName     = :moduleName,
-                                           description    = :description,
-                                           active         = :active,
-                                           systemModule   = :systemModule,
-                                           sortOrder      = :sortOrder,
-                                           availableWWW   = :availableWWW,
-                                           availableADMIN = :availableADMIN
+                                       SET moduleName          = :moduleName,
+                                           description         = :description,
+                                           active              = :active,
+                                           systemModule        = :systemModule,
+                                           sortOrder           = :sortOrder,
+                                           availableWWW        = :availableWWW,
+                                           availableADMIN      = :availableADMIN,
+                                           useDynamicUrlSuffix = :useDynamicUrlSuffix
                                      WHERE moduleId    = :moduleId")
                            .addParam(name = "moduleId",       value = variables.moduleId,       cfsqltype = "cf_sql_numeric")
                            .addParam(name = "moduleName",     value = variables.moduleName,     cfsqltype = "cf_sql_varchar")
@@ -222,6 +234,7 @@ component {
                            .addparam(name = "sortOrder",      value = variables.sortOrder,      cfsqltype = "cf_sql_numeric")
                            .addParam(name = "availableWWW",   value = variables.availableWWW,   cfsqltype = "cf_sql_bit")
                            .addParam(name = "availableADMIN", value = variables.availableADMIN, cfsqltype = "cf_sql_bit")
+                           .addParam(name = "useDynamicUrlSuffix", value = variables.useDynamicUrlSuffix, cfsqltype = "cf_sql_bit")
                            .execute();
             }
             
@@ -277,26 +290,28 @@ component {
                                             .getResult();
         
             if(qModuleDetails.getRecordCount() == 1) {
-                variables.moduleName     = qModuleDetails.moduleName[1];
-                variables.description    = qModuleDetails.description[1];
-                variables.active         = qModuleDetails.active[1];
-                variables.systemModule   = qModuleDetails.systemModule[1];
-                variables.sortOrder      = qModuleDetails.sortOrder[1];
-                variables.availableWWW   = qModuleDetails.availableWWW[1];
-                variables.availableADMIN = qModuleDetails.availableADMIN[1];
+                variables.moduleName          = qModuleDetails.moduleName[1];
+                variables.description         = qModuleDetails.description[1];
+                variables.active              = qModuleDetails.active[1];
+                variables.systemModule        = qModuleDetails.systemModule[1];
+                variables.sortOrder           = qModuleDetails.sortOrder[1];
+                variables.availableWWW        = qModuleDetails.availableWWW[1];
+                variables.availableADMIN      = qModuleDetails.availableADMIN[1];
+                variables.useDynamicUrlSuffix = qModuleDetails.useDynamicUrlSuffix[1];
             }
             else {
                 throw(type = "nephthys.notFound.module", message = "Could not find module by ID ", detail = variables.moduleId);
             }
         }
         else {
-            variables.moduleName     = "Neues Modul";
-            variables.description    = "";
-            variables.active         = 0;
-            variables.systemModule   = 0;
-            variables.sortOrder      = 0;
-            variables.availableWWW   = true;
-            variables.availableADMIN = true;
+            variables.moduleName          = "Neues Modul";
+            variables.description         = "";
+            variables.active              = 0;
+            variables.systemModule        = 0;
+            variables.sortOrder           = 0;
+            variables.availableWWW        = true;
+            variables.availableADMIN      = true;
+            variables.useDynamicUrlSuffix = false;
         }
     }
     

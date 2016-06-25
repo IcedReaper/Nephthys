@@ -34,7 +34,7 @@ component implements="API.interfaces.filter" {
                  FROM (    SELECT p.pageId,
                                   '^' || replace(pv.link, '/', '\/') preparredLink,
                                   CASE 
-                                    WHEN pv.useDynamicSuffixes = true THEN 
+                                    WHEN pv.useDynamicUrlSuffix = true THEN 
                                       '(?:\/(\w*|\-|\s|\.)*)*'
                                     ELSE 
                                       ''

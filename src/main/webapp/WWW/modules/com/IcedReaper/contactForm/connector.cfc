@@ -20,6 +20,7 @@ component implements="WWW.interfaces.connector" {
         }
         else {
             try {
+                // TODO: add validation
                 var contactFormRequest = new request(0);
                 
                 contactFormRequest.setSubject(form.subject)
@@ -44,6 +45,7 @@ component implements="WWW.interfaces.connector" {
                 }
             }
             catch(icedreaper.contactForm.invalidData e) {
+                // TODO: Return to form show error
                 writeDump(var=e, abort=true);
                 return "Fehler";
             }

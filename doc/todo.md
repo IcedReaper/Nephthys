@@ -76,6 +76,7 @@
     13. Responsive anpassungen
     14. Design schick machen
     15. Bei gewissen Modulen easy/expert Mode?
+    16. Usertasklist (Registrierungen freischalten)
 
 ## Module (in eigenen Repos/Projekten)
     1. Gallery
@@ -91,6 +92,10 @@
                 * Als eingeloggter User
         3. Alles prüfen
         4. Statistiken pro Bild
+            - Jegliche Idee bisher ist crap
+                * Für onSlideEnd von blueimp image gallery muss per jQuery der Filename ausgelesen werden
+                * ColdFusion liefert nicht ohne weiteres Bilder aus - ich hab noch nix ergoogled - ggf Lucee-Forum anfunken
+                * imageServer.cfm?i=imagePage.jpg (Wohl beste aber auch nicht so das wahrste) | übern nginx drehen
     2. Blog
         1. Mögliche Verbesserungen:
             * File resizing after upload is only applied by width and height attributes
@@ -207,6 +212,7 @@
     10. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
     11. Charts responsive mit maxHeight!?
     12. Checken, ob man Loading Bar und Error Message Box irgendwie Global verankern kann
+    13. Checkout Lucee REST Servlet (web.xml)
 
 
 

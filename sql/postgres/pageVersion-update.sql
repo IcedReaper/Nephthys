@@ -734,3 +734,7 @@ alter table IcedReaper_gallery_status rename column galleriesAreDeleteable to de
 alter table IcedReaper_gallery_status rename column galleriesAreEditable   to editable;
 
 alter table nephthys_module_option add column multiple boolean default false NOT NULL;
+
+-- 25.06.2016
+alter table nephthys_module ADD column useDynamicUrlSuffix boolean default false NOT NULL;
+alter table nephthys_page_pageVersion rename column useDynamicSuffixes to useDynamicUrlSuffix;

@@ -42,12 +42,8 @@ nephthysAdminApp
                 return $http.get("/ajax/com/Nephthys/pages/getStatusList");
             },
             
-            getAvailableSubModules: function () {
-                return $http.get("/ajax/com/Nephthys/pages/getAvailableSubModules");
-            },
-            
-            getAvailableOptions: function () {
-                return $http.get("/ajax/com/Nephthys/pages/getAvailableOptions");
+            getModule: function () {
+                return $http.get("/ajax/com/Nephthys/pages/getModule");
             },
             
             getActualUser: function () {

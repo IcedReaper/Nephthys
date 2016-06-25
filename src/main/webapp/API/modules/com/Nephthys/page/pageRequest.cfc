@@ -170,8 +170,8 @@ component {
     public numeric function getSortOrder() {
         return variables.pageVersion.getSortOrder();
     }
-    public boolean function getUseDynamicSuffixes() {
-        return variables.pageVersion.getUseDynamicSuffixes();
+    public boolean function getuseDynamicUrlSuffix() {
+        return variables.pageVersion.getuseDynamicUrlSuffix();
     }
     public numeric function getCreatorUserId() {
         return variables.pageVersion.getCreator().getUserId();

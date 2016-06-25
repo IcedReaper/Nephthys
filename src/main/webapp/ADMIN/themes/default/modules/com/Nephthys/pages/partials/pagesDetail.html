@@ -56,22 +56,15 @@
                                     <input type="text" class="form-control" id="link" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].link" ng-disabled="isReadonly()">
                                 </div>
                                 <div class="form-group">
-                                    <label for="useDynamicSuffixes" title="Dynamische Seiten Suffixe sind Erweiterungen der Url, über welche sich Datensätze eines Moduls laden lassen">Dynamische Seiten Suffixe verwenden *</label>
-                                    <select class="form-control" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].useDynamicSuffixes"
-                                            ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]"
-                                            ng-disabled="isReadonly()">
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="statusName">Aktueller Status</label>
-                                    <input type="text" class="form-control" id="statusName" value="{{status[ page.versions[selectedVersion.major][selectedVersion.minor].statusId ].name}}" readonly="readonly">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
                                     <label for="linktext">Text des Links</label>
                                     <input type="text" class="form-control" id="linktext" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].linktext" ng-disabled="isReadonly()">
                                 </div>
+                                <div class="form-group">
+                                    <label>Aktueller Status</label>
+                                    <p class="form-control-static">{{status[ page.versions[selectedVersion.major][selectedVersion.minor].statusId ].name}}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label for="title">Titel der Seite / des Links</label>
                                     <input type="text" class="form-control" id="title" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].title" ng-disabled="isReadonly()">
@@ -79,6 +72,10 @@
                                 <div class="form-group">
                                     <label for="description">Beschreibung der Seite</label>
                                     <input type="text" class="form-control" id="description" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].description" ng-disabled="isReadonly()">
+                                </div>
+                                <div class="form-group">
+                                    <label for="useDynamicUrlSuffix" title="Dynamische Seiten Suffixe sind Erweiterungen der Url, über welche sich Datensätze eines Moduls laden lassen">Dynamische Seiten Suffixe verwenden</label>
+                                    <p class="form-control-static">{{page.versions[selectedVersion.major][selectedVersion.minor].useDynamicUrlSuffix ? 'Ja' : 'Nein'}}</p>
                                 </div>
                             </div>
                         </div>
@@ -128,7 +125,7 @@
                 
                 <h2>{{child.type}}</h2>
                 
-                <div class="form-group row" ng-repeat="option in availableOptions[child.type]">
+                <div class="form-group row" ng-repeat="option in module[child.type].options">
                     <label class="col-sm-2">{{option.description}}</label>
                     <div class="col-sm-10">
                         <input ng-model="child.options[option.dbName]"
@@ -173,13 +170,13 @@
                     <div class="card card-block" ng-repeat="child in child.children" ng-include="'contentChild'"></div>
                 </div>
                 
-                <div ng-if="availableSubModules[child.type].length > 0">
+                <div ng-if="module[child.type].subModules.length > 0">
                     <h4>Weiteres Unterelement hinzufügen</h4>
                     
                     <select class="form-control"
                             ng-change="appendChild(child, child.newChildren)"
                             ng-model="child.newChildren"
-                            ng-options="subModule as subModule for subModule in availableSubModules[child.type]"
+                            ng-options="subModule as subModule for subModule in module[child.type].subModules"
                             ng-disabled="isReadonly()">
                         <option value="" selected="selected"></option>
                     </select>

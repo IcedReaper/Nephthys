@@ -51,8 +51,8 @@ component {
         variables.content = deserializeJSON(arguments.content);
         return this;
     }
-    public pageVersion function setUseDynamicSuffixes(required boolean useDynamicSuffixes) {
-        variables.useDynamicSuffixes = arguments.useDynamicSuffixes;
+    public pageVersion function setuseDynamicUrlSuffix(required boolean useDynamicUrlSuffix) {
+        variables.useDynamicUrlSuffix = arguments.useDynamicUrlSuffix;
         return this;
     }
     public pageVersion function setStatusId(required numeric statusId) {
@@ -117,8 +117,8 @@ component {
     public string function getContentAsJSON() {
         return serializeJSON(variables.content);
     }
-    public boolean function getUseDynamicSuffixes() {
-        return variables.useDynamicSuffixes == 1;
+    public boolean function getuseDynamicUrlSuffix() {
+        return variables.useDynamicUrlSuffix == 1;
     }
     public numeric function getStatusId() {
         return variables.statusId;
@@ -217,7 +217,7 @@ component {
                                                                               title,
                                                                               description,
                                                                               content,
-                                                                              useDynamicSuffixes,
+                                                                              useDynamicUrlSuffix,
                                                                               statusId,
                                                                               creationUserId,
                                                                               creationDate,
@@ -233,7 +233,7 @@ component {
                                                                               :title,
                                                                               :description,
                                                                               :content,
-                                                                              :useDynamicSuffixes,
+                                                                              :useDynamicUrlSuffix,
                                                                               :statusId,
                                                                               :userId,
                                                                               :creationDate,
@@ -249,7 +249,7 @@ component {
                                                      .addParam(name = "title",              value = variables.title,                  cfsqltype = "cf_sql_varchar")
                                                      .addParam(name = "description",        value = variables.description,            cfsqltype = "cf_sql_varchar")
                                                      .addParam(name = "content",            value = serializeJSON(variables.content), cfsqltype = "cf_sql_varchar")
-                                                     .addParam(name = "useDynamicSuffixes", value = variables.useDynamicSuffixes,     cfsqltype = "cf_sql_bit")
+                                                     .addParam(name = "useDynamicUrlSuffix", value = variables.useDynamicUrlSuffix,     cfsqltype = "cf_sql_bit")
                                                      .addParam(name = "statusId",           value = variables.statusId,               cfsqltype = "cf_sql_numeric")
                                                      .addParam(name = "userId",             value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
                                                      .addParam(name = "creationDate",       value = variables.creationDate,           cfsqltype = "cf_sql_timestamp")
@@ -278,7 +278,7 @@ component {
                                            title              = :title,
                                            description        = :description,
                                            content            = :content,
-                                           useDynamicSuffixes = :useDynamicSuffixes,
+                                           useDynamicUrlSuffix = :useDynamicUrlSuffix,
                                            statusId           = :statusId,
                                            lastEditUserId     = :userId,
                                            lastEditDate       = :lastEditDate
@@ -291,7 +291,7 @@ component {
                            .addParam(name = "title",              value = variables.title,                  cfsqltype = "cf_sql_varchar")
                            .addParam(name = "description",        value = variables.description,            cfsqltype = "cf_sql_varchar")
                            .addParam(name = "content",            value = serializeJSON(variables.content), cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "useDynamicSuffixes", value = variables.useDynamicSuffixes,     cfsqltype = "cf_sql_bit")
+                           .addParam(name = "useDynamicUrlSuffix", value = variables.useDynamicUrlSuffix,     cfsqltype = "cf_sql_bit")
                            .addParam(name = "statusId",           value = variables.statusId,               cfsqltype = "cf_sql_numeric")
                            .addParam(name = "userId",             value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
                            .addParam(name = "lastEditDate",       value = variables.lastEditDate,           cfsqltype = "cf_sql_timestamp")
@@ -388,7 +388,7 @@ component {
                 variables.title              = qPageVersion.title[1];
                 variables.description        = qPageVersion.description[1];
                 variables.content            = deserializeJSON(qPageVersion.content[1]);
-                variables.useDynamicSuffixes = qPageVersion.useDynamicSuffixes[1];
+                variables.useDynamicUrlSuffix = qPageVersion.useDynamicUrlSuffix[1];
                 variables.statusId           = qPageVersion.statusId[1];
                 variables.creator            = new user(qPageVersion.creationUserId[1]);
                 variables.creationDate       = qPageVersion.creationDate[1];
@@ -413,7 +413,7 @@ component {
             variables.title              = "";
             variables.description        = "";
             variables.content            = [];
-            variables.useDynamicSuffixes = false;
+            variables.useDynamicUrlSuffix = false;
             variables.statusId           = getFirstStatusId();
             variables.creator            = new user(request.user.getUserId());
             variables.creationDate       = now();

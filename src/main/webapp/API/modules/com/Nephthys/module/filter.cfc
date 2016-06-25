@@ -69,7 +69,7 @@ component implements="API.interfaces.filter" {
             throw(type = "nephthys.application.invalidResource", message = "Please be sure that you called execute() before you're trying to get the results");
         }
         
-        if(variables.results == null) {
+        if(isNull(variables.results)) {
             variables.results = [];
             for(var i = 1; i <= variables.qRes.getRecordCount(); i++) {
                 variables.results.append(new module(variables.qRes.moduleId[i]));
