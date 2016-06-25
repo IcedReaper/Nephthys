@@ -269,7 +269,7 @@ component {
             }
         }
         else {
-            if(getStatus().arePagesEditable()) {
+            if(getStatus().getEditable()) {
                 new Query().setSQL("UPDATE nephthys_page_pageVersion
                                        SET majorVersion       = :majorVersion,
                                            minorVersion       = :minorVersion,

@@ -14,7 +14,7 @@ nephthysAdminApp
         };
         
         $scope.save = function () {
-            if($scope.sitemap[$scope.selectedIndex].pagesAreEditable) {
+            if($scope.sitemap[$scope.selectedIndex].editable) {
                 pagesService
                     .saveSitemap($scope.sitemap[$scope.selectedIndex])
                     .then(function(sitemapId) {

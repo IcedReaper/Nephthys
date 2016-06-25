@@ -49,7 +49,7 @@
                                             ng-click="pushToStatus(ps.statusId);">{{ps.name}}</button>
                                 </div>
                             </div>
-                            <div class="col-md-4" ng-if="sitemap[selectedIndex].pagesAreEditable">
+                            <div class="col-md-4" ng-if="sitemap[selectedIndex].editable">
                                 <div class="pull-right">
                                     <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
                                 </div>
@@ -103,7 +103,7 @@
 
 <script type="text/ng-template" id="tree_renderer.html">
     <h4>{{region.description}}</h4>
-    <div ui-tree id="ui-tree-{{region.region}}" data-nodrag="{{! sitemap[selectedIndex].pagesAreEditable}}" data-nodrop="{{! region.pagesAreEditable}}" data-clone-enabled="false" data-max-depth="(region.regionId === null ? 1 : 0)">
+    <div ui-tree id="ui-tree-{{region.region}}" data-nodrag="{{! sitemap[selectedIndex].editable}}" data-nodrop="{{! region.editable}}" data-clone-enabled="false" data-max-depth="(region.regionId === null ? 1 : 0)">
         <ol ui-tree-nodes ng-model="region.pages">
             <li ng-repeat="page in region.pages" ui-tree-node ng-include="'tree_nodes_renderer.html'"></li>
         </ol>

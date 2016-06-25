@@ -173,7 +173,7 @@ component {
     }
     
     public void function delete() {
-        if(variables.status.arePagesDeleteable()) {
+        if(variables.status.getDeleteable()) {
             new Query().setSQL("DELETE FROM nephthys_page_sitemap
                                       WHERE sitemapId = :sitemapId")
                        .addParam(name = "sitemapId", variables = variables.sitemapId, cfsqltype="cf_sql_numeric")

@@ -36,7 +36,7 @@ component {
     
     remote array function getPageVersionInTasklist() {
         var statusFilterCtrl = new filter().setFor("status")
-                                           .setPagesRequireAction(true)
+                                           .setShowInTasklist(true)
                                            .execute();
         
         var pageVersionFilterCtrl = new filter().setFor("pageVersion");
@@ -147,7 +147,7 @@ component {
             }
             
             var pageVersion = new pageVersion(arguments.pageVersion.pageVersionId);
-            if(pageVersion.getStatus().arePagesEditable()) {
+            if(pageVersion.getStatus().getEditable()) {
                 if(arguments.pageVersion.pageVersionId == null) {
                     pageVersion.setPageId(arguments.pageId)
                                .setMajorVersion(arguments.majorVersion)
@@ -180,7 +180,7 @@ component {
             }
             else {
                 transactionRollback();
-                throw(type = "nephthys.application.notAllowed", message = "The page version is in an non pagesAreEditable status.");
+                throw(type = "nephthys.application.notAllowed", message = "The page version is in an non showInTasklist status.");
             }
         }
     }
@@ -236,11 +236,11 @@ component {
             var status = new status(arguments.status.statusId);
             
             status.setActiveStatus(arguments.status.active)
-                  .setPagesAreEditable(arguments.status.pagesAreEditable)
+                  .setEditable(arguments.status.showInTasklist)
                   .setName(arguments.status.name)
                   .setOnlineStatus(arguments.status.online)
-                  .setPagesAreDeleteable(arguments.status.pagesAreDeleteable)
-                  .setPagesRequireAction(arguments.status.pagesRequireAction)
+                  .setDeleteable(arguments.status.deleteable)
+                  .setShowInTasklist(arguments.status.showInTasklist)
                   .setLastEditor(request.user)
                   .save();
             
@@ -397,7 +397,7 @@ component {
             preparedSitemaps.append({
                 "sitemapId"        = sitemap.getSitemapId(),
                 "version"          = sitemap.getVersion(),
-                "pagesAreEditable" = sitemap.getStatus().arePagesEditable(),
+                "showInTasklist" = sitemap.getStatus().getEditable(),
                 "statusId"         = sitemap.getStatus().getStatusId(),
                 "regions"          = preparedRegions,
                 "approvalList"     = preparedApprovalList,
@@ -415,7 +415,7 @@ component {
     
     remote array function getSitemapInTasklist() {
         var statusFilterCtrl = new filter().setFor("status")
-                                           .setPagesRequireAction(true)
+                                           .setShowInTasklist(true)
                                            .execute();
         
         var sitemapFilterCtrl = new filter().setFor("sitemap");
@@ -432,7 +432,7 @@ component {
                 statusData[index]["sitemaps"].append({
                     "sitemapId"        = sitemap.getSitemapId(),
                     "version"          = sitemap.getVersion(),
-                    "pagesAreEditable" = sitemap.getStatus().arePagesEditable(),
+                    "showInTasklist" = sitemap.getStatus().getEditable(),
                     "statusId"         = sitemap.getStatus().getStatusId(),
                     "creator"          = getUserInformation(sitemap.getCreator()),
                     "creationDate"     = formatCtrl.formatDate(sitemap.getCreationDate()),
@@ -457,7 +457,7 @@ component {
         sitemap[index] = {
             "sitemapId"        = null,
             "version"          = javaCast("integer", index),
-            "pagesAreEditable" = true,
+            "showInTasklist" = true,
             "statusId"         = javaCast("integer", statusId),
             "regions"          = [],
             "offline"          = []
@@ -695,7 +695,7 @@ component {
                     "name"             = nextStatus.getName(),
                     "active"           = nextStatus.isActive(),
                     "online"           = nextStatus.isOnline(),
-                    "pagesAreEditable" = nextStatus.arePagesEditable()
+                    "showInTasklist" = nextStatus.getEditable()
                 };
             }
         }
@@ -705,9 +705,9 @@ component {
             "name"               = arguments.status.getName(),
             "active"             = arguments.status.isActive(),
             "online"             = arguments.status.isOnline(),
-            "pagesAreEditable"   = arguments.status.arePagesEditable(),
-            "pagesAreDeleteable" = arguments.status.arePagesDeleteable(),
-            "pagesRequireAction" = arguments.status.requirePagesAction(),
+            "showInTasklist"   = arguments.status.getEditable(),
+            "deleteable" = arguments.status.getDeleteable(),
+            "showInTasklist" = arguments.status.getShowInTasklist(),
             "nextStatus"         = nextStatusList
         };
     }
@@ -721,7 +721,7 @@ component {
                     "name"             = nextStatus.getName(),
                     "active"           = nextStatus.isActive(),
                     "online"           = nextStatus.isOnline(),
-                    "pagesAreEditable" = nextStatus.arePagesEditable()
+                    "showInTasklist" = nextStatus.getEditable()
                 });
             }
         }
@@ -731,9 +731,9 @@ component {
             "name"               = arguments.status.getName(),
             "active"             = arguments.status.isActive(),
             "online"             = arguments.status.isOnline(),
-            "pagesAreEditable"   = arguments.status.arePagesEditable(),
-            "pagesAreDeleteable" = arguments.status.arePagesDeleteable(),
-            "pagesRequireAction" = arguments.status.requirePagesAction(),
+            "showInTasklist"   = arguments.status.getEditable(),
+            "deleteable" = arguments.status.getDeleteable(),
+            "showInTasklist" = arguments.status.getShowInTasklist(),
             "nextStatus"         = nextStatusList
         };
     }

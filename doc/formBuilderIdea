@@ -3,6 +3,10 @@ Formbuilder Struktur:
 {
     typ: "vertical" // vertical | horizontal | 
     name: "registration",
+    success: {
+        headline: "Vielen Dank",
+        message:  "Vielen Dank für Ihre Registrierung. Bitte geben Sie uns etwas Zeit Ihre Anfrage zu bearbeiten."
+    },
     fields: [
         [
             {

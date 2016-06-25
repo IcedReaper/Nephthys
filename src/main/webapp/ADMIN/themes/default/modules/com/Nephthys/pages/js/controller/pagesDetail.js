@@ -243,7 +243,7 @@ nephthysAdminApp
         
         $scope.isEditable = function () {
             if($scope.page && ! structIsEmpty($scope.page)) {
-                return $scope.status[$scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].statusId].pagesAreEditable;
+                return $scope.status[$scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].statusId].editable;
             }
             else {
                 return false;

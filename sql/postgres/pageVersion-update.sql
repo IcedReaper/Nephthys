@@ -738,3 +738,7 @@ alter table nephthys_module_option add column multiple boolean default false NOT
 -- 25.06.2016
 alter table nephthys_module ADD column useDynamicUrlSuffix boolean default false NOT NULL;
 alter table nephthys_page_pageVersion rename column useDynamicSuffixes to useDynamicUrlSuffix;
+
+alter table Nephthys_page_status rename column pagesRequireAction to showInTasklist;
+alter table Nephthys_page_status rename column pagesAreDeleteable to deleteable;
+alter table Nephthys_page_status rename column pagesAreEditable   to editable;

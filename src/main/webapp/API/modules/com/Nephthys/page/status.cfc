@@ -37,22 +37,22 @@ component {
         return this;
     }
     
-    public status function setPagesAreEditable(required boolean pagesAreEditable) {
-        variables.pagesAreEditable = arguments.pagesAreEditable;
+    public status function setEditable(required boolean editable) {
+        variables.editable = arguments.editable;
         variables.attributesChanged = true;
         
         return this;
     }
     
-    public status function setPagesAreDeleteable(required boolean pagesAreDeleteable) {
-        variables.pagesAreDeleteable = arguments.pagesAreDeleteable;
+    public status function setDeleteable(required boolean deleteable) {
+        variables.deleteable = arguments.deleteable;
         variables.attributesChanged = true;
         
         return this;
     }
     
-    public status function setPagesRequireAction(required boolean pagesRequireAction) {
-        variables.pagesRequireAction = arguments.pagesRequireAction;
+    public status function setShowInTasklist(required boolean showInTasklist) {
+        variables.showInTasklist = arguments.showInTasklist;
         variables.attributesChanged = true;
         
         return this;
@@ -160,14 +160,14 @@ component {
         return variables.nextStatus;
     }
     
-    public boolean function arePagesEditable() {
-        return variables.pagesAreEditable == 1;
+    public boolean function getEditable() {
+        return variables.editable == 1;
     }
-    public boolean function arePagesDeleteable() {
-        return variables.pagesAreDeleteable == 1;
+    public boolean function getDeleteable() {
+        return variables.deleteable == 1;
     }
-    public boolean function requirePagesAction() {
-        return variables.pagesRequireAction == 1;
+    public boolean function getShowInTasklist() {
+        return variables.showInTasklist == 1;
     }
     public boolean function isActive() {
         return variables.active == 1;
@@ -194,14 +194,14 @@ component {
     
     public status function save() {
         transaction {
-            var qUpdate = new Query().addParam(name = "name",               value = variables.name,                   cfsqltype = "cf_sql_varchar")
-                                     .addParam(name = "active",             value = variables.active,                 cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "online",             value = variables.online,                 cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "pagesAreEditable",   value = variables.pagesAreEditable,       cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "pagesAreDeleteable", value = variables.pagesAreDeleteable,     cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "pagesRequireAction", value = variables.pagesRequireAction,     cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "creationUserId",     value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
-                                     .addParam(name = "lastEditUserId",     value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
+            var qUpdate = new Query().addParam(name = "name",           value = variables.name,                   cfsqltype = "cf_sql_varchar")
+                                     .addParam(name = "active",         value = variables.active,                 cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "online",         value = variables.online,                 cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "editable",       value = variables.editable,               cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "deleteable",     value = variables.deleteable,             cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "showInTasklist", value = variables.showInTasklist,         cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "creationUserId", value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
+                                     .addParam(name = "lastEditUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
             
             if(variables.statusId == 0 || variables.statusId == null) {
                 variables.statusId = qUpdate.setSQL("INSERT INTO nephthys_page_status
@@ -209,9 +209,9 @@ component {
                                                                          name,
                                                                          active,
                                                                          online,
-                                                                         pagesAreEditable,
-                                                                         pagesAreDeleteable,
-                                                                         pagesRequireAction,
+                                                                         editable,
+                                                                         deleteable,
+                                                                         showInTasklist,
                                                                          creationUserId,
                                                                          lastEditUserId
                                                                      )
@@ -219,9 +219,9 @@ component {
                                                                          :name,
                                                                          :active,
                                                                          :online,
-                                                                         :pagesAreEditable,
-                                                                         :pagesAreDeleteable,
-                                                                         :pagesRequireAction,
+                                                                         :editable,
+                                                                         :deleteable,
+                                                                         :showInTasklist,
                                                                          :creationUserId,
                                                                          :lastEditUserId
                                                                      );
@@ -233,14 +233,14 @@ component {
             else {
                 if(variables.attributesChanged) {
                     qUpdate.setSQL("UPDATE nephthys_page_status
-                                       SET name               = :name,
-                                           active             = :active,
-                                           online             = :online,
-                                           pagesAreEditable   = :pagesAreEditable,
-                                           pagesAreDeleteable = :pagesAreDeleteable,
-                                           pagesRequireAction = :pagesRequireAction,
-                                           lastEditUserId     = :lastEditUserId,
-                                           lastEditDate       = now()
+                                       SET name           = :name,
+                                           active         = :active,
+                                           online         = :online,
+                                           editable       = :editable,
+                                           deleteable     = :deleteable,
+                                           showInTasklist = :showInTasklist,
+                                           lastEditUserId = :lastEditUserId,
+                                           lastEditDate   = now()
                                      WHERE statusId = :statusId")
                            .addParam(name = "statusId", value = variables.statusId,   cfsqltype = "cf_sql_numeric")
                            .execute();
@@ -298,32 +298,32 @@ component {
                                          .getResult();
             
             if(qStatus.getRecordCount() == 1) {
-                variables.name               = qStatus.name[1];
-                variables.active             = qStatus.active[1];
-                variables.online             = qStatus.online[1];
-                variables.pagesAreEditable   = qStatus.pagesAreEditable[1];
-                variables.pagesAreDeleteable = qStatus.pagesAreDeleteable[1];
-                variables.pagesRequireAction = qStatus.pagesRequireAction[1];
-                variables.creator            = new user(qStatus.creationUserId[1]);
-                variables.creationDate       = qStatus.creationDate[1];
-                variables.lastEditor         = new user(qStatus.lastEditUserId[1]);
-                variables.lastEditDate       = qStatus.lastEditDate[1];
+                variables.name           = qStatus.name[1];
+                variables.active         = qStatus.active[1];
+                variables.online         = qStatus.online[1];
+                variables.editable       = qStatus.editable[1];
+                variables.deleteable     = qStatus.deleteable[1];
+                variables.showInTasklist = qStatus.showInTasklist[1];
+                variables.creator        = new user(qStatus.creationUserId[1]);
+                variables.creationDate   = qStatus.creationDate[1];
+                variables.lastEditor     = new user(qStatus.lastEditUserId[1]);
+                variables.lastEditDate   = qStatus.lastEditDate[1];
             }
             else {
                 throw(type = "nephthys.notFound.general", message = "The page status could not be found", details = variables.statusId);
             }
         }
         else {
-            variables.name               = "";
-            variables.active             = false;
-            variables.online             = true;
-            variables.pagesAreEditable   = true;
-            variables.pagesAreDeleteable = false;
-            variables.pagesRequireAction = false;
-            variables.creator            = new user(request.user.getUserId());
-            variables.creationDate       = now();
-            variables.lastEditor         = new user(request.user.getUserId());
-            variables.lastEditDate       = now();
+            variables.name           = "";
+            variables.active         = false;
+            variables.online         = true;
+            variables.editable       = true;
+            variables.deleteable     = false;
+            variables.showInTasklist = false;
+            variables.creator        = new user(request.user.getUserId());
+            variables.creationDate   = now();
+            variables.lastEditor     = new user(request.user.getUserId());
+            variables.lastEditDate   = now();
         }
     }
     
