@@ -24,13 +24,16 @@
                         <a type="button" class="btn btn-secondary" href="https://www.twitter.com/#application.system.settings.getValueOfKey('twitter-user')#" target="_blank"><i class="fa fa-twitter"></i></a>
                     </cfif>
                     <cfif application.system.settings.getValueOfKey('github-user') NEQ "">
-                        <a type="button" class="btn btn-secondary" href="https://www.github.com/#application.system.settings.getValueOfKey('github-user')#" target="_blank"><i class="fa fa-facebook"></i></a>
+                        <a type="button" class="btn btn-secondary" href="https://www.github.com/#application.system.settings.getValueOfKey('github-user')#" target="_blank"><i class="fa fa-github"></i></a>
                     </cfif>
                     <cfif application.system.settings.getValueOfKey('instagram-user') NEQ "">
                         <a type="button" class="btn btn-secondary" href="https://www.instagram.com/#application.system.settings.getValueOfKey('instagram-user')#" target="_blank"><i class="fa fa-instagram"></i></a>
                     </cfif>
                     <cfif application.system.settings.getValueOfKey('google-plus-page') NEQ "">
                         <a type="button" class="btn btn-secondary" href="https://plus.google.com/#application.system.settings.getValueOfKey('google-plus-page')#" target="_blank"><i class="fa fa-google-plus"></i></a>
+                    </cfif>
+                    <cfif application.system.settings.getValueOfKey('lastfm-user') NEQ "">
+                        <a type="button" class="btn btn-secondary" href="https://last.fm/user/#application.system.settings.getValueOfKey('lastfm-user')#" target="_blank"><i class="fa fa-lastfm"></i></a>
                     </cfif>
                 </div>
             </div>
