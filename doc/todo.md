@@ -63,20 +63,16 @@
             * Check ob alle Module in dem Theme vorhanden sind. Sonst Warnung
     4. Modul-Theme-Management
         1. Was tun, wenn das Modul in einem Theme nicht vorhanden ist.
-    5. DB Dump anbieten
-    6. Errorlog - WORK ON HOLD
+    5. Backup
+    6. Errorlog
     7. Sidebar auf Icons reduzieren
     8. Assets weiter optimieren/reduzieren
     9. Dashboard pro User variabel gestaltbar machen
         * Anordnung
         * Module
     10. Alle (asset) js Files in der index.cfm laden
-    11. Scss - CSS Editor
-    12. Template Editor?
-    13. Responsive anpassungen
-    14. Design schick machen
-    15. Bei gewissen Modulen easy/expert Mode?
-    16. Usertasklist (Registrierungen freischalten)
+    11. Responsive anpassungen
+    12. Design schick machen
 
 ## Module (in eigenen Repos/Projekten)
     1. Gallery
@@ -198,6 +194,13 @@
                 * Abgelehnt 
             * Kommentar
     
+    17. Dashboard
+        * Kacheln
+            * X Tasks in Modul ABC, Global
+            * Heutige Seitenaufrufe
+            * Top Seite Heute/letzte 24h
+            * X Kommentare in Blogposts Heute/letzte 24h
+            * Registrierungen seit dem letzten Besuch (Dashboard / Usermodul)
 
 ## Optimierungen
     1. Datenbank optimieren
