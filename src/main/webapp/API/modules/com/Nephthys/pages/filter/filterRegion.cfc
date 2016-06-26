@@ -1,5 +1,5 @@
 component implements="API.interfaces.filter" {
-    import "API.modules.com.Nephthys.page.*";
+    import "API.modules.com.Nephthys.pages.*";
     
     public filter function init() {
         variables.name = null;

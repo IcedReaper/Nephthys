@@ -1,5 +1,5 @@
 component {
-    import "API.modules.com.Nephthys.page.statistics.*";
+    import "API.modules.com.Nephthys.pages.statistics.*";
     
     public statistics function init(string locale = 'de-DE', string dateFormat = "DD.MM.YYYY") {
         variables.locale     = arguments.locale;

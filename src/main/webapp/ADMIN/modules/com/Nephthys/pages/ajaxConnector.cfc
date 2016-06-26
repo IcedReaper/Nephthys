@@ -1,5 +1,5 @@
 component {
-    import "API.modules.com.Nephthys.page.*";
+    import "API.modules.com.Nephthys.pages.*";
     
     formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
     

@@ -742,3 +742,6 @@ alter table nephthys_page_pageVersion rename column useDynamicSuffixes to useDyn
 alter table Nephthys_page_status rename column pagesRequireAction to showInTasklist;
 alter table Nephthys_page_status rename column pagesAreDeleteable to deleteable;
 alter table Nephthys_page_status rename column pagesAreEditable   to editable;
+
+
+alter table nephthys_module add column integratedSearch boolean default false NOT NULL;

@@ -55,13 +55,14 @@
     2. Seitenmanagement
         1. Mehrsprachigkeit des Contents
         2. Autospeichern (Setzt Versionierung voraus | Problem: Bei normalem Vorgehen wird die Aktuelle Version überschrieben. Es sollte allerdings eine temporäre Version angelegt werden, die nach normalem Speichern wieder gelöscht wird.)
-        3. Vorschau funktioniert aktuell nur für die Seite und nicht auh für Unterseiten
+        3. Vorschau funktioniert aktuell nur für die Seite und nicht auch für Unterseiten
     3. Thememanagement
         1. Themeinstallation per git repository
             * Check ob alle Module in dem Theme vorhanden sind. Sonst Warnung
     4. Modul-Theme-Management
         1. Was tun, wenn das Modul in einem Theme nicht vorhanden ist.
     5. Backup
+        * https://www.postgresql.org/docs/9.3/static/app-pgdump.html
     6. Errorlog
     7. Sidebar auf Icons reduzieren
     8. Assets weiter optimieren/reduzieren

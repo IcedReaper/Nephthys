@@ -1,9 +1,8 @@
 component implements="API.interfaces.filter" {
-    import "API.modules.com.Nephthys.page.*";
+    import "API.modules.com.Nephthys.pages.*";
     
     public filter function init() {
-        variables.sitemapId = null;
-        variables.regionId  = null;
+        variables.sitemapId   = null;
         
         variables.qRes    = null;
         variables.results = null;
@@ -13,10 +12,6 @@ component implements="API.interfaces.filter" {
     
     public filter function setSitemapId(required numeric sitemapId) {
         variables.sitemapId = arguments.sitemapId;
-        return this;
-    }
-    public filter function setRegionId(required numeric regionId) {
-        variables.regionId = arguments.regionId;
         return this;
     }
     
@@ -29,19 +24,24 @@ component implements="API.interfaces.filter" {
         var where   = "";
         var orderBy = "";
         
-        sql = "    SELECT sp.sitemapPageId
-                     FROM nephthys_page_sitemapPage sp";
-        where = "";
+        var innerQuery = "    SELECT sp.pageId
+                                FROM nephthys_page_sitemapPage sp
+                          INNER JOIN nephthys_page_sitemap     sm ON sp.sitemapId = sm.sitemapId";
+        
+        var innerWhere = "";
         if(variables.sitemapId != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & " sp.sitemapId = :sitemapId";
+            innerWhere &= (innerWhere == "" ? " WHERE " : " AND ") & "sm.sitemapId = :sitemapId";
             qryFilter.addParam(name = "sitemapId", value = variables.sitemapId, cfsqltype = "cf_sql_numeric");
         }
-        if(variables.regionId != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & " sp.regionId = :regionId";
-            qryFilter.addParam(name = "regionId", value = variables.regionId, cfsqltype = "cf_sql_numeric");
-        }
         
-        orderBy = " ORDER BY sp.sitemapPageId ASC";
+        innerQuery &= innerWhere;
+        sql = "    SELECT DISTINCT p.pageId
+                     FROM nephthys_page_page p
+               INNER JOIN nephthys_page_pageVersion pv ON p.pageId = pv.pageId
+               INNER JOIN nephthys_page_status      ps ON pv.statusId = ps.statusId";
+        where = " WHERE p.pageId NOT IN ( " & innerQuery & " )";
+        
+        orderBy = " ORDER BY p.pageId ASC";
         
         variables.qRes = qryFilter.setSQL(sql & where & orderBy)
                                   .execute()
@@ -58,7 +58,7 @@ component implements="API.interfaces.filter" {
         if(variables.results == null) {
             variables.results = [];
             for(var i = 1; i <= variables.qRes.getRecordCount(); i++) {
-                variables.results.append(new sitemapPage(variables.qRes.sitemapPageId[i]));
+                variables.results.append(new page(variables.qRes.pageId[i]));
             }
         }
         return variables.results;

@@ -6,6 +6,8 @@ component implements="API.interfaces.filter" {
         variables.parentId = null;
         variables.moduleName = null;
         
+        variables.integratedSearch = null;
+        
         variables.qRes = null;
         variables.results = null;
         
@@ -27,6 +29,10 @@ component implements="API.interfaces.filter" {
     }
     public filter function setModuleName(required string moduleName) {
         variables.moduleName = arguments.moduleName;
+        return this;
+    }
+    public filter function setIntegratedSearch(required boolean integratedSearch) {
+        variables.integratedSearch = arguments.integratedSearch;
         return this;
     }
     
@@ -53,6 +59,10 @@ component implements="API.interfaces.filter" {
         if(variables.moduleName != null) {
             where &= (where == "" ? " WHERE " : " AND ") & " moduleName = :moduleName ";
             qryFilter.addParam(name="moduleName", value=variables.moduleName, cfsqltype="cf_sql_varchar");
+        }
+        if(variables.integratedSearch != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & " integratedSearch = :integratedSearch ";
+            qryFilter.addParam(name="integratedSearch", value=variables.integratedSearch, cfsqltype="cf_sql_bit");
         }
         
         sql &= where & " ORDER BY sortOrder ASC";

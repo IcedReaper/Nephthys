@@ -1,11 +1,13 @@
 component extends="API.abstractClasses.search" {
+    import "API.modules.com.Nephthys.module.*";
+    
     public search function search() {
         var modules = getModules();
         
         for(var i = 1; i <= modules.len(); ++i) {
-            var searchExec = createObject("component", "API." & modules[i] & ".search").init()
-                                                                                       .setSearchPhrase(variables.searchPhrase)
-                                                                                       .search();
+            var searchExec = createObject("component", "API.modules." & modules[i] & ".search").init()
+                                                                                               .setSearchPhrase(variables.searchPhrase)
+                                                                                               .search();
             variables.results[ modules[i] ] = searchExec.getResult().data;
             variables.resultCount += searchExec.getCount();
         }
@@ -14,13 +16,13 @@ component extends="API.abstractClasses.search" {
     }
     
     private array function getModules() {
-        // TODO: refactor when I have a pretty idea for it... :/
-        // Idea: Flag in DB - Filter to get all
-        return [
-            "modules.com.Nephthys.page",
-            "modules.com.Nephthys.user"/*,
-            "com.IcedReaper.blog",
-            "com.IcedReaper.gallery"*/
-        ];
+        var modules = [];
+        
+        var moduleFilter = new filter().setIntegratedSearch(true).execute();
+        for(var module in moduleFilter.getResult()) {
+            modules.append(module.getModuleName());
+        }
+        
+        return modules;
     }
 }

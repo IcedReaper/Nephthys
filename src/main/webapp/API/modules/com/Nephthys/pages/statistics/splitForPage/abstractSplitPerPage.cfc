@@ -1,4 +1,4 @@
-component extends="API.modules.com.Nephthys.page.statistics.abstractStatistic" {
+component extends="API.modules.com.Nephthys.pages.statistics.abstractStatistic" {
     public array function getResult() {
         if(! isQuery(variables.qRes)) {
             throw(type = "nephthys.application.invalidResource", message = "Please be sure that you called execute() before you're trying to get the result count");
@@ -9,7 +9,7 @@ component extends="API.modules.com.Nephthys.page.statistics.abstractStatistic" {
             pageRequests.append({
                 "date"         = variables.qRes._date[i],
                 "requestCount" = variables.qRes.requestCount[i],
-                "pageId"       = variables.qRes.pageId[i]
+                "completeLink" = variables.qRes.completeLink[i]
             });
         }
         

@@ -1,5 +1,5 @@
 component implements="WWW.interfaces.connector" {
-    import "API.modules.com.Nephthys.page.*";
+    import "API.modules.com.Nephthys.pages.*";
     
     public connector function init() {
         return this;
