@@ -745,3 +745,6 @@ alter table Nephthys_page_status rename column pagesAreEditable   to editable;
 
 
 alter table nephthys_module add column integratedSearch boolean default false NOT NULL;
+alter table Icedreaper_gallery_gallery add column title character varying(160);
+update IcedReaper_gallery_gallery SET title = headline;
+alter table IcedReaper_gallery_gallery alter column title set not null;

@@ -1,6 +1,6 @@
 component extends="API.abstractClasses.search" {
     public search function search() {
-        var qSearchResults = new Query().setSQL("  SELECT userId, username 
+        var qSearchResults = new Query().setSQL("  SELECT userId 
                                                      FROM nephthys_user
                                                     WHERE lower(username) LIKE :userName
                                                  ORDER BY userId")
@@ -12,12 +12,14 @@ component extends="API.abstractClasses.search" {
         };
         
         for(var i = 1; i <= qSearchResults.getRecordCount(); ++i) {
-            var extProperties = new extProperties(qSearchResults.userId[i]);
+            var user          = new user(qSearchResults.userId[i]);
+            var extProperties = user.getExtProperties();
             
             variables.results.data.append({
-                link     = "/user/" & qSearchResults.username[i],
-                linkText = qSearchResults.username[i],
-                excerpt  = extProperties.get("description").value
+                link         = "/user/" & user.getUsername(), // TODO: make /user dynamic
+                linkText     = user.getUsername(),
+                excerpt      = extProperties.getValue("description"),
+                previewImage = user.getAvatarPath()
             });
         }
         variables.resultCount = qSearchResults.getRecordCount();

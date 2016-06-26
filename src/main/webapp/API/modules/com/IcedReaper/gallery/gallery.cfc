@@ -25,6 +25,11 @@ component {
         
         return this;
     }
+    public gallery function setTitle(required string title) {
+        variables.title = arguments.title;
+        
+        return this;
+    }
     public gallery function setLink(required string link) {
         variables.link = arguments.link;
         
@@ -169,6 +174,9 @@ component {
     public string function getDescription() {
         return variables.description;
     }
+    public string function getTitle() {
+        return variables.title;
+    }
     public string function getLink() {
         return variables.link;
     }
@@ -280,6 +288,7 @@ component {
                                                                   (
                                                                       headline,
                                                                       description,
+                                                                      title,
                                                                       link,
                                                                       folderName,
                                                                       introduction,
@@ -293,6 +302,7 @@ component {
                                                            VALUES (
                                                                       :headline,
                                                                       :description,
+                                                                      :title,
                                                                       :link,
                                                                       :folderName,
                                                                       :introduction,
@@ -306,6 +316,7 @@ component {
                                                       SELECT currval('seq_icedreaper_gallery_gallery_id') newGalleryId;")
                                              .addParam(name = "headline",         value = variables.headline,             cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "description",      value = variables.description,          cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "title",            value = variables.title,                cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "link",             value = variables.link,                 cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "folderName",       value = variables.folderName,           cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "introduction",     value = variables.introduction,         cfsqltype = "cf_sql_varchar")
@@ -322,6 +333,7 @@ component {
                 new Query().setSQL("UPDATE IcedReaper_gallery_gallery
                                        SET headline         = :headline,
                                            description      = :description,
+                                           title            = :title,
                                            link             = :link,
                                            folderName       = :folderName,
                                            introduction     = :introduction,
@@ -334,6 +346,7 @@ component {
                            .addParam(name = "galleryId",        value = variables.galleryId,            cfsqltype = "cf_sql_numeric")
                            .addParam(name = "headline",         value = variables.headline,             cfsqltype = "cf_sql_varchar")
                            .addParam(name = "description",      value = variables.description,          cfsqltype = "cf_sql_varchar", null = variables.description == "")
+                           .addParam(name = "title",            value = variables.title,                cfsqltype = "cf_sql_varchar")
                            .addParam(name = "link",             value = variables.link,                 cfsqltype = "cf_sql_varchar")
                            .addParam(name = "folderName",       value = variables.folderName,           cfsqltype = "cf_sql_varchar")
                            .addParam(name = "introduction",     value = variables.introduction,         cfsqltype = "cf_sql_varchar", null = variables.introduction == "")
@@ -428,6 +441,7 @@ component {
                 variables.link             = qGallery.link[1];
                 variables.folderName       = qGallery.folderName[1];
                 variables.introduction     = qGallery.introduction[1];
+                variables.title            = qGallery.title[1];
                 variables.story            = qGallery.story[1];
                 variables.creatorUserId    = qGallery.creatorUserId[1];
                 variables.creationDate     = qGallery.creationDate[1];
@@ -452,6 +466,7 @@ component {
             variables.link             = "";
             variables.folderName       = createUUID();
             variables.introduction     = "";
+            variables.title            = "";
             variables.story            = "";
             variables.creatorUserId    = null;
             variables.creationDate     = null;

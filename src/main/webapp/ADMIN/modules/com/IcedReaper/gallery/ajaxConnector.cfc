@@ -54,6 +54,7 @@ component {
     remote struct function save(required numeric galleryId,
                                 required string  headline,
                                 required string  description,
+                                required string  title,
                                 required string  link,
                                 required string  foldername,
                                 required string  introduction,
@@ -68,6 +69,7 @@ component {
             
             gallery.setHeadline(arguments.headline)
                    .setDescription(arguments.description)
+                   .setTitle(arguments.title)
                    .setLink(arguments.link)
                    .setIntroduction(arguments.introduction)
                    .setStory(arguments.story)
@@ -402,6 +404,7 @@ component {
             "galleryId"    = arguments.gallery.getGalleryId(),
             "headline"     = arguments.gallery.getHeadline(),
             "description"  = arguments.gallery.getDescription(),
+            "title"        = arguments.gallery.getTitle(),
             "link"         = arguments.gallery.getLink(),
             "foldername"   = arguments.gallery.getFoldername(),
             "introduction" = arguments.gallery.getIntroduction(),

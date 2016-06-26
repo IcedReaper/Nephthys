@@ -140,7 +140,7 @@ component implements="WWW.interfaces.connector" {
         arguments.gallery.incrementViewCounter();
         
         request.page.setDescription(arguments.gallery.getDescription())
-                    .setTitle(arguments.gallery.getHeadline())
+                    .setTitle(arguments.gallery.getTitle())
                     .setOpenGraphUrl("default")
                     .setOpenGraphType("default")
                     .setOpenGraphImage(application.system.settings.getValueOfKey("wwwDomain") & arguments.gallery.getRelativePath() & "/" & arguments.gallery.getPictures()[1].getThumbnailFileName());

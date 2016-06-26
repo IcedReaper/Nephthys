@@ -9,6 +9,9 @@
             <article>
                 <div class="card m-t-1 p-a-1">
                     <div class="card-block">
+                        <cfif attributes.results[module][result].previewImage NEQ "">
+                            <img class="img-rounded col-md-3 p-a-0 m-a-0 pull-xs-left m-r-1" src="#attributes.results[module][result].previewImage#">
+                        </cfif>
                         <h4 class="card-title"><a href="#attributes.results[module][result].link#">#attributes.results[module][result].linkText#</a></h4>
                         <cfif attributes.results[module][result].excerpt NEQ "">
                             <p class="card-text">#attributes.results[module][result].excerpt#</p>

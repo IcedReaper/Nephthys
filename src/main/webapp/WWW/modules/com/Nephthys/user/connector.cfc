@@ -15,7 +15,7 @@ component implements="WWW.interfaces.connector" {
         
         var splitParameter = listToArray(request.page.getParameter(), "/");
         
-        var userListCtrl = new filter();
+        var userListCtrl = new filter().setFor("user");
         
         if(splitParameter.len() == 0 && form.isEmpty()) {
             saveContent variable="renderedContent" {

@@ -1,4 +1,6 @@
 component implements="WWW.interfaces.connector" {
+    import "API.modules.com.Nephthys.search.*";
+    
     public connector function init() {
         return this;
     }
@@ -21,7 +23,7 @@ component implements="WWW.interfaces.connector" {
             }
         }
         else if(splitParameter.len() == 0 && ! form.isEmpty() && form.keyExists("searchStatement")) {
-            var searchComponent = application.system.settings.getValueOfKey("globalSearchModule");
+            var searchComponent = new search();
             
             var results = searchComponent.setSearchPhrase(form.searchStatement)
                                          .search()

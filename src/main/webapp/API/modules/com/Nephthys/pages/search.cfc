@@ -47,9 +47,10 @@ component extends="API.abstractClasses.search" {
         
         for(var i = 1; i <= qSearchResults.getRecordCount(); ++i) {
             variables.results.data.append({
-                link     = qSearchResults.link[i],
-                linkText = qSearchResults.linktext[i],
-                excerpt  = qSearchResults.description[i] != "" ? qSearchResults.description[i] : qSearchResults.title[i]
+                link         = qSearchResults.link[i],
+                linkText     = qSearchResults.linktext[i],
+                excerpt      = qSearchResults.description[i] != "" ? qSearchResults.description[i] : qSearchResults.title[i],
+                previewImage = ""
             });
         }
         variables.resultCount = qSearchResults.getRecordCount();

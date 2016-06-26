@@ -76,7 +76,6 @@
 ## Module (in eigenen Repos/Projekten)
     1. Gallery
         1. Weitere Möglichkeiten
-            * Suche
             * Auslesen der EXIF Daten zum Initialen setzen der Bildinformationen
             * Kommentarmöglichkeit
             * Release Date - Was machen wenn die Gallerie bis dahin noch nicht im Status online ist?
