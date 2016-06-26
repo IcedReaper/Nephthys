@@ -88,7 +88,8 @@ component extends="API.abstractClasses.settings" {
                 foreignTableOptions = deserializeJSON(qGetSettings.foreignTableOptions[i]),
                 alwaysRevalidate    = qGetSettings.alwaysRevalidate[i],
                 moduleId            = qGetSettings.moduleId[i],
-                moduleName          = qGetSettings.moduleName[i]
+                moduleName          = qGetSettings.moduleName[i],
+                sortOrder           = qGetSettings.sortOrder[i]
             };
             
             variables.settings[ qGetSettings.key[i] ].value = convertAfterLoad(qGetSettings.value[i], qGetSettings.type[i]);
