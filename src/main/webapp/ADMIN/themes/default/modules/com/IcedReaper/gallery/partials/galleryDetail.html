@@ -22,7 +22,7 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-block">
-                    <h3>Details</h3>
+                    <h3>Details - {{gallery.galleryId}}</h3>
                     <form novalidate>
                         <div class="row">
                             <div class="col-md-6">
@@ -110,8 +110,8 @@
                 </div>
             </div>
         </div>
-
-        <div ng-controller="galleryCategoryCtrl" ng-show="galleryId != 0">
+        
+        <div ng-controller="galleryCategoryCtrl" ng-show="gallery.galleryId != 0">
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-block">
@@ -125,15 +125,18 @@
             </div>
         </div>
     </uib-tab>
-    <uib-tab heading="Bilder">
-        <div ng-controller="galleryPictureCtrl" ng-show="galleryId != 0">
+    <uib-tab heading="Bilder" disable="gallery.galleryId == 0">
+        <div ng-controller="galleryPictureCtrl">
             <div class="row" ng-if="gallery.isEditable">
                 <div class="col-md-12">
                     <div class="card card-block">
                         <h3>Neue Bilder hocladen</h3>
                         <form novalidate>
                             <div class="form-group">
-                                <input type="file" ngf-select ngf-multiple="true" required accept="image/*" ng-model="newPictures" ngf-change="upload()" ngf-keep="'distinct'" ngf-fix-orientation="false">
+                                <button multiple accept="image/*" class="btn btn-primary"
+                                        ngf-select="upload($newFiles)" 
+                                        ngf-max-size="5MB" ngf-keep="'distinct'" ngf-fix-orientation="false">
+                                    <i class="fa fa-picture-o"></i> Bilder hinzufügen</button>
                             </div>
                         </form>
                     </div>
@@ -183,7 +186,7 @@
             </div>
         </div>
     </uib-tab>
-    <uib-tab heading="Statistiken" diabled="gallery.galleryId == 0">
+    <uib-tab heading="Statistiken" disable="gallery.galleryId == 0">
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-block">

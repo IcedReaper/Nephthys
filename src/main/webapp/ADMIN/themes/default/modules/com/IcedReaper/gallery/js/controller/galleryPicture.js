@@ -13,7 +13,6 @@ nephthysAdminApp
                 .updatePicture(picture);
         };
         
-        // delete
         $scope.delete = function (pictureId) {
             galleryService
                 .deletePicture($routeParams.galleryId, pictureId)
@@ -22,11 +21,10 @@ nephthysAdminApp
                 });
         };
         
-        // new picture functionality
-        $scope.upload = function () {
+        $scope.upload = function (files) {
             var uploads = [];
-            for(var i = 0; i < $scope.newPictures.length; i++) {
-                uploads.push(galleryService.uploadPicture($scope.newPictures[i],
+            for(var i = 0; i < files.length; i++) {
+                uploads.push(galleryService.uploadPicture(files[i],
                                                           $routeParams.galleryId));
             }
             
@@ -36,14 +34,12 @@ nephthysAdminApp
                     var success = true;
                     for(var i = 0; i < arguments.length; i++) {
                         success = success ? arguments[i] : false;
+                        files[i].result = true;
                     }
-                    
-                    $scope.newPictures = [];
                     
                     $scope.load();
                 }));
         };
-        $scope.newPictures = [];
         
         $scope.rowCount = function (colCount) {
             if($scope.pictures) {

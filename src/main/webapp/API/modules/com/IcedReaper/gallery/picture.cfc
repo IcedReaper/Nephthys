@@ -45,6 +45,7 @@ component {
         var gallery = new gallery(variables.galleryId);
         
         var uploaded = fileUpload(gallery.getAbsolutePath(), "picture", "image/*", "MakeUnique");
+        // TODO: Refactor to use application.system.settings
         var newFilename = uploaded.serverFile;
         
         if(uploaded.fileExisted) {
@@ -57,6 +58,51 @@ component {
         
         variables.pictureFilename   = newFilename;
         variables.thumbnailFilename = "tn_" & newFilename;
+        
+        var exifReader = createObject("API.tools.com.Nephthys.image.exifReader").init(gallery.getAbsolutePath() & "/" & variables.pictureFilename);
+        var jpegComment      = exifReader.getExifKey("JPEG Comment");
+        var imageDescription = exifReader.getExifKey("Image Description");
+        var userComment      = exifReader.getExifKey("User Comment");
+        
+        if(variables.title == "") {
+            if(jpegComment != "") {
+                variables.title = jpegComment;
+            }
+            else {
+                if(imageDescription != "") {
+                    variables.title = imageDescription;
+                }
+                else {
+                    variables.title = userComment;
+                }
+            }
+        }
+        if(variables.alt == "") {
+            variables.alt = uploaded.serverFile;
+            
+            if(jpegComment != "") {
+                variables.alt &= (variables.alt != "" ? " - " : "") & jpegComment;
+            }
+            else {
+                if(imageDescription != "") {
+                    variables.alt &= (variables.alt != "" ? " - " : "") & imageDescription;
+                }
+                else {
+                    variables.alt &= (variables.alt != "" ? " - " : "") & userComment;
+                }
+            }
+        }
+        if(variables.caption == "") {
+            if(jpegComment != "") {
+                variables.caption = jpegComment;
+            }
+            if(imageDescription != "") {
+                variables.caption &= (variables.caption != "" ? " - " : "") & imageDescription;
+            }
+            if(userComment != "") {
+                variables.caption &= (variables.caption != "" ? " - " : "") & userComment;
+            }
+        }
         
         save();
         
@@ -106,7 +152,14 @@ component {
                                                                       :title,
                                                                       :alt,
                                                                       :caption,
-                                                                      (SELECT max(sortId)+1 newSortId FROM IcedReaper_gallery_picture WHERE galleryId = :galleryId)
+                                                                      (SELECT CASE
+                                                                                WHEN max(sortId) IS NOT NULL THEN
+                                                                                  max(sortId)+1
+                                                                                ELSE
+                                                                                  1
+                                                                              END newSortId
+                                                                         FROM IcedReaper_gallery_picture
+                                                                        WHERE galleryId = :galleryId)
                                                                   );
                                                       SELECT currval('seq_icedreaper_gallery_picture_id') newPictureId;")
                                              .addParam(name = "galleryId",         value = variables.galleryId,         cfsqltype = "cf_sql_numeric")

@@ -326,6 +326,7 @@ component {
                                              .addParam(name = "creatorUserId",    value = request.user.getUserId(),       cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "lastEditorUserId", value = request.user.getUserId(),       cfsqltype = "cf_sql_numeric")
                                              .execute()
+                                             .getResult()
                                              .newGalleryId[1];
         }
         else {
@@ -468,10 +469,10 @@ component {
             variables.introduction     = "";
             variables.title            = "";
             variables.story            = "";
-            variables.creatorUserId    = null;
-            variables.creationDate     = null;
-            variables.lastEditorUserId = null;
-            variables.lastEditDate     = null;
+            variables.creatorUserId    = request.user.getUserId();
+            variables.creationDate     = now();
+            variables.lastEditorUserId = request.user.getUserId();
+            variables.lastEditDate     = now();
             variables.pictures         = [];
             variables.categories       = [];
             variables.viewCounter      = 0;

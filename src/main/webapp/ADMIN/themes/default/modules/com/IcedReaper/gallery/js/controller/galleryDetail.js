@@ -1,5 +1,5 @@
 nephthysAdminApp
-    .controller('galleryDetailCtrl', ["$scope", "$routeParams", "$q", "galleryService", function ($scope, $routeParams, $q, galleryService) {
+    .controller('galleryDetailCtrl', ["$scope", "$routeParams", "$route", "$q", "galleryService", function ($scope, $routeParams, $route, $q, galleryService) {
         $scope.load = function() {
             $q.all([
                 galleryService.getDetails($routeParams.galleryId),
@@ -15,7 +15,14 @@ nephthysAdminApp
             galleryService
                 .save($scope.gallery)
                 .then(function (result) {
+                    var oldGalleryId = $scope.gallery.galleryId;
                     $scope.gallery = result;
+                    
+                    if(oldGalleryId == 0) {
+                        $route.updateParams({
+                            galleryId: result.galleryId
+                        });
+                    }
                 });
         };
         

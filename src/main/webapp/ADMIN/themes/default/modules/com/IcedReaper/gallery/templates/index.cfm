@@ -1,6 +1,5 @@
 <!--- file upload --->
-<script type="text/javascript" src="/themes/default/assets/angular-fileUpload/ng-file-upload-shim.js"></script>
-<script type="text/javascript" src="/themes/default/assets/angular-fileUpload/ng-file-upload.js"></script>
+<script type="text/javascript" src="/themes/default/assets/angular-fileUpload/ng-file-upload-all.min.js"></script>
 
 <!--- textAngular --->
 <link rel='stylesheet' href='/themes/default/assets/angular-textAngular/textAngular.css'>

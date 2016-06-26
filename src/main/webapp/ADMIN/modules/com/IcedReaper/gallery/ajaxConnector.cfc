@@ -64,7 +64,7 @@ component {
         
         if(gallery.isEditable(request.user.getUserID())) {
             if(arguments.galleryId == 0) {
-                gallery.setFoldername(attributes.foldername);
+                gallery.setFoldername(arguments.foldername);
             }
             
             gallery.setHeadline(arguments.headline)

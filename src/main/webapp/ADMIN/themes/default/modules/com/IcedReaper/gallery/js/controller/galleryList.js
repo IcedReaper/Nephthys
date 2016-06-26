@@ -18,7 +18,6 @@ nephthysAdminApp
         };
         
         $scope.statusButtonClass = function (actualOnline, nextOnline) {
-            console.log(actualOnline, nextOnline);
             if(! actualOnline && nextOnline) {
                 return "btn-success";
             }
