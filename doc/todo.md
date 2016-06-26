@@ -3,8 +3,6 @@
 ## Actual Task TODO - Reminder:
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
-- Checken ob man die redundanten Statistics zentralisieren kann
-- Status: pagesRequireAction (etc) in requireAction umbennen
 
 ## Allgemein
     1. Validierungen
@@ -201,6 +199,7 @@
             * Top Seite Heute/letzte 24h
             * X Kommentare in Blogposts Heute/letzte 24h
             * Registrierungen seit dem letzten Besuch (Dashboard / Usermodul)
+            * Uptime
 
 ## Optimierungen
     1. Datenbank optimieren

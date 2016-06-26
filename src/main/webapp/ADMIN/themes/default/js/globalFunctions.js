@@ -21,7 +21,42 @@ Array.prototype.sumOfSubArrayLength = function (prop) {
         total += this[i][prop].length;
     }
     return total;
-}
+};
+Number.prototype.formatAsTimeSince = function () {
+    var sec_num = parseInt(this, 10); // don't forget the second param
+    
+    var days    = Math.floor(sec_num / (24 * 3600));
+    sec_num -= days * (24 * 3600);
+    
+    var hours   = Math.floor(sec_num / 3600);
+    sec_num -= hours * 3600;
+    
+    var minutes = Math.floor(sec_num / 60);
+    var seconds = sec_num - minutes * 60;
+    
+    var result = "";
+    if(days > 0) {
+        result += days + 'D ';
+    }
+  
+    if(hours > 0 || result != "") {
+        if(hours < 10) {hours   = "0"+hours;}
+    
+        result += hours+'h ';
+    }
+    if(minutes > 0 || result != "") {
+        if (minutes < 10) {minutes   = "0"+minutes;}
+    
+        result += minutes+'m ';
+    }
+    if(seconds > 0 || result != "") {
+        if (seconds < 10) {seconds   = "0"+seconds;}
+    
+        result += seconds+'s ';
+    }
+  
+    return result;
+};
 
 structDeepCopy = function (struct) {
     return JSON.parse(JSON.stringify(struct));

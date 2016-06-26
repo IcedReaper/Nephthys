@@ -32,5 +32,11 @@ nephthysAdminApp
             onlineStatus: true
         };
         
+        window.setInterval(function () {
+            if($scope.serverInfo) {
+                $scope.serverInfo.uptime++;
+            }
+        }, 1000);
+        
         $scope.load();
     }]);

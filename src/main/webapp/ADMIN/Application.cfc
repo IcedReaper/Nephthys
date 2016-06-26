@@ -7,6 +7,9 @@ component {
     this.datasource = "nephthys_admin";
     
     public boolean function onApplicationStart() {
+        if(! server.keyExists("startupTime")) {
+            server.startupTime = now();
+        }
         // components
         application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
         application.system.settings.load();
