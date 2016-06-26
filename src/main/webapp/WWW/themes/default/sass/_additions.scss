@@ -116,7 +116,41 @@ body {
         left: auto;
     }
     
+    .btn-group-justified {
+        display: table;
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: separate;
+        
+        .btn,
+        .btn-group {
+            float: none;
+            display: table-cell;
+            width: 1%;
+            
+            .btn {
+                width: 100%;
+            }
+            .dropdown-menu {
+                left: auto;
+            }
+        }
+    }
     
+    .btn {
+        &.btn-facebook {
+            color: #FFFFFF;
+            background-color: #3B5998;
+        }
+        &.btn-twitter {
+            color: #EEEEEE;
+            background-color: #0084B4;
+        }
+        &.btn-google-plus {
+            color: #EEEEEE;
+            background-color: #DC483B;
+        }
+    }
 
     .container,
     .container-fluid {

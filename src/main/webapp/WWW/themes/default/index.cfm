@@ -24,6 +24,8 @@
     <script src="/themes/default/assets/bootstrap/js/bootstrap.min.js"></script>
     
     #request.page.renderResources("js")#
+    
+    #request.page.renderOpenGraphInfo()#
 </head>
 <body<cfif request.page.isSpecialCssClassSet("body")> class="#request.page.getSpecialCssClass('body')#"</cfif>>
     <header<cfif request.page.isSpecialCssClassSet("header")> class="#request.page.getSpecialCssClass('header')#"</cfif>>

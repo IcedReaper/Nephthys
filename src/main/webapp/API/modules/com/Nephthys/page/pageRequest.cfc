@@ -15,9 +15,17 @@ component {
             "main"   = "",
             "footer" = ""
         };
+        variables.openGraphInfo = {
+            "url"         = "",
+            "type"        = "",
+            "title"       = "",
+            "description" = "",
+            "image"       = ""
+        };
         
         variables.versionLoaded = false;
-        loadPage(arguments.link);
+        variables.link = arguments.link;
+        loadPage();
         
         return this;
     }
@@ -37,11 +45,13 @@ component {
     }
     public pageRequest function setTitle(required string title) {
         variables.title = arguments.title;
+        variables.openGraphInfo.title = arguments.title;
         
         return this;
     }
     public pageRequest function setDescription(required string description) {
         variables.description = arguments.description;
+        variables.openGraphInfo.description = arguments.description;
         
         return this;
     }
@@ -87,6 +97,47 @@ component {
         }
         
         return resources;
+    }
+    
+    public pageRequest function setOpenGraphTitle(required string title) {
+        variables.openGraphInfo.title = arguments.title;
+        return this;
+    }
+    public pageRequest function setOpenGraphDescription(required string description) {
+        variables.openGraphInfo.description = arguments.description;
+        return this;
+    }
+    public pageRequest function setOpenGraphUrl(required string url) {
+        if(arguments.url != "default") {
+            variables.openGraphInfo.url = arguments.url;
+        }
+        else {
+            variables.openGraphInfo.url = getDeepLink();
+        }
+        return this;
+    }
+    public pageRequest function setOpenGraphType(required string type) {
+        if(arguments.type != "default") {
+            variables.openGraphInfo.type = arguments.type;
+        }
+        else {
+            variables.openGraphInfo.type = "article";
+        }
+        return this;
+    }
+    public pageRequest function setOpenGraphImage(required string image) {
+        variables.openGraphInfo.image = arguments.image;
+        return this;
+    }
+    public string function renderOpenGraphInfo() {
+        var ogInfoString = "";
+        for(var ogInfo in variables.openGraphInfo) {
+            if(variables.openGraphInfo[ogInfo] != "") {
+                ogInfoString &= "<meta property=""og:" & ogInfo & """ content=""" & variables.openGraphInfo[ogInfo].replace("""", "", "ALL") & """ />";
+            }
+        }
+        
+        return ogInfoString;
     }
     
     public pageRequest function setSpecialCssClass(required string for, required string value, required boolean append = true) {
@@ -212,6 +263,15 @@ component {
     public boolean function isPreview() {
         return variables.versionLoaded;
     }
+    public string function getEncodedLink(required boolean withDomain = true) {
+        return urlEncode((arguments.withDomain ? application.system.settings.getValueOfKey("wwwDomain") : "") & getLink());
+    }
+    public string function getEncodedDeepLink(required boolean withDomain = true) {
+        return urlEncode((arguments.withDomain ? application.system.settings.getValueOfKey("wwwDomain") : "") & variables.link);
+    }
+    public string function getDeepLink(required boolean withDomain = true) {
+        return (arguments.withDomain ? application.system.settings.getValueOfKey("wwwDomain") : "") & variables.link;
+    }
     
     public pageRequest function saveToStatistics() {
         if(! variables.versionLoaded) {
@@ -232,23 +292,23 @@ component {
         return this;
     }
     
-    private void function loadPage(required string link) {
+    private void function loadPage() {
         if(url.keyExists("pageVersionId")) {
             var adminLink = application.system.settings.getValueOfKey("adminDomain");
             if(left(cgi.HTTP_REFERER, adminLink.len()) == adminLink) {
                 variables.pageVersion = new pageVersion(url.pageVersionId);
                 variables.page        = new page(variables.pageVersion.getPageId());
-                variables.parameter   = replaceNoCase(arguments.link, variables.pageVersion.getLink(), "");
+                variables.parameter   = replaceNoCase(variables.link, variables.pageVersion.getLink(), "");
                 
                 variables.versionLoaded = true;
             }
             else {
-                throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = arguments.link);
+                throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = variables.link);
             }
         }
         else {
             var pageRequestFilter = new filter().setFor("pageRequest")
-                                                .setLink(arguments.link);
+                                                .setLink(variables.link);
             
             if(pageRequestFilter.execute().getResultCount() == 1) {
                 var filterResult = pageRequestFilter.getResult()[1];
@@ -257,7 +317,7 @@ component {
             }
             else {
                 if(application.system.settings.getValueOfKey("useFirstPageAsStartPage") && 
-                   pageRequestFilter.getResultCount() == 0 && arguments.link == "/") {
+                   pageRequestFilter.getResultCount() == 0 && variables.link == "/") {
                     // if we have the root page and it doesn't exist we'll get the first existing page
                     variables.parameter = "";
                     
@@ -281,15 +341,15 @@ component {
                             }
                         }
                         else {
-                            throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = arguments.link);
+                            throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = variables.link);
                         }
                     }
                     else {
-                        throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = arguments.link);
+                        throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = variables.link);
                     }
                 }
                 else {
-                    throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = arguments.link);
+                    throw(type = "nephthys.notFound.page", message = "The page could not be found.", detail = variables.link);
                 }
             }
         

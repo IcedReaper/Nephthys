@@ -23,8 +23,6 @@ component implements="WWW.interfaces.connector" {
                 if(isArray(arguments.options.galleryId)) {
                     if(arguments.options.galleryId.len() == 1) {
                         var gallery = new gallery(arguments.options.galleryId[1]);
-                        
-                        gallery.incrementViewCounter();
                     
                         return renderDetails(arguments.options, gallery);
                     }
@@ -109,11 +107,6 @@ component implements="WWW.interfaces.connector" {
                 if(galleries.len() == 1) {
                     var gallery = galleries[1];
                     
-                    gallery.incrementViewCounter();
-                    
-                    request.page.setDescription(gallery.getDescription())
-                                .setTitle(gallery.getHeadline());
-                
                     return renderDetails(arguments.options, gallery);
                 }
                 else {
@@ -143,6 +136,14 @@ component implements="WWW.interfaces.connector" {
     private string function renderDetails(required struct options, required gallery gallery) {
         var renderedContent = "";
         var statisticsCtrl = new statistics();
+        
+        arguments.gallery.incrementViewCounter();
+        
+        request.page.setDescription(arguments.gallery.getDescription())
+                    .setTitle(arguments.gallery.getHeadline())
+                    .setOpenGraphUrl("default")
+                    .setOpenGraphType("default")
+                    .setOpenGraphImage(application.system.settings.getValueOfKey("wwwDomain") & arguments.gallery.getRelativePath() & "/" & arguments.gallery.getPictures()[1].getThumbnailFileName());
         
         statisticsCtrl.add(arguments.gallery.getGalleryId());
         

@@ -95,12 +95,42 @@
             </cfloop>
         </section>
         <footer>
-            <p><small>Diese Gallerie wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.gallery.getCreationDate())# von <a href="/User/#attributes.gallery.getCreator().getUsername()#">#attributes.gallery.getCreator().getUsername()#</a> erstellt und bisher #attributes.gallery.getViewCounter()# Mal aufgerufen.</small></p>
+            <div class="row">
+                <div class="col-sm-12">
+                    <p><small>Diese Gallerie wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.gallery.getCreationDate())# von <a href="/User/#attributes.gallery.getCreator().getUsername()#">#attributes.gallery.getCreator().getUsername()#</a> erstellt und bisher #attributes.gallery.getViewCounter()# Mal aufgerufen.</small></p>
+                </div>
+            </div>
             
             <cfset categories = attributes.gallery.getCategories()>
-            <cfloop from="1" to="#categories.len()#" index="categoryIndex">
-                <a class="label label-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
-            </cfloop>
+            <cfif categories.len() GT 0>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <cfloop from="1" to="#categories.len()#" index="categoryIndex">
+                            <a class="label label-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
+                        </cfloop>
+                    </div>
+                </div>
+            </cfif>
+            
+            <cfif application.system.settings.getValueOfKey("com.IcedReaper.gallery.socialMediaSharing")>
+                <div class="row m-t-2">
+                    <div class="col-sm-12">
+                        <h4>Gallerie teilen über</h4>
+                        
+                        <div class="btn-group btn-group-justified">
+                            <cfif application.system.settings.getValueOfKey("com.IcedReaper.gallery.socialMediaSharing.facebook")>
+                                <a onClick="window.open('https://www.facebook.com/sharer/sharer.php?u=#request.page.getEncodedDeepLink()#', 'facebook-share-dialog', 'width=626,height=436'); return false;" class="btn btn-facebook" href="##"><i class="fa fa-facebook"></i></a>
+                            </cfif>
+                            <cfif application.system.settings.getValueOfKey("com.IcedReaper.gallery.socialMediaSharing.googleplus")>
+                                <a href="https://plus.google.com/share?url=#request.page.getEncodedDeepLink()#" class="btn btn-google-plus" target="_blank"><i class="fa fa-google-plus"></i></a>
+                            </cfif>
+                            <cfif application.system.settings.getValueOfKey("com.IcedReaper.gallery.socialMediaSharing.twitter")>
+                                <a href="https://twitter.com/intent/tweet?original_referer=#request.page.getDeepLink()#&text=&url=#request.page.getEncodedDeepLink()#" target="_blank"class="btn btn-twitter"><i class="fa fa-twitter"></i></a>
+                            </cfif>
+                        </div>
+                    </div>
+                </div>
+            </cfif>
         </footer>
         <cfinclude template="../general/blueimpGallery.cfm" />
     </article>

@@ -78,8 +78,6 @@
             * Suche
             * Auslesen der EXIF Daten zum Initialen setzen der Bildinformationen
             * Kommentarmöglichkeit
-            * teilen einer Gallerie oder eines Bilder per Soziale Medien
-                * Per Option ein oder ausschaltbar (jeweils)
             * Release Date - Was machen wenn die Gallerie bis dahin noch nicht im Status online ist?
             * Bewertungen
                 * Anonym per Option
