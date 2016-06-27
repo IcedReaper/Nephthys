@@ -66,7 +66,7 @@ component {
         return returnData;
     }
     
-    public struct function getSplitPerGallery(required string sortOrder, required date fromDate, required date toDate) {
+    public struct function getSplitPerBlogpost(required string sortOrder, required date fromDate, required date toDate) {
         var returnData = {
             "labels" = [],
             "series" = [],

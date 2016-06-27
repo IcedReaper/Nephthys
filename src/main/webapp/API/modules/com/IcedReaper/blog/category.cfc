@@ -1,6 +1,4 @@
 component {
-    import "API.modules.com.Nephthys.user.*";
-    
     public category function init(required numeric categoryId) {
         variables.categoryId = arguments.categoryId;
         
@@ -31,7 +29,7 @@ component {
     }
     public user function getCreator() {
         if(! variables.keyExists("creator")) {
-            variables.creator = new user(variables.creatorUserId);
+            variables.creator = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.creatorUserId);
         }
         return variables.creator;
     }
@@ -40,12 +38,20 @@ component {
     }
     public user function getLastEditor() {
         if(! variables.keyExists("lastEditor")) {
-            variables.lastEditor = new user(variables.lastEditorUserId);
+            variables.lastEditor = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.lastEditorUserId);
         }
         return variables.lastEditor;
     }
     public date function getLastEditDate() {
         return variables.lastEditDate != null ? variables.lastEditDate : 0;
+    }
+    
+    
+    public numeric function getUseCount() {
+        return new filter().setFor("blogpost")
+                           .setCategoryId(variables.categoryId)
+                           .execute()
+                           .getResultCount();
     }
     
     // C R U D

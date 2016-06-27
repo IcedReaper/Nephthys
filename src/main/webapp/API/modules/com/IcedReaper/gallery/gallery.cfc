@@ -6,7 +6,6 @@ component {
         
         variables.categoriesChanged = false;
         variables.picturesChanged   = false;
-        variables.statusChanged = false;
         
         loadDetails();
         
@@ -259,7 +258,13 @@ component {
             if(newStatus.isApprovalValid(arguments.user.getUserId())) {
                 transaction {
                     setStatus(newStatus);
-                    save();
+                    
+                    new Query().setSQL("UPDATE IcedReaper_gallery_gallery
+                                           SET statusId = :statusId
+                                         WHERE galleryId = :galleryId")
+                               .addParam(name = "galleryId", value = variables.galleryId,            cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "statusId",  value = variables.status.getStatusId(), cfsqltype = "cf_sql_numeric")
+                               .execute();
                     
                     new approval(variables.galleryId).approve(actualStatus.getStatusId(),
                                                               newStatus.getStatusId(),
@@ -268,7 +273,6 @@ component {
                     transactionCommit();
                 }
                 
-                variables.statusChanged = true;
                 
                 return this;
             }
@@ -364,17 +368,7 @@ component {
                 }
             }
             else {
-                if(variables.statusChanged) {
-                    new Query().setSQL("UPDATE nephthys_page_pageVersion
-                                           SET statusId = :statusId
-                                         WHERE pageVersionId = :pageVersionId")
-                               .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "statusId",  value = variables.statusId,  cfsqltype = "cf_sql_numeric")
-                               .execute();
-                }
-                else {
-                    throw(type = "nephthys.application.notAllowed", message = "You're not allowed to update the version that is online");
-                }
+                throw(type = "nephthys.application.notAllowed", message = "You're not allowed to update the version that is online");
             }
         }
         

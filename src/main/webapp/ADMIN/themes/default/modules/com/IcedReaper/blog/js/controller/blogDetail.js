@@ -11,6 +11,8 @@ nephthysAdminApp
                        .getDetails($routeParams.blogpostId)
                        .then(function (blogDetails) {
                            $scope.blogpost = blogDetails;
+                           var dateParts = $scope.blogpost.releaseDate.split("/");
+                           $scope.blogpost.releaseDate = new Date(dateParts[0], parseInt(dateParts[1], 10) - 1, dateParts[2]);
                            
                            if($scope.blogpost.blogpostId != 0) {
                                $scope.linkSet = true;
@@ -22,7 +24,7 @@ nephthysAdminApp
         };
         
         $scope.save = function () {
-            var convContent = function() {
+            var convertContent = function() {
                 var ed = $('div[id^="taTextElement"]').clone();
 
                 ed.find('img[imageId]').each(function(index) {
@@ -47,21 +49,25 @@ nephthysAdminApp
             
             var blogpostCopy = {};
             for(var attrib in $scope.blogpost) {
-                blogpostCopy[attrib] = $scope.blogpost[attrib];
+                if($scope.blogpost[attrib] instanceof Date) {
+                    blogpostCopy[attrib] = new Date($scope.blogpost[attrib].valueOf());
+                }
+                else {
+                    blogpostCopy[attrib] = $scope.blogpost[attrib];
+                }
             }
-            blogpostCopy.story = convContent();
+            blogpostCopy.releaseDate = blogpostCopy.releaseDate.getFullYear() + '/' + (blogpostCopy.releaseDate.getMonth() + 1) + '/' + blogpostCopy.releaseDate.getDate();
+            blogpostCopy.story = convertContent();
             
             blogService
                 .save(blogpostCopy, fileNames)
-                .then(function (result) {
-                    blogService.uploadImages(result.blogpostId, images, imageSizes)
+                .then(function (blogpostId) {
+                    blogService.uploadImages(blogpostId, images, imageSizes)
                         .then(function(uploadResult) {
                             var oldBlogpostId = $scope.blogpost.blogpostId;
-                            $scope.blogpost = result;
-                            
                             if(oldBlogpostId == 0) {
                                 $route.updateParams({
-                                    blogpostId: result.blogpostId
+                                    blogpostId: blogpostId
                                 });
                             }
                             

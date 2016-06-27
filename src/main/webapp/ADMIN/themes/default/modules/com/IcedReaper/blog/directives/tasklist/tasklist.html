@@ -1,0 +1,65 @@
+<div>
+    <div class="row m-t-2" ng-repeat="status in tasklist" ng-if="status.blogposts.length > 0">
+        <div class="col-md-12">
+            <h3>Seiten <small>{{status.name}}</small></h3>
+            
+            <table class="table table-striped" ng-class="tableClass">
+                <thead>
+                    <th class="text-nowrap">ID</th>
+                    <th class="text-nowrap">Linktext</th>
+                    <th class="text-nowrap">Veröffentlichungsdatum</th>
+                    <th class="text-nowrap">Erstellt durch</th>
+                    <th class="text-nowrap">Letzte Änderungen durch</th>
+                    <th class="text-nowrap" ng-if="showActions">Aktionen</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="blogpost in status.blogposts">
+                        <td>{{blogpost.blogpostId}}</td>
+                        <td>
+                            <a href="#/blogpost/{{blogpost.blogpostId}}">{{blogpost.headline}}</a>
+                        </td>
+                        <td>{{blogpost.releaseDate}}</td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="blogpost.creator" hide-name="true"></nephthys-user-info>
+                                <span class="text-nowrap">{{blogpost.creationDate}}</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="blogpost.lastEditor" hide-name="true"></nephthys-user-info>
+                                <span class="text-nowrap">{{blogpost.lastEditDate}}</span>
+                            </p>
+                        </td>
+                        <td ng-if="showActions" class="text-nowrap">
+                            <div>
+                                <button class="btn m-r-1"
+                                        ng-repeat="ps in status.nextStatus"
+                                        ng-class="statusButtonClass(status.online, ps.online)"
+                                        ng-click="pushPageToStatus(blogpost.blogpostId, ps.statusId);"
+                                        ng-if="! combineNextStatusButton">{{ps.name}}</button>
+                                
+                                <div class="btn-group" ng-if="combineNextStatusButton">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Status ändern
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <button class="dropdown-item"
+                                                ng-repeat="ps in status.nextStatus"
+                                                ng-class="statusButtonClass(status.online, ps.online)"
+                                                ng-click="pushPageToStatus(blogpost.blogpostId, ps.statusId);">{{ps.name}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div ng-if="tasklist.sumOfSubArrayLength('blogposts') === 0">
+        <div class="alert alert-success m-t-1" role="alert">
+            <h2><i class="fa fa-check"></i> Aktuell sind keine Aufgaben offen</h2>
+        </div>
+    </div>
+</div>

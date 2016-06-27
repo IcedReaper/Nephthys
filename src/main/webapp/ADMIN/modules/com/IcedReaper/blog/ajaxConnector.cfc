@@ -1,6 +1,8 @@
 component {
     import "API.modules.com.IcedReaper.blog.*";
     
+    formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
+    
     remote array function getList() {
         var blogpostFilterCtrl = new filter().setFor("blogpost");
         
@@ -42,7 +44,7 @@ component {
         return prepareCategoryDetails(categories, false);
     }
     
-    remote struct function save(required numeric blogpostId,
+    remote numeric function save(required numeric blogpostId,
                                 required string  headline,
                                 required string  link,
                                 required numeric released,
@@ -58,15 +60,7 @@ component {
         
         if(blogpost.isEditable(request.user.getUserID())) {
             if(arguments.releaseDate != "") {
-                // format: 2015-11-27T00:00
-                var y  = arguments.releaseDate.left(4);
-                var m  = arguments.releaseDate.mid(6, 2);
-                var d  = arguments.releaseDate.mid(9, 2);
-                var h  = arguments.releaseDate.mid(12, 2);
-                var mi = arguments.releaseDate.mid(15, 2);
-                var _releaseDate = createDateTime(y, m, d, h, mi, 0);
-                
-                blogpost.setReleaseDate(_releaseDate);
+                blogpost.setReleaseDate(dateFormat(arguments.releaseDate, "YYYY/MM/DD"));
             }
             else {
                 blogpost.clearReleaseDate();
@@ -83,7 +77,7 @@ component {
                     .setPrivate(arguments.private)
                     .save();
             
-            return prepareDetailStruct(blogpost);
+            return blogpost.getBlogpostId();
         }
         else {
             throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
@@ -230,7 +224,6 @@ component {
         }
         
         var statisticsCtrl = new statistics();
-        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var statisticsData = statisticsCtrl.load(arguments.blogpostId, dateAdd("d", (dayCount - 1) * -1, now()), now());
         
@@ -249,7 +242,6 @@ component {
     
     remote array function loadComments(required numeric blogpostId) {
         var blogpost = new blogpost(arguments.blogpostId);
-        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var bp_comments = blogpost.getComments();
         var comments = [];
@@ -315,15 +307,165 @@ component {
         var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
         var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
 
-        return new statistics().getSplitPerGallery(arguments.sortOrder,
-                                                   _fromDate,
-                                                   _toDate);
+        return new statistics().getSplitPerBlogpost(arguments.sortOrder,
+                                                    _fromDate,
+                                                    _toDate);
+    } 
+    remote boolean function pushToStatus(required numeric blogpostId, required numeric statusId) {
+        new blogpost(arguments.blogpostId).pushToStatus(arguments.statusId, request.user);
+        
+        return true;
+    }
+    
+    remote struct function getStatusList() {
+        var statusLoader = new filter().setFor("status");
+        
+        var prepStatus = {};
+        
+        for(var status in statusLoader.execute().getResult()) {
+            prepStatus[status.getStatusId()] = prepareStatus(status);
+        }
+        
+        return prepStatus;
+    }
+    
+    remote array function getStatusListAsArray() {
+        var statusLoader = new filter().setFor("status");
+        
+        var prepStatus = [];
+        
+        for(var status in statusLoader.execute().getResult()) {
+            prepStatus.append(prepareStatusAsArray(status));
+        }
+        
+        return prepStatus;
+    }
+    
+    remote struct function getStatusDetails(required numeric statusId) {
+        return prepareStatus(new status(arguments.statusId));
+    }
+    
+    remote numeric function saveStatus(required struct status) {
+        var status = new status(arguments.status.statusId);
+        
+        status.setActiveStatus(arguments.status.active)
+              .setEditable(arguments.status.editable)
+              .setName(arguments.status.name)
+              .setOnlineStatus(arguments.status.online)
+              .setDeleteable(arguments.status.deleteable)
+              .setShowInTasklist(arguments.status.showInTasklist)
+              .setLastEditor(request.user)
+              .save();
+        
+        return status.getStatusId();
+    }
+    
+    remote boolean function deleteStatus(required numeric statusId) {
+        if(arguments.statusId == application.system.settings.getValueOfKey("com.IcedReaper.blog.startStatus")) {
+            throw(type = "nephthys.application.notAllowed", message = "You cannot delete the start status. Please reset the start status in the system settings");
+        }
+        
+        var blogpostsStillWithThisStatus = new filter().setFor("blogpost")
+                                                       .setStatusId(arguments.statusId)
+                                                       .execute()
+                                                       .getResultCount();
+        
+        if(blogpostsStillWithThisStatus == 0) {
+            new status(arguments.statusId).delete();
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.application.notAllowed", message = "You cannot delete a status that is still used. There are still " & blogpostsStillWithThisStatus & " blog posts on this status.");
+        }
+    }
+    
+    remote boolean function activateStatus(required numeric statusId) {
+        var status = new status(arguments.statusId);
+        
+        status.setActiveStatus(true)
+              .save();
+        
+        return true;
+    }
+    
+    remote boolean function deactivateStatus(required numeric statusId) {
+        new status(arguments.statusId).setActiveStatus(false)
+                                      .save();
+        
+        return true;
+    }
+    
+    remote boolean function saveStatusFlow(required array statusFlow) {
+        var i = 0;
+        var j = 0;
+        var k = 0;
+        var found = false;
+        transaction {
+            for(i = 1; i <= arguments.statusFlow.len(); ++i) {
+                var status = new status(arguments.statusFlow[i].statusId);
+                
+                var nextStatus = status.getNextStatus();
+                
+                for(j = 1; j <= nextStatus.len(); ++j) {
+                    found = false;
+                    for(k = 1; k <= arguments.statusFlow[i].nextStatus.len() && ! found; ++k) {
+                        if(nextStatus[j].getStatusId() == arguments.statusFlow[i].nextStatus[k].statusId) {
+                            found = true;
+                        }
+                    }
+                    
+                    if(! found) {
+                        status.removeNextStatus(nextStatus[j].getStatusId());
+                    }
+                }
+                
+                for(j = 1; j <= arguments.statusFlow[i].nextStatus.len(); ++j) {
+                    found = false;
+                    for(k = 1; k <= nextStatus.len() && ! found; ++k) {
+                        if(nextStatus[k].getStatusId() == arguments.statusFlow[i].nextStatus[j].statusId) {
+                            found = true;
+                        }
+                    }
+                    
+                    if(! found) {
+                        status.addNextStatus(arguments.statusFlow[i].nextStatus[j].statusId);
+                    }
+                }
+                
+                status.save();
+            }
+            
+            transactionCommit();
+        }
+        
+        return false;
+    }
+    
+    remote array function getBlogpostsInTasklist() {
+        var statusFilterCtrl = new filter().setFor("status")
+                                           .setShowInTasklist(true)
+                                           .execute();
+        
+        var blogpostFilterCtrl = new filter().setFor("blogpost");
+        
+        var statusData = [];
+        var index = 0;
+        for(var status in statusFilterCtrl.execute().getResult()) {
+            index++;
+            statusData[index] = prepareStatusAsArray(status);
+            statusData[index]["blogposts"] = [];
+            
+            for(var blogpost in blogpostFilterCtrl.setStatusId(status.getStatusId()).execute().getResult()) {
+                statusData[index]["blogposts"].append(prepareDetailStruct(blogpost));
+            }
+        }
+        
+        return statusData;
     }
     
     // private
     private struct function prepareDetailStruct(required blogpost blogpost) {
-        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
-        
         var categories = [];
         var gCategories = arguments.blogpost.getCategories();
         for(var c = 1; c <= gCategories.len(); c++) {
@@ -337,14 +479,18 @@ component {
             "story"                      = arguments.blogpost.getStory(),
             "released"                   = arguments.blogpost.getReleased(),
             "folderName"                 = arguments.blogpost.getFolderName(),
-            "releaseDate"                = arguments.blogpost.getReleaseDate() != null ? formatCtrl.formatDate(arguments.blogpost.getReleaseDate()) : null,
+            "releaseDate"                = arguments.blogpost.getReleaseDate() != null ? dateFormat(arguments.blogpost.getReleaseDate(), "YYYY/MM/DD") : "",
             "commentsActivated"          = arguments.blogpost.getCommentsActivated(),
             "anonymousCommentAllowed"    = arguments.blogpost.getAnonymousCommentAllowed(),
             "commentsNeedToGetPublished" = arguments.blogpost.getCommentsNeedToGetPublished(),
             "creatorUserId"              = arguments.blogpost.getCreatorUserId(),
             "categories"                 = categories,
             "private"                    = arguments.blogpost.getPrivate(),
-            "isEditable"                 = arguments.blogpost.isEditable(request.user.getUserId())
+            "isEditable"                 = arguments.blogpost.isEditable(request.user.getUserId()),
+            "creator"                    = getUserInformation(arguments.blogpost.getCreator()),
+            "creationDate"               = formatCtrl.formatDate(arguments.blogpost.getCreationDate()),
+            "lastEditor"                 = getUserInformation(arguments.blogpost.getLastEditor()),
+            "lastEditDate"               = formatCtrl.formatDate(arguments.blogpost.getLastEditDate())
         };
     }
     
@@ -376,8 +522,6 @@ component {
     }
     
     private struct function prepareCategoryStruct(required category category) {
-        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
-        
         return {
             "categoryId"   = arguments.category.getCategoryId(),
             "name"         = arguments.category.getName(),
@@ -391,7 +535,75 @@ component {
     private struct function getUserInformation(required user _user) {
         return {
             'userId'   = arguments._user.getUserId(),
-            'userName' = arguments._user.getUserName()
+            'userName' = arguments._user.getUserName(),
+            "avatar"   = arguments._user.getAvatarPath()
         };
+    }
+    
+    
+    private struct function prepareStatus(required status status) {
+        var nextStatusList = {};
+        for(var nextStatus in arguments.status.getNextStatus()) {
+            if(nextStatus.isActive()) {
+                nextStatusList[nextStatus.getStatusId()] = {
+                    "statusId" = nextStatus.getStatusId(),
+                    "name"     = nextStatus.getName(),
+                    "active"   = nextStatus.isActive(),
+                    "online"   = nextStatus.isOnline(),
+                    "editable" = nextStatus.getEditable()
+                };
+            }
+        }
+        
+        return {
+            "statusId"       = arguments.status.getStatusId(),
+            "name"           = arguments.status.getName(),
+            "active"         = arguments.status.isActive(),
+            "online"         = arguments.status.isOnline(),
+            "editable"       = arguments.status.getEditable(),
+            "deleteable"     = arguments.status.getDeleteable(),
+            "showInTasklist" = arguments.status.getShowInTasklist(),
+            "nextStatus"     = nextStatusList
+        };
+    }
+    
+    private struct function prepareStatusAsArray(required status status) {
+        var nextStatusList = [];
+        for(var nextStatus in arguments.status.getNextStatus()) {
+            if(nextStatus.isActive()) {
+                nextStatusList.append({
+                    "statusId" = nextStatus.getStatusId(),
+                    "name"     = nextStatus.getName(),
+                    "active"   = nextStatus.isActive(),
+                    "online"   = nextStatus.isOnline(),
+                    "editable" = nextStatus.getEditable()
+                });
+            }
+        }
+        
+        return {
+            "statusId"       = arguments.status.getStatusId(),
+            "name"           = arguments.status.getName(),
+            "active"         = arguments.status.isActive(),
+            "online"         = arguments.status.isOnline(),
+            "editable"       = arguments.status.getEditable(),
+            "deleteable"     = arguments.status.getDeleteable(),
+            "showInTasklist" = arguments.status.getShowInTasklist(),
+            "nextStatus"     = nextStatusList
+        };
+    }
+    
+    private array function prepareApprovalList(required array approvalList) {
+        var preparedApprovalList = [];
+        for(var approval in arguments.approvalList) {
+            preparedApprovalList.append({
+                "user"               = getUserInformation(approval.user),
+                "approvalDate"       = formatCtrl.formatDate(approval.approvalDate),
+                "previousStatusName" = approval.previousStatus.getName(),
+                "newStatusName"      = approval.newStatus.getName()
+            });
+        }
+        
+        return preparedApprovalList;
     }
 }

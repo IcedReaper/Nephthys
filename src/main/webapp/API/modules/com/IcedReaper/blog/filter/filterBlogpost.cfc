@@ -10,6 +10,8 @@ component implements="API.interfaces.filter" {
         variables.blogpostId         = 0;
         variables.totalBlogpostCount = 0;
         variables.categoryName       = "";
+        variables.statusId           = null;
+        variables.categoryId         = null;
         
         variables.offset  = 0;
         variables.count   = 0;
@@ -101,6 +103,16 @@ component implements="API.interfaces.filter" {
         return this;
     }
     
+    public filter function setStatusId(required numeric statusId) {
+        variables.statusId = arguments.statusId;
+        return this;
+    }
+    
+    public filter function setCategoryId(required numeric categoryId) {
+        variables.categoryId = arguments.categoryId;
+        return this;
+    }
+    
     public numeric function getTotalBlogpostCount() {
         return variables.totalBlogpostCount;
     }
@@ -131,6 +143,17 @@ component implements="API.interfaces.filter" {
         if(variables.link != "") {
             where &= ((where != "") ? " AND " : " WHERE ") & " link = :link";
             qryFilter.addParam(name = "link", value = variables.link, cfsqltype = "cf_sql_varchar");
+        }
+        if(variables.statusId != null) {
+            where &= ((where != "") ? " AND " : " WHERE ") & " statusId = :statusId";
+            qryFilter.addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric");
+        }
+        
+        if(variables.categoryId != null) {
+            where &= ((where != "") ? " AND " : " WHERE ") & "blogpostId IN (SELECT blogpostId
+                                                                               FROM icedreaper_blog_blogpostCategory
+                                                                              WHERE categoryId = :categoryId)";
+            qryFilter.addParam(name = "categoryId", value = variables.categoryId, cfsqltype="cf_sql_numeric");
         }
         
         if(variables.categoryName != "") {

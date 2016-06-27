@@ -15,7 +15,7 @@ component implements="WWW.interfaces.connector" {
         var preparedOptions = themeIndividualizer.prepareOptions(arguments.options);
         
         var splitParameter = listToArray(request.page.getParameter(), "/");
-        var blogpostFilterCtrl = new filter();
+        var blogpostFilterCtrl = new filter().setFor("blogpost");
         
         if(! arguments.options.keyExists("maxEntries")) {
             arguments.options.maxEntries = 5;

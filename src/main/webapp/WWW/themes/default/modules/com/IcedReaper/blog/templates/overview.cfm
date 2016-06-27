@@ -73,7 +73,7 @@
                         <cfloop from="1" to="#attributes.categories.len()#" index="categoryIndex">
                             <a href="#request.page.getLink()#/Kategorie/#attributes.categories[categoryIndex].getName()#" class="list-group-item<cfif attributes.categories[categoryIndex].getName() EQ attributes.activeCategory> active</cfif>">
                                 #attributes.categories[categoryIndex].getName()#
-                                <span class="label label-primary label-pill pull-right">#attributes.categories[categoryIndex].useCount#</span>
+                                <span class="label label-primary label-pill pull-right">#attributes.categories[categoryIndex].getUseCount()#</span>
                             </a>
                         </cfloop>
                     </div>

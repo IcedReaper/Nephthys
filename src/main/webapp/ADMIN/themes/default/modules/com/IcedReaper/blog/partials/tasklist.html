@@ -1,27 +1,17 @@
 <div class="row m-b-2">
-    <div class="col-md-10 col-sm-8">
+    <div class="col-md-12 col-sm-12">
         <a href="#/tasklist" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>
         <a href="#/blogpost/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Blogpostübersicht</a>
         <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
         <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
         <a href="#/category/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Kategorieübersicht</a>
-    </div>
-    <div class="col-md-2 col-sm-4">
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <h1>Gesamtstatistiken</h1>
+        <a href="#/statistics" class="btn btn-secondary"><i class="fa fa-area-chart"></i> Gesamtstatistik</a>
     </div>
 </div>
 
 <div class="row">
     <div class="col-md-12">
-        <div class="card card-block">
-            <icedreaper-blog-statistics request-type="'perBlog'"
-                                           chart-type="'line'"
-                                           sort-order="ASC"></nephthys-blog-statistics>
-        </div>
+        <h1>Aufgabenliste</h1>
     </div>
 </div>
+<icedreaper-blog-tasklist table-class="table-inverse"></icedreaper-blog-tasklist>

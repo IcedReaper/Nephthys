@@ -748,3 +748,67 @@ alter table nephthys_module add column integratedSearch boolean default false NO
 alter table Icedreaper_gallery_gallery add column title character varying(160);
 update IcedReaper_gallery_gallery SET title = headline;
 alter table IcedReaper_gallery_gallery alter column title set not null;
+
+
+create table IcedReaper_blog_status
+(
+    statusId serial primary key,
+    name character varying(100) not null unique,
+    active boolean not null default true,
+    online boolean not null default false,
+    
+    editable boolean not null default false,
+    deleteable boolean not null default false,
+    showInTasklist boolean not null default false,
+    
+    creationUserId integer not null references nephthys_user,
+    creationDate timestamp with time zone not null default now(),
+    
+    lastEditUserId integer not null references nephthys_user,
+    lastEditDate timestamp with time zone not null default now()
+);
+
+create table IcedReaper_blog_statusFlow
+(
+    statusFlowId serial primary key,
+    statusId integer not null references IcedReaper_blog_status,
+    nextStatusId integer not null references IcedReaper_blog_status
+);
+
+create table IcedReaper_blog_approval
+(
+    approvalId serial primary key,
+    blogpostId integer references IcedReaper_blog_blogpost,
+    
+    prevStatusId integer references IcedReaper_blog_status,
+    nextStatusId integer not null references IcedReaper_blog_status,
+    
+    userId integer not null references nephthys_user,
+    approvalDate timestamp with time zone not null default now(),
+    
+    check (blogpostId IS NOT NULL)
+);
+
+alter table IcedReaper_blog_blogpost add column statusId integer references IcedReaper_blog_status;
+
+INSERT INTO IcedReaper_blog_status VALUES
+(
+    1,
+    'In Erstellung',
+    true,
+    true,
+    
+    true,
+    true,
+    true,
+    
+    1,
+    now(),
+    
+    1,
+    now()
+);
+
+update IcedReaper_blog_blogpost SET statusId = 1;
+
+alter table IcedReaper_blog_blogpost alter column statusId SET NOT NULL;

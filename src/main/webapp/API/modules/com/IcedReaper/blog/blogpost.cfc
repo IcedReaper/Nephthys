@@ -148,6 +148,11 @@ component {
         return this;
     }
     
+    public blogpost function setStatus(required status newStatus) {
+        variables.status = arguments.newStatus;
+        return this;
+    }
+    
     // G E T T E R
     public numeric function getBlogpostId() {
         return variables.blogpostId;
@@ -232,6 +237,52 @@ component {
         }
     }
     
+    public status function getStatus() {
+        return variables.status;
+    }
+    
+    
+    public blogpost function pushToStatus(required numeric newStatusId, required user user) {
+        var newStatus    = new status(arguments.newStatusId);
+        var actualStatus = duplicate(variables.status);
+        
+        var newStatusOK = false;
+        for(var nextStatus in actualStatus.getNextStatus()) {
+            if(nextStatus.getStatusId() == newStatus.getStatusId()) {
+                newStatusOk = true;
+            }
+        }
+        
+        if(newStatusOk) {
+            if(newStatus.isApprovalValid(arguments.user.getUserId())) {
+                transaction {
+                    setStatus(newStatus);
+                    
+                    new Query().setSQL("UPDATE IcedReaper_blog_blogpost
+                                           SET statusId = :statusId
+                                         WHERE blogpostId = :blogpostId")
+                               .addParam(name = "blogpostId", value = variables.blogpostId,           cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "statusId",   value = variables.status.getStatusId(), cfsqltype = "cf_sql_numeric")
+                               .execute();
+                    
+                    new approval(variables.blogpostId).approve(actualStatus.getStatusId(),
+                                                               newStatus.getStatusId(),
+                                                               arguments.user.getUserId());
+                    
+                    transactionCommit();
+                }
+                
+                return this;
+            }
+            else {
+                throw(type = "nephthys.application.notAllowed", message = "You don't have the required permissions for this operation");
+            }
+        }
+        else {
+            throw(type = "nephthys.application.notAllowed", message = "The new status isn't allowed!");
+        }
+    }
+    
     // C R U D
     public blogpost function save() {
         if(variables.folderName == "") {
@@ -251,6 +302,7 @@ component {
                                                                        anonymousCommentAllowed,
                                                                        commentsNeedToGetPublished,
                                                                        private,
+                                                                       statusId,
                                                                        creatorUserId,
                                                                        lastEditorUserId,
                                                                        lastEditDate
@@ -266,6 +318,7 @@ component {
                                                                        :anonymousCommentAllowed,
                                                                        :commentsNeedToGetPublished,
                                                                        :private,
+                                                                       :statusId,
                                                                        :creatorUserId,
                                                                        :lastEditorUserId,
                                                                        now()
@@ -283,6 +336,7 @@ component {
                                               .addParam(name = "private",                    value = variables.private,                    cfsqltype = "cf_sql_bit")
                                               .addParam(name = "creatorUserId",              value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
                                               .addParam(name = "lastEditorUserId",           value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
+                                              .addParam(name = "statusId",                   value = variables.status.getStatusId(),       cfsqltype = "cf_sql_numeric")
                                               .execute()
                                               .getResult()
                                               .newBlogpostId[1];
@@ -290,7 +344,7 @@ component {
             directoryCreate(getAbsolutePath(), true, true);
         }
         else {
-            if(variables.attributesChanged) {
+            if(variables.status.getEditable() && variables.attributesChanged) {
                 new Query().setSQL("UPDATE IcedReaper_blog_blogpost
                                        SET headline                   = :headline,
                                            link                       = :link,
@@ -302,6 +356,7 @@ component {
                                            anonymousCommentAllowed    = :anonymousCommentAllowed,
                                            commentsNeedToGetPublished = :commentsNeedToGetPublished,
                                            private                    = :private,
+                                           statusId                   = :statusId,
                                            lastEditorUserId           = :lastEditorUserId,
                                            lastEditDate               = now()
                                      WHERE blogpostId = :blogpostId")
@@ -318,6 +373,7 @@ component {
                            .addParam(name = "private",                    value = variables.private,                    cfsqltype = "cf_sql_bit")
                            .addParam(name = "creatorUserId",              value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
                            .addParam(name = "lastEditorUserId",           value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "statusId",                   value = variables.status.getStatusId(),       cfsqltype = "cf_sql_numeric")
                            .execute();
             }
             
@@ -326,44 +382,49 @@ component {
             }
         }
         
-        if(variables.categoriesChanged) {
-            for(var c = 1; c <= variables.categories.len(); c++) {
-                try {
-                    if(variables.categories[c].getCategoryId() == 0) {
-                        variables.categories[c].save();
+        if(variables.status.getEditable()) {
+            if(variables.categoriesChanged) {
+                for(var c = 1; c <= variables.categories.len(); c++) {
+                    try {
+                        if(variables.categories[c].getCategoryId() == 0) {
+                            variables.categories[c].save();
+                        }
+                        
+                        new Query().setSQL("INSERT INTO IcedReaper_blog_blogpostCategory
+                                                        (
+                                                            blogpostId,
+                                                            categoryId,
+                                                            creatorUserId
+                                                        )
+                                                 VALUES (
+                                                            :blogpostId,
+                                                            :categoryId,
+                                                            :creatorUserId
+                                                        )")
+                                   .addParam(name = "blogpostId",    value = variables.blogpostId,                    cfsqltype = "cf_sql_numeric")
+                                   .addParam(name = "categoryId",    value = variables.categories[c].getCategoryId(), cfsqltype = "cf_sql_numeric")
+                                   .addParam(name = "creatorUserId", value = request.user.getUserId(),                cfsqltype = "cf_sql_numeric")
+                                   .execute();
                     }
-                    
-                    new Query().setSQL("INSERT INTO IcedReaper_blog_blogpostCategory
-                                                    (
-                                                        blogpostId,
-                                                        categoryId,
-                                                        creatorUserId
-                                                    )
-                                             VALUES (
-                                                        :blogpostId,
-                                                        :categoryId,
-                                                        :creatorUserId
-                                                    )")
-                               .addParam(name = "blogpostId",    value = variables.blogpostId,                    cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "categoryId",    value = variables.categories[c].getCategoryId(), cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "creatorUserId", value = request.user.getUserId(),                cfsqltype = "cf_sql_numeric")
-                               .execute();
+                    catch(any e) {
+                        // check for exception types of duplicate unique keys
+                    }
                 }
-                catch(any e) {
-                    // check for exception types of duplicate unique keys
+            }
+            
+            variables.attributesChanged = false;
+            variables.categoriesChanged = false;
+            
+            // delete all unused files
+            var usedFiles = directoryList(getAbsolutePath(), false, "name");
+            for(var i = 1; i <= usedFiles.len(); i++) {
+                if(! find(usedFiles[i], variables.story)) {
+                    fileDelete(getAbsolutePath() & "/" & usedFiles[i]);
                 }
             }
         }
-        
-        variables.attributesChanged = false;
-        variables.categoriesChanged = false;
-        
-        // delete all unused files
-        var usedFiles = directoryList(getAbsolutePath(), false, "name");
-        for(var i = 1; i <= usedFiles.len(); i++) {
-            if(! find(usedFiles[i], variables.story)) {
-                fileDelete(getAbsolutePath() & "/" & usedFiles[i]);
-            }
+        else {
+            throw(type = "nephthys.application.notAllowed", message = "You're not allowed to update the version that is online");
         }
         
         return this;
@@ -409,12 +470,13 @@ component {
                 variables.categories                 = [];
                 variables.viewCounter                = qBlogpost.viewCounter[1];
                 variables.private                    = qBlogpost.private[1];
+                variables.status                     = new status(qBlogpost.statusId[1]);
                 
                 loadComments();
                 loadCategories();
             }
             else {
-                throw(type = "icedreaper.blogpost.notFound", message = "The Gallery could not be found", detail = variables.blogpostId);
+                throw(type = "icedreaper.blogpost.notFound", message = "The Blogpost could not be found", detail = variables.blogpostId);
             }
         }
         else {
@@ -437,6 +499,7 @@ component {
             variables.folderName                 = createUUID();
             variables.viewCounter                = 0;
             variables.private                    = false;
+            variables.status                     = new status(application.system.settings.getValueOfKey("com.IcedReaper.blog.defaultStatus"));
         }
     }
     

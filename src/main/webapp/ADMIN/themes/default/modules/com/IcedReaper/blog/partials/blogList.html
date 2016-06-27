@@ -1,8 +1,10 @@
 <div class="row m-b-2">
     <div class="col-md-10 col-sm-8">
-        <a href="#/settings" class="btn btn-secondary"><i class="fa fa-cogs"></i> Globale Einstellungen</a>
-        <a href="#/categories" class="btn btn-secondary"><i class="fa fa-tags"></i> Kategorieübersicht</a>
-        <a href="#/statistics" class="btn btn-secondary"><i class="fa fa-area-chart"></i> Gesamtstatistik</a>
+        <a href="#/tasklist" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>
+        <a href="#/blogpost/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Blogpostübersicht</a>
+        <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
+        <a href="#/category/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Kategorieübersicht</a>
     </div>
     <div class="col-md-2 col-sm-4">
         <div class="pull-right">
@@ -44,7 +46,7 @@
                 <th class="text-nowrap">ID</th>
                 <th class="text-nowrap">Überschrift</th>
                 <th class="text-nowrap">Interner Link</th>
-                <!--<th>Veröffentlichungsdatum</th>-->
+                <th class="text-nowrap">Veröffentlichungsdatum</th>
                 <th class="text-nowrap">Kategorien</th>
                 <th class="text-nowrap">Aktionen</th>
             </thead>
@@ -57,7 +59,7 @@
                         <a href="#/{{blogpost.blogpostId}}">{{blogpost.headline}}</a>
                     </td>
                     <td>{{blogpost.link}}</td>
-                    <!--<td>{{blogpost.releaseDate}}</td>-->
+                    <td>{{blogpost.releaseDate}}</td>
                     <td>{{blogpost.categories.join(', ')}}</td>
                     <td class="text-nowrap">
                         <a href="#/{{blogpost.blogpostId}}"

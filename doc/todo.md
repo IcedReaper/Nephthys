@@ -3,7 +3,6 @@
 ## Actual Task TODO - Reminder:
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
-- Taskliste wird beim 1. Statusändern nicht aktualisiert :/
 
 ## Allgemein
     1. Validierungen

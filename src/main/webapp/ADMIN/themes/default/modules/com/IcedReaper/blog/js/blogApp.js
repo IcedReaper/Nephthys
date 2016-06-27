@@ -4,22 +4,32 @@ var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
                                                            "ui.bootstrap",
                                                            "textAngular",
                                                            "ui.bootstrap",
+                                                           "ui.tree",
                                                            "com.nephthys.global.loadingBar",
-                                                           "com.IcedReaper.blog.statistics"]);
+                                                           "com.IcedReaper.blog.statistics",
+                                                           "com.IcedReaper.blog.tasklist"]);
     
 nephthysAdminApp
     .config(["$routeProvider", function ($routeProvider) {
         $routeProvider
             .when("/", {
+                templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/tasklist.html"
+            })
+            
+            .when("/blogpost/list", {
                 templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/blogList.html",
                 controller:  "blogListCtrl"
             })
-                
+            .when("/blogpost/:blogpostId", {
+                templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/blogDetail.html",
+                controller:  "blogDetailCtrl"
+            })
+            
             .when("/statistics", {
                 templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/statistics.html"
             })
             
-            .when("/categories", {
+            .when("/category/list", {
                 templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/categoryList.html",
                 controller:  "categoryListCtrl"
             })
@@ -33,10 +43,19 @@ nephthysAdminApp
                 controller: "settingsCtrl"
             })
             
-            .when("/:blogpostId", {
-                templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/blogDetail.html",
-                controller:  "blogDetailCtrl"
+            .when("/status/list", {
+                templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/statusList.html",
+                controller:  "statusListCtrl"
             })
+            .when("/status/flow", {
+                templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/statusFlow.html",
+                controller:  "statusFlowCtrl"
+            })
+            .when("/status/:statusId", {
+                templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/statusDetail.html",
+                controller:  "statusDetailCtrl"
+            })
+            
             .otherwise({
                 redirectTo: "/"
             });
