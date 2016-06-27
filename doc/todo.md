@@ -3,6 +3,7 @@
 ## Actual Task TODO - Reminder:
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
+- Taskliste wird beim 1. Statusändern nicht aktualisiert :/
 
 ## Allgemein
     1. Validierungen
@@ -48,10 +49,14 @@
             * Was passiert, wenn es auch da nicht vorhanden ist? Auslassen und Fehlerloggen? Fehler schmeißen?
 
 ## Adminbereich
-    1. Modulinstallation
-        1. Fileupload von einer zip/rar-Datei (siehe theme installation)
-        2. Installation per git-repository
-        3. Module-Modul überarbeiten: Neues Modul => Installation
+    1. Modulverwaltung
+        * Installation
+            1. Fileupload von einer zip/rar-Datei (siehe theme installation)
+            2. Installation per git-repository
+            3. Module-Modul überarbeiten: Neues Modul => Installation
+        * Bugs und benötigte Features
+            * Berechtigungen
+            * Untermodule (Children)
     2. Seitenmanagement
         1. Mehrsprachigkeit des Contents
         2. Autospeichern (Setzt Versionierung voraus | Problem: Bei normalem Vorgehen wird die Aktuelle Version überschrieben. Es sollte allerdings eine temporäre Version angelegt werden, die nach normalem Speichern wieder gelöscht wird.)
@@ -81,12 +86,12 @@
             * Bewertungen
                 * Anonym per Option
                 * Als eingeloggter User
-        3. Alles prüfen
-        4. Statistiken pro Bild
+        3. Statistiken pro Bild
             - Jegliche Idee bisher ist crap
                 * Für onSlideEnd von blueimp image gallery muss per jQuery der Filename ausgelesen werden
                 * ColdFusion liefert nicht ohne weiteres Bilder aus - ich hab noch nix ergoogled - ggf Lucee-Forum anfunken
                 * imageServer.cfm?i=imagePage.jpg (Wohl beste aber auch nicht so das wahrste) | übern nginx drehen
+        4. Einstellungen wie im Blog-Modul
     2. Blog
         1. Mögliche Verbesserungen:
             * File resizing after upload is only applied by width and height attributes
@@ -97,6 +102,8 @@
             * Kalenderübersicht hinzufügen => Klick auf Datum => zeigt alle Posts des Tages
         4. Workflow der Seiten adaptieren?
         5. Alles prüfen
+        * Admin schön machen
+        6. Releasedate funktionabel (admin backend) machen
     3. Reviewsystem
         => genre in tags umbenennen
         => Type in Kategorie umbennen
@@ -110,6 +117,7 @@
                 * Sterne
                 * Ausgeschrieben
         * Statistiken
+        * Admin schön machen
     4. Referenzen
     5. Preis/Leistung
     6. YouTube Videoliste

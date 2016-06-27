@@ -330,7 +330,7 @@ component {
                                              .newGalleryId[1];
         }
         else {
-            if(variables.status.areGalleriesEditable()) {
+            if(variables.status.getEditable()) {
                 new Query().setSQL("UPDATE IcedReaper_gallery_gallery
                                        SET headline         = :headline,
                                            description      = :description,

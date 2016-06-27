@@ -204,15 +204,13 @@ component {
         };
     }
     
-    remote boolean function saveGenre(required numeric genreId, required string name) {
-        new genre(arguments.genreId)
-            .setName(arguments.name)
-            .save();
-        
-        return true;
+    remote numeric function saveGenre(required numeric genreId, required string name) {
+        return new genre(arguments.genreId).setName(arguments.name)
+                                           .save()
+                                           .getGenreId();
     }
     
-    remote boolean function deleteGenre(required numeric categoryId) {
+    remote boolean function deleteGenre(required numeric genreId) {
         var genre = new genre(arguments.genreId);
         
         genre.delete();
@@ -251,12 +249,11 @@ component {
         };
     }
     
-    remote boolean function saveType(required numeric typeId, required string name) {
-        new type(arguments.typeId)
-            .setName(arguments.name)
-            .save();
-        
-        return true;
+    remote numeric function saveType(required numeric typeId,
+                                     required string name) {
+        return new type(arguments.typeId).setName(arguments.name)
+                                         .save()
+                                         .getTypeId();
     }
     
     remote boolean function deleteType(required numeric typeId) {

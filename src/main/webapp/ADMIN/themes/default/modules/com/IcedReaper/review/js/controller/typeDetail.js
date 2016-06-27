@@ -1,5 +1,5 @@
 nephthysAdminApp
-    .controller('typeDetailCtrl', ["$scope", "$routeParams", "$q", "typeService", function ($scope, $routeParams, $q, typeService) {
+    .controller('typeDetailCtrl', ["$scope", "$routeParams", "$route", "$q", "typeService", function ($scope, $routeParams, $route, $q, typeService) {
         // load
         $scope.load = function() {
             typeService
@@ -15,9 +15,13 @@ nephthysAdminApp
                     typeId: $scope.type.typeId,
                     name:   $scope.type.name
                 })
-                .then(function () {
-                    if($scope.type.typeId == 0) {
-                        $scope.type.name = "";
+                .then(function (newTypeId) {
+                    if($scope.type.typeId != newTypeId) {
+                        $scope.type.typeId = newTypeId;
+                        
+                        $route.updateParams({
+                            typeId: newTypeId
+                        });
                     }
                 });
         };

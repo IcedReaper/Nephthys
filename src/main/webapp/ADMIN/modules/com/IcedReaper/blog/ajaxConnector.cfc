@@ -2,7 +2,7 @@ component {
     import "API.modules.com.IcedReaper.blog.*";
     
     remote array function getList() {
-        var blogpostFilterCtrl = new filter();
+        var blogpostFilterCtrl = new filter().setFor("blogpost");
         
         var blogposts = blogpostFilterCtrl.execute().getResult();
         var data = [];
@@ -27,14 +27,14 @@ component {
     }
     
     remote array function loadAutoCompleteCategories(required string queryString) {
-        var categoryLoader = new categoryLoader();
+        var categoryFilter = new filter().setFor("category");
         
-        var categories = categoryLoader.setName(arguments.queryString)
-                                       .load();
+        var categories = categoryFilter.setName(arguments.queryString)
+                                       .execute()
+                                       .getResult();
         
         if(categories.len() != 1 || categories[1].getName() != arguments.queryString) {
-            var dummyCategory = new category(0)
-                                    .setName(arguments.queryString);
+            var dummyCategory = new category(0).setName(arguments.queryString);
             
             categories.append(dummyCategory);
         }
@@ -195,10 +195,10 @@ component {
     }
     
     // categories and their details
-    remote struct function getCategoryList() {
-        var categoryLoader = new categoryLoader();
+    remote array function getCategoryList() {
+        var categoryFilter = new filter().setFor("category");
         
-        return prepareCategoryDetails(categoryLoader.load(), true);
+        return prepareCategoryDetails(categoryFilter.execute().getResult(), true);
     }
     
     remote struct function getCategoryDetails(required numeric categoryId) {
@@ -207,13 +207,13 @@ component {
         return prepareCategoryStruct(category);
     }
     
-    remote boolean function saveCategory(required numeric categoryId,
-                                        required string  name) {
+    remote numeric function saveCategory(required numeric categoryId,
+                                         required string  name) {
         var category = new category(arguments.categoryId);
         category.setName(arguments.name)
                 .save();
         
-        return true;
+        return category.getCategoryId();
     }
     
     remote boolean function deleteCategory(required numeric categoryId) {
@@ -350,7 +350,7 @@ component {
     
     private array function prepareCategoryDetails(required array categories, required boolean getBlogposts = false) {
         var gCategories = [];
-        var blogpostFilterCtrl = new filter();
+        var blogpostFilterCtrl = new filter().setFor("blogpost");
         
         for(var c = 1; c <= arguments.categories.len(); c++) {
             gCategories.append({

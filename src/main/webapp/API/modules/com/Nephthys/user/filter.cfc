@@ -10,5 +10,7 @@ component {
                 return createObject("component", "filter.filter" & arguments.for).init();
             }
         }
+        
+        throw(type = "nephthys.notFound.general", message = "Could not find the required filter");
     }
 }

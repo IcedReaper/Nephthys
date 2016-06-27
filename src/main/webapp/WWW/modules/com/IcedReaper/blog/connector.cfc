@@ -99,7 +99,7 @@ component implements="WWW.interfaces.connector" {
                                            required numeric actualPage,
                                                     string  activeCategory = "") {
         var renderedContent = "";
-        var categoryLoader = new categoryLoader();
+        var categoryFilter = new filter().setFor("category");
         
         saveContent variable="renderedContent" {
             module template           = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/overview.cfm"
@@ -108,7 +108,7 @@ component implements="WWW.interfaces.connector" {
                    totalBlogpostCount = arguments.blogpostFilterCtrl.getResultCount()
                    totalPageCount     = ceiling(arguments.blogpostFilterCtrl.getResultCount() / arguments.options.maxEntries)
                    actualPage         = arguments.actualPage
-                   categories         = categoryLoader.load()
+                   categories         = categoryFilter.execute().getResult()
                    activeCategory     = arguments.activeCategory;
         }
         

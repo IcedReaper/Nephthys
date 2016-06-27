@@ -1,5 +1,5 @@
 nephthysAdminApp
-    .controller('pagesDetailCtrl', ["$scope", "$routeParams", "$q", "pagesService", function ($scope, $routeParams, $q, pagesService) {
+    .controller('pagesDetailCtrl', ["$scope", "$routeParams", "$route", "$q", "pagesService", function ($scope, $routeParams, $route, $q, pagesService) {
         var _actualUser,
             
             getStartStatus = function () {
@@ -74,7 +74,14 @@ nephthysAdminApp
                       $scope.selectedVersion.major,
                       $scope.selectedVersion.minor)
                 .then(function (newIds) {
-                    $scope.page.pageId = newIds.pageId;
+                    if($scope.page.pageId != newIds.pageId) {
+                        $scope.page.pageId = newIds.pageId;
+                        
+                        $route.updateParams({
+                            pageId: newIds.pageId
+                        });
+                    }
+                    
                     $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageId        = newIds.pageId;
                     $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].pageVersionId = newIds.pageVersionId;
                 });

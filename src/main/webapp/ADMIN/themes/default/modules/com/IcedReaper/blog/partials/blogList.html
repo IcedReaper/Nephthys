@@ -41,12 +41,12 @@
     <div class="col-md-12">
         <table class="table table-inverse m-t-1">
             <thead>
-                <th>ID</th>
-                <th>Überschrift</th>
-                <th>Interner Link</th>
-                <th>Veröffentlichungsdatum</th>
-                <th>Kategorien</th>
-                <th>Aktionen</th>
+                <th class="text-nowrap">ID</th>
+                <th class="text-nowrap">Überschrift</th>
+                <th class="text-nowrap">Interner Link</th>
+                <!--<th>Veröffentlichungsdatum</th>-->
+                <th class="text-nowrap">Kategorien</th>
+                <th class="text-nowrap">Aktionen</th>
             </thead>
             <tbody>
                 <tr ng-repeat="blogpost in blogposts | filter:search"> <!-- change indicator to published -->
@@ -57,9 +57,9 @@
                         <a href="#/{{blogpost.blogpostId}}">{{blogpost.headline}}</a>
                     </td>
                     <td>{{blogpost.link}}</td>
-                    <td>{{blogpost.releaseDate}}</td>
+                    <!--<td>{{blogpost.releaseDate}}</td>-->
                     <td>{{blogpost.categories.join(', ')}}</td>
-                    <td>
+                    <td class="text-nowrap">
                         <a href="#/{{blogpost.blogpostId}}"
                            class="btn btn-primary"
                            title="Galleriedetails">

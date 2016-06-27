@@ -1,5 +1,5 @@
 nephthysAdminApp
-    .controller('userDetailCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "userService", function ($scope, $rootScope, $routeParams, $q, userService) {
+    .controller('userDetailCtrl', ["$scope", "$routeParams", "$route", "$q", "userService", function ($scope, $routeParams, $route, $q, userService) {
         $scope.load = function() {
             $q.all([
                 userService.getDetails($routeParams.userId),
@@ -11,8 +11,6 @@ nephthysAdminApp
                 $scope.user              = userDetails;
                 $scope.themes            = themes;
                 $scope.actualPermissions = actualPermissions;
-                
-                $rootScope.$emit('user-loaded', {userId: userDetails.userId});
             }));
         };
         
@@ -20,6 +18,12 @@ nephthysAdminApp
             userService
                 .save($scope.user)
                 .then(function (user) {
+                    if($scope.user.userId != user.userId) {
+                        $route.updateParams({
+                            userId: userId
+                        });
+                    }
+                    
                     $scope.user = user;
                 });
         };

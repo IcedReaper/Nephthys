@@ -1,13 +1,10 @@
 nephthysAdminApp
-    .controller('userExtPropertiesCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "userService", function ($scope, $rootScope, $routeParams, $q, userService) {
-        var userId = null;
-        
+    .controller('userExtPropertiesCtrl', ["$scope", "$routeParams", "$q", "userService", function ($scope, $routeParams, $q, userService) {
         $scope.load = function () {
-            if(userId !== null) {
+            if($routeParams.userId !== null && $routeParams.userId !== 0) {
                 $q.all([
                     userService.getExtProperties($routeParams.userId)
                 ])
-                // and merging them
                 .then($q.spread(function (extProperties) {
                     $scope.extProperties = extProperties;
                 }));
@@ -15,14 +12,8 @@ nephthysAdminApp
         };
         
         $scope.save = function () {
-            userService
-                .saveExtProperties(userId, $scope.extProperties)
-                .then($scope.load);
+            userService.saveExtProperties($routeParams.userId, $scope.extProperties);
         };
         
-        $rootScope.$on('user-loaded', function(event, userData) {
-            userId = userData.userId;
-            
-            $scope.load();
-        });
+        $scope.load();
     }]);

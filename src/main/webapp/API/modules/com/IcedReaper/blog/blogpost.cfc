@@ -441,6 +441,7 @@ component {
     }
     
     private void function loadCategories() {
+        // TODO: realize over filter!
         var qCategoryIds = new Query().setSQL("  SELECT categoryId
                                                    FROM IcedReaper_blog_blogpostCategory
                                                   WHERE blogpostId = :blogpostId

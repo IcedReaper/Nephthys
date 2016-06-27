@@ -1,5 +1,5 @@
 nephthysAdminApp
-    .controller('genreDetailCtrl', ["$scope", "$routeParams", "$q", "genreService", function ($scope, $routeParams, $q, genreService) {
+    .controller('genreDetailCtrl', ["$scope", "$routeParams", "$route", "$q", "genreService", function ($scope, $routeParams, $route, $q, genreService) {
         // load
         $scope.load = function() {
             genreService
@@ -15,9 +15,13 @@ nephthysAdminApp
                     genreId: $scope.genre.genreId,
                     name:    $scope.genre.name
                 })
-                .then(function () {
-                    if($scope.genre.genreId == 0) {
-                        $scope.genre.name = "";
+                .then(function (newGenreId) {
+                    if($scope.genre.genreId != newGenreId) {
+                        $scope.genre.genreId = newGenreId;
+                        
+                        $route.updateParams({
+                            genreId: newGenreId
+                        });
                     }
                 });
         };

@@ -1,5 +1,5 @@
 nephthysAdminApp
-    .controller('reviewDetailCtrl', ["$scope", "$routeParams", "$q", "reviewService", "typeService", function ($scope, $routeParams, $q, reviewService, typeService) {
+    .controller('reviewDetailCtrl', ["$scope", "$routeParams", "$route", "$q", "reviewService", "typeService", function ($scope, $routeParams, $route, $q, reviewService, typeService) {
         $scope.load = function() {
             return $q.all([
                     reviewService.getDetails($routeParams.reviewId),
@@ -15,7 +15,14 @@ nephthysAdminApp
             reviewService
                 .save($scope.review)
                 .then(function(reviewId) {
+                    var oldReviewId = $scope.review.reviewId;
                     $scope.review.reviewId = reviewId;
+                    
+                    if(oldReviewId == 0) {
+                        $route.updateParams({
+                            reviewId: reviewId
+                        });
+                    }
                     
                     if($scope.newImage) {
                         return reviewService.uploadImage($scope.newImage, $scope.review.reviewId);

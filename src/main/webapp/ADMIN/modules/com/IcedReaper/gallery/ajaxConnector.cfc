@@ -35,15 +35,14 @@ component {
     }
     
     remote array function loadAutoCompleteCategories(required string queryString) {
-        var categoryLoader = new categoryLoader();
+        var categoryFilter = new filter().setFor("category");
         
-        var categories = categoryLoader
-                             .setName(arguments.queryString)
-                             .load();
+        var categories = categoryFilter.setName(arguments.queryString)
+                                       .execute()
+                                       .getResult();
         
         if(categories.len() != 1 || categories[1].getName() != arguments.queryString) {
-            var dummyCategory = new category(0)
-                                    .setName(arguments.queryString);
+            var dummyCategory = new category(0).setName(arguments.queryString);
             
             categories.append(dummyCategory);
         }
@@ -184,9 +183,9 @@ component {
     
     // categories and their details
     remote array function getCategoryList() {
-        var categoryLoader = new categoryLoader();
+        var categoryFilter = new filter().setFor("category");
         
-        return prepareCategoryDetails(categoryLoader.load(), true);
+        return prepareCategoryDetails(categoryFilter.execute().getResult(), true);
     }
     
     remote struct function getCategoryDetails(required numeric categoryId) {
@@ -195,14 +194,14 @@ component {
         return prepareCategoryStruct(category);
     }
     
-    remote boolean function saveCategory(required numeric categoryId,
-                                        required string  name) {
+    remote numeric function saveCategory(required numeric categoryId,
+                                         required string  name) {
         var category = new category(arguments.categoryId);
         
         category.setName(arguments.name)
                 .save();
         
-        return true;
+        return category.getCategoryId();
     }
     
     remote boolean function deleteCategory(required numeric categoryId) {
@@ -267,30 +266,24 @@ component {
         return prepareStatus(new status(arguments.statusId));
     }
     
-    remote boolean function saveStatus(required struct status) {
-        transaction {
-            var status = new status(arguments.status.statusId);
-            
-            status.setActiveStatus(arguments.status.active)
-                  .setEditable(arguments.status.editable)
-                  .setName(arguments.status.name)
-                  .setOnlineStatus(arguments.status.online)
-                  .setDeleteable(arguments.status.deleteable)
-                  .setShowInTasklist(arguments.status.showInTasklist)
-                  .setLastEditor(request.user)
-                  .save();
-            
-            transactionCommit();
-            return true;
-        }
+    remote numeric function saveStatus(required struct status) {
+        var status = new status(arguments.status.statusId);
+        
+        status.setActiveStatus(arguments.status.active)
+              .setEditable(arguments.status.editable)
+              .setName(arguments.status.name)
+              .setOnlineStatus(arguments.status.online)
+              .setDeleteable(arguments.status.deleteable)
+              .setShowInTasklist(arguments.status.showInTasklist)
+              .setLastEditor(request.user)
+              .save();
+        
+        return status.getStatusId();
     }
     
     remote boolean function deleteStatus(required numeric statusId) {
-        if(arguments.statusId == application.system.settings.getValueOfKey("startStatus")) {
+        if(arguments.statusId == application.system.settings.getValueOfKey("com.IcedReaper.gallery.startStatus")) {
             throw(type = "nephthys.application.notAllowed", message = "You cannot delete the start status. Please reset the start status in the system settings");
-        }
-        if(arguments.statusId == application.system.settings.getValueOfKey("endStatus")) {
-            throw(type = "nephthys.application.notAllowed", message = "You cannot remove the end status. Please reset the end status in the system settings");
         }
         
         var galleriesStillWithThisStatus = new filter().setFor("gallery")
