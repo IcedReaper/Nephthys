@@ -8,17 +8,18 @@ component implements="WWW.interfaces.connector" {
     public string function getName() {
         return "com.IcedReaper.teamOverview";
     }
+    public string function getModulePath() {
+        return getName().replace(".", "/", "ALL");
+    }
     
     public string function render(required struct options, required string childContent) {
-        var renderedContent = "";
-        
         var member = new filter().execute().getResult();
         
-        saveContent variable="renderedContent" {
-            module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/teamOverview/templates/overview.cfm"
-                   member   = member;
-        }
-        
-        return renderedContent;
+        return application.system.settings.getValueOfKey("templateRenderer")
+            .setModulePath(getModulePath())
+            .setTemplate("overview.cfm")
+            .addParam("options", arguments.options)
+            .addParam("member",  member)
+            .render();
     }
 }

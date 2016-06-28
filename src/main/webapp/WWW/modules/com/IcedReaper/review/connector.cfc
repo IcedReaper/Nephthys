@@ -8,6 +8,9 @@ component implements="WWW.interfaces.connector" {
     public string function getName() {
         return "com.IcedReaper.review";
     }
+    public string function getModulePath() {
+        return getName().replace(".", "/", "ALL");
+    }
     
     public string function render(required struct options, required string childContent) {
         // prepare the options required for the theme
@@ -119,29 +122,23 @@ component implements="WWW.interfaces.connector" {
     private string function renderOverview(required struct  options,
                                            required filter  reviewFilter,
                                            required numeric actualPage) {
-        var renderedContent = "";
-        
-        saveContent variable="renderedContent" {
-            module template         = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/review/templates/overview.cfm"
-                   options          = arguments.options
-                   reviews          = arguments.reviewFilter.getResult()
-                   totalReviewCount = arguments.reviewFilter.getResultCount()
-                   totalPageCount   = ceiling(arguments.reviewFilter.getResultCount() / arguments.options.maxEntries)
-                   actualPage       = arguments.actualPage;
-        }
-        
-        return renderedContent;
+        return application.system.settings.getValueOfKey("templateRenderer")
+            .setModulePath(getModulePath())
+            .setTemplate("overview.cfm")
+            .addParam("options",          arguments.options)
+            .addParam("reviews",          arguments.reviewFilter.getResult())
+            .addParam("totalReviewCount", arguments.reviewFilter.getResultCount())
+            .addParam("totalPageCount",   ceiling(arguments.reviewFilter.getResultCount() / arguments.options.maxEntries))
+            .addParam("actualPage",       arguments.actualPage)
+            .render();
     }
     
     private string function renderDetails(required struct options, required review review) {
-        var renderedContent = "";
-        
-        saveContent variable="renderedContent" {
-            module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/review/templates/reviewDetail.cfm"
-                   options  = arguments.options
-                   review   = arguments.review;
-        }
-        
-        return renderedContent;
+        return application.system.settings.getValueOfKey("templateRenderer")
+            .setModulePath(getModulePath())
+            .setTemplate("reviewDetail.cfm")
+            .addParam("options", arguments.options)
+            .addParam("review",  arguments.review)
+            .render();
     }
 }

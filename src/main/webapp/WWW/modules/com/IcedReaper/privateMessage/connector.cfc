@@ -1,6 +1,5 @@
 component implements="WWW.interfaces.connector" {
     import "API.modules.com.IcedReaper.privateMessage.*";
-    import "API.modules.com.Nephthys.user.*"
     
     public connector function init() {
         return this;
@@ -9,10 +8,11 @@ component implements="WWW.interfaces.connector" {
     public string function getName() {
         return "com.IcedReaper.privateMessage";
     }
+    public string function getModulePath() {
+        return getName().replace(".", "/", "ALL");
+    }
     
     public string function render(required struct options, required string childContent) {
-        var renderedContent = "";
-        
         if(arguments.options.keyExists("userId") && arguments.options.userId == request.user.getUserId()) {
             if(arguments.options.otherParameter.len() == 0) {
                 arguments.options.otherParameter[1] = "overview";
@@ -49,11 +49,11 @@ component implements="WWW.interfaces.connector" {
                             location(addtoken = false, statuscode = "302", url = "/user/" & request.user.getUserName() & "/privateMessages/conversation/" & conversation.getConversationId());
                         }
                         
-                        saveContent variable="renderedContent" {
-                            module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/privateMessage/templates/newConversation.cfm";
-                        }
-                        
-                        break;
+                        return application.system.settings.getValueOfKey("templateRenderer")
+                            .setModulePath(getModulePath())
+                            .setTemplate("newConversation.cfm")
+                            .addParam("options", arguments.options)
+                            .render();
                     }
                     case "conversation": {
                         if(! form.isEmpty()) {
@@ -100,11 +100,6 @@ component implements="WWW.interfaces.connector" {
                                                                .getResult();
                                 
                                 if(conversation.len() == 1) {
-                                    saveContent variable="renderedContent" {
-                                        module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/privateMessage/templates/conversation.cfm"
-                                               conversation = conversation[1];
-                                    }
-                                    
                                     for(var message in conversation[1].getMessages()) {
                                         if(! message.isRead(request.user)) {
                                             message.read(request.user);
@@ -114,11 +109,20 @@ component implements="WWW.interfaces.connector" {
                                             break;
                                         }
                                     }
+                                    
+                                    return application.system.settings.getValueOfKey("templateRenderer")
+                                        .setModulePath(getModulePath())
+                                        .setTemplate("conversation.cfm")
+                                        .addParam("options", arguments.options)
+                                        .addParam("conversation", conversation[1])
+                                        .render();
                                 }
                                 else {
-                                    saveContent variable="renderedContent" {
-                                        module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/privateMessage/templates/conversationNotFound.cfm";
-                                    }
+                                    return application.system.settings.getValueOfKey("templateRenderer")
+                                        .setModulePath(getModulePath())
+                                        .setTemplate("conversationNotFound.cfm")
+                                        .addParam("options", arguments.options)
+                                        .render();
                                 }
                             }
                         }
@@ -129,12 +133,12 @@ component implements="WWW.interfaces.connector" {
                                                                .execute()
                                                                .getResult();
                         
-                        saveContent variable="renderedContent" {
-                            module template      = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/privateMessage/templates/overview.cfm"
-                                   conversations = conversationOverview;
-                        }
-                        
-                        break;
+                        return application.system.settings.getValueOfKey("templateRenderer")
+                            .setModulePath(getModulePath())
+                            .setTemplate("overview.cfm")
+                            .addParam("options",       arguments.options)
+                            .addParam("conversations", conversationOverview)
+                            .render();
                     }
                     default: {
                         throw(type = "nephthys.notFound.user", message = "Action not found or invalid");
@@ -148,7 +152,6 @@ component implements="WWW.interfaces.connector" {
         else {
             throw(type = "nephthys.notFound.user", message = "User not found or invalid");
         }
-        
-        return renderedContent;
+        return "";
     }
 }

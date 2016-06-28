@@ -8,10 +8,11 @@ component implements="WWW.interfaces.connector" {
     public string function getName() {
         return "com.IcedReaper.youTube";
     }
+    public string function getModulePath() {
+        return getName().replace(".", "/", "ALL");
+    }
     
     public string function render(required struct options, required string childContent) {
-        var renderedContent = "";
-        
         if(arguments.options.keyExists("playlistId") && arguments.options.playlistId != "") {
             var playlist = new playlist(arguments.options.playlistId);
             
@@ -19,22 +20,24 @@ component implements="WWW.interfaces.connector" {
                 playlist.setMaxResults(arguments.options.videoCount);
             }
             
-            saveContent variable="renderedContent" {
-                module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/youTube/templates/playlist.cfm"
-                       playlist = playlist
-                       options  = duplicate(arguments.options);
-            }
+            return application.system.settings.getValueOfKey("templateRenderer")
+                .setModulePath(getModulePath())
+                .setTemplate("channel.cfm")
+                .addParam("options", arguments.options)
+                .addParam("playlist", playlist)
+                .render();
         }
         else if(arguments.options.keyExists("videoId") && arguments.options.videoId != "") {
             var video = new video(arguments.options.videoId);
-        
-            saveContent variable="renderedContent" {
-                module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/youTube/templates/video.cfm"
-                       video    = video
-                       options  = duplicate(arguments.options);
-            }
+            
+            return application.system.settings.getValueOfKey("templateRenderer")
+                .setModulePath(getModulePath())
+                .setTemplate("channel.cfm")
+                .addParam("options", arguments.options)
+                .addParam("video", video)
+                .render();
         }
         
-        return renderedContent;
+        return "";
     }
 }

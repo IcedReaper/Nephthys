@@ -8,6 +8,9 @@ component implements="WWW.interfaces.connector" {
     public string function getName() {
         return "com.IcedReaper.blog";
     }
+    public string function getModulePath() {
+        return getName().replace(".", "/", "ALL");
+    }
     
     public string function render(required struct options, required string childContent) {
         // prepare the options required for the theme
@@ -96,32 +99,31 @@ component implements="WWW.interfaces.connector" {
                                                     string  activeCategory = "") {
         var categoryFilter = new filter().setFor("category").setUsed(true);
         
-        var renderer = createObject("component", "API.tools.com.Nephthys.renderer.renderer").init();
-        return renderer.setTemplate("/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/overview.cfm")
-                       .addParam("options",            arguments.options)
-                       .addParam("blogposts",          arguments.blogpostFilterCtrl.getResult())
-                       .addParam("totalBlogpostCount", arguments.blogpostFilterCtrl.getResultCount())
-                       .addParam("totalPageCount",     ceiling(arguments.blogpostFilterCtrl.getResultCount() / arguments.options.maxEntries))
-                       .addParam("actualPage",         arguments.actualPage)
-                       .addParam("categories",         categoryFilter.execute().getResult())
-                       .addParam("activeCategory",     arguments.activeCategory)
-                       .render();
+        return application.system.settings.getValueOfKey("templateRenderer")
+            .setModulePath(getModulePath())
+            .setTemplate("overview.cfm")
+            .addParam("options",            arguments.options)
+            .addParam("blogposts",          arguments.blogpostFilterCtrl.getResult())
+            .addParam("totalBlogpostCount", arguments.blogpostFilterCtrl.getResultCount())
+            .addParam("totalPageCount",     ceiling(arguments.blogpostFilterCtrl.getResultCount() / arguments.options.maxEntries))
+            .addParam("actualPage",         arguments.actualPage)
+            .addParam("categories",         categoryFilter.execute().getResult())
+            .addParam("activeCategory",     arguments.activeCategory)
+            .render();
     }
     
     private string function renderDetails(required struct options, required blogpost blogpost, required boolean commentAdded) {
-        var renderedContent = "";
         var statisticsCtrl = new statistics();
         
         statisticsCtrl.add(arguments.blogpost.getBlogpostId());
         
-        saveContent variable="renderedContent" {
-            module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/blogpostDetail.cfm"
-                   options      = arguments.options
-                   blogpost     = arguments.blogpost
-                   commentAdded = commentAdded;
-        }
-        
-        return renderedContent;
+        return application.system.settings.getValueOfKey("templateRenderer")
+            .setModulePath(getModulePath())
+            .setTemplate("blogpostDetail.cfm")
+            .addParam("options",      arguments.options)
+            .addParam("blogpost",     arguments.blogpost)
+            .addParam("commentAdded", commentAdded)
+            .render();
     }
     
     private boolean function checkAndAddComment(required blogpost blogpost) {

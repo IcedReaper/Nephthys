@@ -3,6 +3,8 @@
 ## Actual Task TODO - Reminder:
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
+- Better security against XSS
+- TODOs
 
 ## Allgemein
     1. Validierungen

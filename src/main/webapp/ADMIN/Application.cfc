@@ -13,6 +13,7 @@ component {
         // components
         application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
         application.system.settings.load();
+        application.rootPath = application.system.settings.getValueOfKey("adminRoot");
         
         return true;
     }

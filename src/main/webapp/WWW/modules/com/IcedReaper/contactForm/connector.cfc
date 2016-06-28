@@ -8,15 +8,19 @@ component implements="WWW.interfaces.connector" {
     public string function getName() {
         return "com.IcedReaper.contactForm";
     }
+    public string function getModulePath() {
+        return getName().replace(".", "/", "ALL");
+    }
     
     public string function render(required struct options, required string childContent) {
         var renderedContent = "";
         
         if(form.isEmpty()) {
-            saveContent variable="renderedContent" {
-                module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/contactForm/templates/form.cfm"
-                       options  = arguments.options;
-            }
+            return application.system.settings.getValueOfKey("templateRenderer")
+                .setModulePath(getModulePath())
+                .setTemplate("form.cfm")
+                .addParam("options", arguments.options)
+                .render();
         }
         else {
             try {
@@ -39,10 +43,11 @@ component implements="WWW.interfaces.connector" {
                 
                 contactFormRequest.save();
                 
-                saveContent variable="renderedContent" {
-                    module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/contactForm/templates/thanks.cfm"
-                           options  = arguments.options;
-                }
+                return application.system.settings.getValueOfKey("templateRenderer")
+                    .setModulePath(getModulePath())
+                    .setTemplate("thanks.cfm")
+                    .addParam("options", arguments.options)
+                    .render();
             }
             catch(icedreaper.contactForm.invalidData e) {
                 // TODO: Return to form show error
@@ -50,7 +55,5 @@ component implements="WWW.interfaces.connector" {
                 return "Fehler";
             }
         }
-        
-        return renderedContent;
     }
 }

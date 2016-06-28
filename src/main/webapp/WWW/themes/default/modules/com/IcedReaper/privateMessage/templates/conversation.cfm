@@ -40,7 +40,7 @@
             <div class="row">
                 <div class="col-sm-8
                             <cfif messages[messageIndex].getUser().getUserId() EQ request.user.getUserId()>
-                                col-sm-offset-4 myMessage
+                                offset-sm-4 myMessage
                                 <cfif messages[messageIndex].isDeleted()>
                                     deleted
                                 </cfif>

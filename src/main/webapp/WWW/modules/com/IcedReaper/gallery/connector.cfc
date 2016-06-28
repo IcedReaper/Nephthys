@@ -8,6 +8,9 @@ component implements="WWW.interfaces.connector" {
     public string function getName() {
         return "com.IcedReaper.gallery";
     }
+    public string function getModulePath() {
+        return getName().replace(".", "/", "ALL");
+    }
     
     public string function render(required struct options, required string childContent) {
         // prepare the options required for the theme
@@ -119,22 +122,18 @@ component implements="WWW.interfaces.connector" {
     private string function renderOverview(required struct  options,
                                            required filter  galleryFilterCtrl,
                                            required numeric actualPage) {
-        var renderedContent = "";
-        
-        saveContent variable="renderedContent" {
-            module template          = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/gallery/templates/overview.cfm"
-                   options           = arguments.options
-                   galleries         = arguments.galleryFilterCtrl.getResult()
-                   totalGalleryCount = arguments.galleryFilterCtrl.getResultCount()
-                   totalPageCount    = ceiling(arguments.galleryFilterCtrl.getResultCount() / arguments.options.maxEntries)
-                   actualPage        = arguments.actualPage;
-        }
-        
-        return renderedContent;
+        return application.system.settings.getValueOfKey("templateRenderer")
+            .setModulePath(getModulePath())
+            .setTemplate("overview.cfm")
+            .addParam("options",           arguments.options)
+            .addParam("galleries",         arguments.galleryFilterCtrl.getResult())
+            .addParam("totalGalleryCount", arguments.galleryFilterCtrl.getResultCount())
+            .addParam("totalPageCount",    ceiling(arguments.galleryFilterCtrl.getResultCount() / arguments.options.maxEntries))
+            .addParam("actualPage",        arguments.actualPage)
+            .render();
     }
     
     private string function renderDetails(required struct options, required gallery gallery) {
-        var renderedContent = "";
         var statisticsCtrl = new statistics();
         
         arguments.gallery.incrementViewCounter();
@@ -147,12 +146,11 @@ component implements="WWW.interfaces.connector" {
         
         statisticsCtrl.add(arguments.gallery.getGalleryId());
         
-        saveContent variable="renderedContent" {
-            module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/gallery/templates/galleryDetail.cfm"
-                   options  = arguments.options
-                   gallery  = arguments.gallery;
-        }
-        
-        return renderedContent;
+        return application.system.settings.getValueOfKey("templateRenderer")
+            .setModulePath(getModulePath())
+            .setTemplate("galleryDetail.cfm")
+            .addParam("options", arguments.options)
+            .addParam("gallery", arguments.gallery)
+            .render();
     }
 }

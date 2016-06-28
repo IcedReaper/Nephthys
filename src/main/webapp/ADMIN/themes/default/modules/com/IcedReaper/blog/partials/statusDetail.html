@@ -31,7 +31,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="online" title="Seiten, die einen Status haben, der als Offline markiert ist, werden nicht auf der Webseite angezeigt und können nicht angesurft werden.">Online</label>
+                            <label for="online" title="Blogposts, die einen Status haben, der als Offline markiert ist, werden nicht auf der Webseite angezeigt und können nicht angesurft werden.">Online</label>
                             <select class="form-control" id="online" ng-model="status.online"
                                     ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]">
                             </select>
@@ -39,19 +39,19 @@
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
-                            <label for="deleteable" title="Seiten, die diesen Status haben, können permanent gelöscht werden.">Seiten in dem Status sind löschbar</label>
+                            <label for="deleteable" title="Blogposts, die diesen Status haben, können permanent gelöscht werden.">Blogposts in dem Status sind löschbar</label>
                             <select class="form-control" id="deleteable" ng-model="status.deleteable"
                                     ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]">
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="editable" title="Seiten, die in diesem Status sind, dürfen weiterhin bearbeitet werden.">Seiten in dem Status sind bearbeitbar</label>
+                            <label for="editable" title="Blogposts, die in diesem Status sind, dürfen weiterhin bearbeitet werden.">Blogposts in dem Status sind bearbeitbar</label>
                             <select class="form-control" id="editable" ng-model="status.editable"
                                     ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]">
                             </select>
                         </div>
                         <div class="form-group">
-                            <label for="showInTasklist" title="Seiten, die in diesem Status sind, benötigen Aktionen">Seiten benötigen Aktionen</label>
+                            <label for="showInTasklist" title="Blogposts, die in diesem Status sind, benötigen Aktionen">Blogposts benötigen Aktionen</label>
                             <select class="form-control" id="showInTasklist" ng-model="status.showInTasklist"
                                     ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]">
                             </select>

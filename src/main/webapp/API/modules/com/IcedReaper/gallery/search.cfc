@@ -13,8 +13,8 @@ component extends="API.abstractClasses.search" {
                                                                             INNER JOIN IcedReaper_gallery_category c ON gc.categoryId = gc.categoryId
                                                                                  WHERE lower(c.name) LIKE :searchLikePhrase))")
                                         .addParam(name = "online",           value = 1,                                         cfsqltype = "cf_sql_bit")
-                                        .addParam(name = "searchLikePhrase", value = "%" & uCase(variables.searchPhrase) & "%", cfsqltype = "cf_sql_varchar")
-                                        .addParam(name = "searchPhrase",     value = uCase(variables.searchPhrase),             cfsqltype = "cf_sql_varchar")
+                                        .addParam(name = "searchLikePhrase", value = "%" & lCase(variables.searchPhrase) & "%", cfsqltype = "cf_sql_varchar")
+                                        .addParam(name = "searchPhrase",     value = lCase(variables.searchPhrase),             cfsqltype = "cf_sql_varchar")
                                         .execute()
                                         .getResult();
         

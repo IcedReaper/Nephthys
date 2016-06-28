@@ -11,6 +11,7 @@ component {
         application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
         application.system.settings.load();
         application.page.renderer = createObject("component", "API.modules.com.Nephthys.pages.renderer").init();
+        application.rootPath = application.system.settings.getValueOfKey("wwwRoot");
         
         return true;
     }

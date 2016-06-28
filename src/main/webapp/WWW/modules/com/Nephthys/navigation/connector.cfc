@@ -6,21 +6,22 @@ component implements="WWW.interfaces.connector" {
     }
     
     public string function getName() {
-        return "navigation";
+        return "com.Nephthys.navigation";
+    }
+    public string function getModulePath() {
+        return getName().replace(".", "/", "ALL");
     }
     
     public string function render(required struct options, required string childContent) {
         return "";
     }
     
-    public void function header() {
-        module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/navigation/header.cfm"
-               sitemap  = getSitemap(1);
+    public string function header() {
+        return renderNavigation("header", getSitemap(1));
     }
     
-    public void function footer() {
-        module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/navigation/footer.cfm"
-               sitemap  = getSitemap(2);
+    public string function footer() {
+        return renderNavigation("footer", getSitemap(2));
     }
     
     private array function getSitemap(required numeric regionId) {
@@ -47,5 +48,13 @@ component implements="WWW.interfaces.connector" {
         else {
             throw(type = "nephthys.notFound.page", message = "Could not find an active sitemap");
         }
+    }
+    
+    private string function renderNavigation(required string template, required array sitemap) {
+        return application.system.settings.getValueOfKey("templateRenderer")
+            .setModulePath(getModulePath())
+            .setTemplate(arguments.template & ".cfm")
+            .addParam("sitemap", arguments.sitemap)
+            .render();
     }
 }

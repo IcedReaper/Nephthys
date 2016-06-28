@@ -7,12 +7,15 @@ component interface="ADMIN.interfaces.connector" {
     public string function getName() {
         return variables.moduleName;
     }
+    public string function getModulePath() {
+        return getName().replace(".", "/", "ALL");
+    }
     
     public boolean function checkPermission(required user user) {
         return arguments.user.hasPermission(moduleName = variables.moduleName, roleName = 'user');
     }
     
-    public void function render() {
+    public string function render() {
         var modulePath = "";
         if(variables.keyExists("folder")) {
             modulePath = variables.folder;
@@ -21,6 +24,9 @@ component interface="ADMIN.interfaces.connector" {
             modulePath = getName().replace(".", "/", "ALL");
         }
         
-        include "/ADMIN/themes/" & request.user.getAdminTheme().getFolderName() & "/modules/" & modulePath & "/templates/index.cfm";
+        return application.system.settings.getValueOfKey("templateRenderer")
+            .setModulePath(getModulePath())
+            .setTemplate("index.cfm")
+            .render();
     }
 }

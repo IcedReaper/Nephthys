@@ -8,21 +8,22 @@ component implements="WWW.interfaces.connector" {
     public string function getName() {
         return "com.Nephthys.user";
     }
+    public string function getModulePath() {
+        return getName().replace(".", "/", "ALL");
+    }
     
     public string function render(required struct options, required string childContent) {
         var preparedOptions = createObject("component", "WWW.themes." & request.user.getWwwTheme().getFolderName() & ".modules.com.Nephthys.user.cfc.prepareData").prepareOptions(arguments.options);
-        var renderedContent = "";
-        
-        var splitParameter = listToArray(request.page.getParameter(), "/");
-        
-        var userListCtrl = new filter().setFor("user");
+        var splitParameter  = listToArray(request.page.getParameter(), "/");
+        var userListCtrl    = new filter().setFor("user");
         
         if(splitParameter.len() == 0 && form.isEmpty()) {
-            saveContent variable="renderedContent" {
-                module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/user/templates/userSearch.cfm"
-                       options      = preparedOptions
-                       childContent = arguments.childContent;
-            }
+            return application.system.settings.getValueOfKey("templateRenderer")
+                .setModulePath(getModulePath())
+                .setTemplate("userSearch.cfm")
+                .addParam("options", preparedOptions)
+                .addParam("childContent",  arguments.childContent)
+                .render();
         }
         else if(splitParameter.len() == 0 && ! form.isEmpty()) {
             request.page.setTitle("Benutzersuche - Suchergebnisse");
@@ -31,13 +32,14 @@ component implements="WWW.interfaces.connector" {
                                    .execute()
                                    .getResult();
             
-            saveContent variable="renderedContent" {
-                module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/user/templates/userSearchResults.cfm"
-                       options      = preparedOptions
-                       searchQuery  = form.username
-                       results      = user
-                       childContent = arguments.childContent;
-            }
+            return application.system.settings.getValueOfKey("templateRenderer")
+                .setModulePath(getModulePath())
+                .setTemplate("userSearchResults.cfm")
+                .addParam("options",      preparedOptions)
+                .addParam("childContent", arguments.childContent)
+                .addParam("searchQuery",  form.username)
+                .addParam("results",      user)
+                .render();
         }
         else if(splitParameter.len() == 1) {
             if(splitParameter[1] == "registrieren") {
@@ -89,10 +91,12 @@ component implements="WWW.interfaces.connector" {
                 }
                 
                 request.page.setTitle("Registriere Dich noch heute!");
-                saveContent variable="renderedContent" {
-                    module template = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/user/templates/register.cfm"
-                           errors   = errors;
-                }
+                
+                return application.system.settings.getValueOfKey("templateRenderer")
+                    .setModulePath(getModulePath())
+                    .setTemplate("register.cfm")
+                    .addParam("errors", errors)
+                    .render();
             }
             else {
                 var user = userListCtrl.setUserName(splitParameter[1])
@@ -102,20 +106,23 @@ component implements="WWW.interfaces.connector" {
                 if(user.len() == 1) {
                     request.page.setTitle("Benutzersuche - " & user[1].getUsername());
                     
-                    saveContent variable="renderedContent" {
-                        module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/user/templates/userDetails.cfm"
-                               options      = preparedOptions
-                               user         = user[1]
-                               childContent = arguments.childContent;
-                    }
+                    return application.system.settings.getValueOfKey("templateRenderer")
+                        .setModulePath(getModulePath())
+                        .setTemplate("userDetails.cfm")
+                        .addParam("options",      preparedOptions)
+                        .addParam("childContent", arguments.childContent)
+                        .addParam("user",         user[1])
+                        .render();
                 }
                 else {
                     request.page.setTitle("Benutzersuche - Keine Ergebnisse");
-                    saveContent variable="renderedContent" {
-                        module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/user/templates/noResults.cfm"
-                               options      = preparedOptions
-                               childContent = arguments.childContent;
-                    }
+                    
+                    return application.system.settings.getValueOfKey("templateRenderer")
+                        .setModulePath(getModulePath())
+                        .setTemplate("noResults.cfm")
+                        .addParam("options",      preparedOptions)
+                        .addParam("childContent", arguments.childContent)
+                        .render();
                 }
             }
         }
@@ -137,28 +144,32 @@ component implements="WWW.interfaces.connector" {
                                 otherParameter.deleteAt(1); // username
                                 otherParameter.deleteAt(1); // privateMessages
                                 
-                                renderedContent = createObject("WWW.modules." & privateMessagesModule & ".connector")
-                                                      .init()
-                                                      .render({
-                                                          userId         = user.getUserId(),
-                                                          otherParameter = otherParameter
-                                                      }, "");
+                                return createObject("WWW.modules." & privateMessagesModule & ".connector")
+                                           .init()
+                                           .render({
+                                               userId         = user.getUserId(),
+                                               otherParameter = otherParameter
+                                           }, "");
                             }
                             else {
-                                saveContent variable="renderedContent" {
-                                    module template  = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/user/templates/noPermission.cfm"
-                                           user      = user.getUsername()
-                                           subModule = "Private Nachrichten";
-                                }
+                                return application.system.settings.getValueOfKey("templateRenderer")
+                                    .setModulePath(getModulePath())
+                                    .setTemplate("noPermission.cfm")
+                                    .addParam("options",   preparedOptions)
+                                    .addParam("user",      user.getUsername())
+                                    .addParam("subModule", "Private Nachrichten")
+                                    .render();
                             }
                         }
                         else {
                             request.page.setTitle("Benutzersuche - Keine Ergebnisse");
-                            saveContent variable="renderedContent" {
-                                module template     = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/user/templates/noResults.cfm"
-                                       options      = preparedOptions
-                                       childContent = arguments.childContent;
-                            }
+                            
+                            return application.system.settings.getValueOfKey("templateRenderer")
+                                .setModulePath(getModulePath())
+                                .setTemplate("noResults.cfm")
+                                .addParam("options",      preparedOptions)
+                                .addParam("childContent", arguments.childContent)
+                                .render();
                         }
                     }
                     else {
@@ -173,7 +184,7 @@ component implements="WWW.interfaces.connector" {
             }
         }
         
-        return renderedContent;
+        return "";
     }
     
     public string function renderUserMenu() {
@@ -191,11 +202,10 @@ component implements="WWW.interfaces.connector" {
                                   .getResult();
         }
         
-        saveContent variable="renderedContent" {
-            module template        = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/Nephthys/user/templates/userMenu.cfm"
-                   privateMessages = privateMessages;
-        }
-        
-        return renderedContent;
+        return application.system.settings.getValueOfKey("templateRenderer")
+            .setModulePath(getModulePath())
+            .setTemplate("userMenu.cfm")
+            .addParam("privateMessages", privateMessages)
+            .render();
     }
 }
