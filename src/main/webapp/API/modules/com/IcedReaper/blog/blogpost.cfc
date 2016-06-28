@@ -37,12 +37,6 @@ component {
         
         return this;
     }
-    public blogpost function setReleased(required numeric released) {
-        variables.released = arguments.released;
-        variables.attributesChanged = true;
-        
-        return this;
-    }
     public blogpost function clearReleaseDate() {
         variables.releaseDate = null;
         variables.attributesChanged = true;
@@ -166,9 +160,6 @@ component {
     public string function getStory() {
         return variables.story;
     }
-    public boolean function getReleased() {
-        return variables.released == 1;
-    }
     public any function getReleaseDate() { // any is required as a null date isn't of type date :/
         return variables.releaseDate;
     }
@@ -230,11 +221,12 @@ component {
     
     public boolean function isEditable(required numeric userId) {
         if(variables.private) {
-            return variables.creatorUserId == arguments.userId;
+            if(! variables.creatorUserId == arguments.userId) {
+                return false;
+            }
         }
-        else {
-            return true;
-        }
+        
+        return variables.status.getEditable();
     }
     
     public status function getStatus() {
@@ -295,7 +287,6 @@ component {
                                                                        headline,
                                                                        link,
                                                                        story,
-                                                                       released,
                                                                        releaseDate,
                                                                        folderName,
                                                                        commentsActivated,
@@ -311,7 +302,6 @@ component {
                                                                        :headline,
                                                                        :link,
                                                                        :story,
-                                                                       :released,
                                                                        :releaseDate,
                                                                        :folderName,
                                                                        :commentsActivated,
@@ -327,7 +317,6 @@ component {
                                               .addParam(name = "headline",                   value = variables.headline,                   cfsqltype = "cf_sql_varchar")
                                               .addParam(name = "link",                       value = variables.link,                       cfsqltype = "cf_sql_varchar")
                                               .addParam(name = "story",                      value = variables.story,                      cfsqltype = "cf_sql_varchar")
-                                              .addParam(name = "released",                   value = variables.released,                   cfsqltype = "cf_sql_bit")
                                               .addParam(name = "releaseDate",                value = variables.releaseDate,                cfsqltype = "cf_sql_timestamp", null = variables.releaseDate == null)
                                               .addParam(name = "folderName",                 value = variables.folderName,                 cfsqltype = "cf_sql_varchar")
                                               .addParam(name = "commentsActivated",          value = variables.commentsActivated,          cfsqltype = "cf_sql_bit")
@@ -344,46 +333,51 @@ component {
             directoryCreate(getAbsolutePath(), true, true);
         }
         else {
-            if(variables.status.getEditable() && variables.attributesChanged) {
-                new Query().setSQL("UPDATE IcedReaper_blog_blogpost
-                                       SET headline                   = :headline,
-                                           link                       = :link,
-                                           story                      = :story,
-                                           released                   = :released,
-                                           releaseDate                = :releaseDate,
-                                           folderName                 = :folderName,
-                                           commentsActivated          = :commentsActivated,
-                                           anonymousCommentAllowed    = :anonymousCommentAllowed,
-                                           commentsNeedToGetPublished = :commentsNeedToGetPublished,
-                                           private                    = :private,
-                                           statusId                   = :statusId,
-                                           lastEditorUserId           = :lastEditorUserId,
-                                           lastEditDate               = now()
-                                     WHERE blogpostId = :blogpostId")
-                           .addParam(name = "blogpostId",                 value = variables.blogpostId,                 cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "headline",                   value = variables.headline,                   cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "link",                       value = variables.link,                       cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "story",                      value = variables.story,                      cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "released",                   value = variables.released,                   cfsqltype = "cf_sql_bit")
-                           .addParam(name = "releaseDate",                value = variables.releaseDate,                cfsqltype = "cf_sql_timestamp", null = variables.releaseDate == null)
-                           .addParam(name = "folderName",                 value = variables.folderName,                 cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "commentsActivated",          value = variables.commentsActivated,          cfsqltype = "cf_sql_bit")
-                           .addParam(name = "anonymousCommentAllowed",    value = variables.anonymousCommentAllowed,    cfsqltype = "cf_sql_bit")
-                           .addParam(name = "commentsNeedToGetPublished", value = variables.commentsNeedToGetPublished, cfsqltype = "cf_sql_bit")
-                           .addParam(name = "private",                    value = variables.private,                    cfsqltype = "cf_sql_bit")
-                           .addParam(name = "creatorUserId",              value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "lastEditorUserId",           value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "statusId",                   value = variables.status.getStatusId(),       cfsqltype = "cf_sql_numeric")
-                           .execute();
-            }
-            
-            if(variables.keyExists("oldFolderName") && variables.oldFolderName != variables.folderName) {
-                directoryRename(expandPath("/upload/com.IcedReaper.blog/" & variables.oldFolderName), getAbsolutePath());
+            if(variables.attributesChanged) {
+                if(variables.status.getEditable()) {
+                    new Query().setSQL("UPDATE IcedReaper_blog_blogpost
+                                           SET headline                   = :headline,
+                                               link                       = :link,
+                                               story                      = :story,
+                                               releaseDate                = :releaseDate,
+                                               folderName                 = :folderName,
+                                               commentsActivated          = :commentsActivated,
+                                               anonymousCommentAllowed    = :anonymousCommentAllowed,
+                                               commentsNeedToGetPublished = :commentsNeedToGetPublished,
+                                               private                    = :private,
+                                               statusId                   = :statusId,
+                                               lastEditorUserId           = :lastEditorUserId,
+                                               lastEditDate               = now()
+                                         WHERE blogpostId = :blogpostId")
+                               .addParam(name = "blogpostId",                 value = variables.blogpostId,                 cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "headline",                   value = variables.headline,                   cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "link",                       value = variables.link,                       cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "story",                      value = variables.story,                      cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "releaseDate",                value = variables.releaseDate,                cfsqltype = "cf_sql_timestamp", null = variables.releaseDate == null)
+                               .addParam(name = "folderName",                 value = variables.folderName,                 cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "commentsActivated",          value = variables.commentsActivated,          cfsqltype = "cf_sql_bit")
+                               .addParam(name = "anonymousCommentAllowed",    value = variables.anonymousCommentAllowed,    cfsqltype = "cf_sql_bit")
+                               .addParam(name = "commentsNeedToGetPublished", value = variables.commentsNeedToGetPublished, cfsqltype = "cf_sql_bit")
+                               .addParam(name = "private",                    value = variables.private,                    cfsqltype = "cf_sql_bit")
+                               .addParam(name = "creatorUserId",              value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "lastEditorUserId",           value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "statusId",                   value = variables.status.getStatusId(),       cfsqltype = "cf_sql_numeric")
+                               .execute();
+                    
+                    if(variables.keyExists("oldFolderName") && variables.oldFolderName != variables.folderName) {
+                        directoryRename(expandPath("/upload/com.IcedReaper.blog/" & variables.oldFolderName), getAbsolutePath());
+                    }
+                    
+                    variables.attributesChanged = false;
+                }
+                else {
+                    throw(type = "nephthys.application.notAllowed", message = "You're not allowed to update the version that is online");
+                }
             }
         }
         
-        if(variables.status.getEditable()) {
-            if(variables.categoriesChanged) {
+        if(variables.categoriesChanged) {
+            if(variables.status.getEditable()) {
                 for(var c = 1; c <= variables.categories.len(); c++) {
                     try {
                         if(variables.categories[c].getCategoryId() == 0) {
@@ -410,21 +404,20 @@ component {
                         // check for exception types of duplicate unique keys
                     }
                 }
+                
+                variables.categoriesChanged = false;
             }
-            
-            variables.attributesChanged = false;
-            variables.categoriesChanged = false;
-            
-            // delete all unused files
-            var usedFiles = directoryList(getAbsolutePath(), false, "name");
-            for(var i = 1; i <= usedFiles.len(); i++) {
-                if(! find(usedFiles[i], variables.story)) {
-                    fileDelete(getAbsolutePath() & "/" & usedFiles[i]);
-                }
+            else {
+                throw(type = "nephthys.application.notAllowed", message = "You're not allowed to update the version that is online");
             }
         }
-        else {
-            throw(type = "nephthys.application.notAllowed", message = "You're not allowed to update the version that is online");
+        
+        // delete all unused files
+        var usedFiles = directoryList(getAbsolutePath(), false, "name");
+        for(var i = 1; i <= usedFiles.len(); i++) {
+            if(! find(usedFiles[i], variables.story)) {
+                fileDelete(getAbsolutePath() & "/" & usedFiles[i]);
+            }
         }
         
         return this;
@@ -456,7 +449,6 @@ component {
                 variables.headline                   = qBlogpost.headline[1];
                 variables.link                       = qBlogpost.link[1];
                 variables.story                      = qBlogpost.story[1];
-                variables.released                   = qBlogpost.released[1];
                 variables.releaseDate                = qBlogpost.releaseDate[1];
                 variables.commentsActivated          = qBlogpost.commentsActivated[1];
                 variables.anonymousCommentAllowed    = qBlogpost.anonymousCommentAllowed[1];
@@ -485,7 +477,6 @@ component {
             variables.headline                   = "";
             variables.link                       = "";
             variables.story                      = "";
-            variables.released                   = false;
             variables.releaseDate                = null;
             variables.commentsActivated          = defaultSettings.getValueOfKey("commentsActivated");
             variables.anonymousCommentAllowed    = defaultSettings.getValueOfKey("anonymousCommentAllowed");

@@ -22,7 +22,7 @@ component implements="WWW.interfaces.connector" {
         }
         
         if(arguments.options.keyExists("onlyLast")) {
-            blogpostFilterCtrl.setReleased(1)
+            blogpostFilterCtrl.setReleased(true)
                               .setCount(1)
                               .execute();
             
@@ -37,7 +37,7 @@ component implements="WWW.interfaces.connector" {
         }
         
         if(splitParameter.len() == 0) {
-            blogpostFilterCtrl.setReleased(1)
+            blogpostFilterCtrl.setReleased(true)
                               .setCount(arguments.options.maxEntries)
                               .execute();
             
@@ -45,7 +45,7 @@ component implements="WWW.interfaces.connector" {
         }
         else {
             if(splitParameter[1] == "Seite" && splitParameter.len() == 2) {
-                blogpostFilterCtrl.setReleased(1)
+                blogpostFilterCtrl.setReleased(true)
                                   .setCount(arguments.options.maxEntries)
                                   .setOffset((splitParameter[2]-1) * arguments.options.maxEntries)
                                   .execute();
@@ -54,7 +54,7 @@ component implements="WWW.interfaces.connector" {
             }
             else if(splitParameter[1] == "Kategorie") {
                 if(splitParameter.len() == 2) {
-                    blogpostFilterCtrl.setReleased(1)
+                    blogpostFilterCtrl.setReleased(true)
                                       .setCategory(splitParameter[2])
                                       .setCount(arguments.options.maxEntries)
                                       .execute();
@@ -62,7 +62,7 @@ component implements="WWW.interfaces.connector" {
                     return renderOverview(arguments.options, blogpostFilterCtrl, 1, splitParameter[2]);
                 }
                 else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") {
-                    blogpostFilterCtrl.setReleased(1)
+                    blogpostFilterCtrl.setReleased(true)
                                       .setCategory(splitParameter[2])
                                       .setCount(arguments.options.maxEntries)
                                       .setOffset((splitParameter[4]-1) * arguments.options.maxEntries)
@@ -72,7 +72,7 @@ component implements="WWW.interfaces.connector" {
                 }
             }
             else { // Detail view
-                blogpostFilterCtrl.setReleased(1)
+                blogpostFilterCtrl.setReleased(true)
                                   .setLink(request.page.getParameter())
                                   .execute();
 
@@ -99,7 +99,7 @@ component implements="WWW.interfaces.connector" {
                                            required numeric actualPage,
                                                     string  activeCategory = "") {
         var renderedContent = "";
-        var categoryFilter = new filter().setFor("category");
+        var categoryFilter = new filter().setFor("category").setUsed(true);
         
         saveContent variable="renderedContent" {
             module template           = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/overview.cfm"

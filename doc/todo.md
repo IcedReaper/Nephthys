@@ -99,10 +99,6 @@
             * Verschachtelte Kommentarmöglichkeit
         3. Adaptionen in der Übersicht
             * Kalenderübersicht hinzufügen => Klick auf Datum => zeigt alle Posts des Tages
-        4. Workflow der Seiten adaptieren?
-        5. Alles prüfen
-        * Admin schön machen
-        6. Releasedate funktionabel (admin backend) machen
     3. Reviewsystem
         => genre in tags umbenennen
         => Type in Kategorie umbennen

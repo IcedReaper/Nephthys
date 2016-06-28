@@ -17,6 +17,15 @@ nephthysAdminApp
             }));
         };
         
+        $scope.pushToStatus = function (galleryId, newStatusId) {
+            if(galleryId && newStatusId) {
+                galleryService
+                    .pushToStatus(galleryId,
+                                  newStatusId)
+                    .then($scope.refresh);
+            }
+        };
+        
         $scope.statusButtonClass = function (actualOnline, nextOnline) {
             if(! actualOnline && nextOnline) {
                 return "btn-success";

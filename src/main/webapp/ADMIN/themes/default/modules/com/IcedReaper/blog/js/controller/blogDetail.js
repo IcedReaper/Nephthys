@@ -7,20 +7,24 @@ nephthysAdminApp
         $scope.linkSet = false;
         // load
         $scope.load = function() {
-            return blogService
-                       .getDetails($routeParams.blogpostId)
-                       .then(function (blogDetails) {
-                           $scope.blogpost = blogDetails;
-                           var dateParts = $scope.blogpost.releaseDate.split("/");
-                           $scope.blogpost.releaseDate = new Date(dateParts[0], parseInt(dateParts[1], 10) - 1, dateParts[2]);
-                           
-                           if($scope.blogpost.blogpostId != 0) {
-                               $scope.linkSet = true;
-                           }
-                           else {
-                               $scope.linkSet = false;
-                           }
-                       });
+            $q.all([
+                blogService.getDetails($routeParams.blogpostId),
+                blogService.getStatus()
+            ]).then($q.spread(function (blogDetails, status) {
+                $scope.blogpost = blogDetails;
+                $scope.status   = status;
+                $scope.blogpost = blogDetails;
+                
+                var dateParts = $scope.blogpost.releaseDate.split("/");
+                $scope.blogpost.releaseDate = new Date(dateParts[0], parseInt(dateParts[1], 10) - 1, dateParts[2]);
+
+                if($scope.blogpost.blogpostId != 0) {
+                    $scope.linkSet = true;
+                }
+                else {
+                    $scope.linkSet = false;
+                }
+            }));
         };
         
         $scope.save = function () {
@@ -87,7 +91,35 @@ nephthysAdminApp
         
         $scope.openReleaseDate = function () {
             $scope.releaseDate.isOpen = true;
-        }
+        };
+        
+        $scope.pushToStatus = function (newStatusId) {
+            if(newStatusId) {
+                blogService
+                    .pushToStatus($routeParams.blogpostId,
+                                  newStatusId)
+                    .then(function() {
+                        $scope.blogpost.statusId = newStatusId;
+                    });
+            }
+        };
+        
+        $scope.statusButtonClass = function (actualOnline, nextOnline) {
+            if(! actualOnline && nextOnline) {
+                return "btn-success";
+            }
+            if(actualOnline && ! nextOnline) {
+                return "btn-danger";
+            }
+            if(! actualOnline && ! nextOnline) {
+                return "btn-primary";
+            }
+            if(actualOnline && nextOnline) {
+                return "btn-secondary";
+            }
+            
+            return "btn-warning";
+        };
         
         // init
         $scope.releaseDate = {

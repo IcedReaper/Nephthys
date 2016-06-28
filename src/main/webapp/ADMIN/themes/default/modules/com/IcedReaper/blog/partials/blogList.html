@@ -8,7 +8,7 @@
     </div>
     <div class="col-md-2 col-sm-4">
         <div class="pull-right">
-            <a href="#/0" class="btn btn-primary">Neuen Blogpost anlegen</a>
+            <a href="#/blogpost/0" class="btn btn-primary">Neuen Blogpost anlegen</a>
         </div>
     </div>
 </div>
@@ -21,74 +21,45 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h3>Filtern</h3>
-        <form class="form-horizontal">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="filterActiveStatus" class="col-sm-3 control-label">Veröffentlicht</label>
-                        <div class="col-sm-6">
-                            <select class="form-control" name="filterActiveStatus" ng-model="search.released"
-                                    ng-options="o.v as o.n for o in [{ n: 'Alle', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]">
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
         <table class="table table-inverse m-t-1">
             <thead>
                 <th class="text-nowrap">ID</th>
                 <th class="text-nowrap">Überschrift</th>
-                <th class="text-nowrap">Interner Link</th>
                 <th class="text-nowrap">Veröffentlichungsdatum</th>
                 <th class="text-nowrap">Kategorien</th>
+                <th class="text-nowrap">Status</th>
                 <th class="text-nowrap">Aktionen</th>
             </thead>
             <tbody>
-                <tr ng-repeat="blogpost in blogposts | filter:search"> <!-- change indicator to published -->
+                <tr ng-repeat="blogpost in blogposts"> <!-- change indicator to published -->
                     <td>{{blogpost.blogpostId}}</td>
                     <td>
                         <i class="fa fa-star" ng-if="blogpost.private"></i>
                         <i class="fa fa-lock" ng-if="! blogpost.isEditable"></i>
-                        <a href="#/{{blogpost.blogpostId}}">{{blogpost.headline}}</a>
+                        <a href="#/blogpost/{{blogpost.blogpostId}}">{{blogpost.headline}}</a>
                     </td>
-                    <td>{{blogpost.link}}</td>
                     <td>{{blogpost.releaseDate}}</td>
                     <td>{{blogpost.categories.join(', ')}}</td>
+                    <td ng-class="(status[ blogpost.statusId ].online ? 'text-success' : 'text-danger')">{{status[ blogpost.statusId ].name}}</td>
                     <td class="text-nowrap">
-                        <a href="#/{{blogpost.blogpostId}}"
-                           class="btn btn-primary"
-                           title="Galleriedetails">
-                            <i class="fa fa-cog"></i>
-                        </a>
-                        
-                        <button class="btn btn-success"
-                                ng-click="activate(blogpost.blogpostId)"
-                                ng-show="! blogpost.active"
-                                title="Gallerie aktivieren"
-                                ng-disabled="! blogpost.isEditable">
-                            <i class="fa fa-toggle-on"></i>
-                        </button>
-                        <button class="btn btn-warning"
-                                ng-click="deactivate(blogpost.blogpostId)"
-                                ng-show="blogpost.active"
-                                title="Gallerie deaktivieren"
-                                ng-disabled="! blogpost.isEditable">
-                            <i class="fa fa-toggle-off"></i>
-                        </button>
-                        
                         <button class="btn btn-danger"
                                 ng-click="delete(blogpost.blogpostId)"
-                                title="Gallerie löschen"
-                                ng-disabled="! blogpost.isEditable">
+                                title="Blogpost löschen"
+                                ng-disabled="! blogpost.isEditable"
+                                ng-if="status[ blogpost.statusId ].deleteable">
                             <i class="fa fa-trash-o"></i>
                         </button>
+                        <div class="btn-group m-l-1">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Status ändern
+                            </button>
+                            <div class="dropdown-menu">
+                                <button class="dropdown-item"
+                                        ng-repeat="ps in status[ blogpost.statusId ].nextStatus"
+                                        ng-class="statusButtonClass(status[ blogpost.statusId ].online, ps.online)"
+                                        ng-click="pushToStatus(blogpost.blogpostId, ps.statusId);">{{ps.name}}</button>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tbody>

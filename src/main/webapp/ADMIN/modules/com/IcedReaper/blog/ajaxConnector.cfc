@@ -47,7 +47,6 @@ component {
     remote numeric function save(required numeric blogpostId,
                                 required string  headline,
                                 required string  link,
-                                required numeric released,
                                 required string  releaseDate,
                                 required string  folderName,
                                 required string  story,
@@ -68,7 +67,6 @@ component {
             
             blogpost.setHeadline(arguments.headline)
                     .setLink(arguments.link)
-                    .setReleased(arguments.released)
                     .setFolderName(arguments.folderName)
                     .setStory(arguments.story, deserializeJSON(arguments.fileNames))
                     .setCommentsActivated(arguments.commentsActivated)
@@ -117,34 +115,6 @@ component {
         
         if(blogpost.isEditable(request.user.getUserID())) {
             blogpost.delete();
-            
-            return true;
-        }
-        else {
-            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
-        }
-    }
-    
-    remote boolean function activate(required numeric blogpostId) {
-        var blogpost = new blogpost(arguments.blogpostId);
-        
-        if(blogpost.isEditable(request.user.getUserID())) {
-            blogpost.setReleased(1)
-                    .save();
-            
-            return true;
-        }
-        else {
-            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
-        }
-    }
-    
-    remote boolean function deactivate(required numeric blogpostId) {
-        var blogpost = new blogpost(arguments.blogpostId);
-        
-        if(blogpost.isEditable(request.user.getUserID())) {
-            blogpost.setReleased(0)
-                    .save();
             
             return true;
         }
@@ -477,7 +447,6 @@ component {
             "headline"                   = arguments.blogpost.getHeadline(),
             "link"                       = arguments.blogpost.getLink(),
             "story"                      = arguments.blogpost.getStory(),
-            "released"                   = arguments.blogpost.getReleased(),
             "folderName"                 = arguments.blogpost.getFolderName(),
             "releaseDate"                = arguments.blogpost.getReleaseDate() != null ? dateFormat(arguments.blogpost.getReleaseDate(), "YYYY/MM/DD") : "",
             "commentsActivated"          = arguments.blogpost.getCommentsActivated(),
@@ -490,7 +459,8 @@ component {
             "creator"                    = getUserInformation(arguments.blogpost.getCreator()),
             "creationDate"               = formatCtrl.formatDate(arguments.blogpost.getCreationDate()),
             "lastEditor"                 = getUserInformation(arguments.blogpost.getLastEditor()),
-            "lastEditDate"               = formatCtrl.formatDate(arguments.blogpost.getLastEditDate())
+            "lastEditDate"               = formatCtrl.formatDate(arguments.blogpost.getLastEditDate()),
+            "statusId"                   = arguments.blogpost.getStatus().getStatusId()
         };
     }
     

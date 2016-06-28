@@ -50,9 +50,7 @@ angular.module("com.nephthys.page.tasklist", ["com.nephthys.global.userInfo"])
                     .pushToStatus(pageId,
                                   pageVersionId,
                                   newstatusId)
-                    .then(function () {
-                        $scope.loadPages()
-                    });
+                    .then($scope.loadPages);
             }
         };
         
@@ -61,9 +59,7 @@ angular.module("com.nephthys.page.tasklist", ["com.nephthys.global.userInfo"])
                 tasklistService
                     .pushSitemapToStatus(sitemapId,
                                            newstatusId)
-                    .then(function () {
-                        $scope.loadSitemap()
-                    });
+                    .then($scope.loadSitemap);
             }
         };
         

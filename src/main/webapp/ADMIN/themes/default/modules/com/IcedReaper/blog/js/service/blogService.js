@@ -44,18 +44,6 @@ nephthysAdminApp
                 });
             },
             
-            activate: function (blogpostId) {
-                return $http.post('/ajax/com/IcedReaper/blog/activate', {
-                    blogpostId: blogpostId
-                });
-            },
-            
-            deactivate: function (blogpostId) {
-                return $http.post('/ajax/com/IcedReaper/blog/deactivate', {
-                    blogpostId: blogpostId
-                });
-            },
-            
             loadCategories: function (blogpostId) {
                 return $http.get('/ajax/com/IcedReaper/blog/loadCategories', {
                     params: {
@@ -108,6 +96,17 @@ nephthysAdminApp
             publishComment: function (commentId) {
                 return $http.post('/ajax/com/IcedReaper/blog/publishComment', {
                     commentId: commentId
+                });
+            },
+            
+            getStatus: function () {
+                return $http.get("/ajax/com/IcedReaper/blog/getStatusList");
+            },
+            
+            pushToStatus: function (blogpostId, statusId) {
+                return $http.post('/ajax/com/IcedReaper/blog/pushToStatus', {
+                    blogpostId: blogpostId,
+                    statusId:   statusId
                 });
             }
         };

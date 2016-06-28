@@ -3,7 +3,7 @@ component implements="API.interfaces.filter" {
     
     public filter function init() {
         variables.userId             = 0; // 0 => all | other => specific userId
-        variables.released           = -1; // -1 => all | 0 | 1
+        variables.released           = null; // -1 => all | 0 | 1
         variables.sortBy             = "creationDate";
         variables.sortDirection      = "DESC";
         variables.link               = "";
@@ -33,16 +33,8 @@ component implements="API.interfaces.filter" {
         return this;
     }
     
-    public filter function setReleased(required numeric released) {
-        switch(arguments.released) {
-            case -1:
-            case 0:
-            case 1: {
-                variables.released = arguments.released;
-                
-                break;
-            }
-        }
+    public filter function setReleased(required boolean released) {
+        variables.released = arguments.released;
         
         return this;
     }
@@ -121,13 +113,17 @@ component implements="API.interfaces.filter" {
         var qryFilter = new Query();
         
         var sql = "SELECT blogpostId 
-                     FROM icedreaper_blog_blogpost ";
+                     FROM IcedReaper_blog_blogpost ";
         var where = "";
         var orderBy = " ORDER BY " & variables.sortBy & " " & variables.sortDirection;
         
-        if(variables.released != -1) {
-            where &= ((where != "") ? " AND " : " WHERE ") & " released = :released";
-            qryFilter.addParam(name = "released", value = variables.released, cfsqltype = "cf_sql_bit");
+        if(variables.released != null) {
+            where &= ((where != "") ? " AND " : " WHERE ") & " (releaseDate IS NULL OR
+                                                                releaseDate <= now())
+                                                              AND statusId IN (SELECT statusId
+                                                                                 FROM IcedReaper_blog_status
+                                                                                WHERE online = :online) ";
+            qryFilter.addParam(name = "online", value = true, cfsqltype = "cf_sql_bit");
         }
         
         if(variables.userId != 0 && variables.userId != null) {

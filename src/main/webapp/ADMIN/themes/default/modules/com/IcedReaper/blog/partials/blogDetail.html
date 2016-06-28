@@ -14,6 +14,12 @@
     </div>
 </div>
 
+<div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
+    <h3>{{message.headline}}</h3>
+    <p>{{message.text}}</p>
+    <p>{{message.errorMessage}}</p>
+</div>
+
 <uib-tabset active="active">
     <uib-tab heading="Details">
         <div class="row">
@@ -28,10 +34,11 @@
                                     <input type="text" class="form-control" id="headline" placeholder="headline" ng-model="blogpost.headline" ng-keyup="updateLink()" ng-disabled="! blogpost.isEditable">
                                 </div>
                                 <div class="form-group">
-                                    <label for="active">Veröffentlicht</label>
-                                    <select class="form-control" ng-model="blogpost.released" ng-disabled="! blogpost.isEditable"
-                                            ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]">
-                                    </select>
+                                    <label for="link">
+                                        Verlinkung<br>
+                                        <span class="text text-danger">Achtung! Alte Links sind nach einem Abändern nicht mehr erreichbar!</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="link" placeholder="Verlinkung" ng-model="blogpost.link" ng-keydown="linkSet = true" ng-disabled="! blogpost.isEditable">
                                 </div>
                                 <div class="form-group">
                                     <label for="active">
@@ -43,6 +50,24 @@
                                             <button type="button" class="btn btn-default" ng-click="openReleaseDate()"><i class="fa fa-calendar"></i></button>
                                         </span>
                                     </p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="active">
+                                        Privat<br>
+                                        <span class="text text-info">Dieser Blogpost kann nur von Ihnen bearbeitet werden</span>
+                                    </label>
+                                    <select class="form-control" ng-model="blogpost.private"
+                                            ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]" ng-disabled="! blogpost.isEditable">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="folderName">
+                                        Ordner<br>
+                                        <span class="text text-warning">Dieser Ordner darf noch nicht vorhanden sein. Sollten Sie sich unsicher sein, lassen sie dieses Feld leer, dann wird ein generierter Wert gewählt</span>
+                                    </label>
+                                    <input type="text" class="form-control" id="folderName" placeholder="folderName" ng-model="blogpost.folderName" ng-disabled="! blogpost.isEditable">
                                 </div>
                                 <div class="form-group">
                                     <label for="active">Kommentare erlaubt?</label>
@@ -63,50 +88,32 @@
                                     </select>
                                 </div>
                             </div>
+                        </div>
+                        
+                        <div class="row m-b-1">
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="link">
-                                        Verlinkung<br>
-                                        <span class="text text-danger">Achtung! Alte Links sind nach einem Abändern nicht mehr erreichbar!</span>
-                                    </label>
-                                    <input type="text" class="form-control" id="link" placeholder="Verlinkung" ng-model="blogpost.link" ng-keydown="linkSet = true" ng-disabled="! blogpost.isEditable">
+                                <div ng-if="status[ blogpost.statusId ].nextStatus && blogpost.blogpostId">
+                                    <h4>Status ändern in</h4>
+                                    <button type="submit"
+                                            class="btn m-r-1"
+                                            ng-repeat="ps in status[ blogpost.statusId ].nextStatus"
+                                            ng-class="statusButtonClass(status[ blogpost.statusId ].online, ps.online)"
+                                            ng-click="pushToStatus(ps.statusId);">{{ps.name}}</button>
                                 </div>
-                                <div class="form-group">
-                                    <label for="folderName">
-                                        Ordner<br>
-                                        <span class="text text-warning">Dieser Ordner darf noch nicht vorhanden sein. Sollten Sie sich unsicher sein, lassen sie dieses Feld leer, dann wird ein generierter Wert gewählt</span>
-                                    </label>
-                                    <input type="text" class="form-control" id="folderName" placeholder="folderName" ng-model="blogpost.folderName" ng-disabled="! blogpost.isEditable">
-                                </div>
-                                <div class="form-group">
-                                    <label for="active">
-                                        Privat<br>
-                                        <span class="text text-info">Dieser Blogpost kann nur von Ihnen bearbeitet werden</span>
-                                    </label>
-                                    <select class="form-control" ng-model="blogpost.private"
-                                            ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]" ng-disabled="! blogpost.isEditable">
-                                    </select>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="pull-right m-t-1">
+                                    <button class="btn btn-success" ng-click="save()" ng-disabled="! blogpost.isEditable"><i class="fa fa-floppy-o"></i> Speichern</button>
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="row">
                             <div class="col-md-12">
                                 <div text-angular ng-model="blogpost.story" ta-disabled="! blogpost.isEditable"></div>
                             </div>
                         </div>
-                        
-                        <div class="row">
-                            <div class="col-md-12 m-t-1">
-                                <button class="btn btn-success" ng-click="save()" ng-disabled="! blogpost.isEditable"><i class="fa fa-floppy-o"></i> Speichern</button>
-                            </div>
-                        </div>
                     </form>
-                    
-                    <div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
-                        <h3>{{message.headline}}</h3>
-                        <p>{{message.text}}</p>
-                        <p>{{message.errorMessage}}</p>
-                    </div>
                 </div>
             </div>
         </div>

@@ -812,3 +812,7 @@ INSERT INTO IcedReaper_blog_status VALUES
 update IcedReaper_blog_blogpost SET statusId = 1;
 
 alter table IcedReaper_blog_blogpost alter column statusId SET NOT NULL;
+
+GRANT SELECT ON TABLE IcedReaper_blog_status TO nephthys_user;
+
+alter table IcedReaper_blog_blogpost drop column released;

@@ -36,7 +36,7 @@
                                 <button class="btn m-r-1"
                                         ng-repeat="ps in status.nextStatus"
                                         ng-class="statusButtonClass(status.online, ps.online)"
-                                        ng-click="pushPageToStatus(blogpost.blogpostId, ps.statusId);"
+                                        ng-click="pushToStatus(blogpost.blogpostId, ps.statusId);"
                                         ng-if="! combineNextStatusButton">{{ps.name}}</button>
                                 
                                 <div class="btn-group" ng-if="combineNextStatusButton">
@@ -47,7 +47,7 @@
                                         <button class="dropdown-item"
                                                 ng-repeat="ps in status.nextStatus"
                                                 ng-class="statusButtonClass(status.online, ps.online)"
-                                                ng-click="pushPageToStatus(blogpost.blogpostId, ps.statusId);">{{ps.name}}</button>
+                                                ng-click="pushToStatus(blogpost.blogpostId, ps.statusId);">{{ps.name}}</button>
                                     </div>
                                 </div>
                             </div>

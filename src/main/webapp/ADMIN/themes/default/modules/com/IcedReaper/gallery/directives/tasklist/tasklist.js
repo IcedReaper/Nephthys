@@ -24,14 +24,12 @@ angular.module("com.IcedReaper.gallery.tasklist", ["com.nephthys.global.userInfo
                 })
         };
         
-        $scope.pushPageToStatus = function (galleryId, newStatusId) {
+        $scope.pushToStatus = function (galleryId, newStatusId) {
             if(galleryId && newStatusId) {
                 tasklistService
                     .pushToStatus(galleryId,
                                   newStatusId)
-                    .then(function () {
-                        $scope.load();
-                    });
+                    .then($scope.load);
             }
         };
         

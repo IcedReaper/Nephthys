@@ -6,6 +6,7 @@ component implements="API.interfaces.filter" {
         variables.name         = null;
         variables.blogpostId   = null;
         variables.useExactName = false;
+        variables.used         = null;
         
         variables.qRes = null;
         variables.results = null;
@@ -15,25 +16,26 @@ component implements="API.interfaces.filter" {
     
     public filter function setCategoryId(required numeric categoryId) {
         variables.categoryId = arguments.categoryId;
-        
         return this;
     }
     
     public filter function setName(required string name) {
         variables.name = arguments.name;
-        
         return this;
     }
     
     public filter function setUseExactName(required boolean useExactName) {
         variables.useExactName = arguments.useExactName;
-        
         return this;
     }
     
     public filter function setBlogpostId(required numeric blogpostId) {
         variables.blogpostId = arguments.blogpostId;
-        
+        return this;
+    }
+    
+    public filter function setUsed(required boolean used) {
+        variables.used = arguments.used;
         return this;
     }
     
@@ -45,8 +47,7 @@ component implements="API.interfaces.filter" {
                      FROM IcedReaper_blog_category c";
         
         if(variables.blogpostId != null) {
-            sql &="  
-                   INNER JOIN (  SELECT COUNT(bc.*) count, bc.categoryId
+            sql &="INNER JOIN (  SELECT COUNT(bc.*) count, bc.categoryId
                                    FROM IcedReaper_blog_blogpostCategory bc
                                   WHERE bc.blogpostId = :blogpostId
                                GROUP BY bc.categoryId) bCat ON c.categoryId = bCat.categoryId ";
@@ -67,6 +68,14 @@ component implements="API.interfaces.filter" {
                 where &= ((where == "") ? " WHERE " : "AND") & " lower(c.name) LIKE :name ";
                 qryFilter.addParam(name = "name", value = "%" & lCase(variables.name) & "%", cfsqltype = "cf_sql_varchar");
             }
+        }
+        if(variables.used != null) {
+            where &= ((where == "") ? " WHERE " : "AND") & " c.categoryId IN (    SELECT bc.categoryId
+                                                                                    FROM IcedReaper_blog_blogpostCategory bc
+                                                                              INNER JOIN IcedReaper_blog_blogpost bp ON bc.blogpostId = bp.blogpostId
+                                                                              INNER JOIN IcedReaper_blog_status s ON bp.statusId = s.statusId
+                                                                                   WHERE s.online = :online) ";
+            qryFilter.addParam(name = "online", value = true, cfsqltype = "cf_sql_bit");
         }
         
         sql &= where & " ORDER BY name ASC";
