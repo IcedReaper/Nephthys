@@ -26,14 +26,10 @@ component implements="WWW.interfaces.connector" {
                               .setCount(1)
                               .execute();
             
-            var renderedContent = "";
-            saveContent variable="renderedContent" {
-                module template  = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/lastEntry.cfm"
-                       options   = arguments.options
-                       blogposts = blogpostFilterCtrl.getResult();
-            }
-            
-            return renderedContent;
+            var renderer = createObject("component", "API.tools.com.Nephthys.renderer.renderer").init();
+            return renderer.setTemplate("/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/lastEntry.cfm")
+                           .render(options   = arguments.options,
+                                   blogposts = blogpostFilterCtrl.getResult());
         }
         
         if(splitParameter.len() == 0) {
@@ -98,21 +94,18 @@ component implements="WWW.interfaces.connector" {
                                            required filter  blogpostFilterCtrl,
                                            required numeric actualPage,
                                                     string  activeCategory = "") {
-        var renderedContent = "";
         var categoryFilter = new filter().setFor("category").setUsed(true);
         
-        saveContent variable="renderedContent" {
-            module template           = "/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/overview.cfm"
-                   options            = arguments.options
-                   blogposts          = arguments.blogpostFilterCtrl.getResult()
-                   totalBlogpostCount = arguments.blogpostFilterCtrl.getResultCount()
-                   totalPageCount     = ceiling(arguments.blogpostFilterCtrl.getResultCount() / arguments.options.maxEntries)
-                   actualPage         = arguments.actualPage
-                   categories         = categoryFilter.execute().getResult()
-                   activeCategory     = arguments.activeCategory;
-        }
-        
-        return renderedContent;
+        var renderer = createObject("component", "API.tools.com.Nephthys.renderer.renderer").init();
+        return renderer.setTemplate("/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/overview.cfm")
+                       .addParam("options",            arguments.options)
+                       .addParam("blogposts",          arguments.blogpostFilterCtrl.getResult())
+                       .addParam("totalBlogpostCount", arguments.blogpostFilterCtrl.getResultCount())
+                       .addParam("totalPageCount",     ceiling(arguments.blogpostFilterCtrl.getResultCount() / arguments.options.maxEntries))
+                       .addParam("actualPage",         arguments.actualPage)
+                       .addParam("categories",         categoryFilter.execute().getResult())
+                       .addParam("activeCategory",     arguments.activeCategory)
+                       .render();
     }
     
     private string function renderDetails(required struct options, required blogpost blogpost, required boolean commentAdded) {
