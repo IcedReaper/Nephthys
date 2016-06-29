@@ -62,6 +62,7 @@
         1. Mehrsprachigkeit des Contents
         2. Autospeichern (Setzt Versionierung voraus | Problem: Bei normalem Vorgehen wird die Aktuelle Version überschrieben. Es sollte allerdings eine temporäre Version angelegt werden, die nach normalem Speichern wieder gelöscht wird.)
         3. Vorschau funktioniert aktuell nur für die Seite und nicht auch für Unterseiten
+        4. Themeswitch in Vorschau
     3. Thememanagement
         1. Themeinstallation per git repository
             * Check ob alle Module in dem Theme vorhanden sind. Sonst Warnung
@@ -101,6 +102,7 @@
             * Verschachtelte Kommentarmöglichkeit
         3. Adaptionen in der Übersicht
             * Kalenderübersicht hinzufügen => Klick auf Datum => zeigt alle Posts des Tages
+        4. "Gallerie" am Ende hinzufügbar machen
     3. Reviewsystem
         => genre in tags umbenennen
         => Type in Kategorie umbennen

@@ -10,7 +10,6 @@ component {
         // components
         application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
         application.system.settings.load();
-        application.page.renderer = createObject("component", "API.modules.com.Nephthys.pages.renderer").init();
         application.rootPath = application.system.settings.getValueOfKey("wwwRoot");
         
         return true;
@@ -57,7 +56,6 @@ component {
                     
                     request.page = createObject("component", "API.modules.com.Nephthys.pages.pageRequest").init(url.pageLink);
                     if(request.page.isOnline() || request.page.isPreview()) {
-                        request.content = application.page.renderer.renderPageContent(request.page.getContent(), request.page.getParameter());
                         request.page.saveToStatistics();
                     }
                     else {

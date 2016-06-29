@@ -1,9 +1,15 @@
-component {
+component implements="API.interfaces.templateRenderer" {
     public templateRenderer function init() {
         variables.modulePath = "";
         variables.template = "";
         variables.params = {};
+        variables.themeFolderName = "";
         
+        return this;
+    }
+    
+    public templateRenderer function setThemeFolderName(required string themeFolderName) {
+        variables.themeFolderName = arguments.themeFolderName;
         return this;
     }
     
@@ -18,13 +24,14 @@ component {
     }
     
     public templateRenderer function setTemplate(required string template) {
-        var tmpTemplate = application.rootPath & "/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/" & variables.modulePath & "/templates/" & arguments.template;
+        if(variables.themeFolderName == "") {
+            // TODO: Implement Unterscheidung zwischen WWW und Admin theme
+            variables.themeFolderName = request.user.getWwwTheme().getFolderName();
+        }
+        var tmpTemplate = application.rootPath & "/themes/" & variables.themeFolderName & "/modules/" & variables.modulePath & "/templates/" & arguments.template;
         
         if(fileExists(expandPath(tmpTemplate))) {
             variables.template = tmpTemplate;
-        }
-        else {
-            throw(type = "test", message="File not found!", detail = tmpTemplate);
         }
         
         return this;
@@ -41,6 +48,24 @@ component {
             saveContent variable="renderedContent" {
                 module template            = variables.template
                        attributeCollection = params;
+            }
+        }
+        else {
+            var errorLogger = application.system.settings.getValueOfKey("errorLogger");
+            errorLogger.setException({
+                    type       = "nephthys.application.invalidResource",
+                    message    = "Cannot find the template '" & variables.template & "'",
+                    stacktrace = callStackGet("string")
+                })
+                .save();
+            
+            try { // IS WWW
+                if(request.page.isPreview()) {
+                    renderedContent = "Template could not be fond in theme!";
+                }
+            }
+            catch(any e) {
+                // TODO: ADMIN Doesn't have it | Make pages like in the front end for the back end too?
             }
         }
         
