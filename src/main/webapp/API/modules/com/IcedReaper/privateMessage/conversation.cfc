@@ -1,6 +1,4 @@
 component {
-    import "API.modules.com.Nephthys.user.*";
-    
     public conversation function init(required numeric conversationId = 0) {
         variables.conversationId = arguments.conversationId;
         
@@ -197,7 +195,7 @@ component {
                                            .getResult();
             
             if(qConversation.getRecordCount() == 1) {
-                variables.initiator    = new user(qConversation.initiatorUserId[1]);
+                variables.initiator    = createObject("component", "API.modules.com.Nephthys.user.user").init(qConversation.initiatorUserId[1]);
                 variables.participants = null;
                 variables.messages     = null;
             }
@@ -206,42 +204,25 @@ component {
             }
         }
         else {
-            variables.initiator    = new user(request.user.getUserId());
+            variables.initiator    = createObject("component", "API.modules.com.Nephthys.user.user").init(request.user.getUserId());
             variables.participants = null;
             variables.messages     = null;
         }
     }
     
     private void function loadMessages() {
-        if(variables.conversationId != 0 && variables.conversationId != null) {
-            var qMessages = new Query().setSQL("  SELECT messageId
-                                                    FROM IcedReaper_privateMessage_message
-                                                   WHERE conversationId = :conversationId
-                                                ORDER BY sendDate DESC")
-                                       .addParam(name = "conversationId", value = variables.conversationId, cfsqltype = "cf_sql_numeric")
-                                       .execute()
-                                       .getResult();
-            
-            variables.messages = [];
-            for(var i = 1; i <= qMessages.getRecordCount(); ++i) {
-                variables.messages.append(new message(qMessages.messageId[i]));
-            }
-        }
+        variables.messages = new filter().setFor("message")
+                                         .setConversationId(variables.conversationId)
+                                         .setSortBy("sendDate")
+                                         .setSortDirection("DESC")
+                                         .execute()
+                                         .getResult();
     }
     
     private void function loadParticipants() {
-        variables.participants = [];
-        
-        if(variables.conversationId != 0 && variables.conversationId != null) {
-            var qParticipants = new Query().setSQL("SELECT userId FROM IcedReaper_privateMessage_participant
-                                                   WHERE conversationId = :conversationId")
-                                       .addParam(name = "conversationId", value = variables.conversationId, cfsqltype = "cf_sql_numeric")
-                                       .execute()
-                                       .getResult();
-            
-            for(var i = 1; i <= qParticipants.getRecordCount(); ++i) {
-                variables.participants.append(new user(qParticipants.userId[i]));
-            }
-        }
+        variables.participants = new filter().setFor("participant")
+                                             .setConversationId(variables.conversationId)
+                                             .execute()
+                                             .getResult();
     }
 }

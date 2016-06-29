@@ -10,15 +10,15 @@ component {
     }
     
     // SETTER
-    public request function setUserName(required string userName) { // todo: implement validations
+    public request function setUserName(required string userName) {
         variables.userName = arguments.userName;
         return this;
     }
-    public request function setRequestorUserId(required numeric requestorUserId) { // todo: implement validations
+    public request function setRequestorUserId(required numeric requestorUserId) {
         variables.requestorUserId = arguments.requestorUserId;
         return this;
     }
-    public request function setEmail(required string email) { // todo: implement validations
+    public request function setEmail(required string email) {
         variables.email = arguments.email;
         return this;
     }

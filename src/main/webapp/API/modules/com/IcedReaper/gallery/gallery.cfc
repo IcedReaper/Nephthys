@@ -1,6 +1,4 @@
 component {
-    import "API.modules.com.Nephthys.user.*";
-    
     public gallery function init(required numeric galleryId) {
         variables.galleryId = arguments.galleryId;
         
@@ -193,7 +191,7 @@ component {
     }
     public user function getCreator() {
         if(! variables.keyExists("creator")) {
-            variables.creator = new user(variables.creatorUserId);
+            variables.creator = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.creatorUserId);
         }
         return variables.creator;
     }
@@ -202,7 +200,7 @@ component {
     }
     public user function getLastEditor() {
         if(! variables.keyExists("lastEditor")) {
-            variables.lastEditor = new user(variables.lastEditorUserId);
+            variables.lastEditor = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.lastEditorUserId);
         }
         return variables.lastEditor;
     }
@@ -476,34 +474,18 @@ component {
     }
     
     private void function loadPictures() {
-        var qImageIds = new Query().setSQL("  SELECT pictureId
-                                                FROM IcedReaper_gallery_picture 
-                                               WHERE galleryId = :galleryId
-                                            ORDER BY sortId ASC")
-                                   .addParam(name = "galleryId", value = variables.galleryId, cfsqltype = "cf_sql_numeric")
-                                   .execute()
-                                   .getResult();
-        
-        variables.pictures.clear();
-        for(var i = 1; i <= qImageIds.getRecordCount(); i++) {
-            variables.pictures.append(new picture(qImageIds.pictureId[i]));
-        }
+        variables.pictures = new filter().setFor("picture")
+                                         .setGalleryId(variables.galleryId)
+                                         .execute()
+                                         .getResult();
         
         variables.picturesChanged = false;
     }
     
     private void function loadCategories() {
-        var qCategoryIds = new Query().setSQL("  SELECT categoryId
-                                                   FROM IcedReaper_gallery_galleryCategory
-                                                  WHERE galleryId = :galleryId
-                                               ORDER BY creationDate ASC")
-                                      .addParam(name = "galleryId", value = variables.galleryId, cfsqltype = "cf_sql_numeric")
-                                      .execute()
-                                      .getResult();
-        
-        variables.categories.clear();
-        for(var i = 1; i <= qCategoryIds.getRecordCount(); i++) {
-            variables.categories.append(new category(qCategoryIds.categoryId[i]));
-        }
+        variables.categories = new filter().setFor("category")
+                                           .setGalleryId(variables.galleryId)
+                                           .execute()
+                                           .getResult();
     }
 }

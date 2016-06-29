@@ -281,76 +281,7 @@ component {
             variables.folderName = createUUID();
         }
         
-        if(variables.blogpostId == 0) {
-            variables.blogpostId = new Query().setSQL("INSERT INTO IcedReaper_blog_blogpost
-                                                                   (
-                                                                       headline,
-                                                                       link,
-                                                                       story,
-                                                                       releaseDate,
-                                                                       folderName,
-                                                                       commentsActivated,
-                                                                       anonymousCommentAllowed,
-                                                                       commentsNeedToGetPublished,
-                                                                       private,
-                                                                       statusId,
-                                                                       creatorUserId,
-                                                                       lastEditorUserId,
-                                                                       lastEditDate
-                                                                   )
-                                                            VALUES (
-                                                                       :headline,
-                                                                       :link,
-                                                                       :story,
-                                                                       :releaseDate,
-                                                                       :folderName,
-                                                                       :commentsActivated,
-                                                                       :anonymousCommentAllowed,
-                                                                       :commentsNeedToGetPublished,
-                                                                       :private,
-                                                                       :statusId,
-                                                                       :creatorUserId,
-                                                                       :lastEditorUserId,
-                                                                       now()
-                                                                   );
-                                                       SELECT currval('seq_icedreaper_blog_blogpost_id') newBlogpostId;")
-                                              .addParam(name = "headline",                   value = variables.headline,                   cfsqltype = "cf_sql_varchar")
-                                              .addParam(name = "link",                       value = variables.link,                       cfsqltype = "cf_sql_varchar")
-                                              .addParam(name = "story",                      value = variables.story,                      cfsqltype = "cf_sql_varchar")
-                                              .addParam(name = "releaseDate",                value = variables.releaseDate,                cfsqltype = "cf_sql_timestamp", null = variables.releaseDate == null)
-                                              .addParam(name = "folderName",                 value = variables.folderName,                 cfsqltype = "cf_sql_varchar")
-                                              .addParam(name = "commentsActivated",          value = variables.commentsActivated,          cfsqltype = "cf_sql_bit")
-                                              .addParam(name = "anonymousCommentAllowed",    value = variables.anonymousCommentAllowed,    cfsqltype = "cf_sql_bit")
-                                              .addParam(name = "commentsNeedToGetPublished", value = variables.commentsNeedToGetPublished, cfsqltype = "cf_sql_bit")
-                                              .addParam(name = "private",                    value = variables.private,                    cfsqltype = "cf_sql_bit")
-                                              .addParam(name = "creatorUserId",              value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
-                                              .addParam(name = "lastEditorUserId",           value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
-                                              .addParam(name = "statusId",                   value = variables.status.getStatusId(),       cfsqltype = "cf_sql_numeric")
-                                              .execute()
-                                              .getResult()
-                                              .newBlogpostId[1];
-            
-            directoryCreate(getAbsolutePath(), true, true);
-        }
-        else {
-            if(variables.attributesChanged) {
-                if(variables.status.getEditable()) {
-                    new Query().setSQL("UPDATE IcedReaper_blog_blogpost
-                                           SET headline                   = :headline,
-                                               link                       = :link,
-                                               story                      = :story,
-                                               releaseDate                = :releaseDate,
-                                               folderName                 = :folderName,
-                                               commentsActivated          = :commentsActivated,
-                                               anonymousCommentAllowed    = :anonymousCommentAllowed,
-                                               commentsNeedToGetPublished = :commentsNeedToGetPublished,
-                                               private                    = :private,
-                                               statusId                   = :statusId,
-                                               lastEditorUserId           = :lastEditorUserId,
-                                               lastEditDate               = now()
-                                         WHERE blogpostId = :blogpostId")
-                               .addParam(name = "blogpostId",                 value = variables.blogpostId,                 cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "headline",                   value = variables.headline,                   cfsqltype = "cf_sql_varchar")
+        var qSave = new Query().addParam(name = "headline",                   value = variables.headline,                   cfsqltype = "cf_sql_varchar")
                                .addParam(name = "link",                       value = variables.link,                       cfsqltype = "cf_sql_varchar")
                                .addParam(name = "story",                      value = variables.story,                      cfsqltype = "cf_sql_varchar")
                                .addParam(name = "releaseDate",                value = variables.releaseDate,                cfsqltype = "cf_sql_timestamp", null = variables.releaseDate == null)
@@ -359,10 +290,67 @@ component {
                                .addParam(name = "anonymousCommentAllowed",    value = variables.anonymousCommentAllowed,    cfsqltype = "cf_sql_bit")
                                .addParam(name = "commentsNeedToGetPublished", value = variables.commentsNeedToGetPublished, cfsqltype = "cf_sql_bit")
                                .addParam(name = "private",                    value = variables.private,                    cfsqltype = "cf_sql_bit")
-                               .addParam(name = "creatorUserId",              value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "lastEditorUserId",           value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "statusId",                   value = variables.status.getStatusId(),       cfsqltype = "cf_sql_numeric")
-                               .execute();
+                               .addParam(name = "userId",                     value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "statusId",                   value = variables.status.getStatusId(),       cfsqltype = "cf_sql_numeric");
+        
+        if(variables.blogpostId == 0) {
+            variables.blogpostId = qSave.setSQL("INSERT INTO IcedReaper_blog_blogpost
+                                                             (
+                                                                 headline,
+                                                                 link,
+                                                                 story,
+                                                                 releaseDate,
+                                                                 folderName,
+                                                                 commentsActivated,
+                                                                 anonymousCommentAllowed,
+                                                                 commentsNeedToGetPublished,
+                                                                 private,
+                                                                 statusId,
+                                                                 creatorUserId,
+                                                                 lastEditorUserId,
+                                                                 lastEditDate
+                                                             )
+                                                      VALUES (
+                                                                 :headline,
+                                                                 :link,
+                                                                 :story,
+                                                                 :releaseDate,
+                                                                 :folderName,
+                                                                 :commentsActivated,
+                                                                 :anonymousCommentAllowed,
+                                                                 :commentsNeedToGetPublished,
+                                                                 :private,
+                                                                 :statusId,
+                                                                 :userId,
+                                                                 :userId,
+                                                                 now()
+                                                             );
+                                                 SELECT currval('seq_icedreaper_blog_blogpost_id') newBlogpostId;")
+                                        .execute()
+                                        .getResult()
+                                        .newBlogpostId[1];
+            
+            directoryCreate(getAbsolutePath(), true, true);
+        }
+        else {
+            if(variables.attributesChanged) {
+                if(variables.status.getEditable()) {
+                    qSave.setSQL("UPDATE IcedReaper_blog_blogpost
+                                     SET headline                   = :headline,
+                                         link                       = :link,
+                                         story                      = :story,
+                                         releaseDate                = :releaseDate,
+                                         folderName                 = :folderName,
+                                         commentsActivated          = :commentsActivated,
+                                         anonymousCommentAllowed    = :anonymousCommentAllowed,
+                                         commentsNeedToGetPublished = :commentsNeedToGetPublished,
+                                         private                    = :private,
+                                         statusId                   = :statusId,
+                                         lastEditorUserId           = :userId,
+                                         lastEditDate               = now()
+                                   WHERE blogpostId = :blogpostId")
+                         .addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric")
+                         .execute();
                     
                     if(variables.keyExists("oldFolderName") && variables.oldFolderName != variables.folderName) {
                         directoryRename(expandPath("/upload/com.IcedReaper.blog/" & variables.oldFolderName), getAbsolutePath());
@@ -495,33 +483,18 @@ component {
     }
     
     private void function loadCategories() {
-        // TODO: realize over filter!
-        var qCategoryIds = new Query().setSQL("  SELECT categoryId
-                                                   FROM IcedReaper_blog_blogpostCategory
-                                                  WHERE blogpostId = :blogpostId
-                                               ORDER BY creationDate ASC")
-                                      .addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric")
-                                      .execute()
-                                      .getResult();
-        
-        variables.categories.clear();
-        for(var i = 1; i <= qCategoryIds.getRecordCount(); i++) {
-            variables.categories.append(new category(qCategoryIds.categoryId[i]));
-        }
+        variables.categories = new filter().setFor("category")
+                                           .setBlogpostId(variables.blogpostId)
+                                           .execute()
+                                           .getResult();
     }
     
     private void function loadComments() {
-        // TODO: realize over filter!
-        var qCommentIds = new Query().setSQL("  SELECT commentId
-                                                  FROM icedReaper_blog_comment
-                                                 WHERE blogpostId = :blogpostId
-                                              ORDER BY creationDate DESC ")
-                                     .addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric")
-                                     .execute()
-                                     .getResult();
-        
-        for(var i = 1; i <= qCommentIds.getRecordCount(); i++) {
-            variables.comments.append(new comment(qCommentIds.commentId[i]));
-        }
+         variables.comments = new filter().setFor("comment")
+                                          .setBlogpostId(variables.blogpostId)
+                                          .setSortBy("creationDate")
+                                          .setSortDirection("DESC")
+                                          .execute()
+                                          .getResult();
     }
 }

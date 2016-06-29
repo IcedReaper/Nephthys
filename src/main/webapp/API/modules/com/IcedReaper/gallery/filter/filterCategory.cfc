@@ -46,23 +46,23 @@ component implements="API.interfaces.filter" {
         
         var where = "";
         if(variables.categoryId != null) {
-            where &= ((where == "") ? " WHERE " : "AND") & "categoryId = :categoryId ";
+            where &= ((where == "") ? " WHERE " : " AND ") & " categoryId = :categoryId ";
             qryFilter.addParam(name = "categoryId", value = variables.categoryId, cfsqltype = "cf_sql_numeric");
         }
         if(variables.name != null) {
             if(variables.useExactName) {
-                where &= ((where == "") ? " WHERE " : "AND") & "name = :name ";
+                where &= ((where == "") ? " WHERE " : " AND ") & " name = :name ";
                 qryFilter.addParam(name = "name", value = variables.name, cfsqltype = "cf_sql_varchar");
             }
             else {
-                where &= ((where == "") ? " WHERE " : "AND") & " lower(name) LIKE :name ";
+                where &= ((where == "") ? " WHERE " : " AND ") & "  lower(name) LIKE :name ";
                 qryFilter.addParam(name = "name", value = "%" & lCase(variables.name) & "%", cfsqltype = "cf_sql_varchar");
             }
         }
         if(variables.galleryId != null) {
-            where &= ((where == "") ? " WHERE " : "AND") & "categoryId IN (SELECT categoryId
-                                                                             FROM IcedReaper_gallery_galleryCategory
-                                                                            WHERE galleryId = :galleryId) ";
+            where &= ((where == "") ? " WHERE " : " AND ") & " categoryId IN (SELECT categoryId
+                                                                                FROM IcedReaper_gallery_galleryCategory
+                                                                               WHERE galleryId = :galleryId) ";
             qryFilter.addParam(name = "galleryId", value = variables.galleryId, cfsqltype = "cf_sql_numeric");
         }
         

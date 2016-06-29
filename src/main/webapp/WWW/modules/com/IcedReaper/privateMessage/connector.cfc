@@ -94,7 +94,8 @@ component implements="WWW.interfaces.connector" {
                         
                         if(arguments.options.otherParameter.len() == 2) {
                             if(isNumeric(arguments.options.otherParameter[2])) {
-                                var conversation = new filter().setParticipantId(request.user.getUserId())
+                                var conversation = new filter().setFor("conversation")
+                                                               .setParticipantId(request.user.getUserId())
                                                                .setConversationId(arguments.options.otherParameter[2])
                                                                .execute()
                                                                .getResult();
@@ -129,7 +130,8 @@ component implements="WWW.interfaces.connector" {
                         break;
                     }
                     case "overview": {
-                        var conversationOverview = new filter().setParticipantId(request.user.getUserId())
+                        var conversationOverview = new filter().setFor("conversation")
+                                                               .setParticipantId(request.user.getUserId())
                                                                .execute()
                                                                .getResult();
                         

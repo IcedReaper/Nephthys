@@ -47,30 +47,30 @@ component implements="API.interfaces.filter" {
                      FROM IcedReaper_blog_category c";
         
         if(variables.blogpostId != null) {
-            sql &="INNER JOIN (  SELECT COUNT(bc.*) count, bc.categoryId
-                                   FROM IcedReaper_blog_blogpostCategory bc
-                                  WHERE bc.blogpostId = :blogpostId
-                               GROUP BY bc.categoryId) bCat ON c.categoryId = bCat.categoryId ";
+            sql &=" INNER JOIN (  SELECT COUNT(bc.*) count, bc.categoryId
+                                    FROM IcedReaper_blog_blogpostCategory bc
+                                   WHERE bc.blogpostId = :blogpostId
+                                GROUP BY bc.categoryId) bCat ON c.categoryId = bCat.categoryId ";
             qryFilter.addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric");
         }
         
         var where = "";
         if(variables.categoryId != null) {
-            where &= ((where == "") ? " WHERE " : "AND") & " c.categoryId = :categoryId ";
+            where &= ((where == "") ? " WHERE " : " AND ") & " c.categoryId = :categoryId ";
             qryFilter.addParam(name = "categoryId", value = variables.categoryId, cfsqltype = "cf_sql_numeric");
         }
         if(variables.name != null) {
             if(variables.useExactName) {
-                where &= ((where == "") ? " WHERE " : "AND") & " c.name = :name ";
+                where &= ((where == "") ? " WHERE " : " AND ") & " c.name = :name ";
                 qryFilter.addParam(name = "name", value = variables.name, cfsqltype = "cf_sql_varchar");
             }
             else {
-                where &= ((where == "") ? " WHERE " : "AND") & " lower(c.name) LIKE :name ";
+                where &= ((where == "") ? " WHERE " : " AND ") & " lower(c.name) LIKE :name ";
                 qryFilter.addParam(name = "name", value = "%" & lCase(variables.name) & "%", cfsqltype = "cf_sql_varchar");
             }
         }
         if(variables.used != null) {
-            where &= ((where == "") ? " WHERE " : "AND") & " c.categoryId IN (    SELECT bc.categoryId
+            where &= ((where == "") ? " WHERE " : " AND ") & " c.categoryId IN (    SELECT bc.categoryId
                                                                                     FROM IcedReaper_blog_blogpostCategory bc
                                                                               INNER JOIN IcedReaper_blog_blogpost bp ON bc.blogpostId = bp.blogpostId
                                                                               INNER JOIN IcedReaper_blog_status s ON bp.statusId = s.statusId

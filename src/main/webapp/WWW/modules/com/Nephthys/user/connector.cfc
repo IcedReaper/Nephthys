@@ -196,6 +196,7 @@ component implements="WWW.interfaces.connector" {
         if(privateMessagesModule != null && request.user.isActive()) {
             privateMessages = createObject("API.modules." & privateMessagesModule & ".filter")
                                   .init()
+                                  .setFor("conversation")
                                   .setParticipantId(request.user.getUserId())
                                   .setUnreadOnly(true)
                                   .execute()

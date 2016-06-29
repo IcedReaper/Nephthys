@@ -1,6 +1,4 @@
 component {
-    import "API.modules.com.Nephthys.user.*";
-    
     public message function init(required numeric messageId = 0) {
         variables.messageId = arguments.messageId;
         
@@ -34,7 +32,7 @@ component {
         }
         
         variables.userId = arguments.userId;
-        variables.user = new user(variables.userId);
+        variables.user = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.userId);
         
         return this;
     }
@@ -259,10 +257,10 @@ component {
             variables.userId         = null;
             variables.sendDate       = null;
             variables.deleteDate     = null;
-            variables.message           = "";
+            variables.message        = "";
         }
         
-        variables.user = new user(variables.userId);
+        variables.user = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.userId);
         variables.conversation = null;
         
         loadRead();
@@ -271,32 +269,34 @@ component {
     private void function loadRead() {
         variables.read = [];
         
-        var readInfo = new Query().setSQL("  SELECT readDate, userId
-                                               FROM IcedReaper_privateMessage_read
-                                              WHERE messageId = :messageId
-                                           ORDER BY readDate DESC")
-                                  .addParam(name = "messageId", value = variables.messageId, cfsqltype = "cf_sql_numeric")
-                                  .execute()
-                                  .getResult();
-        
-        for(var i = 1; i <= readInfo.getRecordCount(); ++i) {
-            variables.read[i] = {
-                read     = true,
-                user     = new user(readInfo.userId[i]),
-                readDate = readInfo.readDate[i]
-            };
-        }
-        
-        for(participant in getConversation().getParticipants()) {
-            for(i = 1; i <= variables.read.len(); ++i) {
-                if(variables.read[i].user.getUserId() == participant.getUserId()) {
-                    variables.read.append({
-                        read     = false,
-                        user     = participant,
-                        readDate = null
-                    });
-                    
-                    break;
+        if(variables.conversationId != null) {
+            var readInfo = new Query().setSQL("  SELECT readDate, userId
+                                                   FROM IcedReaper_privateMessage_read
+                                                  WHERE messageId = :messageId
+                                               ORDER BY readDate DESC")
+                                      .addParam(name = "messageId", value = variables.messageId, cfsqltype = "cf_sql_numeric")
+                                      .execute()
+                                      .getResult();
+            
+            for(var i = 1; i <= readInfo.getRecordCount(); ++i) {
+                variables.read[i] = {
+                    read     = true,
+                    user     = createObject("component", "API.modules.com.Nephthys.user.user").init(readInfo.userId[i]),
+                    readDate = readInfo.readDate[i]
+                };
+            }
+            
+            for(participant in getConversation().getParticipants()) {
+                for(i = 1; i <= variables.read.len(); ++i) {
+                    if(variables.read[i].user.getUserId() == participant.getUserId()) {
+                        variables.read.append({
+                            read     = false,
+                            user     = participant,
+                            readDate = null
+                        });
+                        
+                        break;
+                    }
                 }
             }
         }

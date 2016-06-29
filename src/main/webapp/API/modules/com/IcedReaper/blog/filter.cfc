@@ -7,7 +7,8 @@ component {
         switch(arguments.for) {
             case "blogpost":
             case "status":
-            case "category": {
+            case "category":
+            case "comment": {
                 arguments.for = uCase(arguments.for.left(1)) & arguments.for.right(arguments.for.len() - 1);
                 return createObject("component", "filter.filter" & arguments.for).init();
             }
