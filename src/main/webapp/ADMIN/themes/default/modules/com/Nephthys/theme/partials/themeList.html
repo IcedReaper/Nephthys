@@ -61,13 +61,13 @@
                 
                 <button class="btn btn-warning"
                         ng-click="activate(theme.themeId)"
-                        ng-show="theme.active == 0"
+                        ng-show="theme.active"
                         title="Theme aktivieren">
                     <i class="fa fa-toggle-off"></i>
                 </button>
                 <button class="btn btn-success"
                         ng-click="deactivate(theme.themeId)"
-                        ng-show="theme.active == 1 && theme.default == 0"
+                        ng-show="theme.active && ! theme.defaultWww && ! theme.defaultAdmin"
                         title="Theme deaktivieren">
                     <i class="fa fa-toggle-on"></i>
                 </button>

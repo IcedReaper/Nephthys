@@ -68,12 +68,29 @@ component extends="API.abstractClasses.settings" {
     }
     
     public settings function load() {
-        var qGetSettings = new Query().setSQL("  SELECT ss.*, m.moduleName
-                                                   FROM nephthys_serverSetting ss
-                                               LEFT OUTER JOIN nephthys_module m ON ss.moduleId = m.moduleId
-                                               ORDER BY m.sortOrder ASC, ss.sortOrder ASC")
-                                     .execute()
-                                     .getResult();
+        var qrySettings = new Query();
+        var sql = "  SELECT ss.*, m.moduleName
+                       FROM nephthys_serverSetting ss
+                   LEFT OUTER JOIN nephthys_module m ON ss.moduleId = m.moduleId";
+        
+        var where = "";
+        var index = 0;
+        for(var applicationType in listToArray(variables.applicationList, ",")) {
+            where &= (where == "" ? " WHERE " : " OR ");
+            if(applicationType != "NULL") {
+                where &= "application = :applicationType" & ++index & " ";
+                qrySettings.addParam(name = "applicationType" & index, value = applicationType, cfsqltype = "cf_sql_varchar");
+            }
+            else {
+                where &= "application IS NULL ";
+            }
+        }
+        
+        sql &= where & "ORDER BY m.sortOrder ASC, ss.sortOrder ASC";
+        
+        var qGetSettings = qrySettings.setSQL(sql)
+                                      .execute()
+                                      .getResult();
         
         for(var i = 1; i <= qGetSettings.getRecordCount(); i++) {
             variables.settings[ qGetSettings.key[i] ] = {

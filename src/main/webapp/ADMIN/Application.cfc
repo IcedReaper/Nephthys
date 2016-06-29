@@ -11,9 +11,8 @@ component {
             server.startupTime = now();
         }
         // components
-        application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
+        application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init("ADMIN,NULL");
         application.system.settings.load();
-        application.rootPath = application.system.settings.getValueOfKey("adminRoot");
         
         return true;
     }
@@ -107,11 +106,11 @@ component {
                     // get theme
                     var themeFoldername = "";
                     if(request.keyExists("user")) {
-                        themeFoldername = request.user.getAdminTheme().getFolderName();
+                        themeFoldername = request.user.getTheme().getFolderName();
                     }
                     else {
                         if(application.keyExists("system") && application.system.keyExists("settings")) {
-                            themeFoldername = createObject("component", "API.modules.com.Nephthys.theme.theme").init(application.system.settings.getValueOfKey("defaultAdminThemeId")).getFolderName();
+                            themeFoldername = createObject("component", "API.modules.com.Nephthys.theme.theme").init(application.system.settings.getValueOfKey("defaultThemeId")).getFolderName();
                         }
                         else {
                             throw(type = "nephthys.critical.installation", message = "Neither the user nor the system settings are defined!");

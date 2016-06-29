@@ -152,7 +152,7 @@ component {
             themeData.append({
                 "themeId"        = theme.getThemeId(),
                 "name"           = theme.getName(),
-                "default"        = theme.getThemeId() == application.system.settings.getValueOfKey("defaultWwwThemeId"),
+                "default"        = theme.getThemeId() == application.system.settings.getValueOfKey("defaultThemeId"),
                 "active"         = theme.getActiveStatus(),
                 "availableWww"   = theme.getAvailableWww(),
                 "availableAdmin" = theme.getAvailableAdmin()
@@ -262,8 +262,8 @@ component {
             "password"     = "      ",
             "avatar"       = arguments.userObject.getAvatarPath(false),
             "actualUser"   = arguments.userObject.getUserId() == request.user.getUserId(),
-            "wwwThemeId"   = arguments.userObject.getWwwThemeId(),
-            "adminThemeId" = arguments.userObject.getAdminThemeId()
+            "wwwThemeId"   = arguments.userObject.getThemeId(),
+            "adminThemeId" = arguments.userObject.getThemeId()
         };
     }
     

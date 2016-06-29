@@ -14,7 +14,7 @@ component implements="WWW.interfaces.connector" {
     
     public string function render(required struct options, required string childContent) {
         // prepare the options required for the theme
-        var themeIndividualizer = createObject("component", "WWW.themes." & request.user.getWwwTheme().getFolderName() & ".modules.com.IcedReaper.blog.cfc.prepareData");
+        var themeIndividualizer = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.IcedReaper.blog.cfc.prepareData");
         var preparedOptions = themeIndividualizer.prepareOptions(arguments.options);
         
         var splitParameter = listToArray(request.page.getParameter(), "/");
@@ -30,7 +30,7 @@ component implements="WWW.interfaces.connector" {
                               .execute();
             
             var renderer = createObject("component", "API.tools.com.Nephthys.renderer.renderer").init();
-            return renderer.setTemplate("/WWW/themes/" & request.user.getWwwTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/lastEntry.cfm")
+            return renderer.setTemplate("/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/lastEntry.cfm")
                            .render(options   = arguments.options,
                                    blogposts = blogpostFilterCtrl.getResult());
         }

@@ -76,6 +76,14 @@ component {
     public string function getPassword() {
         return variables.password; // todo: check for security reasons
     }
+    public numeric function getThemeId() {
+        if(application.system.settings.getValueOfKey("applicationType") == "WWW") {
+            return variables.wwwThemeId;
+        }
+        else {
+            return variables.adminThemeId;
+        }
+    }
     public numeric function getWwwThemeId() {
         return variables.wwwThemeId;
     }
@@ -83,10 +91,18 @@ component {
         return variables.adminThemeId;
     }
     public theme function getTheme() {
-        if(! variables.keyExists("wwwTheme")) {
-            variables.wwwTheme = new theme(variables.wwwThemeId);
+        if(application.system.settings.getValueOfKey("applicationType") == "WWW") {
+            if(! variables.keyExists("wwwTheme")) {
+                variables.wwwTheme = new theme(variables.wwwThemeId);
+            }
+            return wwwTheme;
         }
-        return wwwTheme;
+        else {
+            if(! variables.keyExists("adminTheme")) {
+                variables.adminTheme = new theme(variables.adminThemeId);
+            }
+            return adminTheme;
+        }
     }
     public theme function getWwwTheme() {
         if(! variables.keyExists("wwwTheme")) {
@@ -115,7 +131,7 @@ component {
         }
         else {
             if(arguments.returnAnonymous) {
-                return "/themes/"&request.user.getWwwTheme().getFolderName() & "/img/" & request.user.getWwwTheme().getAnonymousAvatarFilename();
+                return "/themes/"&request.user.getTheme().getFolderName() & "/img/" & request.user.getTheme().getAnonymousAvatarFilename();
             }
             else {
                 return "";
@@ -242,8 +258,8 @@ component {
             variables.password         = "";
             variables.active           = false;
             variables.registrationDate = now();
-            variables.wwwThemeId       = application.system.settings.getValueOfKey("defaultWwwThemeId");
-            variables.adminThemeId     = application.system.settings.getValueOfKey("defaultAdminThemeId");
+            variables.wwwThemeId       = createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("WWW").getValue();
+            variables.adminThemeId     = createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("ADMIN").getValue();
             variables.avatarFilename   = null;
         }
         

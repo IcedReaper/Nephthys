@@ -8,9 +8,8 @@ component {
             server.startupTime = now();
         }
         // components
-        application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
+        application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init("WWW,NULL");
         application.system.settings.load();
-        application.rootPath = application.system.settings.getValueOfKey("wwwRoot");
         
         return true;
     }
@@ -43,7 +42,7 @@ component {
         switch(lcase(right(arguments.targetPage, 3))) {
             case "cfm": {
                 if(! application.system.settings.getValueOfKey("active")) {
-                    include template = "themes/" & request.user.getWwwTheme().getFolderName() & "/offline.cfm";
+                    include template = "themes/" & request.user.getTheme().getFolderName() & "/offline.cfm";
                     abort;
                 }
                 
@@ -56,6 +55,7 @@ component {
                     
                     request.page = createObject("component", "API.modules.com.Nephthys.pages.pageRequest").init(url.pageLink);
                     if(request.page.isOnline() || request.page.isPreview()) {
+                        request.page.generateContent();
                         request.page.saveToStatistics();
                     }
                     else {
@@ -63,7 +63,7 @@ component {
                     }
                 }
                 else {
-                    include template = "themes/" & request.user.getWwwTheme().getFolderName() & "/maintenanceMode.cfm";
+                    include template = "themes/" & request.user.getTheme().getFolderName() & "/maintenanceMode.cfm";
                     return false;
                 }
                 
@@ -91,6 +91,7 @@ component {
     }
     
     public void function onError(required any exception) {
+        writeDump(var=arguments.exception, abort=true);
         try {
             var errorLogger = application.system.settings.getValueOfKey("errorLogger");
             errorLogger.setException(arguments.exception)
@@ -112,11 +113,11 @@ component {
                     // get theme
                     var themeFoldername = "";
                     if(request.keyExists("user")) {
-                        themeFoldername = request.user.getWwwTheme().getFolderName();
+                        themeFoldername = request.user.getTheme().getFolderName();
                     }
                     else {
                         if(application.keyExists("system") && application.system.keyExists("settings")) {
-                            themeFoldername = createObject("component", "API.modules.com.Nephthys.theme.theme").init(application.system.settings.getValueOfKey("defaultWwwThemeId")).getFolderName();
+                            themeFoldername = createObject("component", "API.modules.com.Nephthys.theme.theme").init(application.system.settings.getValueOfKey("defaultThemeId")).getFolderName();
                         }
                         else {
                             throw(type = "nephthys.critical.installation", message = "Neither the user nor the system settings are defined!");

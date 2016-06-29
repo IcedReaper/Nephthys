@@ -28,7 +28,7 @@
                             </select>
                         </div>
                         <!-- TODO: Move to theme install | update
-                        <div class="form-group" ng-show="! theme.default">
+                        <div class="form-group" ng-show="! theme.defaultWww">
                             <label>Theme als Zip hochladen</label>
                             <input type="file" ng-model="theme.uploadFile" ngf-select required accept="application/*" />
                         </div>-->
@@ -49,8 +49,10 @@
                     </div>
                 </div>
                 
+                <!-- TODO: Move to theme install | update
                 <button type="submit" class="btn btn-success" ng-click="createTheme()" ng-show="! theme.default"><i class="fa fa-upload"></i> Erstellen</button>
-                <button type="submit" class="btn btn-success" ng-click="save()" ng-show="theme.default"><i class="fa fa-floppy-o"></i> Speichern</button>
+                -->
+                <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
             </form>
         </div>
         

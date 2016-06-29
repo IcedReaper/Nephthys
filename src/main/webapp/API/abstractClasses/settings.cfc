@@ -1,7 +1,8 @@
 component {
     // this class should not be initialized directly!!!
-    public settings function init() {
+    public settings function init(required string applicationList) {
         variables.settings = {};
+        variables.applicationList = arguments.applicationList;
         
         return this;
     }

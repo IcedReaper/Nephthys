@@ -13,7 +13,7 @@ component implements="WWW.interfaces.connector" {
     }
     
     public string function render(required struct options, required string childContent) {
-        var preparedOptions = createObject("component", "WWW.themes." & request.user.getWwwTheme().getFolderName() & ".modules.com.Nephthys.search.cfc.prepareData").prepareOptions(arguments.options);
+        var preparedOptions = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.Nephthys.search.cfc.prepareData").prepareOptions(arguments.options);
         var splitParameter  = listToArray(request.page.getParameter(), "/");
         
         if(splitParameter.len() == 0 && form.isEmpty()) {

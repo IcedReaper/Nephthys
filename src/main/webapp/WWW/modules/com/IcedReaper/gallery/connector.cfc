@@ -14,7 +14,7 @@ component implements="WWW.interfaces.connector" {
     
     public string function render(required struct options, required string childContent) {
         // prepare the options required for the theme
-        var themeIndividualizer = createObject("component", "WWW.themes." & request.user.getWwwTheme().getFolderName() & ".modules.com.IcedReaper.gallery.cfc.prepareData");
+        var themeIndividualizer = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.IcedReaper.gallery.cfc.prepareData");
         var preparedOptions = themeIndividualizer.prepareOptions(arguments.options);
         
         themeIndividualizer.invokeResources();

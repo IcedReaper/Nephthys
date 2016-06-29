@@ -25,6 +25,7 @@ component {
         
         variables.versionLoaded = false;
         variables.link = arguments.link;
+        variables.content = "";
         loadPage();
         
         return this;
@@ -272,8 +273,12 @@ component {
     public string function getDeepLink(required boolean withDomain = true) {
         return (arguments.withDomain ? application.system.settings.getValueOfKey("wwwDomain") : "") & variables.link;
     }
-    public string function renderContent() {
-        return renderPageContent(variables.pageVersion.getContent(), variables.parameter);
+    public pageRequest function generateContent() {
+        variables.content = renderPageContent(variables.pageVersion.getContent(), variables.parameter);
+        return this;
+    }
+    public string function getRenderedContent() {
+        return variables.content;
     }
     
     public pageRequest function saveToStatistics() {
@@ -359,7 +364,6 @@ component {
             variables.pageVersion = variables.page.getActualPageVersion();
         }
     }
-    
     
     private string function renderPageContent(required array pageContent, required string parameter) {
         var content = "";

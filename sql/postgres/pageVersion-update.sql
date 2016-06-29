@@ -816,3 +816,8 @@ alter table IcedReaper_blog_blogpost alter column statusId SET NOT NULL;
 GRANT SELECT ON TABLE IcedReaper_blog_status TO nephthys_user;
 
 alter table IcedReaper_blog_blogpost drop column released;
+
+
+alter table nephthys_serversetting add column application character varying (5) DEFAULT NULL;
+alter table nephthys_serversetting add check (application IS NULL OR application = 'WWW' OR application = 'ADMIN');
+alter table nephthys_serversetting add constraint UK_nephthys_serverSetting_keyName unique (key, application);

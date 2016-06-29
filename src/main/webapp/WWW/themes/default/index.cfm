@@ -32,7 +32,7 @@
         #createObject("component", "WWW.modules.com.Nephthys.navigation.connector").init().header()#
     </header>
     <main<cfif request.page.isSpecialCssClassSet("main")> class="#request.page.getSpecialCssClass('main')#"</cfif>>
-        #request.page.renderContent()#
+        #request.page.getRenderedContent()#
     </main>
     <footer<cfif request.page.isSpecialCssClassSet("footer")> class="#request.page.getSpecialCssClass('footer')#"</cfif>>
         #createObject("component", "WWW.modules.com.Nephthys.navigation.connector").init().footer()#

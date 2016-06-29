@@ -27,8 +27,8 @@ component {
         
         if(arguments.themeId != 0) {
             if(arguments.active == 1 || 
-               (arguments.active == 0 && themeList[i].getThemeId() != application.system.settings.getValueOfKey("defaultWwwThemeId") &&
-                                         themeList[i].getThemeId() != application.system.settings.getValueOfKey("defaultAdminThemeId"))) {
+               (arguments.active == 0 && themeList[i].getThemeId() != createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("WWW").getValue() &&
+                                         themeList[i].getThemeId() != createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("ADMIN").getValue())) {
                 theme.setActiveStatus(arguments.active);
             }
         }
@@ -53,8 +53,8 @@ component {
     remote boolean function deactivate(required numeric themeId) {
         var theme = new theme(arguments.themeId);
         
-        if(themeList[i].getThemeId() != application.system.settings.getValueOfKey("defaultWwwThemeId") &&
-           themeList[i].getThemeId() != application.system.settings.getValueOfKey("defaultAdminThemeId")) {
+        if(themeList[i].getThemeId() != createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("WWW").getValue() &&
+           themeList[i].getThemeId() != createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("ADMIN").getValue()) {
             theme.setActiveStatus(0)
                  .save();
         }
@@ -79,7 +79,8 @@ component {
             "themeId"        = arguments.theme.getThemeId(),
             "name"           = arguments.theme.getName(),
             "foldername"     = arguments.theme.getFoldername(),
-            "default"        = arguments.theme.getThemeId() == application.system.settings.getValueOfKey("defaultWwwThemeId"),
+            "defaultWww"     = arguments.theme.getThemeId() == createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("WWW").getValue(),
+            "defaultAdmin"   = arguments.theme.getThemeId() == createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("ADMIN").getValue(),
             "active"         = arguments.theme.getActiveStatus(),
             "availableWww"   = arguments.theme.getAvailableWww(),
             "availableAdmin" = arguments.theme.getAvailableAdmin()

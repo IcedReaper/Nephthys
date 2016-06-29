@@ -1,1 +1,1 @@
-<cfinclude template="themes/#request.user.getAdminTheme().getFolderName()#/index.cfm">
+<cfinclude template="themes/#request.user.getTheme().getFolderName()#/index.cfm">

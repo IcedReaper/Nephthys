@@ -25,10 +25,9 @@ component implements="API.interfaces.templateRenderer" {
     
     public templateRenderer function setTemplate(required string template) {
         if(variables.themeFolderName == "") {
-            // TODO: Implement Unterscheidung zwischen WWW und Admin theme
-            variables.themeFolderName = request.user.getWwwTheme().getFolderName();
+            variables.themeFolderName = request.user.getTheme().getFolderName();
         }
-        var tmpTemplate = application.rootPath & "/themes/" & variables.themeFolderName & "/modules/" & variables.modulePath & "/templates/" & arguments.template;
+        var tmpTemplate = application.system.settings.getValueOfKey("rootPath") & "/themes/" & variables.themeFolderName & "/modules/" & variables.modulePath & "/templates/" & arguments.template;
         
         if(fileExists(expandPath(tmpTemplate))) {
             variables.template = tmpTemplate;
@@ -60,13 +59,8 @@ component implements="API.interfaces.templateRenderer" {
             }
         }
         else {
-            try { // IS WWW
-                if(request.page.isPreview()) {
-                    renderedContent = "Template could not be fond in theme!";
-                }
-            }
-            catch(any e) {
-                // TODO: ADMIN Doesn't have it | Make pages like in the front end for the back end too?
+            if(application.system.settings.getValueOfKey("applicationType") == "WWW" && request.page.isPreview()) {
+                renderedContent = "Template could not be fond in theme!";
             }
         }
         
