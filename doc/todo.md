@@ -3,7 +3,6 @@
 ## Actual Task TODO - Reminder:
 - required approvals
 - Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
-- Better security against XSS
 - TODOs
 
 ## Allgemein
@@ -43,11 +42,6 @@
     1. Codeoptimierung
     2. Userverwaltung ?
         * User darf nur sich selber bearbeiten können
-    3. Was passiert, wenn eine View in einem Theme für ein Modul nicht vorhanden ist?
-        * Check im Admin einbauen
-            * Weitere Views (für neue Themes) nachinstallieren?
-        * Check im WWW einbauen => Wenn nicht gefunden im Default Theme anzeigen
-            * Was passiert, wenn es auch da nicht vorhanden ist? Auslassen und Fehlerloggen? Fehler schmeißen?
 
 ## Adminbereich
     1. Modulverwaltung

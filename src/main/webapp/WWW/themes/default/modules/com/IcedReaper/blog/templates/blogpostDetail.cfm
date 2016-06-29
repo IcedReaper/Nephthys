@@ -39,7 +39,7 @@
                                                     #comments[commentIndex].getUsername()#
                                                 </cfif>
                                             </h5>
-                                            <p>#comments[commentIndex].getComment()#</p>
+                                            <p>#application.system.settings.getValueOfKey("xssProtector").encodeForHTML(comments[commentIndex].getComment())#</p>
                                             <small>Geschrieben am #dateFormat(comments[commentIndex].getCreationDate(), "dd.mmm yyyy")# um #timeFormat(comments[commentIndex].getCreationDate(), "HH:MM:SS")# Uhr.</small>
                                         </div>
                                     </li>

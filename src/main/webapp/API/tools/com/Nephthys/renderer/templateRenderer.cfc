@@ -33,6 +33,15 @@ component implements="API.interfaces.templateRenderer" {
         if(fileExists(expandPath(tmpTemplate))) {
             variables.template = tmpTemplate;
         }
+        else {
+            var errorLogger = application.system.settings.getValueOfKey("errorLogger");
+            errorLogger.setException({
+                    type       = "nephthys.application.invalidResource",
+                    message    = "Cannot find the template '" & tmpTemplate & "'",
+                    stacktrace = callStackGet("string")
+                })
+                .save();
+        }
         
         return this;
     }
@@ -51,14 +60,6 @@ component implements="API.interfaces.templateRenderer" {
             }
         }
         else {
-            var errorLogger = application.system.settings.getValueOfKey("errorLogger");
-            errorLogger.setException({
-                    type       = "nephthys.application.invalidResource",
-                    message    = "Cannot find the template '" & variables.template & "'",
-                    stacktrace = callStackGet("string")
-                })
-                .save();
-            
             try { // IS WWW
                 if(request.page.isPreview()) {
                     renderedContent = "Template could not be fond in theme!";

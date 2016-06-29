@@ -60,7 +60,9 @@ nephthysAdminApp
                     blogpostCopy[attrib] = $scope.blogpost[attrib];
                 }
             }
-            blogpostCopy.releaseDate = blogpostCopy.releaseDate.getFullYear() + '/' + (blogpostCopy.releaseDate.getMonth() + 1) + '/' + blogpostCopy.releaseDate.getDate();
+            if(blogpostCopy.releaseDate instanceof Date && ! isNaN(blogpostCopy.releaseDate.getFullYear())) {
+                blogpostCopy.releaseDate = blogpostCopy.releaseDate.getFullYear() + '/' + (blogpostCopy.releaseDate.getMonth() + 1) + '/' + blogpostCopy.releaseDate.getDate();
+            }
             blogpostCopy.story = convertContent();
             
             blogService
@@ -98,8 +100,9 @@ nephthysAdminApp
                 blogService
                     .pushToStatus($routeParams.blogpostId,
                                   newStatusId)
-                    .then(function() {
+                    .then(function(isEditable) {
                         $scope.blogpost.statusId = newStatusId;
+                        $scope.blogpost.isEditable = isEditable;
                     });
             }
         };

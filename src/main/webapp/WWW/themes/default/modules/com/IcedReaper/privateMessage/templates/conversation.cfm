@@ -2,7 +2,7 @@
 <div class="com-IcedReaper-privateMessage">
     <div class="row">
         <div class="col-sm-12">
-            <a href="overview" class="btn btn-primary pull-right" href="/user/#request.user.getUserName()#/privateMessages"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
+            <a class="btn btn-primary pull-right" href="/user/#request.user.getUserName()#/privateMessages"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
             <h3>
                 Unterhaltung zwischen
                 <span class="small">
@@ -57,7 +57,7 @@
                             <cfif messages[messageIndex].getUser().getUserId() EQ request.user.getUserId() AND messages[messageIndex].isReadByOther(request.user) EQ false AND messages[messageIndex].isDeleted() EQ false>
                                 <a href="/user/#request.user.getUserName()#/privateMessages/conversation/#attributes.conversation.getConversationId()#?delete&messageId=#messages[messageIndex].getMessageId()#" class="close" title="Nachricht löschen">&times;</a>
                             </cfif>
-                            <p>#messages[messageIndex].getMessage().replace(chr(10), "<br>", "ALL")#</p>
+                            <p>#application.system.settings.getValueOfKey("xssProtector").encodeForHTML(messages[messageIndex].getMessage()).replace(chr(10), "<br>", "ALL")#</p>
                         </div>
                         <div class="card-footer text-muted">
                             Gesendet von <a href="/user/#messages[messageIndex].getUser().getUserName()#">#messages[messageIndex].getUser().getUserName()#</a>

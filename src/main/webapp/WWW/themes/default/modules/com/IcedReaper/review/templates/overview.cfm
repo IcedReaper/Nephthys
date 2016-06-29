@@ -31,7 +31,6 @@
         <cfloop from="1" to="#attributes.reviews.len()#" index="reviewIndex">
             <article<cfif reviewIndex GT 1> class="m-t-2"</cfif>>
                 <header>
-                    <!-- todo optimize -->
                     <p class="pull-right">
                         <cfif attributes.reviews[reviewIndex].getRating() EQ 0.5>
                             <i class="fa fa-star-half-o"></i>

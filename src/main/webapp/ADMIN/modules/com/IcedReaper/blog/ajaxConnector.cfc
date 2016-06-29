@@ -282,9 +282,9 @@ component {
                                                     _toDate);
     } 
     remote boolean function pushToStatus(required numeric blogpostId, required numeric statusId) {
-        new blogpost(arguments.blogpostId).pushToStatus(arguments.statusId, request.user);
-        
-        return true;
+        return new blogpost(arguments.blogpostId)
+            .pushToStatus(arguments.statusId, request.user)
+            .isEditable(request.user.getUserId());
     }
     
     remote struct function getStatusList() {
