@@ -42,6 +42,10 @@ nephthysAdminApp
                     controller:  "statusDetailCtrl"
                 })
                 
+                .when("/sitemap/:sitemapId", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/sitemap.html",
+                    controller: "sitemapCtrl"
+                })
                 .when("/sitemap", {
                     templateUrl: "/themes/default/modules/com/Nephthys/pages/partials/sitemap.html",
                     controller: "sitemapCtrl"

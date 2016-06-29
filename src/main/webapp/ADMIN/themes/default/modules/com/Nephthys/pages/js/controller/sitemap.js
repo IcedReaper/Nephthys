@@ -1,15 +1,25 @@
 nephthysAdminApp
-    .controller("sitemapCtrl", ["$scope", "$q", "pagesService", function ($scope, $q, pagesService) {
+    .controller("sitemapCtrl", ["$scope", "$routeParams", "$q", "pagesService", function ($scope, $routeParams, $q, pagesService) {
         $scope.refresh = function () {
             $q.all([
                 pagesService.getSitemap(),
                 pagesService.getStatus()
             ])
             .then($q.spread(function (sitemap, status) {
-                $scope.status    = status;
+                $scope.status  = status;
                 $scope.sitemap = sitemap;
                 
-                $scope.selectedIndex = ($scope.sitemap.length - 1).toString()
+                if($routeParams.sitemapId) {
+                    for(var i = 0; i < $scope.sitemap.length; ++i) {
+                        if($scope.sitemap[i].sitemapId == $routeParams.sitemapId) {
+                            $scope.selectedIndex = i.toString();
+                            break;
+                        }
+                    }
+                }
+                else {
+                    $scope.selectedIndex = ($scope.sitemap.length - 1).toString();
+                }
             }));
         };
         

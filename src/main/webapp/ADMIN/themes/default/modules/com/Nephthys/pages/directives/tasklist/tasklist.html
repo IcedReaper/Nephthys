@@ -94,12 +94,12 @@
                         </td>
                         <td ng-if="showActions">
                             <div>
-                                <a href="#/sitemap"
+                                <a href="#/sitemap/{{sitemap.sitemapId}}"
                                    class="btn btn-primary m-r-1"
                                    title="Seitendetails"
                                    ng-if="showPageButton">
                                     <i class="fa fa-cog"></i>
-                                </a> <!-- todo: add version for direct call -->
+                                </a>
                                 
                                 <button class="btn m-r-1"
                                         ng-repeat="ps in status.nextStatus"
