@@ -45,7 +45,6 @@ component {
         var gallery = new gallery(variables.galleryId);
         
         var uploaded = fileUpload(gallery.getAbsolutePath(), "picture", "image/*", "MakeUnique");
-        // TODO: Refactor to use application.system.settings
         var newFilename = uploaded.serverFile;
         
         if(uploaded.fileExisted) {
@@ -59,7 +58,8 @@ component {
         variables.pictureFilename   = newFilename;
         variables.thumbnailFilename = "tn_" & newFilename;
         
-        var exifReader = createObject("API.tools.com.Nephthys.image.exifReader").init(gallery.getAbsolutePath() & "/" & variables.pictureFilename);
+        var exifReader = application.system.settings.getValueOfKey("exifReader");
+        exifReader.setImagePath(gallery.getAbsolutePath() & "/" & variables.pictureFilename);
         var jpegComment      = exifReader.getExifKey("JPEG Comment");
         var imageDescription = exifReader.getExifKey("Image Description");
         var userComment      = exifReader.getExifKey("User Comment");

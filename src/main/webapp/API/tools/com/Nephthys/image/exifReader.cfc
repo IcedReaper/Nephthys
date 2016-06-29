@@ -1,8 +1,13 @@
 component {
-    public exifReader function init(required string imagePath) {
-        variables.imagePath = arguments.imagePath;
+    public exifReader function init() {
+        variables.imagePath = "";
         variables.exifInfo = null;
         
+        return this;
+    }
+    
+    public exifReader function setImagePath(required string imagePath) {
+        variables.imagePath = arguments.imagePath;
         return this;
     }
     
@@ -28,20 +33,25 @@ component {
     }
     
     private void function readExifInfo() {
-        var myImage = createObject("java", "java.io.File").init(variables.imagePath);
-        
-        var metadata = createObject("java", "com.drew.imaging.ImageMetadataReader").readMetadata(myImage);
-        
-        variables.exifInfo = [];
-        
-        for(var directory in metadata.getDirectories()) {
-            for(var tag in directory.getTags().toArray()) {
-                variables.exifInfo.append({
-                    region = directory.getName(),
-                    key    = tag.getTagName(),
-                    value  = tag.getDescription()
-                });
+        if(variables.imagePath != "") {
+            var myImage = createObject("java", "java.io.File").init(variables.imagePath);
+            
+            var metadata = createObject("java", "com.drew.imaging.ImageMetadataReader").readMetadata(myImage);
+            
+            variables.exifInfo = [];
+            
+            for(var directory in metadata.getDirectories()) {
+                for(var tag in directory.getTags().toArray()) {
+                    variables.exifInfo.append({
+                        region = directory.getName(),
+                        key    = tag.getTagName(),
+                        value  = tag.getDescription()
+                    });
+                }
             }
+        }
+        else {
+            throw(type = "nephthys.application.invalidResource", message = "Source image isn't defined");
         }
     }
 }

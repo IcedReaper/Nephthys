@@ -511,6 +511,7 @@ component {
     }
     
     private void function loadComments() {
+        // TODO: realize over filter!
         var qCommentIds = new Query().setSQL("  SELECT commentId
                                                   FROM icedReaper_blog_comment
                                                  WHERE blogpostId = :blogpostId

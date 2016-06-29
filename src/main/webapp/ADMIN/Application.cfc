@@ -125,7 +125,6 @@ component {
             }
         }
         catch(any e) {
-            // TODO: to be removed!!!
             writeDump(var=e, label="critical error");
         }
     }
