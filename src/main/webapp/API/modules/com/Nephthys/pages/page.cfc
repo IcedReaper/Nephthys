@@ -63,6 +63,15 @@ component {
                                           .getResult()
                                           .newPageId[1];
         }
+        else {
+            new Query().setSQL("UPDATE nephthys_page_page
+                                   SET pageVersionId = :pageVersionId
+                                 WHERE pageId = :pageId")
+                       .addParam(name = "pageId",        value = variables.pageId,        cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
+                       .execute()
+                       .getResult();
+        }
         
         return this;
     }

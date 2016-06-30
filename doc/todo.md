@@ -3,9 +3,6 @@
 ## Actual Task TODO - Reminder:
 - required approvals
 - Hardcoded /user, /search, /Gallerie und /Blog Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
-- Anscheinend wird beim anlegen einer neuen seite die pageVersionId in der page nicht aktualisiert.
-- Beim 1. Speichern einer Seite wird die ausgewählte PageVersion zurückgesetzt.
-- Wenn eine Seitenversion online gestellt wird, wird die pageVersionId nicht aktualisiert.
 
 ## Allgemein
     1. Validierungen

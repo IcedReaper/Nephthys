@@ -474,7 +474,7 @@ create table nephthys_page_page
 create table nephthys_page_pageVersion
 (
     pageVersionId serial primary key,
-    pageId integer not null references nephthys_page_page,
+    pageId integer not null references nephthys_page_page on delete cascade,
     majorVersion integer not null default 1,
     minorVersion integer not null default 0,
     statusId integer references nephthys_page_status,
@@ -825,3 +825,10 @@ alter table nephthys_serversetting add constraint UK_nephthys_serverSetting_keyN
 
 alter table IcedReaper_gallery_picture alter column title type character varying(250);
 alter table IcedReaper_gallery_picture alter column alt type character varying(250);
+
+alter table nephthys_page_pageVersion
+DROP CONSTRAINT nephthys_page_pageversion_pageid_fkey,
+ADD CONSTRAINT nephthys_page_pageversion_pageid_fkey
+   FOREIGN KEY (pageId)
+   REFERENCES nephthys_page_page(pageId)
+   ON DELETE CASCADE;
