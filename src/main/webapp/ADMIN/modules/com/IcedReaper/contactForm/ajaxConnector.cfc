@@ -2,7 +2,7 @@ component {
     import "API.modules.com.IcedReaper.contactForm.*";
     
     remote array function getList() {
-        var filterCtrl = new filter();
+        var filterCtrl = new filter().setFor("request");
         var rawRequests = filterCtrl.execute()
                                     .getResult();
         
