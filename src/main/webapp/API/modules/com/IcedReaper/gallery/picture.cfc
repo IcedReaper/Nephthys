@@ -162,12 +162,12 @@ component {
                                                                         WHERE galleryId = :galleryId)
                                                                   );
                                                       SELECT currval('seq_icedreaper_gallery_picture_id') newPictureId;")
-                                             .addParam(name = "galleryId",         value = variables.galleryId,         cfsqltype = "cf_sql_numeric")
-                                             .addParam(name = "pictureFileName",   value = variables.pictureFileName,   cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "thumbnailFileName", value = variables.thumbnailFileName, cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "title",             value = variables.title,             cfsqltype = "cf_sql_varchar", null = variables.title == "")
-                                             .addParam(name = "alt",               value = variables.alt,               cfsqltype = "cf_sql_varchar", null = variables.alt == "")
-                                             .addParam(name = "caption",           value = variables.caption,           cfsqltype = "cf_sql_varchar", null = variables.caption == "")
+                                             .addParam(name = "galleryId",         value = variables.galleryId,          cfsqltype = "cf_sql_numeric")
+                                             .addParam(name = "pictureFileName",   value = variables.pictureFileName,    cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "thumbnailFileName", value = variables.thumbnailFileName,  cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "title",             value = left(variables.title, 250),   cfsqltype = "cf_sql_varchar", null = variables.title == "")
+                                             .addParam(name = "alt",               value = left(variables.alt, 250),     cfsqltype = "cf_sql_varchar", null = variables.alt == "")
+                                             .addParam(name = "caption",           value = left(variables.caption, 300), cfsqltype = "cf_sql_varchar", null = variables.caption == "")
                                              .execute()
                                              .getResult()
                                              .newPictureId[1];
@@ -181,12 +181,12 @@ component {
                                            alt               = :alt,
                                            caption           = :caption
                                      WHERE pictureId = :pictureId")
-                           .addParam(name = "pictureId",         value = variables.pictureId,         cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "pictureFileName",   value = variables.pictureFileName,   cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "thumbnailFileName", value = variables.thumbnailFileName, cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "title",             value = variables.title,             cfsqltype = "cf_sql_varchar", null = variables.title == "")
-                           .addParam(name = "alt",               value = variables.alt,               cfsqltype = "cf_sql_varchar", null = variables.alt == "")
-                           .addParam(name = "caption",           value = variables.caption,           cfsqltype = "cf_sql_varchar", null = variables.caption == "")
+                           .addParam(name = "pictureId",         value = variables.pictureId,          cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "pictureFileName",   value = variables.pictureFileName,    cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "thumbnailFileName", value = variables.thumbnailFileName,  cfsqltype = "cf_sql_varchar")
+                           .addParam(name = "title",             value = left(variables.title, 250),   cfsqltype = "cf_sql_varchar", null = variables.title == "")
+                           .addParam(name = "alt",               value = left(variables.alt, 250),     cfsqltype = "cf_sql_varchar", null = variables.alt == "")
+                           .addParam(name = "caption",           value = left(variables.caption, 300), cfsqltype = "cf_sql_varchar", null = variables.caption == "")
                            .execute();
             }
         }

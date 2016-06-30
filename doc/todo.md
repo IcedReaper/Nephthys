@@ -2,8 +2,10 @@
 
 ## Actual Task TODO - Reminder:
 - required approvals
-- Hardcoded /user & /search Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
-- TODOs
+- Hardcoded /user, /search, /Gallerie und /Blog Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
+- Anscheinend wird beim anlegen einer neuen seite die pageVersionId in der page nicht aktualisiert.
+- Beim 1. Speichern einer Seite wird die ausgewählte PageVersion zurückgesetzt.
+- Wenn eine Seitenversion online gestellt wird, wird die pageVersionId nicht aktualisiert.
 
 ## Allgemein
     1. Validierungen
@@ -84,6 +86,8 @@
             * Bewertungen
                 * Anonym per Option
                 * Als eingeloggter User
+            * Bilderupload umbauen, sodass alle Bilder (5/10, wie auch immer) zusammen hochgeladen werden
+                * Aktuell werden alle parallel hochgeladen, was dazu führt, dass ab einer gewissen Menge der JavaHeap vollläuft und es elendig langsam ist.
         3. Statistiken pro Bild
             - Jegliche Idee bisher ist crap
                 * Für onSlideEnd von blueimp image gallery muss per jQuery der Filename ausgelesen werden
@@ -215,6 +219,7 @@
     11. Charts responsive mit maxHeight!?
     12. Checken, ob man Loading Bar und Error Message Box irgendwie Global verankern kann
     13. Checkout Lucee REST Servlet (web.xml)
+    14. Client Side validation für Formulare
 
 
 

@@ -821,3 +821,7 @@ alter table IcedReaper_blog_blogpost drop column released;
 alter table nephthys_serversetting add column application character varying (5) DEFAULT NULL;
 alter table nephthys_serversetting add check (application IS NULL OR application = 'WWW' OR application = 'ADMIN');
 alter table nephthys_serversetting add constraint UK_nephthys_serverSetting_keyName unique (key, application);
+
+
+alter table IcedReaper_gallery_picture alter column title type character varying(250);
+alter table IcedReaper_gallery_picture alter column alt type character varying(250);
