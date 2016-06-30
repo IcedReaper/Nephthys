@@ -691,24 +691,24 @@ component {
         for(var nextStatus in arguments.status.getNextStatus()) {
             if(nextStatus.isActive()) {
                 nextStatusList[nextStatus.getStatusId()] = {
-                    "statusId"         = nextStatus.getStatusId(),
-                    "name"             = nextStatus.getName(),
-                    "active"           = nextStatus.isActive(),
-                    "online"           = nextStatus.isOnline(),
+                    "statusId"       = nextStatus.getStatusId(),
+                    "name"           = nextStatus.getName(),
+                    "active"         = nextStatus.isActive(),
+                    "online"         = nextStatus.isOnline(),
                     "showInTasklist" = nextStatus.getEditable()
                 };
             }
         }
         
         return {
-            "statusId"           = arguments.status.getStatusId(),
-            "name"               = arguments.status.getName(),
-            "active"             = arguments.status.isActive(),
-            "online"             = arguments.status.isOnline(),
-            "showInTasklist"   = arguments.status.getEditable(),
-            "deleteable" = arguments.status.getDeleteable(),
+            "statusId"       = arguments.status.getStatusId(),
+            "name"           = arguments.status.getName(),
+            "active"         = arguments.status.isActive(),
+            "online"         = arguments.status.isOnline(),
+            "editable"       = arguments.status.getEditable(),
+            "deleteable"     = arguments.status.getDeleteable(),
             "showInTasklist" = arguments.status.getShowInTasklist(),
-            "nextStatus"         = nextStatusList
+            "nextStatus"     = nextStatusList
         };
     }
     
@@ -717,24 +717,24 @@ component {
         for(var nextStatus in arguments.status.getNextStatus()) {
             if(nextStatus.isActive()) {
                 nextStatusList.append({
-                    "statusId"         = nextStatus.getStatusId(),
-                    "name"             = nextStatus.getName(),
-                    "active"           = nextStatus.isActive(),
-                    "online"           = nextStatus.isOnline(),
+                    "statusId"       = nextStatus.getStatusId(),
+                    "name"           = nextStatus.getName(),
+                    "active"         = nextStatus.isActive(),
+                    "online"         = nextStatus.isOnline(),
                     "showInTasklist" = nextStatus.getEditable()
                 });
             }
         }
         
         return {
-            "statusId"           = arguments.status.getStatusId(),
-            "name"               = arguments.status.getName(),
-            "active"             = arguments.status.isActive(),
-            "online"             = arguments.status.isOnline(),
-            "showInTasklist"   = arguments.status.getEditable(),
-            "deleteable" = arguments.status.getDeleteable(),
+            "statusId"       = arguments.status.getStatusId(),
+            "name"           = arguments.status.getName(),
+            "active"         = arguments.status.isActive(),
+            "online"         = arguments.status.isOnline(),
+            "editable"       = arguments.status.getEditable(),
+            "deleteable"     = arguments.status.getDeleteable(),
             "showInTasklist" = arguments.status.getShowInTasklist(),
-            "nextStatus"         = nextStatusList
+            "nextStatus"     = nextStatusList
         };
     }
     

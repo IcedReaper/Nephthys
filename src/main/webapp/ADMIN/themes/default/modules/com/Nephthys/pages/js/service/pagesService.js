@@ -70,6 +70,13 @@ nephthysAdminApp
                 return $http.post("/ajax/com/Nephthys/pages/saveSitemap", {
                     sitemap: sitemap
                 });
+            },
+            
+            pushSitemapToStatus: function (sitemapId, statusId) {
+                return $http.post('/ajax/com/Nephthys/pages/pushSitemapToStatus', {
+                    sitemapId: sitemapId,
+                    statusId:  statusId
+                });
             }
         };
     });
