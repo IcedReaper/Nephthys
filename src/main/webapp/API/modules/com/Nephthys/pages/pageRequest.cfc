@@ -283,7 +283,6 @@ component {
     
     public pageRequest function saveToStatistics() {
         if(! variables.versionLoaded) {
-            // TODO: Move to separate statistics component
             new Query().setSQL("INSERT INTO nephthys_page_statistics
                                             (
                                                 pageId,

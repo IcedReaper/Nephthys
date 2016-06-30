@@ -13,20 +13,53 @@ component implements="WWW.interfaces.connector" {
     }
     
     public string function render(required struct options, required string childContent) {
-        var renderedContent = "";
+        var errors = {
+            error             = false,
+            contactSuccessful = false,
+            subject           = false,
+            message           = false,
+            username          = false,
+            usernameUsed      = false,
+            email             = false,
+            emailUsed         = false
+        };
         
-        if(form.isEmpty()) {
-            return application.system.settings.getValueOfKey("templateRenderer")
-                .setModulePath(getModulePath())
-                .setTemplate("form.cfm")
-                .addParam("options", arguments.options)
-                .render();
-        }
-        else {
-            try {
-                // TODO: add validation
+        if(! form.isEmpty() && form.keyExists("name") && form.name == "com.IcedReaper.contactForm") {
+            var validator = application.system.settings.getValueOfKey("validator");
+            
+            if(form.subject == "") {
+                errors.subject = true;
+                errors.error = true;
+            }
+            if(form.message == "") {
+                errors.message = true;
+                errors.error = true;
+            }
+            if(! request.user.isActive()) {
+                if(form.username == "") {
+                    errors.username = true;
+                    errors.error = true;
+                }
+                if(form.email == "") {
+                    errors.email = true;
+                    errors.error = true;
+                }
+                if(! validator.validate(form.email, "Email")) {
+                    errors.email = true;
+                    errors.error = true;
+                }
+                if(createObject("component", "API.modules.com.Nephthys.user.filter").init().setFor("user").setUsername(form.username).setActive(true).execute().getResultCount() != 0) {
+                    errors.usernameUsed = true;
+                    errors.error = true;
+                }
+                if(createObject("component", "API.modules.com.Nephthys.user.filter").init().setFor("user").setEmail(form.email).setActive(true).execute().getResultCount() != 0) {
+                    errors.emailUsed = true;
+                    errors.error = true;
+                }
+            }
+            
+            if(! errors.error) {
                 var contactFormRequest = new request(0);
-                
                 contactFormRequest.setSubject(form.subject)
                                   .setMessage(form.message);
                 
@@ -43,17 +76,21 @@ component implements="WWW.interfaces.connector" {
                 
                 contactFormRequest.save();
                 
+                errors.contactSuccessful = true;
+                
                 return application.system.settings.getValueOfKey("templateRenderer")
                     .setModulePath(getModulePath())
                     .setTemplate("thanks.cfm")
                     .addParam("options", arguments.options)
                     .render();
             }
-            catch(icedreaper.contactForm.invalidData e) {
-                // TODO: Return to form show error
-                writeDump(var=e, abort=true);
-                return "Fehler";
-            }
         }
+        
+        return application.system.settings.getValueOfKey("templateRenderer")
+                .setModulePath(getModulePath())
+                .setTemplate("form.cfm")
+                .addParam("options", arguments.options)
+                .addParam("errors",  errors)
+                .render();
     }
 }

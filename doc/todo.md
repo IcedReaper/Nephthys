@@ -58,21 +58,23 @@
         3. Vorschau funktioniert aktuell nur für die Seite und nicht auch für Unterseiten
         4. Themeswitch in Vorschau
     3. Thememanagement
-        1. Themeinstallation per git repository
-            * Check ob alle Module in dem Theme vorhanden sind. Sonst Warnung
-    4. Modul-Theme-Management
-        1. Was tun, wenn das Modul in einem Theme nicht vorhanden ist.
-    5. Backup
+        * Installation
+            - Per git Repo
+            - Per zip/rar
+        * Update
+            - Per git Repo mit Branch/tag
+            - per zip
+    4. Backup
         * https://www.postgresql.org/docs/9.3/static/app-pgdump.html
-    6. Errorlog
-    7. Sidebar auf Icons reduzieren
-    8. Assets weiter optimieren/reduzieren
-    9. Dashboard pro User variabel gestaltbar machen
+    5. Errorlog
+    6. Sidebar auf Icons reduzieren
+    7. Assets weiter optimieren/reduzieren
+    8. Dashboard pro User variabel gestaltbar machen
         * Anordnung
         * Module
-    10. Alle (asset) js Files in der index.cfm laden
-    11. Responsive anpassungen
-    12. Design schick machen
+    9. Alle (asset) js Files in der index.cfm laden
+    10. Responsive anpassungen
+    11. Design schick machen
 
 ## Module (in eigenen Repos/Projekten)
     1. Gallery

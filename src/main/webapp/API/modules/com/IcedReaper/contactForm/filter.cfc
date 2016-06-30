@@ -1,4 +1,5 @@
 component implements="API.interfaces.filter" {
+    // TODO: refactor
     public filter function init() {
         variables.read            = -1;
         variables.answered        = -1;

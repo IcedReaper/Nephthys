@@ -23,22 +23,12 @@ component {
         return this;
     }
     public request function setSubject(required string subject) {
-        if(arguments.subject != "") {
-            variables.subject = arguments.subject;
-            return this;
-        }
-        else {
-            throw(type = "icedreaper.contactForm.invalidData", message = "Please insert a subject");
-        }
+        variables.subject = arguments.subject;
+        return this;
     }
     public request function setMessage(required string message) {
-        if(arguments.message != "") {
-            variables.message = arguments.message;
-            return this;
-        }
-        else {
-            throw(type = "icedreaper.contactForm.invalidData", message = "Please insert a message");
-        }
+        variables.message = arguments.message;
+        return this;
     }
     public request function setRead(required boolean read) {
         variables.read = arguments.read;

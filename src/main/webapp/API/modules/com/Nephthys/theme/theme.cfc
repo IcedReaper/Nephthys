@@ -91,7 +91,6 @@ component {
             }
         }
         else {
-            // further todo: update
             throw(type = "nephthys.application.notAllowed", message = "It is not allowed to overwrite an existing theme");
         }
         

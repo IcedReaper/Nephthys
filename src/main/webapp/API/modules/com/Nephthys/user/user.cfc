@@ -73,9 +73,6 @@ component {
     public string function getEmail() {
         return variables.eMail;
     }
-    public string function getPassword() {
-        return variables.password; // todo: check for security reasons
-    }
     public numeric function getThemeId() {
         if(application.system.settings.getValueOfKey("applicationType") == "WWW") {
             return variables.wwwThemeId;

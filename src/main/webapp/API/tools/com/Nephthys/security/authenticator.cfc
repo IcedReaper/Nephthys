@@ -22,7 +22,7 @@ component interface="API.interfaces.authenticator" {
                                 .userid[1];
         
         var successful = userId != null;
-        // check to move somewhero elso into the statistics
+        
         new Query().setSQL("INSERT INTO nephthys_statistics_login
                                         (
                                             username,
