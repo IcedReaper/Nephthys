@@ -8,8 +8,8 @@ angular.module("com.IcedReaper.gallery.statistics", ["chart.js",
                     params: {
                         galleryId: galleryId,
                         sortOrder: sortOrder,
-                        fromDate:  fromDate,
-                        toDate:    toDate
+                        fromDate:  fromDate.toAjaxFormat(),
+                        toDate:    toDate.toAjaxFormat()
                     }
                 });
             },
@@ -17,8 +17,8 @@ angular.module("com.IcedReaper.gallery.statistics", ["chart.js",
                 return $http.get('/ajax/com/IcedReaper/gallery/getStatisticsSeparatedByGallery', {
                     params: {
                         sortOrder: sortOrder,
-                        fromDate:  fromDate,
-                        toDate:    toDate
+                        fromDate:  fromDate.toAjaxFormat(),
+                        toDate:    toDate.toAjaxFormat()
                     }
                 });
             }
@@ -96,12 +96,6 @@ angular.module("com.IcedReaper.gallery.statistics", ["chart.js",
             };
         
         $scope.refresh = function () {
-            var dateStringOptions = {
-                month: "2-digit",
-                day:   "2-digit",
-                year:  "numeric"
-            };
-            
             $scope.chart.labels = [];
             $scope.chart.data   = [];
             
@@ -119,8 +113,8 @@ angular.module("com.IcedReaper.gallery.statistics", ["chart.js",
             
             if(method) {
                 method($scope.sortOrder,
-                       $scope.selectedDate.fromDate.toLocaleDateString('de-DE', dateStringOptions),
-                       $scope.selectedDate.toDate.toLocaleDateString('de-DE', dateStringOptions),
+                       $scope.selectedDate.fromDate,
+                       $scope.selectedDate.toDate,
                        $scope.galleryId)
                     .then(function(res) {
                         actualView = res.actualView;

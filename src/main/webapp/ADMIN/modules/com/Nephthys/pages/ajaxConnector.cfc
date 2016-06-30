@@ -520,9 +520,9 @@ component {
     }
     
     // STATISTICS
-    remote struct function getPageRequests(required numeric pageId = null, required string sortOrder, required string fromDate, required string toDate) { // format: DD.MM.YYYY // TODO: custom formats by server settings
-        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
-        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+    remote struct function getPageRequests(required numeric pageId = null, required string sortOrder, required string fromDate, required string toDate) {
+        var _fromDate = dateFormat(arguments.fromDate, "YYYY/MM/DD");
+        var _toDate   = dateFormat(arguments.toDate, "YYYY/MM/DD");
 
         return new statistics().getTotal(arguments.pageId,
                                          arguments.sortOrder,
@@ -530,18 +530,18 @@ component {
                                          _toDate);
     } 
     
-    remote struct function getPageRequestsSeperatedByPage(required string sortOrder, required string fromDate, required string toDate) { // format: DD.MM.YYYY // TODO: custom formats by server settings
-        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
-        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+    remote struct function getPageRequestsSeperatedByPage(required string sortOrder, required string fromDate, required string toDate) {
+        var _fromDate = dateFormat(arguments.fromDate, "YYYY/MM/DD");
+        var _toDate   = dateFormat(arguments.toDate, "YYYY/MM/DD");
 
         return new statistics().getTotalSplitPerPage(arguments.sortOrder,
                                                      _fromDate,
                                                      _toDate);
     }
     
-    remote struct function getPageRequestsSeperatedByLink(required numeric pageId, required string sortOrder, required string fromDate, required string toDate) { // format: DD.MM.YYYY // TODO: custom formats by server settings
-        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
-        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+    remote struct function getPageRequestsSeperatedByLink(required numeric pageId, required string sortOrder, required string fromDate, required string toDate) {
+        var _fromDate = dateFormat(arguments.fromDate, "YYYY/MM/DD");
+        var _toDate   = dateFormat(arguments.toDate, "YYYY/MM/DD");
 
         return new statistics().getSplitPerPage(arguments.pageId,
                                                 arguments.sortOrder,

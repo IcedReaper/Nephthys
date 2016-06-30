@@ -213,8 +213,8 @@ component {
     }
     
     remote struct function getGalleryStatistics(required numeric galleryId = null, required string sortOrder, required string fromDate, required string toDate) {
-        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
-        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+        var _fromDate = dateFormat(arguments.fromDate, "YYYY/MM/DD");
+        var _toDate   = dateFormat(arguments.toDate, "YYYY/MM/DD");
 
         return new statistics().getTotal(arguments.galleryId,
                                          arguments.sortOrder,
@@ -223,8 +223,8 @@ component {
     }
     
     remote struct function getStatisticsSeparatedByGallery(required string sortOrder, required string fromDate, required string toDate) {
-        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
-        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+        var _fromDate = dateFormat(arguments.fromDate, "YYYY/MM/DD");
+        var _toDate   = dateFormat(arguments.toDate, "YYYY/MM/DD");
 
         return new statistics().getSplitPerGallery(arguments.sortOrder,
                                                    _fromDate,

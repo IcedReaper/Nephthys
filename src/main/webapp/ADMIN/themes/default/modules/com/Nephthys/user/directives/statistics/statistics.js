@@ -8,8 +8,8 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
                     params: {
                         userId:    userId,
                         sortOrder: sortOrder,
-                        fromDate:  fromDate,
-                        toDate:    toDate
+                        fromDate:  fromDate.toAjaxFormat(),
+                        toDate:    toDate.toAjaxFormat()
                     }
                 });
             }
@@ -87,18 +87,12 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
             };
         
         $scope.refresh = function () {
-            var dateStringOptions = {
-                month: "2-digit",
-                day:   "2-digit",
-                year:  "numeric"
-            };
-            
             $scope.chart.labels = [];
             $scope.chart.data   = [];
             
             service.getLoginStatistics($scope.sortOrder,
-                                       $scope.selectedDate.fromDate.toLocaleDateString('de-DE', dateStringOptions),
-                                       $scope.selectedDate.toDate.toLocaleDateString('de-DE', dateStringOptions),
+                                       $scope.selectedDate.fromDate,
+                                       $scope.selectedDate.toDate,
                                        $scope.userId)
                 .then(function(res) {
                     actualView = res.actualView;

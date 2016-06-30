@@ -57,6 +57,14 @@ Number.prototype.formatAsTimeSince = function () {
   
     return result;
 };
+Date.prototype.toAjaxFormat = function () {
+    if(! isNaN(this.getFullYear())) {
+        return this.getFullYear() + '/' + (this.getMonth() + 1) + '/' + this.getDate();
+    }
+    else {
+        return "";
+    }
+}
 
 structDeepCopy = function (struct) {
     return JSON.parse(JSON.stringify(struct));

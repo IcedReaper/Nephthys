@@ -264,8 +264,8 @@ component {
     }
     
     remote struct function getBlogStatistics(required numeric blogpostId = null, required string sortOrder, required string fromDate, required string toDate) {
-        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
-        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+        var _fromDate = dateFormat(arguments.fromDate, "YYYY/MM/DD");
+        var _toDate   = dateFormat(arguments.toDate, "YYYY/MM/DD");
 
         return new statistics().getTotal(arguments.blogpostId,
                                          arguments.sortOrder,
@@ -274,8 +274,8 @@ component {
     }
     
     remote struct function getStatisticsSeparatedByBlog(required string sortOrder, required string fromDate, required string toDate) {
-        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
-        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+        var _fromDate = dateFormat(arguments.fromDate, "YYYY/MM/DD");
+        var _toDate   = dateFormat(arguments.toDate, "YYYY/MM/DD");
 
         return new statistics().getSplitPerBlogpost(arguments.sortOrder,
                                                     _fromDate,

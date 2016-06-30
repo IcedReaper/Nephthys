@@ -60,9 +60,7 @@ nephthysAdminApp
                     blogpostCopy[attrib] = $scope.blogpost[attrib];
                 }
             }
-            if(blogpostCopy.releaseDate instanceof Date && ! isNaN(blogpostCopy.releaseDate.getFullYear())) {
-                blogpostCopy.releaseDate = blogpostCopy.releaseDate.getFullYear() + '/' + (blogpostCopy.releaseDate.getMonth() + 1) + '/' + blogpostCopy.releaseDate.getDate();
-            }
+            blogpostCopy.releaseDate = blogpostCopy.toAjaxFormat();
             blogpostCopy.story = convertContent();
             
             blogService

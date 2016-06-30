@@ -230,9 +230,9 @@ component {
         };
     }
     
-    remote struct function getLoginStatisticsTotal(required numeric userId = null, required string sortOrder, required string fromDate, required string toDate) { // format: DD.MM.YYYY // TODO: custom formats by server settings
-        var _fromDate = dateFormat(arguments.fromDate, "DD.MM.YYYY");
-        var _toDate   = dateFormat(arguments.toDate, "DD.MM.YYYY");
+    remote struct function getLoginStatisticsTotal(required numeric userId = null, required string sortOrder, required string fromDate, required string toDate) {
+        var _fromDate = dateFormat(arguments.fromDate, "YYYY/MM/DD");
+        var _toDate   = dateFormat(arguments.toDate, "YYYY/MM/DD");
 
         return new statistics().getTotal(arguments.userId,
                                          arguments.sortOrder,
