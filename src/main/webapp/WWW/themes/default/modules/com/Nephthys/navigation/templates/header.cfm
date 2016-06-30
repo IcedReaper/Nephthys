@@ -20,10 +20,12 @@
             </cfif>
         </cfif>
         
-        <form action="/search" method="POST" class="form-inline navbar-form pull-right">
-            <input type="text" class="form-control" placeholder="Suchbegriff" name="searchStatement">
-            <button type="submit" class="btn btn-success"><span class="fa fa-search"></span> Suchen</button>
-        </form>
+        <cfif attributes.searchPage NEQ "">
+            <form action="#attributes.searchPage#" method="POST" class="form-inline navbar-form pull-right">
+                <input type="text" class="form-control" placeholder="Suchbegriff" name="searchStatement">
+                <button type="submit" class="btn btn-success"><span class="fa fa-search"></span> Suchen</button>
+            </form>
+        </cfif>
     </div>
 </nav>
 </cfoutput>

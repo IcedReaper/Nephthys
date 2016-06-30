@@ -18,6 +18,13 @@ component implements="WWW.interfaces.connector" {
                 arguments.options.otherParameter[1] = "overview";
             }
             
+            var aPages = createObject("component", "API.modules.com.Nephthys.pages.filter").init()
+                                                                                           .setFor("pageWithModule")
+                                                                                           .setModuleName("com.Nephthys.user")
+                                                                                           .execute()
+                                                                                           .getResult(); 
+            var userPage = aPages.len() >= 1 ? aPages[1].link : "";
+            
             if(arguments.options.keyExists("otherParameter") && arguments.options.otherParameter.len() > 0) {
                 switch(arguments.options.otherParameter[1]) {
                     case "new": {
@@ -46,13 +53,14 @@ component implements="WWW.interfaces.connector" {
                                 transactionCommit();
                             }
                             
-                            location(addtoken = false, statuscode = "302", url = "/user/" & request.user.getUserName() & "/privateMessages/conversation/" & conversation.getConversationId());
+                            location(addtoken = false, statuscode = "302", url = userPage & "/" & request.user.getUserName() & "/privateMessages/conversation/" & conversation.getConversationId());
                         }
                         
                         return application.system.settings.getValueOfKey("templateRenderer")
                             .setModulePath(getModulePath())
                             .setTemplate("newConversation.cfm")
-                            .addParam("options", arguments.options)
+                            .addParam("options",  arguments.options)
+                            .addParam("userPage", userPage)
                             .render();
                     }
                     case "conversation": {
@@ -67,7 +75,7 @@ component implements="WWW.interfaces.connector" {
                                 
                                 conversation.addMessage(message);
                                 
-                                location(addtoken = false, statuscode = "302", url = "/user/" & request.user.getUserName() & "/privateMessages/conversation/" & conversation.getConversationId());
+                                location(addtoken = false, statuscode = "302", url = userPage & "/" & request.user.getUserName() & "/privateMessages/conversation/" & conversation.getConversationId());
                             }
                             else {
                                 throw(type = "nephthys.application.notAllowed", message = "You aren't a participant of this conversation; You cannot reply");
@@ -81,7 +89,7 @@ component implements="WWW.interfaces.connector" {
                                 if(! message.isReadByOther(request.user)) {
                                     message.delete();
                                     
-                                    location(addtoken = false, statuscode = "302", url = "/user/" & request.user.getUserName() & "/privateMessages/conversation/" & message.getConversation().getConversationId());
+                                    location(addtoken = false, statuscode = "302", url = userPage & "/" & request.user.getUserName() & "/privateMessages/conversation/" & message.getConversation().getConversationId());
                                 }
                                 else {
                                     throw(type = "nephthys.application.notAllowed", message = "The reply couldn't be deleted. It was already read by someone");
@@ -114,15 +122,17 @@ component implements="WWW.interfaces.connector" {
                                     return application.system.settings.getValueOfKey("templateRenderer")
                                         .setModulePath(getModulePath())
                                         .setTemplate("conversation.cfm")
-                                        .addParam("options", arguments.options)
+                                        .addParam("options",      arguments.options)
                                         .addParam("conversation", conversation[1])
+                                        .addParam("userPage",     userPage)
                                         .render();
                                 }
                                 else {
                                     return application.system.settings.getValueOfKey("templateRenderer")
                                         .setModulePath(getModulePath())
                                         .setTemplate("conversationNotFound.cfm")
-                                        .addParam("options", arguments.options)
+                                        .addParam("options",  arguments.options)
+                                        .addParam("userPage", userPage)
                                         .render();
                                 }
                             }
@@ -140,6 +150,7 @@ component implements="WWW.interfaces.connector" {
                             .setTemplate("overview.cfm")
                             .addParam("options",       arguments.options)
                             .addParam("conversations", conversationOverview)
+                            .addParam("userPage",      userPage)
                             .render();
                     }
                     default: {

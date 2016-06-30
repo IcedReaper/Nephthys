@@ -54,7 +54,17 @@ component implements="WWW.interfaces.connector" {
         return application.system.settings.getValueOfKey("templateRenderer")
             .setModulePath(getModulePath())
             .setTemplate(arguments.template & ".cfm")
-            .addParam("sitemap", arguments.sitemap)
+            .addParam("sitemap",  arguments.sitemap)
+            .addParam("searchPage", getUserLink())
             .render();
+    }
+    
+    private string function getUserLink() {
+        var aPages = createObject("component", "API.modules.com.Nephthys.pages.filter").init()
+                                                                                       .setFor("pageWithModule")
+                                                                                       .setModuleName("com.Nephthys.search")
+                                                                                       .execute()
+                                                                                       .getResult(); 
+        return aPages.len() >= 1 ? aPages[1].link : "";
     }
 }

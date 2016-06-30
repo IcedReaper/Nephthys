@@ -20,7 +20,7 @@
                                     <div class="row">
                                         <div class="col-sm-6 col-md-10">
                                             <h4>
-                                                <a href="/user/#request.user.getUserName()#/privateMessages/conversation/#attributes.conversations[conversationIndex].getConversationId()#">Unterhaltung zwischen</a>
+                                                <a href="#attributes.userPage#/#request.user.getUserName()#/privateMessages/conversation/#attributes.conversations[conversationIndex].getConversationId()#">Unterhaltung zwischen</a>
                                                 <span class="small">
                                                     <cfset participants = attributes.conversations[conversationIndex].getParticipants()>
                                                     <cfloop from="1" to="#participants.len()#" index="participantIndex">
@@ -29,13 +29,13 @@
                                                         <cfelseif participantIndex EQ participants.len()>
                                                             &nbsp;und&nbsp;
                                                         </cfif>
-                                                        <a href="/user/#participants[participantIndex].getUserName()#" target="_blank">#participants[participantIndex].getUserName()#</a>
+                                                        <a href="#attributes.userPage#/#participants[participantIndex].getUserName()#" target="_blank">#participants[participantIndex].getUserName()#</a>
                                                     </cfloop>
                                                 </span>
                                             </h4>
                                         </div>
                                         <div class="col-sm-6 col-md-2">
-                                            <a class="btn btn-primary btn-sm pull-right" href="/user/#request.user.getUserName()#/privateMessages/conversation/#attributes.conversations[conversationIndex].getConversationId()###reply">
+                                            <a class="btn btn-primary btn-sm pull-right" href="#attributes.userPage#/#request.user.getUserName()#/privateMessages/conversation/#attributes.conversations[conversationIndex].getConversationId()###reply">
                                                 <span class="fa-stack">
                                                     <i class="fa fa-comment fa-stack-lg"></i>
                                                     <i class="fa fa-arrow-right fa-stack-1x text-success overlay-lower-right"></i>
@@ -50,7 +50,7 @@
                                     
                                     <p class="card-text">
                                         <small class="text-muted">
-                                            Gesendet von <a href="/user/#attributes.conversations[conversationIndex].getLastMessage().getUser().getUserName()#">#attributes.conversations[conversationIndex].getLastMessage().getUser().getUserName()#</a>
+                                            Gesendet von <a href="#attributes.userPage#/#attributes.conversations[conversationIndex].getLastMessage().getUser().getUserName()#">#attributes.conversations[conversationIndex].getLastMessage().getUser().getUserName()#</a>
                                             am #dateFormat(attributes.conversations[conversationIndex].getLastMessage().getSendDate(), "DD.MMM YYYY")#
                                             um #timeFormat(attributes.conversations[conversationIndex].getLastMessage().getSendDate(), "HH:MM")#
                                         </small>
@@ -62,7 +62,7 @@
                 </cfloop>
             <cfelse>
                 <p class="text-warning">Wir konnten keine Konversationen finden, an denen Du teilgenommen hast.</p>
-                <p>Fange jetzt eine <a href="/user/#request.user.getUserName()#/privateMessages/conversation/new">neue Konversation</a> an.</p>
+                <p>Fange jetzt eine <a href="#attributes.userPage#/#request.user.getUserName()#/privateMessages/conversation/new">neue Konversation</a> an.</p>
             </cfif>
         </div>
     </div>

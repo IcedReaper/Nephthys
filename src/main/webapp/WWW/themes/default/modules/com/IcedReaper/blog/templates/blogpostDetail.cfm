@@ -7,7 +7,7 @@
             <p>#attributes.blogpost.getStory()#</p>
         </section>
         <footer>
-            <p><small>Dieser Blogeintrag wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.blogpost.getCreationDate())# von <a href="/User/#attributes.blogpost.getCreator().getUsername()#">#attributes.blogpost.getCreator().getUsername()#</a> erstellt und bisher #attributes.blogpost.getViewCounter()# Mal aufgerufen.</small></p>
+            <p><small>Dieser Blogeintrag wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.blogpost.getCreationDate())# von <a href="#attributes.userPage#/#attributes.blogpost.getCreator().getUsername()#">#attributes.blogpost.getCreator().getUsername()#</a> erstellt und bisher #attributes.blogpost.getViewCounter()# Mal aufgerufen.</small></p>
             <cfset categories = attributes.blogpost.getCategories()>
             <p>
                 <cfloop from="1" to="#categories.len()#" index="categoryIndex">
@@ -34,7 +34,7 @@
                                         <div class="media-body">
                                             <h5 class="media-heading">
                                                 <cfif comments[commentIndex].fromRegistrated()>
-                                                    <a href="/user/#comments[commentIndex].getUsername()#">#comments[commentIndex].getUsername()#</a>
+                                                    <a href="#attributes.userPage#/#comments[commentIndex].getUsername()#">#comments[commentIndex].getUsername()#</a>
                                                 <cfelse>
                                                     #comments[commentIndex].getUsername()#
                                                 </cfif>

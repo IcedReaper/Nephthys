@@ -2,7 +2,6 @@
 
 ## Actual Task TODO - Reminder:
 - required approvals
-- Hardcoded /user, /search, /Gallerie und /Blog Links fixen... => move to system settings... but what when the page isn't part of the sitemap?
 
 ## Allgemein
     1. Validierungen
@@ -217,12 +216,3 @@
     12. Checken, ob man Loading Bar und Error Message Box irgendwie Global verankern kann
     13. Checkout Lucee REST Servlet (web.xml)
     14. Client Side validation für Formulare
-
-
-
-NULL checks
-
-return type date => return null
-set array == null
-
-method caching of object

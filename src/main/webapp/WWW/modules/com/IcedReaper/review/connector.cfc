@@ -130,6 +130,7 @@ component implements="WWW.interfaces.connector" {
             .addParam("totalReviewCount", arguments.reviewFilter.getResultCount())
             .addParam("totalPageCount",   ceiling(arguments.reviewFilter.getResultCount() / arguments.options.maxEntries))
             .addParam("actualPage",       arguments.actualPage)
+            .addParam("userPage",         getUserLink())
             .render();
     }
     
@@ -137,8 +138,18 @@ component implements="WWW.interfaces.connector" {
         return application.system.settings.getValueOfKey("templateRenderer")
             .setModulePath(getModulePath())
             .setTemplate("reviewDetail.cfm")
-            .addParam("options", arguments.options)
-            .addParam("review",  arguments.review)
+            .addParam("options",  arguments.options)
+            .addParam("review",   arguments.review)
+            .addParam("userPage", getUserLink())
             .render();
+    }
+    
+    private string function getUserLink() {
+        var aPages = createObject("component", "API.modules.com.Nephthys.pages.filter").init()
+                                                                                       .setFor("pageWithModule")
+                                                                                       .setModuleName("com.Nephthys.user")
+                                                                                       .execute()
+                                                                                       .getResult(); 
+        return aPages.len() >= 1 ? aPages[1].link : "";
     }
 }

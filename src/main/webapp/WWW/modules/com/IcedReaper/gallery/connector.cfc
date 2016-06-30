@@ -130,6 +130,7 @@ component implements="WWW.interfaces.connector" {
             .addParam("totalGalleryCount", arguments.galleryFilterCtrl.getResultCount())
             .addParam("totalPageCount",    ceiling(arguments.galleryFilterCtrl.getResultCount() / arguments.options.maxEntries))
             .addParam("actualPage",        arguments.actualPage)
+            .addParam("userPage",          getUserLink())
             .render();
     }
     
@@ -149,8 +150,18 @@ component implements="WWW.interfaces.connector" {
         return application.system.settings.getValueOfKey("templateRenderer")
             .setModulePath(getModulePath())
             .setTemplate("galleryDetail.cfm")
-            .addParam("options", arguments.options)
-            .addParam("gallery", arguments.gallery)
+            .addParam("options",  arguments.options)
+            .addParam("gallery",  arguments.gallery)
+            .addParam("userPage", getUserLink())
             .render();
+    }
+    
+    private string function getUserLink() {
+        var aPages = createObject("component", "API.modules.com.Nephthys.pages.filter").init()
+                                                                                       .setFor("pageWithModule")
+                                                                                       .setModuleName("com.Nephthys.user")
+                                                                                       .execute()
+                                                                                       .getResult(); 
+        return aPages.len() >= 1 ? aPages[1].link : "";
     }
 }
