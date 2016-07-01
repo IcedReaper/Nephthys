@@ -1,4 +1,5 @@
 component {
+    // todo: Refactor as filter
     public extPropertyKeyLoader function init() {
         return this;
     }

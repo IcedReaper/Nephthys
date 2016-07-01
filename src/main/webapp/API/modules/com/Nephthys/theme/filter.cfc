@@ -4,6 +4,9 @@ component implements="API.interfaces.filter" {
         variables.themeName = null;
         variables.active    = null;
         
+        variables.availableWww = null;
+        variables.availableAdmin = null;
+        
         variables.qRes = null;
         variables.results = null;
         
@@ -20,6 +23,14 @@ component implements="API.interfaces.filter" {
     }
     public filter function setActive(required boolean active) {
         variables.active = arguments.active;
+        return this;
+    }
+    public filter function setAvailableWww(required boolean availableWww) {
+        variables.availableWww = arguments.availableWww;
+        return this;
+    }
+    public filter function setAvailableAdmin(required boolean availableAdmin) {
+        variables.availableAdmin = arguments.availableAdmin;
         return this;
     }
     
@@ -40,6 +51,14 @@ component implements="API.interfaces.filter" {
         if(variables.active != null) {
             where &= (where == "" ? " WHERE " : " AND ") & "active = :active";
             qryFilter.addParam(name = "active", value = variables.active, cfsqltype = "cf_sql_bit");
+        }
+        if(variables.availableWww != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & "availableWww = :availableWww";
+            qryFilter.addParam(name = "availableWww", value = variables.availableWww, cfsqltype = "cf_sql_bit");
+        }
+        if(variables.availableAdmin != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & "availableAdmin = :availableAdmin";
+            qryFilter.addParam(name = "availableAdmin", value = variables.availableAdmin, cfsqltype = "cf_sql_bit");
         }
         
         sql &= where & " ORDER BY name ASC";

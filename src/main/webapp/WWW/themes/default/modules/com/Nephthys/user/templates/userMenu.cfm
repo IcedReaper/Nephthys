@@ -6,6 +6,7 @@
         </button>
         <div class="dropdown-menu p-r-1 p-l-1 p-b-1">
             <form action="?" method="POST" class="form-inline" auto-complete="off">
+                <input type="hidden" name="name" value="com.Nephthys.user.login">
                 <fieldset class="form-group">
                     <label for="username">Username</label>
                     <input type="text" name="Username" id="username" class="form-control">
@@ -25,9 +26,10 @@
             #request.user.getUsername()#
         </button>
         <div class="dropdown-menu p-r-1 p-l-1 p-b-1">
-            <a href="#attributes.userPage#/#request.user.getUsername()#" class="btn btn-secondary btn-link btn-sm font-light"><i class="fa fa-cog"></i> Mein Profil</a>
+            <a href="#attributes.userPage#/#request.user.getUsername()#" class="btn btn-link btn-sm font-light"><i class="fa fa-cog"></i> Mein Profil</a>
+            <a href="#attributes.userPage#/#request.user.getUsername()#/edit" class="btn btn-link btn-sm font-light"><i class="fa fa-cog"></i> Mein Profil bearbeiten</a>
             <cfif application.system.settings.getValueOfKey("privateMessageModule") NEQ null>
-                <a href="#attributes.userPage#/#request.user.getUsername()#/privateMessages" class="btn btn-secondary btn-link btn-sm font-light">
+                <a href="#attributes.userPage#/#request.user.getUsername()#/privateMessages" class="btn btn-link btn-sm font-light">
                     <i class="fa fa-commenting-o"></i> Private Nachrichten
                     <cfif attributes.privateMessages.len() GT 0>
                         <span class="label label-danger" title="Du hast #attributes.privateMessages.len()# neue Private Nachrichten">#attributes.privateMessages.len()#</span>
@@ -35,7 +37,7 @@
                 </a>
             </cfif>
             <div class="dropdown-divider"></div>
-            <a href="?logout" class="btn btn-secondary btn-link btn-sm font-light"><i class="fa fa-sign-out"></i> Ausloggen</a>
+            <a href="?logout" class="btn btn-link btn-sm font-light"><i class="fa fa-sign-out"></i> Ausloggen</a>
         </div>
     </div>
 </cfif>

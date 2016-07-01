@@ -2,6 +2,8 @@
 
 ## Actual Task TODO - Reminder:
 - required approvals
+- User ext property keys mit typen versehen: date, etc (Geburtstag => date ==> datepicker)
+- User ext properties mit sortierung versehen
 
 ## Allgemein
     1. Validierungen
@@ -38,8 +40,6 @@
 
 ## Website
     1. Codeoptimierung
-    2. Userverwaltung ?
-        * User darf nur sich selber bearbeiten können
 
 ## Adminbereich
     1. Modulverwaltung

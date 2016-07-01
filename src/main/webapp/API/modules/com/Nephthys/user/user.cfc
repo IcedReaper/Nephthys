@@ -49,12 +49,27 @@ component {
         if(variables.userId != 0) {
             variables.oldAvatarFilename = variables.avatarFilename;
             
-            var uploaded = fileUpload(expandPath(variables.avatarFolder), "avatar", "image/*", "MakeUnique");
-            
-            var imageFunctionCtrl = application.system.settings.getValueOfKey("imageEditLibrary");
-            imageFunctionCtrl.resize(expandPath(variables.avatarFolder) & uploaded.serverFile, 1024);
-            
-            variables.avatarFilename = uploaded.serverFile;
+            if(form.keyExists("avatar")) {
+                var uploaded = fileUpload(expandPath(variables.avatarFolder), "avatar", "image/*", "MakeUnique");
+                if(uploaded.fileWasSaved) {
+                    if(isImageFile(expandPath(variables.avatarFolder) & uploaded.serverFile)) {
+                        var imageFunctionCtrl = application.system.settings.getValueOfKey("imageEditLibrary");
+                        imageFunctionCtrl.resize(expandPath(variables.avatarFolder) & uploaded.serverFile, 1024);
+                        
+                        variables.avatarFilename = uploaded.serverFile;
+                    }
+                    else {
+                        fileDelete(expandPath(variables.avatarFolder) & uploaded.serverFile);
+                        throw(type = "nephthys.application.invalidResource", message = "The new avatar was not an image");
+                    }
+                }
+                else {
+                    throw(type = "nephthys.application.uploadFailed", message = "Fehler während des Uploads");
+                }
+            }
+            else {
+                throw(type = "nephthys.application.uploadFailed", message = "Form.avatar not found", detail = serializeJSON(form));
+            }
         }
         else {
             throw(type = "nephthys.application.notAllowed", message = "Cannot upload an avatar to a non existing user.");

@@ -832,3 +832,9 @@ ADD CONSTRAINT nephthys_page_pageversion_pageid_fkey
    FOREIGN KEY (pageId)
    REFERENCES nephthys_page_page(pageId)
    ON DELETE CASCADE;
+   
+alter table nephthys_user alter column avatarFilename type character varying(80);
+
+GRANT SELECT, INSERT, UPDATE ON TABLE nephthys_user TO nephthys_user;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE nephthys_user_extProperty TO nephthys_user;
+GRANT SELECT, UPDATE ON SEQUENCE seq_nephthys_user_extproperty_id TO nephthys_user;

@@ -185,6 +185,108 @@ component implements="WWW.interfaces.connector" {
                     
                     break;
                 }
+                case "edit": {
+                    var user = userListCtrl.setUserName(splitParameter[1])
+                                           .execute()
+                                           .getResult();
+                    if(user.len() == 1) {
+                        if(user[1].getUserId() == request.user.getUserId()) {
+                            var result = {
+                                error = false,
+                                success = false,
+                                errors = {
+                                    theme = false
+                                }
+                            };
+                            
+                            if(! form.isEmpty() && form.keyExists("name") && form.name == "com.Nephthys.user.edit") {
+                                try {
+                                    createObject("component", "API.modules.com.Nephthys.theme.theme").init(form.themeId);
+                                }
+                                catch(themeNotFound tnf) {
+                                    result.errors.theme = true;
+                                    result.error = true;
+                                }
+                                
+                                if(! result.error) {
+                                    if(form.password.trim() != "") {
+                                        var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.security.encryptionMethodLoader").init();
+                                        
+                                        request.user.setPassword(encrypt(form.password,
+                                                                         application.system.settings.getValueOfKey("encryptionKey"),
+                                                                         encryptionMethodLoader.getAlgorithm(application.system.settings.getValueOfKey("encryptionMethodId"))));
+                                    }
+                                    
+                                    request.user.setWwwThemeId(form.themeId);
+                                    
+                                    if(form.avatar != "") {
+                                        request.user.uploadAvatar();
+                                    }
+                                    
+                                    transaction {
+                                        request.user.save();
+                                        
+                                        var extProperties = request.user.getExtProperties();
+                                        var lastExtPropertyKeyId = 0;
+                                        for(var fieldName in listToArray(listSort(form.fieldNames, "text"), ",")) {
+                                            if(left(fieldName, 13) == "extProperties") {
+                                                var extPropertyKeyId = reReplace(fieldName, "extProperties_(\d+)_\d*_\w+", "\1");
+                                                if(extPropertyKeyId != lastExtPropertyKeyId) {
+                                                    lastExtPropertyKeyId = extPropertyKeyId;
+                                                    var extPropertyId = reReplace(fieldName, "extProperties_\d+_(\d*)_\w+", "\1");
+                                                    
+                                                    var val    = form["extProperties_" & extPropertyKeyId & "_" & extPropertyId & "_value"];
+                                                    var public = form["extProperties_" & extPropertyKeyId & "_" & extPropertyId & "_public"];
+                                                    
+                                                    var extPropertyKey = new extPropertyKey(extPropertyKeyId);
+                                                    if(val != "") {
+                                                        extProperties.set(extPropertyKey.getKeyName(), val, public);
+                                                    }
+                                                    else {
+                                                        extProperties.remove(extPropertyKey.getKeyName());
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        extProperties.save();
+                                        
+                                        result.success = true;
+                                        
+                                        transactionCommit();
+                                    }
+                                }
+                            }
+                            
+                            var themeFilter = createObject("component", "API.modules.com.Nephthys.theme.filter").init()
+                                                                                                                .setActive(true)
+                                                                                                                .setAvailableWww(true)
+                                                                                                                .execute();
+                            
+                            var extPropertyFilter = new filter().setFor("extProperties")
+                                                                .setUserId(request.user.getUserId())
+                                                                .execute();
+                            
+                            return application.system.settings.getValueOfKey("templateRenderer")
+                                .setModulePath(getModulePath())
+                                .setTemplate("editProfile.cfm")
+                                .addParam("options",       preparedOptions)
+                                .addParam("childContent",  arguments.childContent)
+                                .addParam("userPage",      getUserLink())
+                                .addParam("themes",        themeFilter.getResult())
+                                .addParam("extProperties", extPropertyFilter.getResult())
+                                .addParam("result",        result)
+                                .render();
+                        }
+                        else {
+                            throw(type = "nephthys.application.notAllowed", message = "You're not allowed to update a user profile other than yours");
+                        }
+                    }
+                    else {
+                        throw(type = "nephthys.application.notAllowed", message = "Couldn't find the user you tried to edit");
+                    }
+                    
+                    break;
+                }
                 default: {
                     throw(type = "nephthys.notFound.user", message = "Invalid permission to user module");
                 }
