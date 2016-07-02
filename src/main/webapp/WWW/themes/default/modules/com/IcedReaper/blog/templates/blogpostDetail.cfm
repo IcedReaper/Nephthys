@@ -11,7 +11,7 @@
             <cfset categories = attributes.blogpost.getCategories()>
             <p>
                 <cfloop from="1" to="#categories.len()#" index="categoryIndex">
-                    <a class="label label-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
+                    <a class="tag tag-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
                 </cfloop>
             </p>
         </footer>

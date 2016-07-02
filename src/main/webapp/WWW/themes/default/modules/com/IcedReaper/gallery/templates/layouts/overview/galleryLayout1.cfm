@@ -72,7 +72,7 @@
             <p><small>Diese Gallerie wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.galleries[galleryIndex].getCreationDate())# von <a href="#attributes.userPage#/#attributes.galleries[galleryIndex].getCreator().getUsername()#">#attributes.galleries[galleryIndex].getCreator().getUsername()#</a> erstellt.</small></p>
             <cfset categories = attributes.galleries[galleryIndex].getCategories()>
             <cfloop from="1" to="#categories.len()#" index="categoryIndex">
-                <a class="label label-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
+                <a class="tag tag-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
             </cfloop>
         </footer>
     </article>

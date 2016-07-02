@@ -14,7 +14,7 @@
                             <p><small>Dieser Blogeintrag wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.blogposts[blogpostIndex].getCreationDate())# von <a href="#attributes.userPage#/#attributes.blogposts[blogpostIndex].getCreator().getUsername()#">#attributes.blogposts[blogpostIndex].getCreator().getUsername()#</a> erstellt.</small></p>
                             <cfset categories = attributes.blogposts[blogpostIndex].getCategories()>
                             <cfloop from="1" to="#categories.len()#" index="categoryIndex">
-                                <a class="label label-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
+                                <a class="tag tag-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
                             </cfloop>
                             
                             <p>Dieser Blogeintrag hat #attributes.blogposts[blogpostIndex].getComments().len()# Kommentare</p>

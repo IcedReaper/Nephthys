@@ -39,7 +39,7 @@
             
             <cfset categories = attributes.gallery.getCategories()>
             <cfloop from="1" to="#categories.len()#" index="categoryIndex">
-                <a class="label label-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
+                <a class="tag tag-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
             </cfloop>
         </footer>
         <cfinclude template="../general/blueimpGallery.cfm" />

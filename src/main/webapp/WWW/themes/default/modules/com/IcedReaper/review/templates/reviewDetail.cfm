@@ -48,7 +48,7 @@
             <strong>Genre:</strong>
             <cfset genre = attributes.review.getGenre()>
             <cfloop from="1" to="#genre.len()#" index="genreIndex">
-                <a class="label label-primary" href="#request.page.getLink()#/Kategorie/#genre[genreIndex].getName()#">#genre[genreIndex].getName()#</a>
+                <a class="tag tag-primary" href="#request.page.getLink()#/Kategorie/#genre[genreIndex].getName()#">#genre[genreIndex].getName()#</a>
             </cfloop>
         </p>
         <p>

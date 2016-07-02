@@ -200,6 +200,8 @@
             * X Kommentare in Blogposts Heute/letzte 24h
             * Registrierungen seit dem letzten Besuch (Dashboard / Usermodul)
             * Uptime
+    
+    18. Suchanfragenübersicht
 
 ## Optimierungen
     1. Datenbank optimieren
