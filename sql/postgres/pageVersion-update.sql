@@ -838,3 +838,24 @@ alter table nephthys_user alter column avatarFilename type character varying(80)
 GRANT SELECT, INSERT, UPDATE ON TABLE nephthys_user TO nephthys_user;
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE nephthys_user_extProperty TO nephthys_user;
 GRANT SELECT, UPDATE ON SEQUENCE seq_nephthys_user_extproperty_id TO nephthys_user;
+
+
+alter table nephthys_statistics_login rename to nephthys_user_statistics;
+alter table nephthys_user_statistics rename column loginId to statisticsId;
+
+
+create table nephthys_search_statistics
+(
+    statisticsId serial primary key,
+    searchString character varying(250) NOT NULL,
+    searchDate timestamp with time zone not null default now(),
+    referer character varying(1024) NOT NULL,
+    userId integer references nephthys_user ON DELETE SET NULL,
+    resultCount integer NOT NULL
+);
+
+create index IDX_nephthys_search_statistics_searchDate ON nephthys_search_statistics(searchDate);
+
+GRANT SELECT, INSERT ON TABLE nephthys_search_statistics TO nephthys_user;
+GRANT SELECT, UPDATE ON SEQUENCE nephthys_search_statistics_statisticsid_seq TO nephthys_user;
+

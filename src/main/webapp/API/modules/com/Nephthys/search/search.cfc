@@ -12,6 +12,8 @@ component extends="API.abstractClasses.search" {
             variables.resultCount += searchExec.getCount();
         }
         
+        saveToStatistics(variables.searchPhrase, variables.resultCount);
+        
         return this;
     }
     
@@ -24,5 +26,26 @@ component extends="API.abstractClasses.search" {
         }
         
         return modules;
+    }
+    
+    private void function saveToStatistics(required string searchPhrase, required numeric resultCount) {
+        new Query().setSQL("INSERT INTO nephthys_search_statistics
+                                        (
+                                            searchString,
+                                            referer,
+                                            userId,
+                                            resultCount
+                                        )
+                                 VALUES (
+                                            :searchString,
+                                            :referer,
+                                            :userId,
+                                            :resultCount
+                                        )")
+                   .addParam(name = "searchString", value = arguments.searchPhrase,   cfsqltype = "cf_sql_varchar")
+                   .addParam(name = "referer",      value = cgi.HTTP_REFERER,         cfsqltype = "cf_sql_varchar")
+                   .addParam(name = "userId",       value = request.user.getUserId(), cfsqltype = "cf_sql_integer", null = ! request.user.isActive())
+                   .addParam(name = "resultCount",  value = arguments.resultCount,    cfsqltype = "cf_sql_integer")
+                   .execute();
     }
 }

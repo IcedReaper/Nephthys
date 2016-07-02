@@ -28,7 +28,7 @@ component extends="abstractTotal" {
                                                     FROM generate_series(:fromYear, :toYear) i) dateRange
                                          LEFT OUTER JOIN (  SELECT COUNT(*) loginCount,
                                                                    date_part('year', loginDate) _date
-                                                              FROM nephthys_statistics_login
+                                                              FROM nephthys_user_statistics
                                                              WHERE date_part('year', loginDate) BETWEEN :fromYear AND :toYear
                                                                AND successful = :successful "
                                                                  & extWhere & "
@@ -51,7 +51,7 @@ component extends="abstractTotal" {
                                                 FROM generate_series(:fromYear, :toYear) i) dateRange
                                      LEFT OUTER JOIN (  SELECT COUNT(*) loginCount,
                                                                date_part('year', loginDate) _date
-                                                          FROM nephthys_statistics_login
+                                                          FROM nephthys_user_statistics
                                                          WHERE date_part('year', loginDate) BETWEEN :fromYear AND :toYear
                                                            AND successful = :failed "
                                                                  & extWhere & "

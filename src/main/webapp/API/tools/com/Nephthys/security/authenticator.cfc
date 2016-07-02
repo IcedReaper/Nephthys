@@ -23,7 +23,7 @@ component interface="API.interfaces.authenticator" {
         
         var successful = userId != null;
         
-        new Query().setSQL("INSERT INTO nephthys_statistics_login
+        new Query().setSQL("INSERT INTO nephthys_user_statistics
                                         (
                                             username,
                                             successful

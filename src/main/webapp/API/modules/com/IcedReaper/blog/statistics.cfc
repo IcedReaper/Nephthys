@@ -18,22 +18,27 @@ component {
             var statisticsService = createObject("component", "total.perYear").init();
             returnData.actualView = "perYear";
         }
-        else if(month(arguments.fromDate) != month(arguments.toDate)) {
-            var statisticsService = createObject("component", "total.perMonth").init();
-            returnData.actualView = "perMonth";
-        }
-        else if(day(arguments.fromDate) != day(arguments.toDate)) {
-            if(arguments.toDate > now()) {
-                var n = now();
-                arguments.toDate = createDate(year(n), month(n), day(n));
-            }
-            var statisticsService = createObject("component", "total.perDay").init();
-            returnData.actualView = "perDay";
-            
-        }
         else {
-            var statisticsService = createObject("component", "total.perHour").init();
-            returnData.actualView = "perHour";
+            if(month(arguments.fromDate) != month(arguments.toDate) && 
+               datediff("d", arguments.fromDate, arguments.toDate) > daysInMonth(arguments.fromDate)) {
+                var statisticsService = createObject("component", "total.perMonth").init();
+                returnData.actualView = "perMonth";
+            }
+            else {
+                if(arguments.fromDate == arguments.toDate) {
+                    var statisticsService = createObject("component", "total.perHour").init();
+                    returnData.actualView = "perHour";
+                }
+                else {
+                    if(arguments.toDate > now()) {
+                        var n = now();
+                        arguments.toDate = createDate(year(n), month(n), day(n));
+                    }
+                    
+                    var statisticsService = createObject("component", "total.perDay").init();
+                    returnData.actualView = "perDay";
+                }
+            }
         }
         
         var requestData = statisticsService.setBlogpostId(arguments.blogpostId)
@@ -77,21 +82,27 @@ component {
             var statisticsService = createObject("component", "perBlogpost.perYear").init();
             returnData.actualView = "perYear";
         }
-        else if(month(arguments.fromDate) != month(arguments.toDate)) {
-            var statisticsService = createObject("component", "perBlogpost.perMonth").init();
-            returnData.actualView = "perMonth";
-        }
-        else if(day(arguments.fromDate) != day(arguments.toDate)) {
-            if(arguments.toDate > now()) {
-                var n = now();
-                arguments.toDate = createDate(year(n), month(n), day(n));
-            }
-            var statisticsService = createObject("component", "perBlogpost.perDay").init();
-            returnData.actualView = "perDay";
-        }
         else {
-            var statisticsService = createObject("component", "perBlogpost.perHour").init();
-            returnData.actualView = "perHour";
+            if(month(arguments.fromDate) != month(arguments.toDate) && 
+               datediff("d", arguments.fromDate, arguments.toDate) > daysInMonth(arguments.fromDate)) {
+                var statisticsService = createObject("component", "perBlogpost.perMonth").init();
+                returnData.actualView = "perMonth";
+            }
+            else {
+                if(arguments.fromDate == arguments.toDate) {
+                    var statisticsService = createObject("component", "perBlogpost.perHour").init();
+                    returnData.actualView = "perHour";
+                }
+                else {
+                    if(arguments.toDate > now()) {
+                        var n = now();
+                        arguments.toDate = createDate(year(n), month(n), day(n));
+                    }
+                    
+                    var statisticsService = createObject("component", "perBlogpost.perDay").init();
+                    returnData.actualView = "perDay";
+                }
+            }
         }
         
         var requestData = statisticsService.setSortOrder(arguments.sortOrder)

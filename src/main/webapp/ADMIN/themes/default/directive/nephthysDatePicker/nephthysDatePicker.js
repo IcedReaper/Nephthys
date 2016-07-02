@@ -126,8 +126,8 @@ angular.module("com.nephthys.global.datePicker", ["ui.bootstrap"])
             restrict: "E",
             controller: "nephthysDatePickerController",
             scope: {
-                fromDate: "=fromDate",
-                toDate: "=toDate",
+                fromDate: "=?",
+                toDate: "=?",
                 format: "@"
             },
             templateUrl : "/themes/default/directive/nephthysDatePicker/nephthysDatePicker.html"

@@ -1,28 +1,28 @@
-angular.module("com.nephthys.user.statistics", ["chart.js",
+angular.module("com.nephthys.search.statistics", ["chart.js",
                                                 "ui.bootstrap",
                                                 "com.nephthys.global.datePicker"])
-    .service("comNephthysUserStatisticsService", function($http) {
+    .service("comNephthysSearchStatisticsService", function($http) {
         return {
-            getLoginStatistics: function(sortOrder, fromDate, toDate, userId) {
-                return $http.get('/ajax/com/Nephthys/user/getLoginStatisticsTotal', {
+            getSearchStatistics: function(sortOrder, fromDate, toDate, total) {
+                return $http.get('/ajax/com/Nephthys/search/getSearchStatistics', {
                     params: {
-                        userId:    userId,
                         sortOrder: sortOrder,
                         fromDate:  fromDate.toAjaxFormat(),
-                        toDate:    toDate.toAjaxFormat()
+                        toDate:    toDate.toAjaxFormat(),
+                        total:     total
                     }
                 });
             }
         };
     })
-    .controller('comNephthysUserStatisticsController', ["$rootScope", "$scope", "$q", "comNephthysUserStatisticsService", function ($rootScope, $scope, $q, service) {
+    .controller('comNephthysSearchStatisticsController', ["$rootScope", "$scope", "$q", "comNephthysSearchStatisticsService", function ($rootScope, $scope, $q, service) {
         var actualView = "perDay", // perYear | perMonth | perDay | perHour
             
-            renderChart = function (loginChartData) {
-                $scope.chart.labels = loginChartData.labels;
-                $scope.chart.data   = loginChartData.data;
-                if(loginChartData.series) {
-                    $scope.chart.series = loginChartData.series;
+            renderChart = function (searchChartData) {
+                $scope.chart.labels = searchChartData.labels;
+                $scope.chart.data   = searchChartData.data;
+                if(searchChartData.series) {
+                    $scope.chart.series = searchChartData.series;
                 }
             },
             today = function () {
@@ -87,19 +87,21 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
             };
         
         $scope.refresh = function () {
-            $scope.chart.labels = [];
-            $scope.chart.data   = [];
-            
-            service.getLoginStatistics($scope.sortOrder,
-                                       $scope.selectedDate.fromDate,
-                                       $scope.selectedDate.toDate,
-                                       $scope.userId)
-                .then(function(res) {
-                    actualView = res.actualView;
-                    
-                    return res;
-                })
-                .then(renderChart);
+            if($scope.selectedDate.fromDate && $scope.selectedDate.toDate) {
+                $scope.chart.labels = [];
+                $scope.chart.data   = [];
+                
+                service.getSearchStatistics($scope.sortOrder,
+                                           $scope.selectedDate.fromDate,
+                                           $scope.selectedDate.toDate,
+                                           $scope.total)
+                    .then(function(res) {
+                        actualView = res.actualView;
+                        
+                        return res;
+                    })
+                    .then(renderChart);
+            }
         };
         
         $scope.handleClick = function (object, event) {
@@ -161,12 +163,12 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
         }
         
         $scope.chart = {
-            series: ["Seitenaufrufe"]
+            series: ["Suchanfrgen"]
         };
         
         // init dates
-        if(! $scope.userId) {
-            $scope.userId = null;
+        if($scope.total === undefined) {
+            $scope.total = true;
         }
         
         if(! $scope.chartType) {
@@ -181,34 +183,6 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
         }
         else {
             $scope.chart.options = $scope.chartOptions;
-        }
-        
-        $scope.selectedDate = {};
-        
-        if(! $scope.fromDate && ! $scope.selectedDate.fromDate) {
-            var now = new Date();
-            $scope.selectedDate.fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
-        }
-        else {
-            if($scope.fromDate instanceof Date) {
-                $scope.selectedDate.fromDate = $scope.fromDate;
-            }
-            else if (! $scope.selectedDate.fromDate) {
-                console.error("from date is not a date!");
-            }
-        }
-        if(! $scope.toDate && ! $scope.selectedDate.toDate) {
-            $scope.selectedDate.toDate = new Date();
-            $scope.selectedDate.toDate.setMonth($scope.selectedDate.fromDate.getMonth() + 1);
-            $scope.selectedDate.toDate.setDate(0);
-        }
-        else {
-            if($scope.toDate instanceof Date) {
-                $scope.selectedDate.toDate = $scope.toDate;
-            }  
-            else if (! $scope.selectedDate.toDate) {
-                console.error("from date is not a date!");
-            }
         }
         
         if(! $scope.sortOrder) {
@@ -231,7 +205,19 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
             $scope.showRefreshButton = true;
         }
         
-        $scope.$watchGroup(["chartOptions", "chartType", "requestType", "userId"], function(newValues, oldValues) {
+        if($scope.showDatePicker) {
+            if(! $scope.selectedDate.fromDate) {
+                var now = new Date();
+                $scope.selectedDate.fromDate = new Date(now.getFullYear(), now.getMonth(), 1);
+            }
+            if(! $scope.selectedDate.toDate) {
+                $scope.selectedDate.toDate = new Date();
+                $scope.selectedDate.toDate.setMonth($scope.selectedDate.fromDate.getMonth() + 1);
+                $scope.selectedDate.toDate.setDate(0);
+            }
+        }
+        
+        $scope.$watchGroup(["chartOptions", "chartType", "requestType", "total"], function(newValues, oldValues) {
             var changed = false;
             if(newValues[1] && newValues[1] !== oldValues[1]) {
                 $scope.chart.type = newValues[1];
@@ -243,7 +229,7 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
                 changed = true;
             }
             else {
-                if(! newValues[0]) {
+                if(! newValues[0] && oldValues[0]) {
                     setDefaultChartOptions();
                     changed = true;
                 }
@@ -274,8 +260,10 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
         }, true);
         
         var dateChangedEvent = $rootScope.$on('nephthys-date-picker-date-changed', function(evt, data) {
-            $scope.selectedDate.fromDate = data.fromDate;
-            $scope.selectedDate.toDate   = data.toDate;
+            if($scope.selectedDate.fromDate !== data.fromDate || $scope.selectedDate.toDate !== data.toDate) {
+                $scope.selectedDate.fromDate = data.fromDate;
+                $scope.selectedDate.toDate   = data.toDate;
+            }
         });
         var refreshEvent = $rootScope.$on('nephthys-statistics-refresh', $scope.refresh);
         
@@ -283,16 +271,16 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
             dateChangedEvent();
             refreshEvent();
         });
+        
+        $scope.refresh();
     }])
-    .directive("nephthysUserStatistics", function() {
+    .directive("nephthysSearchStatistics", function() {
         return {
             replace: true,
             restrict: "E",
-            controller: "comNephthysUserStatisticsController",
+            controller: "comNephthysSearchStatisticsController",
             scope: {
-                userId: "=?",
-                fromDate: "=?",
-                toDate: "=?",
+                total: "=?",
                 chartType: "=?",
                 chartOptions: "=?",
                 sortOrder: "@",
@@ -301,6 +289,6 @@ angular.module("com.nephthys.user.statistics", ["chart.js",
                 showRefreshButton: "=?",
                 selectedDate: "=?"
             },
-            templateUrl : "/themes/default/modules/com/Nephthys/user/directives/statistics/statistics.html"
+            templateUrl : "/themes/default/modules/com/Nephthys/search/directives/statistics/statistics.html"
         };
     });

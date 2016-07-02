@@ -18,22 +18,27 @@ component {
             var statisticsService = createObject("component", "total.perYear").init();
             returnData.actualView = "perYear";
         }
-        else if(month(arguments.fromDate) != month(arguments.toDate)) {
-            var statisticsService = createObject("component", "total.perMonth").init();
-            returnData.actualView = "perMonth";
-        }
-        else if(day(arguments.fromDate) != day(arguments.toDate)) {
-            if(arguments.toDate > now()) {
-                var n = now();
-                arguments.toDate = createDate(year(n), month(n), day(n));
-            }
-            var statisticsService = createObject("component", "total.perDay").init();
-            returnData.actualView = "perDay";
-            
-        }
         else {
-            var statisticsService = createObject("component", "total.perHour").init();
-            returnData.actualView = "perHour";
+            if(month(arguments.fromDate) != month(arguments.toDate) && 
+               datediff("d", arguments.fromDate, arguments.toDate) > daysInMonth(arguments.fromDate)) {
+                var statisticsService = createObject("component", "total.perMonth").init();
+                returnData.actualView = "perMonth";
+            }
+            else {
+                if(arguments.fromDate == arguments.toDate) {
+                    var statisticsService = createObject("component", "total.perHour").init();
+                    returnData.actualView = "perHour";
+                }
+                else {
+                    if(arguments.toDate > now()) {
+                        var n = now();
+                        arguments.toDate = createDate(year(n), month(n), day(n));
+                    }
+                    
+                    var statisticsService = createObject("component", "total.perDay").init();
+                    returnData.actualView = "perDay";
+                }
+            }
         }
         
         var requestData = statisticsService.setPageId(arguments.pageId)
@@ -77,21 +82,27 @@ component {
             var statisticsService = createObject("component", "perPage.perYear").init();
             returnData.actualView = "perYear";
         }
-        else if(month(arguments.fromDate) != month(arguments.toDate)) {
-            var statisticsService = createObject("component", "perPage.perMonth").init();
-            returnData.actualView = "perMonth";
-        }
-        else if(day(arguments.fromDate) != day(arguments.toDate)) {
-            if(arguments.toDate > now()) {
-                var n = now();
-                arguments.toDate = createDate(year(n), month(n), day(n));
-            }
-            var statisticsService = createObject("component", "perPage.perDay").init();
-            returnData.actualView = "perDay";
-        }
         else {
-            var statisticsService = createObject("component", "perPage.perHour").init();
-            returnData.actualView = "perHour";
+            if(month(arguments.fromDate) != month(arguments.toDate) && 
+               datediff("d", arguments.fromDate, arguments.toDate) > daysInMonth(arguments.fromDate)) {
+                var statisticsService = createObject("component", "perPage.perMonth").init();
+                returnData.actualView = "perMonth";
+            }
+            else {
+                if(arguments.fromDate == arguments.toDate) {
+                    var statisticsService = createObject("component", "perPage.perHour").init();
+                    returnData.actualView = "perHour";
+                }
+                else {
+                    if(arguments.toDate > now()) {
+                        var n = now();
+                        arguments.toDate = createDate(year(n), month(n), day(n));
+                    }
+                    
+                    var statisticsService = createObject("component", "perPage.perDay").init();
+                    returnData.actualView = "perDay";
+                }
+            }
         }
         
         var requestData = statisticsService.setSortOrder(arguments.sortOrder)
@@ -152,30 +163,36 @@ component {
             "data" = []
         };
         
-        var linkIndex = {};
-        var maxLinkIndex = 0;
-        var lastDate = "";
-        
         if(year(arguments.fromDate) != year(arguments.toDate)) {
             var statisticsService = createObject("component", "splitForPage.perYear").init();
             returnData.actualView = "perYear";
         }
-        else if(month(arguments.fromDate) != month(arguments.toDate)) {
-            var statisticsService = createObject("component", "splitForPage.perMonth").init();
-            returnData.actualView = "perMonth";
-        }
-        else if(day(arguments.fromDate) != day(arguments.toDate)) {
-            if(arguments.toDate > now()) {
-                var n = now();
-                arguments.toDate = createDate(year(n), month(n), day(n));
-            }
-            var statisticsService = createObject("component", "splitForPage.perDay").init();
-            returnData.actualView = "perDay";
-        }
         else {
-            var statisticsService = createObject("component", "splitForPage.perHour").init();
-            returnData.actualView = "perHour";
+            if(month(arguments.fromDate) != month(arguments.toDate) && 
+               datediff("d", arguments.fromDate, arguments.toDate) > daysInMonth(arguments.fromDate)) {
+                var statisticsService = createObject("component", "splitForPage.perMonth").init();
+                returnData.actualView = "perMonth";
+            }
+            else {
+                if(arguments.fromDate == arguments.toDate) {
+                    var statisticsService = createObject("component", "splitForPage.perHour").init();
+                    returnData.actualView = "perHour";
+                }
+                else {
+                    if(arguments.toDate > now()) {
+                        var n = now();
+                        arguments.toDate = createDate(year(n), month(n), day(n));
+                    }
+                    
+                    var statisticsService = createObject("component", "splitForPage.perDay").init();
+                    returnData.actualView = "perDay";
+                }
+            }
         }
+        
+        var linkIndex = {};
+        var maxLinkIndex = 0;
+        var lastDate = "";
         
         var requestData = statisticsService.setPageId(arguments.pageId)
                                            .setSortOrder(arguments.sortOrder)

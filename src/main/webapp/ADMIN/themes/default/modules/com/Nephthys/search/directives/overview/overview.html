@@ -1,0 +1,27 @@
+<div>
+    <button class="btn btn-primary pull-right"
+            ng-if="showRefreshButton"
+            ng-click="refresh()"><i class="fa fa-refresh"></i> refresh</button>
+    <h2 ng-if="headline">{{headline}}</h2>
+    <nephthys-date-picker from-date="selectedDate.fromDate"
+                          to-date="selectedDate.toDate"
+                          format="dd.MM.yyyy"
+                          ng-if="showDatePicker"></nephthys-date-picker>
+    
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Suchanfrage</th>
+                <th>Anzahl</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="searchStatement in searchStatements | startFrom:(pagination.currentPage-1)*pagination.entriesPerPage | limitTo:pagination.entriesPerPage">
+                <td>{{searchStatement.searchString}}</td>
+                <td>{{searchStatement.searchCount}}</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <uib-pagination total-items="searchStatements.length" items-per-page="pagination.entriesPerPage" ng-model="pagination.currentPage" max-size="maxSize" class="pagination-sm" boundary-links="true" force-ellipses="true"></uib-pagination>
+</div>

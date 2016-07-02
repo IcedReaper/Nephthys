@@ -28,7 +28,7 @@ component extends="abstractTotal" {
                                                     FROM generate_series(0, 23) i) dateRange
                                          LEFT OUTER JOIN (  SELECT COUNT(*) loginCount,
                                                                    date_part('hour', loginDate) _date
-                                                              FROM nephthys_statistics_login
+                                                              FROM nephthys_user_statistics
                                                              WHERE date_trunc('day', loginDate) = :date
                                                                AND successful = :successful "
                                                                  & extWhere & "
@@ -51,7 +51,7 @@ component extends="abstractTotal" {
                                                 FROM generate_series(0, 23) i) dateRange
                                      LEFT OUTER JOIN (  SELECT COUNT(*) loginCount,
                                                                date_part('hour', loginDate) _date
-                                                          FROM nephthys_statistics_login
+                                                          FROM nephthys_user_statistics
                                                          WHERE date_trunc('day', loginDate) = :date
                                                            AND successful = :failed "
                                                                  & extWhere & "

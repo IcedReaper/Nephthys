@@ -28,7 +28,7 @@ component extends="abstractTotal" {
                                                     FROM generate_series(:fromDate, :toDate, '1 day' :: interval) i) dateRange
                                          LEFT OUTER JOIN (  SELECT COUNT(*) loginCount,
                                                                    date_trunc('day', loginDate) _date
-                                                              FROM nephthys_statistics_login
+                                                              FROM nephthys_user_statistics
                                                              WHERE date_trunc('day', loginDate) >= :fromDate
                                                                AND date_trunc('day', loginDate) <= :toDate
                                                                AND successful = :successful "
@@ -52,7 +52,7 @@ component extends="abstractTotal" {
                                                 FROM generate_series(:fromDate, :toDate, '1 day' :: interval) i) dateRange
                                      LEFT OUTER JOIN (  SELECT COUNT(*) loginCount,
                                                                date_trunc('day', loginDate) _date
-                                                          FROM nephthys_statistics_login
+                                                          FROM nephthys_user_statistics
                                                          WHERE date_trunc('day', loginDate) >= :fromDate
                                                            AND date_trunc('day', loginDate) <= :toDate
                                                            AND successful = :failed "

@@ -28,7 +28,7 @@ component {
         var limit = "";
         
         sql = "  SELECT username, loginDate
-                   FROM nephthys_statistics_login ";
+                   FROM nephthys_user_statistics ";
         
         if(variables.successful != null) {
             where &= (where == "" ? " WHERE " : " AND ") & " successful = :successful ";
