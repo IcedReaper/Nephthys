@@ -133,58 +133,6 @@ component implements="WWW.interfaces.connector" {
         }
         else if(splitParameter.len() >= 2) { // private message can have more parameter e.g. /conversation/id /message/id
             switch(splitParameter[2]) {
-                case "privateMessages": {
-                    var privateMessagesModule = application.system.settings.getValueOfKey("privateMessageModule");
-                    
-                    if(privateMessagesModule != null) {
-                        var tmpUser = userListCtrl.setUserName(splitParameter[1])
-                                                  .execute()
-                                                  .getResult();
-                        
-                        if(tmpUser.len() == 1) {
-                            var user = tmpUser[1];
-                            
-                            if(user.getUserId() == request.user.getUserId()) {
-                                var otherParameter = duplicate(splitParameter);
-                                otherParameter.deleteAt(1); // username
-                                otherParameter.deleteAt(1); // privateMessages
-                                
-                                return createObject("WWW.modules." & privateMessagesModule & ".connector")
-                                           .init()
-                                           .render({
-                                               userId         = user.getUserId(),
-                                               otherParameter = otherParameter
-                                           }, "");
-                            }
-                            else {
-                                return application.system.settings.getValueOfKey("templateRenderer")
-                                    .setModulePath(getModulePath())
-                                    .setTemplate("noPermission.cfm")
-                                    .addParam("options",   preparedOptions)
-                                    .addParam("user",      user.getUsername())
-                                    .addParam("subModule", "Private Nachrichten")
-                                    .addParam("userPage",  getUserLink())
-                                    .render();
-                            }
-                        }
-                        else {
-                            request.page.setTitle("Benutzersuche - Keine Ergebnisse");
-                            
-                            return application.system.settings.getValueOfKey("templateRenderer")
-                                .setModulePath(getModulePath())
-                                .setTemplate("noResults.cfm")
-                                .addParam("options",      preparedOptions)
-                                .addParam("childContent", arguments.childContent)
-                                .addParam("userPage",     getUserLink())
-                                .render();
-                        }
-                    }
-                    else {
-                        throw(type = "nephthys.notFound.user", message = "Module not found / inactive");
-                    }
-                    
-                    break;
-                }
                 case "edit": {
                     var user = userListCtrl.setUserName(splitParameter[1])
                                            .execute()
@@ -285,6 +233,109 @@ component implements="WWW.interfaces.connector" {
                         throw(type = "nephthys.application.notAllowed", message = "Couldn't find the user you tried to edit");
                     }
                     
+                    break;
+                }
+                case "privateMessages": {
+                    var privateMessagesModule = application.system.settings.getValueOfKey("privateMessageModule");
+                    
+                    if(privateMessagesModule != null) {
+                        var tmpUser = userListCtrl.setUserName(splitParameter[1])
+                                                  .execute()
+                                                  .getResult();
+                        
+                        if(tmpUser.len() == 1) {
+                            var user = tmpUser[1];
+                            
+                            if(user.getUserId() == request.user.getUserId()) {
+                                var otherParameter = duplicate(splitParameter);
+                                otherParameter.deleteAt(1); // username
+                                otherParameter.deleteAt(1); // privateMessages
+                                
+                                return createObject("WWW.modules." & privateMessagesModule & ".connector")
+                                           .init()
+                                           .render({
+                                               userId         = user.getUserId(),
+                                               otherParameter = otherParameter
+                                           }, "");
+                            }
+                            else {
+                                return application.system.settings.getValueOfKey("templateRenderer")
+                                    .setModulePath(getModulePath())
+                                    .setTemplate("noPermission.cfm")
+                                    .addParam("options",   preparedOptions)
+                                    .addParam("user",      user.getUsername())
+                                    .addParam("subModule", "Private Nachrichten")
+                                    .addParam("userPage",  getUserLink())
+                                    .render();
+                            }
+                        }
+                        else {
+                            request.page.setTitle("Benutzersuche - Keine Ergebnisse");
+                            
+                            return application.system.settings.getValueOfKey("templateRenderer")
+                                .setModulePath(getModulePath())
+                                .setTemplate("noResults.cfm")
+                                .addParam("options",      preparedOptions)
+                                .addParam("childContent", arguments.childContent)
+                                .addParam("userPage",     getUserLink())
+                                .render();
+                        }
+                    }
+                    else {
+                        throw(type = "nephthys.notFound.user", message = "Module not found / inactive");
+                    }
+                    
+                    break;
+                }
+                case "permissionRequest": {
+                    var permissionRequestModule = application.system.settings.getValueOfKey("permissionRequestModule");
+                    
+                    if(permissionRequestModule != null) {
+                        var tmpUser = userListCtrl.setUserName(splitParameter[1])
+                                                  .execute()
+                                                  .getResult();
+                        
+                        if(tmpUser.len() == 1) {
+                            var user = tmpUser[1];
+                            
+                            if(user.getUserId() == request.user.getUserId()) {
+                                var otherParameter = duplicate(splitParameter);
+                                otherParameter.deleteAt(1); // username
+                                otherParameter.deleteAt(1); // permissionRequest
+                                
+                                return createObject("WWW.modules." & permissionRequestModule & ".connector")
+                                           .init()
+                                           .render({
+                                               userId         = user.getUserId(),
+                                               otherParameter = otherParameter
+                                           }, "");
+                            }
+                            else {
+                                return application.system.settings.getValueOfKey("templateRenderer")
+                                    .setModulePath(getModulePath())
+                                    .setTemplate("noPermission.cfm")
+                                    .addParam("options",   preparedOptions)
+                                    .addParam("user",      user.getUsername())
+                                    .addParam("subModule", "Private Nachrichten")
+                                    .addParam("userPage",  getUserLink())
+                                    .render();
+                            }
+                        }
+                        else {
+                            request.page.setTitle("Benutzersuche - Keine Ergebnisse");
+                            
+                            return application.system.settings.getValueOfKey("templateRenderer")
+                                .setModulePath(getModulePath())
+                                .setTemplate("noResults.cfm")
+                                .addParam("options",      preparedOptions)
+                                .addParam("childContent", arguments.childContent)
+                                .addParam("userPage",     getUserLink())
+                                .render();
+                        }
+                    }
+                    else {
+                        throw(type = "nephthys.notFound.user", message = "Module not found / inactive");
+                    }
                     break;
                 }
                 default: {

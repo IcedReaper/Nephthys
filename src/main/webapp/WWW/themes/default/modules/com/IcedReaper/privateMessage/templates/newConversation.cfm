@@ -1,3 +1,4 @@
+<cfoutput>
 <div class="com-IcedReaper-privateMessage">
     <div class="row">
         <div class="col-md-12">
@@ -31,3 +32,4 @@
      - user auto complete
     --->
 </div>
+</cfoutput>

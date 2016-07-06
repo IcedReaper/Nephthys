@@ -4,6 +4,7 @@
 - required approvals
 - User ext property keys mit typen versehen: date, etc (Geburtstag => date ==> datepicker)
 - User ext properties mit sortierung versehen
+- +Attribut zu Module => Uses permissions (if false hide in permission screens)
 
 ## Allgemein
     1. Validierungen
@@ -180,7 +181,7 @@
              * geschlossen
         * "PostIt"-Setup des Desktops
     
-    16. Berechtigungsrequestor
+    16. Berechtigungsrequestor - IN WORK
         (Tool um eine Anfrage an den/die Admins zu stellen, mit der Bitte eine gewisse Berechtigung zu erhalten - nur für eingeloggte User - Untermodul des Usermodul)
         * Gruppe
         * Rolle
@@ -200,8 +201,6 @@
             * X Kommentare in Blogposts Heute/letzte 24h
             * Registrierungen seit dem letzten Besuch (Dashboard / Usermodul)
             * Uptime
-    
-    18. Suchanfragenübersicht
 
 ## Optimierungen
     1. Datenbank optimieren

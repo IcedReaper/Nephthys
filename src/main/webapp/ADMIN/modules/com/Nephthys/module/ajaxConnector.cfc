@@ -2,7 +2,7 @@ component {
     import "API.modules.com.Nephthys.module.*";
     
     remote array function getList() {
-        var filterCtrl = new filter();
+        var filterCtrl = new filter().setFor("module");
         
         var installedModules = filterCtrl.execute()
                                          .getResult();
@@ -134,7 +134,7 @@ component {
     }
     
     remote array function getUnusedSubModules(required numeric moduleId) {
-        var moduleFilterCtrl = new filter();
+        var moduleFilterCtrl = new filter().setFor("module");
         
         moduleFilterCtrl.setParentId(arguments.moduleId)
                         .setAvailableWWW(true);
@@ -149,7 +149,7 @@ component {
     
     remote boolean function addSubModules(required numeric moduleId, required array subModules) {
         var module = new module(arguments.moduleId);
-        var moduleFilterCtrl = new filter();
+        var moduleFilterCtrl = new filter().setFor("module");
         
         var subModule = null;
         for(var i = 1; i <= arguments.subModules.len(); ++i) {

@@ -859,3 +859,27 @@ create index IDX_nephthys_search_statistics_searchDate ON nephthys_search_statis
 GRANT SELECT, INSERT ON TABLE nephthys_search_statistics TO nephthys_user;
 GRANT SELECT, UPDATE ON SEQUENCE nephthys_search_statistics_statisticsid_seq TO nephthys_user;
 
+create table IcedReaper_permissionRequest_request
+(
+    requestId serial primary key,
+    userId integer not null references nephthys_user on delete cascade,
+    moduleId integer not null references nephthys_module on delete cascade,
+    roleId integer not null references nephthys_role on delete cascade,
+    
+    status integer not null default 0,
+    
+    reason character varying(500),
+    
+    creationDate timestamp with time zone not null default now(),
+    
+    adminUserId integer references nephthys_user on delete set null,
+    responseDate timestamp with time zone default null,
+    comment character varying(500)
+    
+    check(status = -1 OR status = 0 OR status = 1)
+);
+
+create unique index UIDX_IcedReaper_permissionRequest_req_umrId ON IcedReaper_permissionRequest_request (userId, moduleId, roleId) WHERE (status = 0);
+    
+GRANT SELECT, INSERT ON TABLE IcedReaper_permissionRequest_request TO nephthys_user;
+GRANT SELECT, UPDATE ON SEQUENCE icedreaper_permissionrequest_request_requestid_seq TO nephthys_user;

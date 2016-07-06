@@ -5,7 +5,7 @@ component {
     
     public filter function setFor(required string for) {
         switch(arguments.for) {
-            case "module": {
+            case "request": {
                 arguments.for = uCase(arguments.for.left(1)) & arguments.for.right(arguments.for.len() - 1);
                 return createObject("component", "filter.filter" & arguments.for).init();
             }

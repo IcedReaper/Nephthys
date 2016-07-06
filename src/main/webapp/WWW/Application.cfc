@@ -4,10 +4,14 @@ component {
     this.datasource = "nephthys_user";
     
     public boolean function onApplicationStart() {
+        if(directoryExists(expandPath("install"))) {
+            return false;
+        }
+        
         if(! server.keyExists("startupTime")) {
             server.startupTime = now();
         }
-        // components
+        
         application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init("WWW,NULL");
         application.system.settings.load();
         

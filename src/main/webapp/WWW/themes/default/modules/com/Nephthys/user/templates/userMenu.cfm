@@ -32,8 +32,13 @@
                 <a href="#attributes.userPage#/#request.user.getUsername()#/privateMessages" class="btn btn-link btn-sm font-light">
                     <i class="fa fa-commenting-o"></i> Private Nachrichten
                     <cfif attributes.privateMessages.len() GT 0>
-                        <span class="label label-danger" title="Du hast #attributes.privateMessages.len()# neue Private Nachrichten">#attributes.privateMessages.len()#</span>
+                        <span class="tag tag-danger" title="Du hast #attributes.privateMessages.len()# neue Private Nachrichten">#attributes.privateMessages.len()#</span>
                     </cfif>
+                </a>
+            </cfif>
+            <cfif application.system.settings.getValueOfKey("permissionRequestModule") NEQ null>
+                <a href="#attributes.userPage#/#request.user.getUsername()#/permissionRequest/overview" class="btn btn-link btn-sm font-light">
+                    <i class="fa fa-key"></i> Berechtigungen anfragen
                 </a>
             </cfif>
             <div class="dropdown-divider"></div>
