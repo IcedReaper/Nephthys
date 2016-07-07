@@ -86,14 +86,17 @@ component implements="WWW.interfaces.connector" {
                             }
                         }
                         
+                        var existingPermissions = permissionHandlerCtrl.loadForUserId(request.user.getUserId());
+                        
                         return application.system.settings.getValueOfKey("templateRenderer")
                             .setModulePath(getModulePath())
                             .setTemplate("newRequest.cfm")
-                            .addParam("options",  arguments.options)
-                            .addParam("userPage", userPage)
-                            .addParam("modules",  modules)
-                            .addParam("roles",    permissionHandlerCtrl.loadRoles())
-                            .addParam("result",   result)
+                            .addParam("options",             arguments.options)
+                            .addParam("userPage",            userPage)
+                            .addParam("modules",             modules)
+                            .addParam("roles",               permissionHandlerCtrl.loadRoles())
+                            .addParam("result",              result)
+                            .addParam("existingPermissions", existingPermissions)
                             .render();
                     }
                     case "request": {

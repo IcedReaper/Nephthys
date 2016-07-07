@@ -183,19 +183,7 @@
              * geschlossen
         * "PostIt"-Setup des Desktops
     
-    16. Berechtigungsrequestor - IN WORK
-        (Tool um eine Anfrage an den/die Admins zu stellen, mit der Bitte eine gewisse Berechtigung zu erhalten - nur für eingeloggte User - Untermodul des Usermodul)
-        * Gruppe
-        * Rolle
-        * Begründung/Kommentar
-        * Auflistung und Status aktueller (letzte 10 Tage) Anfragen
-        * Admintool
-            * Setzen des Status
-                * Genehmigt
-                * Abgelehnt 
-            * Kommentar
-    
-    17. Dashboard
+    16. Dashboard
         * Kacheln
             * X Tasks in Modul ABC, Global
             * Heutige Seitenaufrufe

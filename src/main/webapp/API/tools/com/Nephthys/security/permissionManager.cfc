@@ -6,10 +6,11 @@ component interface="APi.interface.permissionManager" {
     }
     
     public array function loadForUserId(required numeric userId) {
-        var qGetUserPermissions = new Query().setSQL("         SELECT m.moduleId, m.moduleName, m.description, p.permissionId, p.roleId
+        var qGetUserPermissions = new Query().setSQL("         SELECT m.moduleId, m.moduleName, m.description, p.permissionId, p.roleId, p.value roleValue
                                                                  FROM nephthys_module m
-                                                      LEFT OUTER JOIN (SELECT *
+                                                      LEFT OUTER JOIN (SELECT perm.*, r.value
                                                                          FROM nephthys_permission perm
+                                                                       INNER JOIN nephthys_role r ON perm.roleId = r.roleId
                                                                         WHERE perm.userId = :userId) p ON m.moduleId = p.moduleId
                                                              ORDER BY m.sortOrder ASC")
                                             .addParam(name = "userId", value = arguments.userId, cfsqltype = "cf_sql_numeric", null = ! isNumeric(arguments.userId))
@@ -23,7 +24,8 @@ component interface="APi.interface.permissionManager" {
                 "moduleName"   = qGetUserPermissions.moduleName[i],
                 "description"  = qGetUserPermissions.description[i],
                 "permissionId" = qGetUserPermissions.permissionId[i],
-                "roleId"       = qGetUserPermissions.roleId[i]
+                "roleId"       = qGetUserPermissions.roleId[i],
+                "roleValue"    = qGetUserPermissions.roleValue[i]
             });
         }
         
@@ -87,7 +89,27 @@ component interface="APi.interface.permissionManager" {
         }
         
         return userArray;
+    }
+    
+    public struct function loadRoleForUserInModule(required numeric userId, required numeric moduleId) {
+        var qGetUser = new Query().setSQL("SELECT perm.*
+                                             FROM nephthys_permission perm
+                                            WHERE perm.moduleId = :moduleId
+                                              AND perm.userId   = :userId")
+                                  .addParam(name = "moduleId", value = arguments.moduleId, cfsqltype = "cf_sql_numeric")
+                                  .addParam(name = "userId", value = arguments.userId, cfsqltype = "cf_sql_numeric")
+                                  .execute()
+                                  .getResult();
         
+        if(qGetUser.getRecordCount() == 1) {
+            return {
+                "permissionId" = qGetUser.permissionId[1],
+                "roleId"       = qGetUser.roleId[1]
+            };
+        }
+        else {
+            return {};
+        }
     }
     
     public struct function loadRole(required numeric roleId) {

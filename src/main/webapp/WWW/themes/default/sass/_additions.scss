@@ -155,6 +155,11 @@ body {
             background-color: #DC483B;
         }
     }
+    
+    .table-danger,
+    .table-success {
+        color: $body-bg;
+    }
 
     .container,
     .container-fluid {

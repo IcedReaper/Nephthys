@@ -7,13 +7,15 @@ angular.module("com.IcedReaper.permissionRequest.tasklist", ["com.nephthys.globa
             
             approve: function (requestId) {
                 return $http.post('/ajax/com/IcedReaper/permissionRequest/approve', {
-                    requestId: requestId
+                    requestId: requestId,
+                    comment: ""
                 });
             },
             
             decline: function (requestId) {
                 return $http.post('/ajax/com/IcedReaper/permissionRequest/decline', {
-                    requestId: requestId
+                    requestId: requestId,
+                    comment: ""
                 });
             }
         };
@@ -32,7 +34,7 @@ angular.module("com.IcedReaper.permissionRequest.tasklist", ["com.nephthys.globa
         $scope.approve = function (requestId) {
             if(requestId) {
                 tasklistService
-                    .approve(requestIdd)
+                    .approve(requestId)
                     .then($scope.load);
             }
         };
@@ -40,7 +42,7 @@ angular.module("com.IcedReaper.permissionRequest.tasklist", ["com.nephthys.globa
         $scope.decline = function (requestId) {
             if(requestId) {
                 tasklistService
-                    .decline(requestIdd)
+                    .decline(requestId)
                     .then($scope.load);
             }
         };

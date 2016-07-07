@@ -33,15 +33,15 @@ component implements="API.interfaces.filter" {
         var where = "";
         
         if(variables.userId != null) {
-            where = (where == "" ? " WHERE " : " AND ") & " userId = :userId ";
+            where &= (where == "" ? " WHERE " : " AND ") & " userId = :userId ";
             qryFilter.addParam(name = "userId", value = variables.userId, cfsqltype = "cf_sql_numeric");
         }
         if(variables.requestsSince != null) {
-            where = (where == "" ? " WHERE " : " AND ") & " creationDate >= :requestsSince ";
+            where &= (where == "" ? " WHERE " : " AND ") & " creationDate >= :requestsSince ";
             qryFilter.addParam(name = "requestsSince", value = variables.requestsSince, cfsqltype = "cf_sql_date");
         }
         if(variables.status != null) {
-            where = (where == "" ? " WHERE " : " AND ") & " status = :status ";
+            where &= (where == "" ? " WHERE " : " AND ") & " status = :status ";
             qryFilter.addParam(name = "status", value = variables.status, cfsqltype = "cf_sql_numeric");
         }
         

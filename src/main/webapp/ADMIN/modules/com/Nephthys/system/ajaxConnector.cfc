@@ -2,7 +2,7 @@ component {
     import "API.modules.com.Nephthys.system.*";
     
     remote array function getSettings() {
-        var serverSettings = new settings();
+        var serverSettings = new settings("WWW,ADMIN,NULL");
         serverSettings.load();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         

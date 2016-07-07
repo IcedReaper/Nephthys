@@ -130,17 +130,19 @@
                 <div class="card card-block">
                     <h3>Berechtigungen</h3>
                     
-                    <form novalidate>
-                        <fieldset class="form-group col-md-6 col-lg-4" ng-repeat="permission in permissions">
-                            <label for="permission_{{permission.moduleId}}">{{permission.moduleName}}</label>
-                            <select name="{{permission.moduleId}}" id="permission_{{permission.moduleId}}" ng-model="permission.roleId" class="form-control"
-                                    ng-options="o.roleId as o.name for o in roles">
-                                <option value="">Nicht gesetzt</option>
-                            </select>
-                        </fieldset>
-                        
-                        <button ng-click="save()" class="btn btn-success"><i class="fa fa-floppy-o"></i> Speichern</button>
-                    </form>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <fieldset class="form-group col-md-6 col-lg-4" ng-repeat="permission in permissions">
+                                <label for="permission_{{permission.moduleId}}">{{permission.moduleName}}</label>
+                                <select name="{{permission.moduleId}}" id="permission_{{permission.moduleId}}" ng-model="permission.roleId" class="form-control"
+                                        ng-options="o.roleId as o.name for o in roles">
+                                    <option value="">Nicht gesetzt</option>
+                                </select>
+                            </fieldset>
+                        </div>
+                    </div>
+                    
+                    <button ng-click="save()" class="btn btn-success"><i class="fa fa-floppy-o"></i> Speichern</button>
                 </div>
             </div>
         </div>

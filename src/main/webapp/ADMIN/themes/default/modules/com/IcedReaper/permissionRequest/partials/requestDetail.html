@@ -1,0 +1,80 @@
+<div class="row m-b-2">
+    <div class="col-md-10 col-sm-8">
+        <a href="#/tasklist" class="btn btn-primary"><i class="fa fa-list"></i> Tasklist</a>
+        <a href="#/overview" class="btn btn-primary"><i class="fa fa-bars"></i> Übersicht</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
+    </div>
+</div>
+
+<div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
+    <h3>{{message.headline}}</h3>
+    <p>{{message.text}}</p>
+    <p>{{message.errorMessage}}</p>
+</div>
+
+<div class="card card-block">
+    <h1>Anfrage <small>{{request.requestId}}</small></h1>
+    <div class="row">
+        <div class="col-md-2">
+            User
+        </div>
+        <div class="col-md-10">
+            {{request.creator.userName}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            Modul
+        </div>
+        <div class="col-md-10">
+            {{request.module.name}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            Rolle
+        </div>
+        <div class="col-md-10">
+            {{request.role.name}}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-2">
+            Begründung
+        </div>
+        <div class="col-md-10">
+            {{request.reason}}
+        </div>
+    </div>
+    <div class="row m-t-1">
+        <div class="col-md-2">
+            Status
+        </div>
+        <div class="col-md-10" ng-if="request.status === -1 || request.status === 1" ng-class="request.status === -1 ? 'text-danger' : 'text-success'">
+            {{request.status === -1 ? 'Abgelehnt' : 'Akzeptiert'}} von {{request.admin.userName}} am --.
+        </div>
+        <div class="col-md-10" ng-if="request.status === 0">
+            Offen
+        </div>
+    </div>
+    <div class="row m-t-1" ng-if="request.status === 0">
+        <div class="col-md-12">
+            <textarea ng-model="response.comment" class="form-control"></textarea>
+        </div>
+    </div>
+    <div class="row" ng-if="request.status === 0">
+        <div class="col-md-12">
+            <button class="btn btn-success" ng-click="approve(request.requestId);"><i class="fa fa-check"></i> Akzeptieren</button>
+            <button class="btn btn-danger" ng-click="decline(request.requestId);"><i class="fa fa-ban"></i> Ablehnen</button>
+        </div>
+    </div>
+    <div class="row" ng-if="request.status === -1 || request.status === 1">
+        <div class="col-md-2">
+            Antwort
+        </div>
+        <div class="col-md-10">
+            {{request.comment}}
+        </div>
+    </div>
+</div>

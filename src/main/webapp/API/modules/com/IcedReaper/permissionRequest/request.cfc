@@ -113,9 +113,12 @@ component {
                                    adminUserId = :adminUserId,
                                    comment     = :comment
                              WHERE requestId = :requestId")
+                   .addParam(name = "requestId",   value = variables.requestId,      cfsqltype = "cf_sql_numeric")
                    .addParam(name = "adminUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                    .addParam(name = "comment",     value = arguments.comment,        cfsqltype = "cf_sql_varchar")
-                   .execute()
+                   .execute();
+        
+        return this;
     }
     
     public request function decline(required string comment) {
@@ -124,9 +127,12 @@ component {
                                    adminUserId = :adminUserId,
                                    comment     = :comment
                              WHERE requestId = :requestId")
+                   .addParam(name = "requestId",   value = variables.requestId,      cfsqltype = "cf_sql_numeric")
                    .addParam(name = "adminUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                    .addParam(name = "comment",     value = arguments.comment,        cfsqltype = "cf_sql_varchar")
-                   .execute()
+                   .execute();
+        
+        return this;
     }
     
     

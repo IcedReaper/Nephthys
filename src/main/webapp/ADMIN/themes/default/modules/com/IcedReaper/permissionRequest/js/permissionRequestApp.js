@@ -11,8 +11,13 @@ nephthysAdminApp
             })
             
             .when("/request/:requestId", {
-                templateUrl: "/themes/default/modules/com/IcedReaper/permissionRequest/partials/galleryDetail.html",
+                templateUrl: "/themes/default/modules/com/IcedReaper/permissionRequest/partials/requestDetail.html",
                 controller:  "requestDetailCtrl"
+            })
+            
+            .when("/overview", {
+                templateUrl: "/themes/default/modules/com/IcedReaper/permissionRequest/partials/overview.html",
+                controller: "overviewCtrl"
             })
             
             .otherwise({

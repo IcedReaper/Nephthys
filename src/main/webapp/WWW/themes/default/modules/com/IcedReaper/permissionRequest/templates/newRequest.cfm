@@ -2,7 +2,8 @@
 <div class="com-IcedReaper-permissionRequest">
     <div class="row">
         <div class="col-md-12">
-            <a href="overview" class="btn btn-primary pull-right"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
+            <a href="#attributes.userPage#/#request.user.getUserName()#/permissionRequest/overview" class="btn btn-primary pull-right"><i class="fa fa-list"></i> Übersicht</a>
+            
             <h2>Neue Berechtigung anfragen</h2>
             
             <cfif attributes.result.successful>
@@ -32,7 +33,9 @@
                         <div class="col-md-9">
                             <select id="moduleId" name="moduleId" class="form-control<cfif attributes.result.errors.module> with-danger</cfif>">
                                 <cfloop from="1" to="#attributes.modules.len()#" index="moduleIndex">
-                                    <option value="#attributes.modules[moduleIndex].getModuleId()#"<cfif attributes.result.error && form.moduleId EQ attributes.modules[moduleIndex].getModuleId()>selected="selected"</cfif>>#attributes.modules[moduleIndex].getModuleName()#</option>
+                                    <cfif NOT request.user.hasPermission(attributes.modules[moduleIndex].getModuleName(), "admin")>
+                                        <option value="#attributes.modules[moduleIndex].getModuleId()#"<cfif attributes.result.error && form.moduleId EQ attributes.modules[moduleIndex].getModuleId()>selected="selected"</cfif>>#attributes.modules[moduleIndex].getModuleName()#</option>
+                                    </cfif>
                                 </cfloop>
                             </select>
                         </div>
@@ -42,7 +45,7 @@
                         <div class="col-md-9">
                             <select id="roleId" name="roleId" class="form-control<cfif attributes.result.errors.role> with-danger</cfif>">
                                 <cfloop from="1" to="#attributes.roles.len()#" index="roleIndex">
-                                    <option value="#attributes.roles[roleIndex].roleId#"<cfif attributes.result.error && form.roleId EQ attributes.roles[roleIndex].roleId>selected="selected"</cfif>>#attributes.roles[roleIndex].name#</option>
+                                    <option value="#attributes.roles[roleIndex].roleId#" data-roleValue="#attributes.roles[roleIndex].value#" <cfif attributes.result.error && form.roleId EQ attributes.roles[roleIndex].roleId>selected="selected"</cfif>>#attributes.roles[roleIndex].name#</option>
                                 </cfloop>
                             </select>
                         </div>
@@ -59,5 +62,42 @@
             </cfif>
         </div>
     </div>
+    
+    <script>
+        (function ($) {
+            var existingPermissions = #serializeJSON(attributes.existingPermissions)#;
+            
+            $(".com-IcedReaper-permissionRequest form")
+                .on("change", "select##moduleId", function () {
+                    var $form = $(this).closest("form");
+                    $('select##roleId option:disabled', $form)
+                        .removeProp("disabled")
+                        .removeClass("text-danger");
+                    $('select##roleId option:selected', $form)
+                        .removeProp("selected");
+                    
+                    for(var i = 0; i < existingPermissions.length; ++i) {
+                        if(existingPermissions[i].moduleId == $(this).val()) {
+                            if(existingPermissions[i].roleValue !== null) {
+                                $('select##roleId option', $form).each(function (index, elem) {
+                                    if(parseInt($(this).attr('data-roleValue'), 10) <= existingPermissions[i].roleValue) {
+                                        $(this).prop("disabled", "disabled")
+                                               .addClass("text-danger");
+                                    }
+                                });
+                                
+                                if($('select##roleId option:not(:disabled)', $form).length > 0) {
+                                    $('select##roleId option:not(:disabled)', $form).first().attr("selected", "selected");
+                                }
+                                else {
+                                    return false;
+                                }
+                            }
+                            return true;
+                        }
+                    }
+                });
+        })(window.jQuery);
+    </script>
 </div>
 </cfoutput>
