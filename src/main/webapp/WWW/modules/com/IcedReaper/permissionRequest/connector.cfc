@@ -43,7 +43,7 @@ component implements="WWW.interfaces.connector" {
                         if(! form.isEmpty() && form.keyExists("name") && form.name == "com.IcedReaper.permissionRequest") {
                             var module = createObject("component", "API.modules.com.Nephthys.module.module").init(form.moduleId);
                             
-                            if(! module.getActiveStatus()) {
+                            if(! module.getActiveStatus() || ! module.getAvailableWWW()) {
                                 result.error = true;
                                 result.errors.module = true;
                             }
@@ -62,20 +62,20 @@ component implements="WWW.interfaces.connector" {
                                         .setUserId(request.user.getUserId())
                                         .setModuleId(form.moduleId)
                                         .setRoleId(form.roleId)
+                                        .setReason(form.reason)
                                         .save();
                                     
                                     result.successful = true;
                                     
                                     transactionCommit();
                                 }
-                                
-                                location(addtoken = false, statuscode = "302", url = userPage & "/" & request.user.getUserName() & "/permissionRequest/overview");
                             }
                         }
                         
                         var modules = createObject("component", "API.modules.com.Nephthys.module.filter").init()
                                                                                                          .setFor("module")
                                                                                                          .setActive(true)
+                                                                                                         .setAvailableWww(true)
                                                                                                          .execute()
                                                                                                          .getResult();
                         
@@ -99,29 +99,27 @@ component implements="WWW.interfaces.connector" {
                     case "request": {
                         if(arguments.options.otherParameter.len() == 2) {
                             if(isNumeric(arguments.options.otherParameter[2])) {
-                                var request = new filter().setFor("request")
-                                                          .setParticipantId(request.user.getUserId())
-                                                          .setRequestId(arguments.options.otherParameter[2])
-                                                          .execute()
-                                                          .getResult();
+                                try {
+                                    var _request = new Request(arguments.options.otherParameter[2]);
+                                    
+                                    if(_request.getUserId() == request.user.getUserId()) {
+                                        return application.system.settings.getValueOfKey("templateRenderer")
+                                            .setModulePath(getModulePath())
+                                            .setTemplate("request.cfm")
+                                            .addParam("options",  arguments.options)
+                                            .addParam("request",  _request)
+                                            .addParam("userPage", userPage)
+                                            .render();
+                                    }
+                                }
+                                catch(nephthys.notFound.general e) {}
                                 
-                                if(request.len() == 1) {
-                                    return application.system.settings.getValueOfKey("templateRenderer")
-                                        .setModulePath(getModulePath())
-                                        .setTemplate("request.cfm")
-                                        .addParam("options",  arguments.options)
-                                        .addParam("request",  request[1])
-                                        .addParam("userPage", userPage)
-                                        .render();
-                                }
-                                else {
-                                    return application.system.settings.getValueOfKey("templateRenderer")
-                                        .setModulePath(getModulePath())
-                                        .setTemplate("requestNotFound.cfm")
-                                        .addParam("options",  arguments.options)
-                                        .addParam("userPage", userPage)
-                                        .render();
-                                }
+                                return application.system.settings.getValueOfKey("templateRenderer")
+                                    .setModulePath(getModulePath())
+                                    .setTemplate("requestNotFound.cfm")
+                                    .addParam("options",  arguments.options)
+                                    .addParam("userPage", userPage)
+                                    .render();
                             }
                         }
                         break;

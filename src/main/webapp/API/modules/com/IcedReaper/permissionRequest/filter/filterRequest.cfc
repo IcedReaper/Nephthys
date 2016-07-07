@@ -27,27 +27,26 @@ component implements="API.interfaces.filter" {
     
     
     public filter function execute() {
-        if(variables.userId == null || variables.userId == 0) {
-            throw(type = "nephthys.application.invalidResource", message = "The userId is required and has to be set!");
-        }
-        
         var qryFilter = new Query();
         
         var sql = "";
         var where = "";
         
+        if(variables.userId != null) {
+            where = (where == "" ? " WHERE " : " AND ") & " userId = :userId ";
+            qryFilter.addParam(name = "userId", value = variables.userId, cfsqltype = "cf_sql_numeric");
+        }
         if(variables.requestsSince != null) {
-            where = " AND creationDate >= :requestsSince ";
+            where = (where == "" ? " WHERE " : " AND ") & " creationDate >= :requestsSince ";
             qryFilter.addParam(name = "requestsSince", value = variables.requestsSince, cfsqltype = "cf_sql_date");
         }
         if(variables.status != null) {
-            where = " AND status = :status ";
+            where = (where == "" ? " WHERE " : " AND ") & " status = :status ";
             qryFilter.addParam(name = "status", value = variables.status, cfsqltype = "cf_sql_numeric");
         }
         
         sql = "   SELECT pr.requestId
-                    FROM IcedReaper_permissionRequest_request pr
-                   WHERE pr.userId = :userId"
+                    FROM IcedReaper_permissionRequest_request pr "
             & where
             & " ORDER BY pr.requestId DESC";
         

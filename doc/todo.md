@@ -5,6 +5,7 @@
 - User ext property keys mit typen versehen: date, etc (Geburtstag => date ==> datepicker)
 - User ext properties mit sortierung versehen
 - +Attribut zu Module => Uses permissions (if false hide in permission screens)
+- Role zu Object umändern (permissionManager umbauen)
 
 ## Allgemein
     1. Validierungen
@@ -41,6 +42,7 @@
 
 ## Website
     1. Codeoptimierung
+    2. Formvalidierung
 
 ## Adminbereich
     1. Modulverwaltung
