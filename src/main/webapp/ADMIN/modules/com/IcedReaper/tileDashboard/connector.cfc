@@ -4,4 +4,8 @@ component extends="ADMIN.abstractClasses.connector" {
         
         return this;
     }
+    
+    public boolean function checkPermission(required user user) {
+        return true;
+    }
 }

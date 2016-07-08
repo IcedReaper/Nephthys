@@ -24,4 +24,15 @@ component {
     remote struct function getTopPageRequest() {
         return createObject("component", "API.modules.com.Nephthys.pages.statistics").getTopPageRequestCount(dateAdd("h", -24, now()), now());
     }
+    
+    remote struct function getLast24HourRequests() {
+        return createObject("component", "API.modules.com.Nephthys.pages.statistics").getLast24HoursTotal();
+    }
+    
+    remote struct function getServerStatus() {
+        return {
+            maintenanceMode = application.system.settings.getValueOfKey("maintenanceMode") == "true",
+            online          = application.system.settings.getValueOfKey("active") == "true"
+        };
+    }
 }

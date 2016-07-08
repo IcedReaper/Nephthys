@@ -15,6 +15,12 @@ nephthysAdminApp
             },
             getTopPageRequest: function () {
                 return $http.get("/ajax/com/IcedReaper/tileDashboard/getTopPageRequest");
+            },
+            getLast24HourRequests: function () {
+                return $http.get("/ajax/com/IcedReaper/tileDashboard/getLast24HourRequests");
+            },
+            getServerStatus: function () {
+                return $http.get("/ajax/com/IcedReaper/tileDashboard/getServerStatus");
             }
         };
     });
