@@ -5,7 +5,9 @@ component extends="API.modules.com.Nephthys.pages.statistics.abstractStatistic" 
                                                    FROM (  SELECT COUNT(*) pageRequests,
                                                                   pageId
                                                              FROM nephthys_page_statistics ps
+                                                         INNER JOIN nephthys_page_region r ON ps.regionId = r.regionId
                                                             WHERE ps.visitDate > NOW() - '1 day' :: interval
+                                                              AND r.showInStatistics = true
                                                          GROUP BY ps.pageId
                                                          ORDER BY COUNT(*) DESC
                                                             LIMIT 1) pageStats

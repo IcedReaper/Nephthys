@@ -6,7 +6,6 @@
 - User ext properties mit sortierung versehen
 - +Attribut zu Module => Uses permissions (if false hide in permission screens)
 - Role zu Object umändern (permissionManager umbauen)
-- Statistics ohne system links (/user /search, etc?)
 - Tasklist for user-module
 
 ## Allgemein

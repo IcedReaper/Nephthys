@@ -2,7 +2,9 @@ component extends="API.modules.com.Nephthys.pages.statistics.abstractStatistic" 
     public statistic function execute() {
         variables.qRes = new Query().setSQL("SELECT COUNT(*) pageRequests
                                                FROM nephthys_page_statistics ps
-                                              WHERE ps.visitDate > NOW() - '1 day' :: interval")
+                                             INNER JOIN nephthys_page_region r ON ps.regionId = r.regionId
+                                              WHERE ps.visitDate > NOW() - '1 day' :: interval
+                                                AND r.showInStatistics = true ")
                                     .execute()
                                     .getResult();
         return this;

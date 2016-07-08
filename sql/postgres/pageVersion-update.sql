@@ -883,3 +883,28 @@ create unique index UIDX_IcedReaper_permissionRequest_req_umrId ON IcedReaper_pe
     
 GRANT SELECT, INSERT ON TABLE IcedReaper_permissionRequest_request TO nephthys_user;
 GRANT SELECT, UPDATE ON SEQUENCE icedreaper_permissionrequest_request_requestid_seq TO nephthys_user;
+
+
+-- 8.7.2016
+alter table nephthys_page_statistics add column regionId references nephthys_page_region on delete set null;
+
+update nephthys_page_statistics stats
+   set regionId = (    SELECT sp.regionId
+                         FROM nephthys_page_sitemapPage sp
+                   INNER JOIN nephthys_page_sitemap sm ON sp.sitemapId = sm.sitemapId
+                   INNER JOIN nephthys_page_status s ON sm.statusId = s.statusId
+                        WHERE stats.pageId = sp.pageId
+                          AND s.online = true);
+update nephthys_page_statistics stats
+   set regionId = 1
+ where regionId IS NULL
+   and lower(completeLink) LIKE '/faq%'
+    or lower(completeLink) LIKE '/reviews%';
+update nephthys_page_statistics stats
+   set regionId = 2
+ where regionId IS NULL
+   and lower(completeLink) LIKE '/kontakt%';
+
+alter table nephthys_page_statistics alter column regionId SET NOT NULL;
+
+alter table nephthys_page_region add column showInStatistics boolean default true NOT NULL;

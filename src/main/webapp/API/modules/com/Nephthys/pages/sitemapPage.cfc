@@ -56,6 +56,9 @@ component {
     public numeric function getSortOrder() {
         return variables.sortOrder;
     }
+    public region function getRegion() {
+        return variables.region;
+    }
     
     
     public sitemapPage function save() {

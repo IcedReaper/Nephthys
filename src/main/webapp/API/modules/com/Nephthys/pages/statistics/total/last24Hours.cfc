@@ -15,10 +15,12 @@ component extends="abstractTotal" {
                                 UNION ALL
                                 SELECT i d
                                   FROM generate_series(0, cast(extract(hour FROM now()) as integer)) i) dateRange
-               LEFT OUTER JOIN (  SELECT COUNT(*) requestCount, date_part('Hour', visitDate) _date 
-                                    FROM nephthys_page_statistics
-                                   WHERE visitDate >= now() - '1 day' :: interval
-                                GROUP BY date_part('Hour', visitDate)) pageRequests ON dateRange.d = pageRequests._date";
+               LEFT OUTER JOIN (    SELECT COUNT(s.*) requestCount, date_part('Hour', s.visitDate) _date 
+                                      FROM nephthys_page_statistics s
+                                INNER JOIN nephthys_page_region r ON s.regionId = r.regionId
+                                     WHERE s.visitDate >= now() - '1 day' :: interval
+                                       AND r.showInStatistics = true
+                                  GROUP BY date_part('Hour', s.visitDate)) pageRequests ON dateRange.d = pageRequests._date";
         
         variables.qRes = qPageRequests.setSQL(sql)
                                       .addParam(name = "date", value = variables.fromDate, cfsqltype = "cf_sql_date")
