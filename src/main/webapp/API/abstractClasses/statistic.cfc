@@ -40,7 +40,7 @@ component implements="API.interfaces.statistic" {
         return variables.qRes;
     }
     
-    public array function getResult() {
+    public any function getResult() {
         throw(type = "application", message = "Implement this method yourself!");
     }
     

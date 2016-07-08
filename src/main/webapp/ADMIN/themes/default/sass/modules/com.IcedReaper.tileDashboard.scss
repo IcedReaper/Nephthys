@@ -1,0 +1,61 @@
+.com-IcedReaper-tileDashboard {
+    height: 100%;
+    
+    .tile {
+        padding: 15px;
+        height: 250px;
+        width:  25%;
+        float: left;
+        color: #000;
+        
+        &.wide {
+            width: 50%;
+        }
+        
+        > div {
+            background-color: #EEE;
+            height: 100%;
+            
+            text-align: center;
+            
+            h3 {
+                padding-top: 30px;
+            }
+            
+            p {
+                font-size:2rem;
+            }
+        }
+        
+        &.tile-primary {
+            > div {
+                background-color: $brand-primary;
+            }
+        }
+        &.tile-success {
+            > div {
+                background-color: $brand-success;
+            }
+        }
+        &.tile-info {
+            > div {
+                background-color: $brand-info;
+            }
+        }
+        &.tile-warning {
+            > div {
+                background-color: $brand-warning;
+            }
+        }
+        &.tile-danger {
+            > div {
+                background-color: $brand-danger;
+            }
+        }
+        &.tile-inverse {
+            > div {
+                background-color: $brand-inverse;
+            }
+        }
+    }
+}

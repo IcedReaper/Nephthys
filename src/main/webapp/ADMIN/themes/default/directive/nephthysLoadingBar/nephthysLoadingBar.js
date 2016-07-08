@@ -26,6 +26,8 @@ angular.module("com.nephthys.global.loadingBar", [])
             $scope.showLoadingBar = false;
         });
         
+        $scope.showLoadingBar = false;
+        
         $scope.$on('$destroy', function() {
             destroyShowListener();
             destroyHideListener();

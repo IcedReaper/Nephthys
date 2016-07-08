@@ -8,6 +8,20 @@ component {
         return this;
     }
     
+    public numeric function getTotalPageRequestCount(required date fromDate, required date toDate) {
+        return createObject("component", "requestCount.total").setFromDate(arguments.fromDate)
+                                                              .setToDate(arguments.toDate)
+                                                              .execute()
+                                                              .getResult();
+    }
+    
+    public struct function getTopPageRequestCount(required date fromDate, required date toDate) {
+        return createObject("component", "requestCount.top").setFromDate(arguments.fromDate)
+                                                            .setToDate(arguments.toDate)
+                                                            .execute()
+                                                            .getResult();
+    }
+    
     public struct function getTotal(required numeric pageId = null, required string sortOrder, required date fromDate, required date toDate) {
         var returnData = {
             "labels" = [],

@@ -7,5 +7,5 @@ interface {
     public statistic function execute();
     
     public query function getQuery();
-    public array function getResult();
+    public any function getResult();
 }
