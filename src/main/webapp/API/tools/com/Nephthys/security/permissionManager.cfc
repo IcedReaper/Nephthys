@@ -9,8 +9,8 @@ component interface="APi.interface.permissionManager" {
         var qGetUserPermissions = new Query().setSQL("         SELECT m.moduleId, m.moduleName, m.description, p.permissionId, p.roleId, p.value roleValue
                                                                  FROM nephthys_module m
                                                       LEFT OUTER JOIN (SELECT perm.*, r.value
-                                                                         FROM nephthys_permission perm
-                                                                       INNER JOIN nephthys_role r ON perm.roleId = r.roleId
+                                                                         FROM nephthys_user_permission perm
+                                                                       INNER JOIN nephthys_user_permissionRole r ON perm.roleId = r.roleId
                                                                         WHERE perm.userId = :userId) p ON m.moduleId = p.moduleId
                                                              ORDER BY m.sortOrder ASC")
                                             .addParam(name = "userId", value = arguments.userId, cfsqltype = "cf_sql_numeric", null = ! isNumeric(arguments.userId))
@@ -35,8 +35,8 @@ component interface="APi.interface.permissionManager" {
     public array function loadForModuleId(required numeric moduleId, required numeric roleId = 0, required numeric roleValue = 0) {
         var qryGetModuleUser = new Query();
         var sql = "    SELECT p.permissionId, p.userId, r.roleId, r.name roleName, r.value roleValue
-                         FROM nephthys_permission p
-                   INNER JOIN nephthys_role r ON p.roleId = r.roleId
+                         FROM nephthys_user_permission p
+                   INNER JOIN nephthys_user_permissionRole r ON p.roleId = r.roleId
                         WHERE p.moduleId = :moduleId ";
         
         if(arguments.roleId != 0) {
@@ -72,7 +72,7 @@ component interface="APi.interface.permissionManager" {
         var qGetUser = new Query().setSQL("         SELECT u.userId, p.roleId, p.permissionId
                                                       FROM nephthys_user u
                                            LEFT OUTER JOIN (SELECT perm.*
-                                                              FROM nephthys_permission perm
+                                                              FROM nephthys_user_permission perm
                                                              WHERE perm.moduleId = :moduleId) p ON u.userId = p.userId
                                                   ORDER BY u.userId")
                                   .addParam(name = "moduleId", value = arguments.moduleId, cfsqltype = "cf_sql_numeric")
@@ -93,7 +93,7 @@ component interface="APi.interface.permissionManager" {
     
     public struct function loadRoleForUserInModule(required numeric userId, required numeric moduleId) {
         var qGetUser = new Query().setSQL("SELECT perm.*
-                                             FROM nephthys_permission perm
+                                             FROM nephthys_user_permission perm
                                             WHERE perm.moduleId = :moduleId
                                               AND perm.userId   = :userId")
                                   .addParam(name = "moduleId", value = arguments.moduleId, cfsqltype = "cf_sql_numeric")
@@ -114,7 +114,7 @@ component interface="APi.interface.permissionManager" {
     
     public struct function loadRole(required numeric roleId) {
         var qRole = new Query().setSQL("SELECT *
-                                          FROM nephthys_role
+                                          FROM nephthys_user_permissionRole
                                          WHERE roleId = :roleId")
                                .addParam(name = "roleId", value = arguments.roleId, cfsqltype = "cf_sql_numeric")
                                .execute()
@@ -134,7 +134,7 @@ component interface="APi.interface.permissionManager" {
     
     public struct function loadRoleByName(required string roleName) {
         var qRole = new Query().setSQL("SELECT *
-                                          FROM nephthys_role
+                                          FROM nephthys_user_permissionRole
                                          WHERE name = :roleName")
                                .addParam(name = "roleName", value = arguments.roleName, cfsqltype = "cf_sql_varchar")
                                .execute()
@@ -154,7 +154,7 @@ component interface="APi.interface.permissionManager" {
     
     public array function loadRoles() {
         var qRoles = new Query().setSQL("  SELECT roleId, name, value
-                                             FROM nephthys_role
+                                             FROM nephthys_user_permissionRole
                                          ORDER BY value")
                                 .execute()
                                 .getResult();
@@ -182,7 +182,7 @@ component interface="APi.interface.permissionManager" {
         var user = new user(arguments.userId);
         
         if(arguments.permissionId == 0 || arguments.permissionId == null) {
-            new Query().setSQL("INSERT INTO nephthys_permission
+            new Query().setSQL("INSERT INTO nephthys_user_permission
                                             (
                                                 userId,
                                                 roleId,
@@ -205,7 +205,7 @@ component interface="APi.interface.permissionManager" {
                        .execute();
         }
         else {
-            new Query().setSQL("UPDATE nephthys_permission
+            new Query().setSQL("UPDATE nephthys_user_permission
                                    SET roleId           = :roleId,
                                        lastEditorUserId = :lastEditorUserId
                                  WHERE permissionId = :permissionId")
@@ -217,7 +217,7 @@ component interface="APi.interface.permissionManager" {
     }
     
     public void function removePermission(required numeric permissionId) {
-        new Query().setSQL("DELETE FROM nephthys_permission WHERE permissionId = :permissionId")
+        new Query().setSQL("DELETE FROM nephthys_user_permission WHERE permissionId = :permissionId")
                    .addParam(name = "permissionId", value = arguments.permissionId, cfsqltype = "cf_sql_numeric")
                    .execute();
     }
@@ -230,10 +230,10 @@ component interface="APi.interface.permissionManager" {
         }
         
         return new Query().setSQL("    SELECT p.permissionId
-                                         FROM nephthys_permission p
+                                         FROM nephthys_user_permission p
                                    INNER JOIN nephthys_module m ON p.moduleId = m.moduleId AND m.moduleName = :moduleName
-                                   INNER JOIN nephthys_role r ON p.roleId = r.roleId AND r.value >= (SELECT r2.value
-                                                                                                       FROM nephthys_role r2
+                                   INNER JOIN nephthys_user_permissionRole r ON p.roleId = r.roleId AND r.value >= (SELECT r2.value
+                                                                                                       FROM nephthys_user_permissionRole r2
                                                                                                       WHERE r2.name = :roleName)
                                         WHERE p.userId = :userId")
                           .addParam(name = "userId",     value = arguments.userId,     cfsqltype = "cf_sql_numeric")

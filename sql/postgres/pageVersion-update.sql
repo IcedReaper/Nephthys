@@ -908,3 +908,75 @@ update nephthys_page_statistics stats
 alter table nephthys_page_statistics alter column regionId SET NOT NULL;
 
 alter table nephthys_page_region add column showInStatistics boolean default true NOT NULL;
+
+
+
+create table nephthys_user_permissionRole
+(
+    permissionRoleId serial primary key,
+    name character varying(50) not null unique,
+    value integer unique not null,
+    
+    check(value >= 0)
+);
+
+insert into nephthys_user_permissionRole
+(
+    permissionRoleId,
+    name,
+    value
+)
+SELECT roleId, name, value FROM nephthys_role;
+
+create table nephthys_user_permissionSubGroup
+(
+    permissionSubGroupId serial primary key,
+    moduleId integer not null references nephthys_module on delete cascade,
+    name character varying(50),
+    
+    unique (moduleId, name)
+);
+
+create table nephthys_user_permission
+(
+    permissionId serial primary key,
+    userId integer not null references nephthys_user on delete cascade,
+    permissionRoleId integer not null references nephthys_user_permissionRole on delete cascade,
+    moduleId integer not null references nephthys_module on delete cascade,
+    permissionSubGroupId integer default null references nephthys_user_permissionSubGroup on delete cascade,
+    
+    creatorUserId integer not null references nephthys_user on delete set null,
+    creationDate timestamp with time zone not null default now(),
+    lastEditorUserId integer not null references nephthys_user on delete set null,
+    lastEditDate timestamp with time zone not null default now(),
+    
+    unique (userId, moduleId, permissionSubGroupId)
+);
+
+insert into nephthys_user_permission
+(
+    userId,
+    roleId,
+    moduleId,
+    
+    creatorUserId,
+    creationDate,
+    lastEditorUserId,
+    lastEditDate
+)
+SELECT 
+    userId,
+    roleId,
+    moduleId,
+    
+    creatorUserId,
+    creationDate,
+    lastEditorUserId,
+    lastEditDate
+FROM nephthys_permission;
+
+alter table IcedReaper_permissionRequest_request drop constraint IcedReaper_permissionRequest_request_roleId_fkey;
+alter table IcedReaper_permissionRequest_request add constraint IcedReaper_permissionRequest_request_roleId_fkey foreign key (roleId) references nephthys_user_permissionRole on delete cascade;
+
+drop table nephthys_permission;
+drop table nephthys_role;
