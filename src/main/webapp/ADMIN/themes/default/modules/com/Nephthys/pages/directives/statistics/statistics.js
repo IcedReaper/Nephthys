@@ -313,10 +313,6 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
         var dateChangedEvent = $rootScope.$on('nephthys-date-picker-date-changed', function(evt, data) {
             $scope.selectedDate.fromDate = data.fromDate;
             $scope.selectedDate.toDate   = data.toDate;
-            console.log($scope.selectedDate.fromDate);
-            console.log($scope.selectedDate.toDate);
-            console.log($scope.selectedDate.fromDate.toAjaxFormat());
-            console.log($scope.selectedDate.toDate.toAjaxFormat());
         });
         var refreshEvent = $rootScope.$on('nephthys-statistics-refresh', $scope.refresh);
         

@@ -339,7 +339,8 @@ component {
     }
     
     remote struct function getModule() {
-        var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init();
+        var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.module.filter").init()
+                                                                                                  .setFor("module");
         
         moduleFilterCtrl.setAvailableWWW(true)
                         .execute();

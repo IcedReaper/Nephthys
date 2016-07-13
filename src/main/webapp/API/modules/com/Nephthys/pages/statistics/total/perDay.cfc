@@ -4,14 +4,18 @@ component extends="abstractTotal" {
             var qPageRequests = new Query();
             
             var sql = "";
-            var innerQuery = "SELECT COUNT(*) requestCount, date_trunc('day', visitDate) _date 
-                                FROM nephthys_page_statistics
-                               WHERE date_trunc('day', visitDate) >= :fromDate
-                                 AND date_trunc('day', visitDate) <= :toDate ";
+            var innerQuery = "    SELECT COUNT(*) requestCount, date_trunc('day', visitDate) _date 
+                                    FROM nephthys_page_statistics s
+                              INNER JOIN nephthys_page_region r ON s.regionId = r.regionId
+                                   WHERE date_trunc('day', visitDate) >= :fromDate
+                                     AND date_trunc('day', visitDate) <= :toDate ";
             
             if(variables.pageId != null) {
                 innerQuery &= " AND pageId = :pageId ";
                 qPageRequests.addParam(name = "pageId", value = variables.pageId, cfsqltype = "cf_sql_numeric");
+            }
+            else {
+                innerQuery &= " AND r.showInStatistics = true ";
             }
             
             innerQuery &= " GROUP BY date_trunc('day', visitDate)";

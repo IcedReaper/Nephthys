@@ -26,6 +26,7 @@ component {
         variables.versionLoaded = false;
         variables.link = arguments.link;
         variables.content = "";
+        variables.sitemapPage = null;
         loadPage();
         
         return this;
@@ -282,18 +283,21 @@ component {
     }
     
     public pageRequest function saveToStatistics() {
-        if(! variables.versionLoaded) {
+        if(! variables.versionLoaded && ! isNull(variables.sitemapPage)) {
             new Query().setSQL("INSERT INTO nephthys_page_statistics
                                             (
                                                 pageId,
-                                                completeLink
+                                                completeLink,
+                                                regionId
                                             )
                                      VALUES (
                                                 :pageId,
-                                                :link
+                                                :link,
+                                                :regionId
                                             )")
-                       .addParam(name = "pageId", value = variables.page.getPageId(),      cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "link",   value = getLink() & variables.parameter, cfsqltype = "cf_sql_varchar")
+                       .addParam(name = "pageId",   value = variables.page.getPageId(),                      cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "link",     value = getLink() & variables.parameter,                 cfsqltype = "cf_sql_varchar")
+                       .addParam(name = "regionId", value = variables.sitemapPage.getRegion().getRegionId(), cfsqltype = "cf_sql_numeric")
                        .execute();
         }
         return this;
@@ -319,8 +323,26 @@ component {
             
             if(pageRequestFilter.execute().getResultCount() == 1) {
                 var filterResult = pageRequestFilter.getResult()[1];
-                variables.page = filterResult.page;
+                variables.page      = filterResult.page;
                 variables.parameter = filterResult.parameter;
+                
+                var sitemap = new filter().setFor("sitemap")
+                                          .setOnline(true)
+                                          .execute()
+                                          .getResult();
+                if(sitemap.len() >= 1) {
+                    var sitemapId = sitemap[1].getSitemapId();
+                    
+                    var sitemapPages = new filter().setFor("sitemapPage")
+                                                   .setSitemapId(sitemapId)
+                                                   .setPageId(variables.page.getPageId())
+                                                   .execute()
+                                                   .getResult();
+                    
+                    if(sitemapPages.len() >= 1) {
+                        variables.sitemapPage = sitemapPages[1];
+                    }
+                }
             }
             else {
                 if(application.system.settings.getValueOfKey("useFirstPageAsStartPage") && 
@@ -341,7 +363,8 @@ component {
                                                        .getResult();
                         
                         if(sitemapPages.len() >= 1) {
-                            variables.page = sitemapPages[1].getPage();
+                            variables.sitemapPage = sitemapPages[1];
+                            variables.page = variables.sitemapPage.getPage();
                             
                             if(application.system.settings.getValueOfKey("redirectToFirstPage")) {
                                 location(addtoken = false, statuscode = "301", url = variables.page.getActualPageVersion().getLink());

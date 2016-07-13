@@ -22,6 +22,25 @@ component {
                                                             .getResult();
     }
     
+    public struct function getLast24HoursTotal() {
+        var returnData = {
+            "labels" = [],
+            "data"   = []
+        };
+        
+        var requestData = createObject("component", "total.last24Hours").init()
+                                                                        .execute()
+                                                                        .getResult();
+        
+        returnData.data[1] = [];
+        for(var i = 1; i <= requestData.len(); ++i) {
+            returnData.labels[i] = requestData[i].date;
+            returnData.data[1][i] = requestData[i].requestCount;
+        }
+        
+        return returnData;
+    }
+    
     public struct function getTotal(required numeric pageId = null, required string sortOrder, required date fromDate, required date toDate) {
         var returnData = {
             "labels" = [],

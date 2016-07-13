@@ -26,7 +26,6 @@ angular.module("com.nephthys.search.overview", ["ui.bootstrap",
                     .then(function(searchStatements) {
                         $scope.searchStatements = searchStatements;
                         $scope.pagination.totalPages = Math.ceil(searchStatements.length / $scope.pagination.entriesPerPage);
-                        console.log($scope.pagination.totalPages);
                         $scope.pagination.currentPage = 1;
                     });
             }

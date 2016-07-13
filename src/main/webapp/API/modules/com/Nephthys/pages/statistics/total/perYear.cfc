@@ -4,13 +4,17 @@ component extends="abstractTotal" {
             var qPageRequests = new Query();
             
             var sql = "";
-            var innerQuery = "SELECT COUNT(*) requestCount, date_part('year', visitDate) _date 
-                                FROM nephthys_page_statistics
-                               WHERE date_part('year', visitDate) BETWEEN :fromYear AND :toYear ";
+            var innerQuery = "    SELECT COUNT(*) requestCount, date_part('year', visitDate) _date 
+                                    FROM nephthys_page_statistics s
+                              INNER JOIN nephthys_page_region r ON s.regionId = r.regionId
+                                   WHERE date_part('year', visitDate) BETWEEN :fromYear AND :toYear ";
             
             if(variables.pageId != null) {
                 innerQuery &= " AND pageId = :pageId ";
                 qPageRequests.addParam(name = "pageId", value = variables.pageId, cfsqltype = "cf_sql_numeric");
+            }
+            else {
+                innerQuery &= " AND r.showInStatistics = true ";
             }
             
             innerQuery &= " GROUP BY date_part('year', visitDate)";

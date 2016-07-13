@@ -4,6 +4,7 @@ component implements="API.interfaces.filter" {
     public filter function init() {
         variables.sitemapId = null;
         variables.regionId  = null;
+        variables.pageId    = null;
         
         variables.qRes    = null;
         variables.results = null;
@@ -17,6 +18,10 @@ component implements="API.interfaces.filter" {
     }
     public filter function setRegionId(required numeric regionId) {
         variables.regionId = arguments.regionId;
+        return this;
+    }
+    public filter function setPageId(required numeric pageId) {
+        variables.pageId = arguments.pageId;
         return this;
     }
     
@@ -39,6 +44,10 @@ component implements="API.interfaces.filter" {
         if(variables.regionId != null) {
             where &= (where == "" ? " WHERE " : " AND ") & " sp.regionId = :regionId";
             qryFilter.addParam(name = "regionId", value = variables.regionId, cfsqltype = "cf_sql_numeric");
+        }
+        if(variables.pageId != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & " sp.pageId = :pageId";
+            qryFilter.addParam(name = "pageId", value = variables.pageId, cfsqltype = "cf_sql_numeric");
         }
         
         orderBy = " ORDER BY sp.sitemapPageId ASC";

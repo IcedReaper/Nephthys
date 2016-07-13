@@ -6,6 +6,7 @@
 - User ext properties mit sortierung versehen
 - +Attribut zu Module => Uses permissions (if false hide in permission screens)
 - Role zu Object umändern (permissionManager umbauen)
+- Tasklist for user-module
 
 ## Allgemein
     1. Validierungen
@@ -184,14 +185,8 @@
              * geschlossen
         * "PostIt"-Setup des Desktops
     
-    16. Dashboard
-        * Kacheln
-            * X Tasks in Modul ABC, Global
-            * Heutige Seitenaufrufe
-            * Top Seite Heute/letzte 24h
-            * X Kommentare in Blogposts Heute/letzte 24h
-            * Registrierungen seit dem letzten Besuch (Dashboard / Usermodul)
-            * Uptime
+    16. com.IcedReaper.tileDashboard
+        * Anzahl an offenen Tasks (Gute Idee fehlt zum Managen der Module, die, und wie, eine Taskliste haben)
 
 ## Optimierungen
     1. Datenbank optimieren
