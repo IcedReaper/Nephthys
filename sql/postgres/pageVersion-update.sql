@@ -883,3 +883,26 @@ create unique index UIDX_IcedReaper_permissionRequest_req_umrId ON IcedReaper_pe
     
 GRANT SELECT, INSERT ON TABLE IcedReaper_permissionRequest_request TO nephthys_user;
 GRANT SELECT, UPDATE ON SEQUENCE icedreaper_permissionrequest_request_requestid_seq TO nephthys_user;
+
+
+create table IcedReaper_references_reference
+(
+    referenceId serial primary key,
+    
+    name character varying(250) unique,
+    since date not null,
+    quote text not null,
+    homepage character varying (1024),
+    imageName character varying(250),
+    
+    position integer not null unique,
+    
+    
+    creatorUserId integer not null references nephthys_user,
+    creationDate timestamp with time zone not null default now(),
+    
+    lastEditorUserId integer not null references nephthys_user,
+    lastEditDate timestamp with time zone not null default now()
+);
+
+GRANT SELECT ON TABLE IcedReaper_references_reference TO nephthys_user;

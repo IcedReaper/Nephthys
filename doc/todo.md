@@ -58,6 +58,7 @@
         2. Autospeichern (Setzt Versionierung voraus | Problem: Bei normalem Vorgehen wird die Aktuelle Version überschrieben. Es sollte allerdings eine temporäre Version angelegt werden, die nach normalem Speichern wieder gelöscht wird.)
         3. Vorschau funktioniert aktuell nur für die Seite und nicht auch für Unterseiten
         4. Themeswitch in Vorschau
+        5. Sitemap zum Zeitpunkt X releasen
     3. Thememanagement
         * Installation
             - Per git Repo
