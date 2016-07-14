@@ -40,6 +40,7 @@
         * Personen freischalten => Nur normales Editieren
         *
     18. API-Statistics wie page.filter allen Modulen hinzufügen. - abwägen, und nach und nach
+    19. Eigenes Date objekt? Date auch als null möglich | date.format() möglich
 
 ## Website
     1. Codeoptimierung

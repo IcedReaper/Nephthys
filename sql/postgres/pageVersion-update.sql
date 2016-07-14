@@ -885,7 +885,7 @@ GRANT SELECT, INSERT ON TABLE IcedReaper_permissionRequest_request TO nephthys_u
 GRANT SELECT, UPDATE ON SEQUENCE icedreaper_permissionrequest_request_requestid_seq TO nephthys_user;
 
 -- 8.7.2016
-alter table nephthys_page_statistics add column regionId references nephthys_page_region on delete set null;
+alter table nephthys_page_statistics add column regionId integer references nephthys_page_region on delete set null;
 
 update nephthys_page_statistics stats
    set regionId = (    SELECT sp.regionId

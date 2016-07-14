@@ -21,6 +21,10 @@ component {
             classes &= "col-xl-" & getClassWidthSuffix(arguments.options["width-xl"]) & " ";
         }
         
+        if(classes == "") {
+            classes = "col-xs-12";
+        }
+        
         return {
             classes = classes
         };
