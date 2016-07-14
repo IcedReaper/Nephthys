@@ -54,7 +54,7 @@
                                         <button class="dropdown-item"
                                                 ng-repeat="ps in status.nextStatus"
                                                 ng-class="statusButtonClass(status.online, ps.online)"
-                                                ng-click="pushPageToStatus(page.pageId, ps.statusId);">{{ps.name}}</button>
+                                                ng-click="pushPageToStatus(page.pageId, page.pageVersionId, ps.statusId);">{{ps.name}}</button>
                                     </div>
                                 </div>
                             </div>

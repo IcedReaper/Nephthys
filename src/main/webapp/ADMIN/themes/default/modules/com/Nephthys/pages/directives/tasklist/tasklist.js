@@ -44,21 +44,21 @@ angular.module("com.nephthys.page.tasklist", ["com.nephthys.global.userInfo"])
                 })
         };
         
-        $scope.pushPageToStatus = function (pageId, pageVersionId, newstatusId) {
-            if(pageId && pageVersionId && newstatusId) {
+        $scope.pushPageToStatus = function (pageId, pageVersionId, newStatusId) {
+            if(pageId && pageVersionId && newStatusId) {
                 tasklistService
                     .pushToStatus(pageId,
                                   pageVersionId,
-                                  newstatusId)
+                                  newStatusId)
                     .then($scope.loadPages);
             }
         };
         
-        $scope.pushSitemapToStatus = function (sitemapId, newstatusId) {
-            if(sitemapId && newstatusId) {
+        $scope.pushSitemapToStatus = function (sitemapId, newStatusId) {
+            if(sitemapId && newStatusId) {
                 tasklistService
                     .pushSitemapToStatus(sitemapId,
-                                           newstatusId)
+                                           newStatusId)
                     .then($scope.loadSitemap);
             }
         };
