@@ -91,7 +91,7 @@
             * Bilderupload umbauen, sodass alle Bilder (5/10, wie auch immer) zusammen hochgeladen werden
                 * Aktuell werden alle parallel hochgeladen, was dazu führt, dass ab einer gewissen Menge der JavaHeap vollläuft und es elendig langsam ist.
         3. Statistiken pro Bild
-            - Jegliche Idee bisher ist crap
+            - Jegliche Idee zum Erfassen der Daten sind bisher crap
                 * Für onSlideEnd von blueimp image gallery muss per jQuery der Filename ausgelesen werden
                 * ColdFusion liefert nicht ohne weiteres Bilder aus - ich hab noch nix ergoogled - ggf Lucee-Forum anfunken
                 * imageServer.cfm?i=imagePage.jpg (Wohl beste aber auch nicht so das wahrste) | übern nginx drehen
@@ -119,22 +119,21 @@
                 * Ausgeschrieben
         * Statistiken
         * Admin schön machen
-    4. Referenzen
-    5. Preis/Leistung
-    6. YouTube Videoliste
+    4. Preis/Leistung
+    5. YouTube Videoliste
         * Designauswahl
 
-    7. Facebookpostfeed
+    6. Facebookpostfeed
         * Facebook pageId
         * Anzahl der posts
         * Designauswahl
 
-    8. Schnittstelle zu Twitter
+    7. Schnittstelle zu Twitter
         * Username
         * Anzahl der Tweets
         * Designauswahl
     
-    9. Schnittstelle zu Last.fm
+    8. Schnittstelle zu Last.fm
         * Username
         * Anzahl der Scrobbles
         * Last Scrobbles
@@ -150,20 +149,20 @@
         * Ggf Authentifizierung
         * Designauswahl
     
-    10. Schnittstelle zu Flickr
+    9. Schnittstelle zu Flickr
         (ggf in das Modul com.IcedReaper.gallery inkludieren)
         * UserId
         * AlbumId oder -name
         * Designauswahl
         * Upload der Bilder direkt nach Flickr. Erstellt das Album auf beiden Plattformen (API checken)
     
-    11. Schnittstelle zu DeviantArt
+    10. Schnittstelle zu DeviantArt
         (ggf in das Modul com.IcedReaper.gallery inkludieren)
         * UserId
         * AlbumId oder -name
         * Designauswahl
     
-    12. Downloadmodul
+    11. Downloadmodul
         * Kategorien
         * Tags
         * Suche
@@ -171,14 +170,14 @@
         * Übersicht
         * Anzeige der letzten 4 Suchbegriffe
     
-    13. Adminchat
+    12. Adminchat
         * Globaler Channel
         * Private Chats/Channel
     
-    14. Private Nachrichten
+    13. Private Nachrichten
         * Infos zu neuen Nachrichten per Websockets melden
     
-    15. Admintaskliste (Aufgabenverwaltung)
+    14. Admintaskliste (Aufgabenverwaltung)
          * private / globale tasks
          * Status
              * Offen
@@ -186,7 +185,7 @@
              * geschlossen
         * "PostIt"-Setup des Desktops
     
-    16. com.IcedReaper.tileDashboard
+    15. com.IcedReaper.tileDashboard
         * Anzahl an offenen Tasks (Gute Idee fehlt zum Managen der Module, die, und wie, eine Taskliste haben)
 
 ## Optimierungen

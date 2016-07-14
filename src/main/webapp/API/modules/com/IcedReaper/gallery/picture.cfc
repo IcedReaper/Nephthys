@@ -36,6 +36,12 @@ component {
         
         return this;
     }
+    public picture function setSortId(required numeric sortId) {
+        variables.sortId = arguments.sortId;
+        variables.attributesChanged = true;
+        
+        return this;
+    }
     
     public picture function upload() {
         if(variables.pictureId != 0) {
@@ -131,6 +137,9 @@ component {
     public string function getCaption() {
         return variables.caption;
     }
+    public numeric function getSortId() {
+        return variables.sortId;
+    }
     
     // C R U D
     public picture function save() {
@@ -179,7 +188,8 @@ component {
                                            thumbnailFileName = :thumbnailFileName,
                                            title             = :title,
                                            alt               = :alt,
-                                           caption           = :caption
+                                           caption           = :caption,
+                                           sortId            = :sortId
                                      WHERE pictureId = :pictureId")
                            .addParam(name = "pictureId",         value = variables.pictureId,          cfsqltype = "cf_sql_numeric")
                            .addParam(name = "pictureFileName",   value = variables.pictureFileName,    cfsqltype = "cf_sql_varchar")
@@ -187,6 +197,7 @@ component {
                            .addParam(name = "title",             value = left(variables.title, 250),   cfsqltype = "cf_sql_varchar", null = variables.title == "")
                            .addParam(name = "alt",               value = left(variables.alt, 250),     cfsqltype = "cf_sql_varchar", null = variables.alt == "")
                            .addParam(name = "caption",           value = left(variables.caption, 300), cfsqltype = "cf_sql_varchar", null = variables.caption == "")
+                           .addParam(name = "sortId",            value = variables.sortId,             cfsqltype = "cf_sql_numeric")
                            .execute();
             }
         }
@@ -224,6 +235,7 @@ component {
                 variables.title             = qPicture.title[1];
                 variables.alt               = qPicture.alt[1];
                 variables.caption           = qPicture.caption[1];
+                variables.sortId            = qPicture.sortId[1];
             }
             else {
                 throw(type = "pictureNotFound", message = "Could not find the imahe", detail = variables.pictureId);
@@ -236,6 +248,7 @@ component {
             variables.title             = "";
             variables.alt               = "";
             variables.caption           = "";
+            variables.sortId            = 0;
         }
     }
     

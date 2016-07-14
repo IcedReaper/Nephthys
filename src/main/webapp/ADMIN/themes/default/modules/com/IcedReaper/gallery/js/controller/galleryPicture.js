@@ -50,5 +50,15 @@ nephthysAdminApp
             }
         };
         
+        $scope.saveSorting = function () {
+            galleryService
+                .updatePictureSorting($scope.pictures)
+                .then(function () {
+                    for(var i = 0; i < $scope.pictures.length; ++i) {
+                        $scope.pictures[i].sortId = i + 1;
+                    }
+                });
+        }
+        
         $scope.load();
     }]);

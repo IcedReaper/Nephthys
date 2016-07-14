@@ -4,6 +4,9 @@ component implements="API.interfaces.filter" {
     public filter function init() {
         variables.galleryId = null;
         
+        variables.sortBy = "sortId";
+        variables.sortDirection = "ASC";
+        
         variables.qRes = null;
         variables.results = null;
         
@@ -12,6 +15,32 @@ component implements="API.interfaces.filter" {
     
     public filter function setGalleryId(required numeric galleryId) {
         variables.galleryId = arguments.galleryId;
+        
+        return this;
+    }
+    public filter function setSortBy(required string columnName) {
+        switch(lCase(arguments.columnName)) {
+            case "sortid":
+            case "pictureid":
+            case "picturefilename":
+            case "title":
+            case "alt":
+            case "caption": {
+                variables.sortBy = arguments.columnName;
+                break;
+            }
+        }
+        return this;
+    }
+    
+    public filter function setSortDirection(required string sortDirection) {
+        switch(lCase(arguments.sortDirection)) {
+            case "asc":
+            case "desc": {
+                variables.sortDirection = arguments.sortDirection;
+                break;
+            }
+        }
         
         return this;
     }
@@ -29,7 +58,7 @@ component implements="API.interfaces.filter" {
             qryFilter.addParam(name = "galleryId", value = variables.galleryId, cfsqltype = "cf_sql_numeric");
         }
         
-        sql &= where & " ORDER BY pictureId ASC";
+        sql &= where & " ORDER BY " & variables.sortBy & " " & variables.sortDirection;
         
         variables.qRes = qryFilter.setSQL(sql)
                                   .execute()
