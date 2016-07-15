@@ -64,6 +64,25 @@ Date.prototype.toAjaxFormat = function () {
     else {
         return "";
     }
+};
+Date.prototype.toUrlFormat = function () {
+    if(! isNaN(this.getFullYear())) {
+        return this.getFullYear() + '' + (this.getMonth() + 1 > 10 ? this.getMonth() + 1 : '0' + (this.getMonth() + 1)) + '' + (this.getDate() >= 10 ? this.getDate() : '0' + this.getDate());
+    }
+    else {
+        return "";
+    }
+};
+
+String.prototype.urlFormatToDate = function () {
+    if(this.length === 8) {
+        var year = parseInt(this.substr(0, 4), 10);
+        var month = parseInt(this.substr(4, 2), 10) - 1;
+        var day = parseInt(this.substr(6, 2), 10);
+        
+        return new Date(year, month, day);
+    }
+    return null;
 }
 
 structDeepCopy = function (struct) {

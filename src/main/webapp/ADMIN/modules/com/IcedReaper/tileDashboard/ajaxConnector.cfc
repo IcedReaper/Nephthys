@@ -11,10 +11,10 @@ component {
     }
     
     remote numeric function getErrorCount() {
-        return createObject("component", "API.modules.com.Nephthys.error.filter").setFor("error")
-                                                                                 .setFromDate(dateAdd("h", -24, now()))
-                                                                                 .execute()
-                                                                                 .getResultCount();
+        return createObject("component", "API.modules.com.Nephthys.errorLog.filter").setFor("error")
+                                                                                    .setFromDatetime(dateAdd("h", -24, now()))
+                                                                                    .execute()
+                                                                                    .getResultCount();
     }
     
     remote numeric function getTotalPageRequests() {

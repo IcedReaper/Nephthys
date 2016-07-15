@@ -27,7 +27,7 @@ component extends="abstractPerPage" {
                                                s.pageId
                                           FROM nephthys_page_statistics s
                                     INNER JOIN nephthys_page_region r ON s.regionId = r.regionId
-                                         WHERE date_trunc('day', s.visitDate) >= :fromDate
+                                         WHERE date_trunc('day', s.visitDate) = :fromDate
                                            AND r.showInStatistics = true
                                       GROUP BY date_part('Hour', s.visitDate), s.pageId
                                    ) stats ON page.pageId = stats.pageId AND page._date = stats._date

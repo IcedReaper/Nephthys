@@ -1,20 +1,10 @@
-angular.module("com.nephthys.page.statistics", ["chart.js",
-                                               "ui.bootstrap",
-                                               "com.nephthys.global.datePicker"])
-    .service("comNephthysPageStatisticsService", function($http) {
+angular.module("com.Nephthys.errorLog.statistics", ["chart.js",
+                                                    "ui.bootstrap",
+                                                    "com.nephthys.global.datePicker"])
+    .service("comNephthysErrorlogStatisticsService", function($http) {
         return {
-            getPageRequests: function(sortOrder, fromDate, toDate, pageId) {
-                return $http.get('/ajax/com/Nephthys/pages/getPageRequests', {
-                    params: {
-                        pageId:    pageId,
-                        sortOrder: sortOrder,
-                        fromDate:  fromDate.toAjaxFormat(),
-                        toDate:    toDate.toAjaxFormat()
-                    }
-                });
-            },
-            getPageRequestsSeparatedByPage: function(sortOrder, fromDate, toDate) {
-                return $http.get('/ajax/com/Nephthys/pages/getPageRequestsSeparatedByPage', {
+            getStatisticsChartTotal: function(sortOrder, fromDate, toDate) {
+                return $http.get('/ajax/com/Nephthys/errorLog/getStatisticsChartTotal', {
                     params: {
                         sortOrder: sortOrder,
                         fromDate:  fromDate.toAjaxFormat(),
@@ -22,10 +12,9 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
                     }
                 });
             },
-            getPageRequestsSeparatedByLink: function(sortOrder, fromDate, toDate, pageId) {
-                return $http.get('/ajax/com/Nephthys/pages/getPageRequestsSeparatedByLink', {
+            getStatisticsChartSeparatedByType: function(sortOrder, fromDate, toDate) {
+                return $http.get('/ajax/com/Nephthys/errorLog/getStatisticsChartSeparatedByType', {
                     params: {
-                        pageId:    pageId,
                         sortOrder: sortOrder,
                         fromDate:  fromDate.toAjaxFormat(),
                         toDate:    toDate.toAjaxFormat()
@@ -34,14 +23,14 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
             }
         };
     })
-    .controller('comNephthysPageStatisticsController', ["$rootScope", "$scope", "$q", "comNephthysPageStatisticsService", function ($rootScope, $scope, $q, service) {
+    .controller('comNephthysErrorLogStatisticsController', ["$rootScope", "$scope", "$q", "comNephthysErrorlogStatisticsService", function ($rootScope, $scope, $q, service) {
         var actualView = "perDay", // perYear | perMonth | perDay | perHour
             
-            renderChart = function (pageVisitStatisticsData) {
-                $scope.chart.labels = pageVisitStatisticsData.labels;
-                $scope.chart.data   = pageVisitStatisticsData.data;
-                if(pageVisitStatisticsData.series) {
-                    $scope.chart.series = pageVisitStatisticsData.series;
+            renderChart = function (chartData) {
+                $scope.chart.labels = chartData.labels;
+                $scope.chart.data   = chartData.data;
+                if(chartData.series) {
+                    $scope.chart.series = chartData.series;
                 }
             },
             today = function () {
@@ -112,15 +101,11 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
             var method = null;
             switch($scope.requestType) {
                 case "total": {
-                    method = service.getPageRequests;
+                    method = service.getStatisticsChartTotal;
                     break;
                 }
-                case "perPage": {
-                    method = service.getPageRequestsSeparatedByPage;
-                    break;
-                }
-                case "splitPerPage": {
-                    method = service.getPageRequestsSeparatedByLink;
+                case "perType": {
+                    method = service.getStatisticsChartSeparatedByType;
                     break;
                 }
             }
@@ -128,8 +113,7 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
             if(method) {
                 method($scope.sortOrder,
                        $scope.selectedDate.fromDate,
-                       $scope.selectedDate.toDate,
-                       $scope.pageId)
+                       $scope.selectedDate.toDate)
                     .then(function(res) {
                         actualView = res.actualView;
                         
@@ -198,16 +182,11 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
         }
         
         $scope.chart = {
-            series: ["Seitenaufrufe"]
+            series: ["Fehler"]
         };
         
-        // init dates
-        if(! $scope.pageId) {
-            $scope.pageId = null;
-        }
-        
         if(! $scope.chartType) {
-            $scope.chart.type = "horizontalBar";
+            $scope.chart.type = "line";
         }
         else {
             $scope.chart.type = $scope.chartType;
@@ -258,7 +237,7 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
         }
         
         if(! $scope.requestType) {
-            $scope.requestType = "total";
+            $scope.requestType = "perType";
         }
         
         if($scope.showDatePicker === undefined) {
@@ -321,13 +300,12 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
             refreshEvent();
         });
     }])
-    .directive("nephthysPageStatistics", function() {
+    .directive("nephthysErrorlogStatistics", function() {
         return {
             replace: true,
             restrict: "E",
-            controller: "comNephthysPageStatisticsController",
+            controller: "comNephthysErrorLogStatisticsController",
             scope: {
-                pageId: "=?",
                 fromDate: "=?",
                 toDate: "=?",
                 chartType: "=?",
@@ -339,6 +317,6 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
                 showRefreshButton: "=?",
                 selectedDate: "=?"
             },
-            templateUrl : "/themes/default/modules/com/Nephthys/pages/directives/statistics/statistics.html"
+            templateUrl : "/themes/default/modules/com/Nephthys/errorLog/directives/statistics/statistics.html"
         };
     });

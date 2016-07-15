@@ -21,7 +21,7 @@ component extends="abstractSplitPerPage" {
                                                              date_part('Hour', s.visitDate) _date,
                                                              s.completeLink
                                                         FROM nephthys_page_statistics s
-                                                       WHERE date_trunc('day', s.visitDate) >= :fromDate
+                                                       WHERE date_trunc('day', s.visitDate) = :fromDate
                                                          AND s.pageId = :pageId
                                                     GROUP BY date_part('Hour', s.visitDate), s.completeLink) stats
                                             ORDER BY inter._date, stats.completeLink
@@ -30,7 +30,7 @@ component extends="abstractSplitPerPage" {
                                              date_part('Hour', s.visitDate) _date,
                                              s.completeLink
                                         FROM nephthys_page_statistics s
-                                       WHERE date_trunc('day', s.visitDate) >= :fromDate
+                                       WHERE date_trunc('day', s.visitDate) = :fromDate
                                          AND s.pageId = :pageId
                                     GROUP BY date_part('Hour', s.visitDate), s.completeLink
                                    ) tmp2 ON tmp1._date = tmp2._date AND tmp1.completeLink = tmp2.completeLink

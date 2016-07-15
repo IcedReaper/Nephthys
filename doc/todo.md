@@ -7,6 +7,9 @@
 - +Attribut zu Module => Uses permissions (if false hide in permission screens)
 - Role zu Object umändern (permissionManager umbauen)
 - Tasklist for user-module
+- nephthys => Nephthys
+- filter: min und limit per SQL (nicht per CF Logik)
+- dashboard: Beim 1. Aufruf werden nicht alle Charts angezeigt (1 wird random nicht angezeigt (Bekommt Dateänderung nicht mit))
 
 ## Allgemein
     1. Validierungen
@@ -70,15 +73,14 @@
             - per zip
     4. Backup
         * https://www.postgresql.org/docs/9.3/static/app-pgdump.html
-    5. Errorlog
-    6. Sidebar auf Icons reduzieren
-    7. Assets weiter optimieren/reduzieren
-    8. Dashboard pro User variabel gestaltbar machen
+    5. Sidebar auf Icons reduzieren
+    6. Assets weiter optimieren/reduzieren
+    7. Dashboard pro User variabel gestaltbar machen
         * Anordnung
         * Module
-    9. Alle (asset) js Files in der index.cfm laden
-    10. Responsive anpassungen
-    11. Design schick machen
+    8. Alle (asset) js Files in der index.cfm laden
+    9. Responsive anpassungen
+    10. Design schick machen
 
 ## Module (in eigenen Repos/Projekten)
     1. Gallery

@@ -144,7 +144,6 @@ component {
                 variables.stacktrace     = qGetError.stacktrace[1];
                 variables.userId         = qGetError.userId[1];
                 variables.errorDate      = qGetError.errorDate[1];
-                variables.sqlStatement   = qGetError.sqlStatement[1];
                 variables.referrer       = qGetError.referrer[1];
                 variables.userAgent      = qGetError.userAgent[1];
             }
@@ -160,7 +159,6 @@ component {
             variables.stacktrace     = "";
             variables.userId         = 0;
             variables.errorDate      = null;
-            variables.sqlStatement   = "";
             variables.referrer       = "";
             variables.userAgent      = "";
         }
