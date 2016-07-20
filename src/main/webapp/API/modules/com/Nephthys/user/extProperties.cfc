@@ -77,7 +77,8 @@ component {
                     extPropertyId = variables.extProperties[arguments.key].extPropertyId,
                     public        = variables.extProperties[arguments.key].public == 1,
                     value         = variables.extProperties[arguments.key].value,
-                    description   = variables.extProperties[arguments.key].description
+                    description   = variables.extProperties[arguments.key].description,
+                    type          = variables.extProperties[arguments.key].type
                 };
             }
             else {
@@ -123,7 +124,8 @@ component {
                     extPropertyId = variables.extProperties[key].extPropertyId,
                     public        = variables.extProperties[key].public == 1,
                     value         = variables.extProperties[key].value,
-                    description   = variables.extProperties[key].description
+                    description   = variables.extProperties[key].description,
+                    type          = variables.extProperties[key].type
                 });
             }
         }
@@ -208,7 +210,8 @@ component {
                                                               ep.value,
                                                               ep.public,
                                                               epk.keyName,
-                                                              epk.description
+                                                              epk.description,
+                                                              epk.type
                                                            FROM nephthys_user_extProperty ep
                                                      INNER JOIN nephthys_user_extPropertyKey epk ON ep.extPropertyKeyId = epk.extPropertyKeyId
                                                           WHERE ep.userId = :userId")
@@ -222,7 +225,8 @@ component {
                     extPropertyKeyid = qExtProperty.extPropertyKeyid[i],
                     public           = qExtProperty.public[i],
                     value            = qExtProperty.value[i],
-                    description      = qExtProperty.description[i]
+                    description      = qExtProperty.description[i],
+                    type             = qExtProperty.type[i]
                 };
             }
         }

@@ -1003,3 +1003,7 @@ drop table nephthys_role;
 GRANT SELECT ON TABLE nephthys_user_permission TO nephthys_user;
 GRANT SELECT ON TABLE nephthys_user_permissionSubGroup TO nephthys_user;
 GRANT SELECT ON TABLE nephthys_user_permissionRole TO nephthys_user;
+
+
+alter table nephthys_user_extPropertyKey add column type character varying(125) default 'string' not null;
+alter table nephthys_user_extPropertyKey add constraint check(type in ('string', 'date'));

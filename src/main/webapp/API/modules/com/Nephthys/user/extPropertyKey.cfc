@@ -22,6 +22,15 @@ component {
         }
         return this;
     }
+    public extPropertyKey function setType(required string type) {
+        if(variables.extPropertyKeyId == 0 || variables.extPropertyKeyId == null) {
+            variables.type = arguments.type;
+        }
+        else {
+            throw(type = "nephthys.application.notAllowed", message = "The key of an extended property cannot be changed afterwards.");
+        }
+        return this;
+    }
     
     // GETTER
     public numeric function getExtPropertyKeyId() {
@@ -45,6 +54,9 @@ component {
     public date function getLastEditDate() {
         return variables.lastEditDate;
     }
+    public string function getType() {
+        return variables.type;
+    }
     
     public user function getCreatorUser() {
         if(! variables.keyExists("creator")) {
@@ -67,18 +79,21 @@ component {
                                                                              keyName,
                                                                              description,
                                                                              creatorUserId,
-                                                                             lastEditorUserId
+                                                                             lastEditorUserId,
+                                                                             type
                                                                          )
                                                                   VALUES (
                                                                              :keyName,
                                                                              :description,
                                                                              :userId,
-                                                                             :userId
+                                                                             :userId,
+                                                                             :type
                                                                          )
                                                              SELECT currval('seq_nephthys_user_extPropertyKey_id') newId;")
                                                     .addParam(name = "keyName",     value = variables.keyName,        cfsqltype = "cf_sql_varchar")
                                                     .addParam(name = "description", value = variables.description,    cfsqltype = "cf_sql_varchar")
                                                     .addParam(name = "userId",      value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                                                    .addParam(name = "type",        value = variables.type,           cfsqltype = "cf_sql_varchar")
                                                     .execute()
                                                     .getResult()
                                                     .newId[1];
@@ -86,12 +101,14 @@ component {
         else {
             new Query().setSQL("UPDATE Nephthys_user_extPropertyKey
                                    SET description      = :description,
+                                       type             = :type,
                                        lastEditorUserId = :userId,
                                        lastEditDate     = now()
                                  WHERE extPropertyKeyId = :extPropertyKeyId ")
                       .addParam(name = "description",      value = variables.description,      cfsqltype = "cf_sql_varchar")
                       .addParam(name = "userId",           value = request.user.getUserId(),   cfsqltype = "cf_sql_numeric")
                       .addParam(name = "extPropertyKeyId", value = variables.extPropertyKeyId, cfsqltype = "cf_sql_numeric")
+                      .addParam(name = "type",             value = variables.type,             cfsqltype = "cf_sql_varchar")
                       .execute();
         }
         
@@ -136,6 +153,7 @@ component {
                 variables.extPropertyKeyId = qExtPropertyKey.extPropertyKeyId[1];
                 variables.keyName          = qExtPropertyKey.keyName[1];
                 variables.description      = qExtPropertyKey.description[1];
+                variables.type             = qExtPropertyKey.type[1];
                 variables.creatorUserId    = qExtPropertyKey.creatorUserId[1];
                 variables.createdDate      = qExtPropertyKey.createdDate[1];
                 variables.lastEditorUserId = qExtPropertyKey.lastEditorUserId[1];

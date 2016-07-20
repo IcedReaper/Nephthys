@@ -2,10 +2,9 @@
 
 ## Actual Task TODO - Reminder:
 - required approvals
-- User ext property keys mit typen versehen: date, etc (Geburtstag => date ==> datepicker)
 - User ext properties mit sortierung versehen
+- User ext property sauber refactoren
 - +Attribut zu Module => Uses permissions (if false hide in permission screens)
-- Role zu Object umändern (permissionManager umbauen)
 - Tasklist for user-module
 - nephthys => Nephthys
 - filter: min und limit per SQL (nicht per CF Logik)

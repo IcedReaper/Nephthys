@@ -27,7 +27,14 @@
                                 <strong>#extProperties[epIndex].description#:</strong>
                             </div>
                             <div class="col-md-9 col-lg-10">
-                                #extProperties[epIndex].value#
+                                <cfswitch expression="#extProperties[epIndex].type#">
+                                    <cfcase value="date">
+                                        #application.system.settings.getValueOfKey("formatLibrary").formatDate(extProperties[epIndex].value, false)#
+                                    </cfcase>
+                                    <cfdefaultcase>
+                                        #extProperties[epIndex].value#
+                                    </cfdefaultcase>
+                                </cfswitch>
                             </div>
                         </div>
                     </cfloop>

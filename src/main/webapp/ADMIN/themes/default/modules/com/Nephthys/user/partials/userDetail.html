@@ -106,7 +106,13 @@
                                         {{extProperty.description}}
                                     </td>
                                     <td>
-                                        <input type="text" maxlength="255" ng-model="extProperty.value" class="form-control">
+                                        <input type="text" maxlength="255" ng-model="extProperty.value" class="form-control" ng-if="extProperty.type == 'string'">
+                                        <p class="input-group" ng-if="extProperty.type == 'date'">
+                                            <input type="text" ng-model="extProperty.value" class="form-control" uib-datepicker-popup="dd. MM. yyyy" is-open="datePicker.isOpen" datepicker-options="datePicker.options">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="openDatePicker()"><i class="fa fa-calendar"></i></button>
+                                            </span>
+                                        </p>
                                     </td>
                                     <td>
                                         <select ng-model="extProperty.public" class="form-control"

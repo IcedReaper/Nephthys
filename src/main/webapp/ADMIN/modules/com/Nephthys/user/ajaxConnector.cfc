@@ -227,8 +227,21 @@ component {
             
             if(! prop.isEmpty()) {
                 extPropertyId = prop.extPropertyId;
-                value         = prop.value;
                 public        = prop.public;
+                switch(extPropertyKeys[i].getType()) {
+                    case "date": {
+                        if(prop.value != null) {
+                            value = dateFormat(prop.value, "YYYYMMDD");
+                        }
+                        else {
+                            value = prop.value;
+                        }
+                        break;
+                    }
+                    default: {
+                        value = prop.value;
+                    }
+                }
             }
             else {
                 extPropertyId = 0;
@@ -241,7 +254,8 @@ component {
                 extPropertyKeyId = extPropertyKeys[i].getExtPropertyKeyId(),
                 value            = value,
                 public           = public,
-                description      = extPropertyKeys[i].getDescription()
+                description      = extPropertyKeys[i].getDescription(),
+                type             = extPropertyKeys[i].getType()
             });
         }
         
