@@ -18,7 +18,7 @@ component {
                     "name" = _request.getModule().getModuleName()
                 },
                 "role" = {
-                    "name" = _request.getRole().name
+                    "name" = _request.getPermissionRole().getName()
                 },
                 "reason" = _request.getReason(),
                 "creator" = {
@@ -37,22 +37,22 @@ component {
         transaction {
             var _request = new request(arguments.requestId).approve(arguments.comment);
             
-            var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
+            var permissionFilter = createObject("API.modules.com.Nephthys.user.filter").setFor("permission");
             
-            var existingRole = permissionHandlerCtrl.loadRoleForUserInModule(_request.getUserId(),
-                                                                             _request.getModuleId());
+            permissionFilter.setUserId(_request.getUserId())
+                            .setModuleId(_request.getModuleId())
+                            .execute();
             
-            if(existingRole.isEmpty()) {
-                permissionHandlerCtrl.setPermission(null,
-                                                    _request.getUserId(),
-                                                    _request.getRoleId(),
-                                                    _request.getModuleId());
+            if(permissionFilter.getResultCount() == 1) {
+                permissionFilter.getResult()[1].setPermissionRole(_request.getPermissionRole())
+                                               .save();
             }
             else {
-                permissionHandlerCtrl.setPermission(existingRole.permissionId,
-                                                    _request.getUserId(),
-                                                    _request.getRoleId(),
-                                                    _request.getModuleId());
+                var permission = createObject("component", "API.modules.com.Nephthys.user.permission").init(null);
+                permission.setUser(_request.getUser())
+                          .setModule(_request.getModule())
+                          .setPermissionRole(_request.setPermissionRole())
+                          .save();
             }
             
             transactionCommit();
@@ -76,7 +76,7 @@ component {
                 "name" = _request.getModule().getModuleName()
             },
             "role" = {
-                "name" = _request.getRole().name
+                "name" = _request.getPermissionRole().getName()
             },
             "reason" = _request.getReason(),
             "creator" = {
@@ -109,7 +109,7 @@ component {
                     "name" = _request.getModule().getModuleName()
                 },
                 "role" = {
-                    "name" = _request.getRole().name
+                    "name" = _request.getPermissionRole().getName()
                 },
                 "reason" = _request.getReason(),
                 "creator" = {

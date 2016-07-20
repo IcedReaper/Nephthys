@@ -57,9 +57,18 @@ component {
     }
     
     remote array function getRoles() {
-        var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
+        var roleFilter = createObject("component", "API.modules.com.Nephthys.user.filter").setFor("permissionRole");
         
-        return permissionHandlerCtrl.loadRoles();
+        var roles = [];
+        for(var role in roleFilter.execute().getResult()) {
+            roles.append({
+                "roleId" = role.getPermissionRoleId(),
+                "name"   = role.getName(),
+                "value"  = role.getValue()
+            });
+        }
+        
+        return roles;
     }
     
     remote array function getUser(required numeric moduleId) {
@@ -80,19 +89,30 @@ component {
     }
     
     remote boolean function savePermissions(required numeric moduleId, required array permissions) {
-        var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
+        var module = new module(arguments.moduleId);
         
         transaction {
             for(var i = 1; i <= arguments.permissions.len(); i++) {
                 if(arguments.permissions[i].roleId != 0) {
-                    permissionHandlerCtrl.setPermission(arguments.permissions[i].permissionId,
-                                                        arguments.permissions[i].userId,
-                                                        arguments.permissions[i].roleId,
-                                                        arguments.moduleId);
+                    var permissionRole = createObject("component", "API.modules.com.Nephthys.user.permissionRole").init(arguments.permissions[i].roleId);
+                    
+                    if(arguments.permissions[i].permissionId == null) {
+                        var permission = createObject("component", "API.modules.com.Nephthys.user.permission").init(null);
+                        permission.setUser(createObject("component", "API.modules.com.Nephthys.user.user").init(arguments.permissions[i].userId))
+                                  .setModule(module)
+                                  .setPermissionRole(permissionRole)
+                                  .save();
+                    }
+                    else {
+                        var permission = createObject("component", "API.modules.com.Nephthys.user.permission").init(arguments.permissions[i].permissionId);
+                        permission.setPermissionRole(permissionRole)
+                                  .save();
+                    }
                 }
                 else {
                     if(arguments.permissions[i].permissionId != 0 && arguments.permissions[i].permissionId != null) {
-                        permissionHandlerCtrl.removePermission(arguments.permissions[i].permissionId);
+                        createObject("component", "API.modules.com.Nephthys.user.permission").init(arguments.permissions[i].permissionId)
+                                                                                             .delete();
                     }
                     else {
                         continue;

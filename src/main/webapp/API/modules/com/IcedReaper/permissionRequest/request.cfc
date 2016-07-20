@@ -66,9 +66,8 @@ component {
     public module function getModule() {
         return createObject("component", "API.modules.com.Nephthys.module.module").init(variables.moduleId);
     }
-    public struct function getRole() {
-        var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
-        return permissionHandlerCtrl.loadRole(variables.roleId);
+    public module function getPermissionRole() {
+        return createObject("component", "API.modules.com.Nephthys.module.permissionRole").init(variables.roleId);
     }
     
     public boolean function isApproved() {

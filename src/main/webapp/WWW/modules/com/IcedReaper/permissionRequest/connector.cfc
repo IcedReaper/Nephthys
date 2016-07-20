@@ -49,7 +49,7 @@ component implements="WWW.interfaces.connector" {
                             }
                             
                             try {
-                                var role = permissionHandlerCtrl.loadRole(form.roleId);
+                                var role = createObject("component", "API.modules.com.Nephthys.user.permissionRole").init(form.roleId);
                             }
                             catch(nephthys.notFound.role e) {
                                 result.error = true;
@@ -87,6 +87,7 @@ component implements="WWW.interfaces.connector" {
                         }
                         
                         var existingPermissions = permissionHandlerCtrl.loadForUserId(request.user.getUserId());
+                        var roleFilter = createObject("component", "API.modules.com.Nephthys.user.filter").setFor("permissionRole");
                         
                         return application.system.settings.getValueOfKey("templateRenderer")
                             .setModulePath(getModulePath())
@@ -94,7 +95,7 @@ component implements="WWW.interfaces.connector" {
                             .addParam("options",             arguments.options)
                             .addParam("userPage",            userPage)
                             .addParam("modules",             modules)
-                            .addParam("roles",               permissionHandlerCtrl.loadRoles())
+                            .addParam("roles",               roleFilter.execute().getResult())
                             .addParam("result",              result)
                             .addParam("existingPermissions", existingPermissions)
                             .render();

@@ -158,9 +158,11 @@ component {
         if(variables.userId == 0 || variables.userId == null)
             return false;
         
-        var permissionHandler = application.system.settings.getValueOfKey("permissionManager");
-        
-        return permissionHandler.hasPermission(variables.userId, arguments.moduleName, arguments.roleName);
+        return new filter().setFor("permission").setUserId(variables.userId)
+                                                .setModuleName(variables.moduleName)
+                                                .setRoleName(variables.roleName)
+                                                .execute()
+                                                .getResultCount() == 1;
     }
     
     public extProperties function getExtProperties() {
@@ -189,7 +191,7 @@ component {
                                                                    :adminThemeId,
                                                                    :avatarFilename
                                                                );
-                                                  SELECT currval('seq_nephthys_user_id') newUserId;") // directly loading the current value of the sequence
+                                                  SELECT currval('seq_nephthys_user_id') newUserId;")
                                           .addParam(name = "userName",       value = variables.userName,       cfsqltype = "cf_sql_varchar")
                                           .addParam(name = "eMail",          value = variables.eMail,          cfsqltype = "cf_sql_varchar")
                                           .addParam(name = "password",       value = variables.password,       cfsqltype = "cf_sql_varchar")
