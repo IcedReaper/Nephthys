@@ -66,8 +66,8 @@ component {
     public module function getModule() {
         return createObject("component", "API.modules.com.Nephthys.module.module").init(variables.moduleId);
     }
-    public module function getPermissionRole() {
-        return createObject("component", "API.modules.com.Nephthys.module.permissionRole").init(variables.roleId);
+    public permissionRole function getPermissionRole() {
+        return createObject("component", "API.modules.com.Nephthys.user.permissionRole").init(variables.roleId);
     }
     
     public boolean function isApproved() {
@@ -106,7 +106,7 @@ component {
         return this;
     }
     
-    public request function approve(required string comment) {
+    public request function approve(required string comment = "") {
         new query().setSQL("UPDATE IcedReaper_permissionRequest_request
                                SET status      = 1,
                                    adminUserId = :adminUserId,
@@ -120,7 +120,7 @@ component {
         return this;
     }
     
-    public request function decline(required string comment) {
+    public request function decline(required string comment = "") {
         new query().setSQL("UPDATE IcedReaper_permissionRequest_request
                                SET status      = -1,
                                    adminUserId = :adminUserId,

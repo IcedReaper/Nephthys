@@ -85,7 +85,7 @@ component {
             user.uploadAvatar()
                 .save();
             
-            return  user.getAvatarPath();
+            return user.getAvatarPath();
         }
         else {
             throw(type = "nephthys.permission.notAuthorized", message = "It is only allowed to upload an avatar for yourself");
@@ -93,12 +93,44 @@ component {
     }
     
     remote array function getPermissions(required numeric userId) {
-        var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
-        var permissions = permissionHandlerCtrl.loadForUserId(arguments.userId);
+        var permissionFilter = new filter().setFor("permission").setUserId(arguments.userId)
+                                                                .execute();
         
-        for(var i = 1; i <= permissions.len(); i++) {
-            permissions[i].permissionId = permissions[i].permissionId != null ? permissions[i].permissionId : 0;
-            permissions[i].roleId       = permissions[i].roleId != null ? permissions[i].roleId : 0;
+        var permissions = [];
+        for(var permission in permissionFilter.getResult()) {
+            permissions.append({
+                "moduleId"     = permission.getModule().getModuleId(),
+                "moduleName"   = permission.getModule().getModuleName(),
+                "description"  = permission.getModule().getModuleName(),
+                "permissionId" = permission.getPermissionId(),
+                "roleId"       = permission.getPermissionRole().getPermissionRoleId(),
+                "roleValue"    = permission.getPermissionRole().getValue()
+            });
+        }
+        
+        var moduleFilter = createObject("component", "API.modules.com.Nephthys.module.filter").init()
+                                                                                              .setFor("module")
+                                                                                              .setActive(true)
+                                                                                              .execute();
+        
+        for(var module in moduleFilter.getResult()) {
+            var found = false;
+            for(var i = 1; i <= permissions.len(); ++i) {
+                if(permissions[i].moduleId == module.getModuleId()) {
+                    found = true;
+                }
+            }
+            
+            if(! found) {
+                permissions.append({
+                    "moduleId"     = module.getModuleId(),
+                    "moduleName"   = module.getModuleName(),
+                    "description"  = module.getModuleName(),
+                    "permissionId" = null,
+                    "roleId"       = null,
+                    "roleValue"    = 0
+                });
+            }
         }
         
         return permissions;
@@ -125,7 +157,7 @@ component {
             
             transaction {
                 for(var i = 1; i <= arguments.permissions.len(); i++) {
-                    if(arguments.permissions[i].roleId != 0) {
+                    if(arguments.permissions[i].roleId != null) {
                         var permissionRole = new permissionRole(arguments.permissions[i].roleId);
                         
                         if(arguments.permissions[i].permissionId == null) {
@@ -257,9 +289,10 @@ component {
     }
     
     remote struct function getPermissionsOfActualUser() {
-        var roleFilter = new filter().setFor("permissionRole");
-        for(var role in roleFilter.execute().getResult()) {
-            userRoles[role.name] = request.user.hasPermission("com.Nephthys.user", role.name);
+        var roleFilter = new filter().setFor("permissionRole").execute();
+        var roles = {};
+        for(var role in roleFilter.getResult()) {
+            userRoles[role.getName()] = request.user.hasPermission("com.Nephthys.user", role.getName());
         }
         
         return userRoles;

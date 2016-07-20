@@ -999,3 +999,7 @@ alter table IcedReaper_permissionRequest_request add constraint IcedReaper_permi
 
 drop table nephthys_permission;
 drop table nephthys_role;
+
+GRANT SELECT ON TABLE nephthys_user_permission TO nephthys_user;
+GRANT SELECT ON TABLE nephthys_user_permissionSubGroup TO nephthys_user;
+GRANT SELECT ON TABLE nephthys_user_permissionRole TO nephthys_user;

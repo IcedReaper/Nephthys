@@ -20,50 +20,29 @@ component implements="API.interfaces.filter" {
     }
     
     public filter function execute() {
-        if(variables.userId != null) {
-            variables.qRes = null;
-            variables.results = null;
-            
-            var qryFilter = new Query();
-            var sql = "";
-            var where = "";
-            
-            var where = "";
-            
-            if(variables.roleValue != null) {
-                where &= " WHERE r.value = :roleValue) ";
-                qryFilter.addParam(name = "roleValue", value = variables.roleValue, cfsqltype = "cf_sql_varchar");
-            }
-            if(variables.roleName != null) {
-                where &= " WHERE r.name = :roleName) ";
-                qryFilter.addParam(name = "roleName", value = variables.roleName, cfsqltype = "cf_sql_varchar");
-            }
-                    
-            where &= (where == "" ? " WHERE " : " AND ") & " p.userId = :userId ";
-            qryFilter.addParam(name = "userId", value = variables.userId, cfsqltype = "cf_sql_numeric");
-            
-            if(variables.permissionSubGroupId != null) {
-                where &= (where == "" ? " WHERE " : " AND ") & " p.permissionSubGroupId = :permissionSubGroupId ";
-                qryFilter.addParam(name = "permissionSubGroupId", value = variables.permissionSubGroupId, cfsqltype = "cf_sql_numeric");
-            }
-            else if(variables.permissionSubGroupName != null) {
-                where &= (where == "" ? " WHERE " : " AND ") & " p.permissionSubGroupId = (SELECT psg.permissionSubGroupId
-                                                                                             FROM nephthys_user_permissionSubGroupId psg
-                                                                                            WHERE psg.name = :permissionSubGroupName) ";
-                qryFilter.addParam(name = "permissionSubGroupName", value = variables.permissionSubGroupName, cfsqltype = "cf_sql_numeric");
-            }
-            
-            sql = "SELECT r.permissionRoleId
-                     FROM nephthys_user_permissionRole r "
-                & where;
-            
-            variables.qRes = qryFilter.setSQL(sql)
-                                      .execute()
-                                      .getResult();
+        variables.qRes = null;
+        variables.results = null;
+        
+        var qryFilter = new Query();
+        var sql = "";
+        var where = "";
+        
+        if(variables.roleValue != null) {
+            where &= (where = "" ? " WHERE " : " AND ") & " r.value = :roleValue ";
+            qryFilter.addParam(name = "roleValue", value = variables.roleValue, cfsqltype = "cf_sql_varchar");
         }
-        else {
-            throw(type = "nephthys.application.invalidResource", message = "Please specify the userId");
+        if(variables.roleName != null) {
+            where &= (where = "" ? " WHERE " : " AND ") & " r.name = :roleName ";
+            qryFilter.addParam(name = "roleName", value = variables.roleName, cfsqltype = "cf_sql_varchar");
         }
+        
+        sql = "SELECT r.permissionRoleId
+                 FROM nephthys_user_permissionRole r "
+            & where;
+        
+        variables.qRes = qryFilter.setSQL(sql)
+                                  .execute()
+                                  .getResult();
         return this;
     }
     

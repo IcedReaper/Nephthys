@@ -18,7 +18,7 @@
                     Rolle
                 </div>
                 <div class="col-md-10">
-                    #attributes.request.getRole().name#
+                    #attributes.request.getPermissionRole().getName()#
                 </div>
             </div>
             <div class="row">

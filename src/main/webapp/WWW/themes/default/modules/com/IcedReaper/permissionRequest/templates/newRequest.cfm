@@ -45,7 +45,7 @@
                         <div class="col-md-9">
                             <select id="roleId" name="roleId" class="form-control<cfif attributes.result.errors.role> with-danger</cfif>">
                                 <cfloop from="1" to="#attributes.roles.len()#" index="roleIndex">
-                                    <option value="#attributes.roles[roleIndex].roleId#" data-roleValue="#attributes.roles[roleIndex].value#" <cfif attributes.result.error && form.roleId EQ attributes.roles[roleIndex].roleId>selected="selected"</cfif>>#attributes.roles[roleIndex].name#</option>
+                                    <option value="#attributes.roles[roleIndex].getPermissionRoleId()#" data-roleValue="#attributes.roles[roleIndex].getValue()#" <cfif attributes.result.error && form.roleId EQ attributes.roles[roleIndex].getPermissionRoleId()>selected="selected"</cfif>>#attributes.roles[roleIndex].getName()#</option>
                                 </cfloop>
                             </select>
                         </div>

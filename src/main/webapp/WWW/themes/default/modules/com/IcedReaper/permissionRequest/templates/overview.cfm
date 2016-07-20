@@ -22,7 +22,7 @@
                             <tr class="clickable<cfif attributes.requests[requestIndex].isApproved()> table-success<cfelseif attributes.requests[requestIndex].isDeclined()> table-danger</cfif>" onClick="window.location='request/#attributes.requests[requestIndex].getRequestId()#'">
                                 <td>#attributes.requests[requestIndex].getRequestId()#</td>
                                 <td>#attributes.requests[requestIndex].getModule().getModuleName()#</td>
-                                <td>#attributes.requests[requestIndex].getRole().name#</td>
+                                <td>#attributes.requests[requestIndex].getPermissionRole().getName()#</td>
                             </tr>
                         </cfloop>
                     </tbody>

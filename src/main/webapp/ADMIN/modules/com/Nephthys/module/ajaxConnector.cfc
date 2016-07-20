@@ -72,20 +72,43 @@ component {
     }
     
     remote array function getUser(required numeric moduleId) {
-        var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
+        var permissionFilter = createObject("component", "API.modules.com.Nephthys.user.filter").setFor("permission")
+                                                                                                .setModuleId(arguments.moduleId)
+                                                                                                .execute();
         
-        var users = permissionHandlerCtrl.loadUserForModule(arguments.moduleId);
-        var userArray = [];
-        for(var i = 1; i <= users.len(); i++) {
-            userArray.append({
-                "permissionId" = users[i].permissionId,
-                "userId"       = users[i].user.getUserId(),
-                "userName"     = users[i].user.getUserName(),
-                "roleId"       = users[i].roleId != null ? users[i].roleId : 0
+        var permissions = [];
+        for(var permission in permissionFilter.getResult()) {
+            permissions.append({
+                "permissionId" = permission.getPermissionId(),
+                "userId"       = permission.getUser().getUserId(),
+                "userName"     = permission.getUser().getUserName(),
+                "roleId"       = permission.getPermissionRole().getPermissionRoleId()
             });
         }
         
-        return userArray;
+        var userFilter = createObject("component", "API.modules.com.Nephthys.user.filter").setFor("user")
+                                                                                          .setActive(true)
+                                                                                          .execute();
+        
+        for(var user in userFilter.getResult()) {
+            var found = false;
+            for(var i = 1; i <= permissions.len(); ++i) {
+                if(permissions[i].userId == user.getUserId()) {
+                    found = true;
+                }
+            }
+            
+            if(! found) {
+                permissions.append({
+                    "permissionId" = null,
+                    "userId"       = user.getUserId(),
+                    "userName"     = user.getUserName(),
+                    "roleId"       = null
+                });
+            }
+        }
+        
+        return permissions;
     }
     
     remote boolean function savePermissions(required numeric moduleId, required array permissions) {
@@ -93,7 +116,7 @@ component {
         
         transaction {
             for(var i = 1; i <= arguments.permissions.len(); i++) {
-                if(arguments.permissions[i].roleId != 0) {
+                if(arguments.permissions[i].roleId != null) {
                     var permissionRole = createObject("component", "API.modules.com.Nephthys.user.permissionRole").init(arguments.permissions[i].roleId);
                     
                     if(arguments.permissions[i].permissionId == null) {

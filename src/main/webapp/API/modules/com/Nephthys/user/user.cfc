@@ -159,8 +159,8 @@ component {
             return false;
         
         return new filter().setFor("permission").setUserId(variables.userId)
-                                                .setModuleName(variables.moduleName)
-                                                .setRoleName(variables.roleName)
+                                                .setModuleName(arguments.moduleName)
+                                                .setRoleName(arguments.roleName)
                                                 .execute()
                                                 .getResultCount() == 1;
     }

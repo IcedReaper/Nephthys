@@ -24,7 +24,7 @@ component {
     public numeric function getpermissionRoleId() {
         return variables.permissionRoleId;
     }
-    public numeric function getName() {
+    public string function getName() {
         return variables.name;
     }
     public numeric function getValue() {
@@ -56,7 +56,7 @@ component {
     
     
     private void function load() {
-        if(variables.permissionRoleId == null) {
+        if(variables.permissionRoleId != null) {
             var qGetRole = new Query().setSQL("SELECT *
                                                  FROM nephthys_user_permissionRole
                                                 WHERE permissionRoleId = :permissionRoleId")

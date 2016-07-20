@@ -28,9 +28,6 @@ component implements="WWW.interfaces.connector" {
             if(arguments.options.keyExists("otherParameter") && arguments.options.otherParameter.len() > 0) {
                 switch(arguments.options.otherParameter[1]) {
                     case "new": {
-                        var permissionHandlerCtrl = application.system.settings.getValueOfKey("permissionManager");
-                        
-                        
                         var result = {
                             successful = false,
                             error = false,
@@ -86,7 +83,22 @@ component implements="WWW.interfaces.connector" {
                             }
                         }
                         
-                        var existingPermissions = permissionHandlerCtrl.loadForUserId(request.user.getUserId());
+                        var permissionFilter = createObject("component", "API.modules.com.Nephthys.user.filter").setFor("permission")
+                                                                                                                .setUserId(request.user.getUserId())
+                                                                                                                .execute();
+                        
+                        var existingPermissions = [];
+                        for(var permission in permissionFilter.getResult()) {
+                            existingPermissions.append({
+                                "moduleId"     = permission.getModule().getModuleId(),
+                                "moduleName"   = permission.getModule().getModuleName(),
+                                "description"  = permission.getModule().getModuleName(),
+                                "permissionId" = permission.getPermissionId(),
+                                "roleId"       = permission.getPermissionRole().getPermissionRoleId(),
+                                "roleValue"    = permission.getPermissionRole().getValue()
+                            });
+                        }
+                        
                         var roleFilter = createObject("component", "API.modules.com.Nephthys.user.filter").setFor("permissionRole");
                         
                         return application.system.settings.getValueOfKey("templateRenderer")

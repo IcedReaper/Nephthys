@@ -20,7 +20,7 @@
     <header>
     </header>
     <main>
-        <div class="site-wrapper text-xs-center">
+        <!---<div class="site-wrapper text-xs-center">
             <cfswitch expression="#attributes.statusCode#">
                 <cfcase value="500">
                     <h1>Uups, da ist wohl was schief gegangen!</h1>
@@ -30,7 +30,8 @@
                 </cfcase>
             </cfswitch>
             <a href="/">Zurück zur Startseite</a>
-        </div>
+        </div>--->
+        <cfdump var="#attributes#">
     </main>
     <footer>
         &copy; IcedReaper und das Nephthys Team 2015 - <cfoutput>#year(now())#</cfoutput>

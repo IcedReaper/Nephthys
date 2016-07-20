@@ -56,11 +56,17 @@ component {
     
     public permission function save() {
         var qSave = new Query();
-        qSave.addParam(name = "userId",               value = variables.user.getUserId(),                             cfsqltype = "cf_sql_numeric")
-             .addParam(name = "permissionRoleId",     value = variables.permissionRole.getPermissionRoleId(),         cfsqltype = "cf_sql_numeric")
-             .addParam(name = "moduleId",             value = variables.module.getModuleId(),                         cfsqltype = "cf_sql_numeric")
-             .addParam(name = "permissionSubGroupId", value = variables.permissionSubGroup.getPermissionSubGroupId(), cfsqltype = "cf_sql_numeric")
-             .addParam(name = "userId",               value = variables.creator.getUserId(),                          cfsqltype = "cf_sql_numeric");
+        qSave.addParam(name = "userId",           value = variables.user.getUserId(),                     cfsqltype = "cf_sql_numeric")
+             .addParam(name = "permissionRoleId", value = variables.permissionRole.getPermissionRoleId(), cfsqltype = "cf_sql_numeric")
+             .addParam(name = "moduleId",         value = variables.module.getModuleId(),                 cfsqltype = "cf_sql_numeric")
+             .addParam(name = "userId",           value = variables.creator.getUserId(),                  cfsqltype = "cf_sql_numeric");
+        
+        if(variables.permissionSubGroup != null) {
+            qSave.addParam(name = "permissionSubGroupId", value = variables.permissionSubGroup.getPermissionSubGroupId(), cfsqltype = "cf_sql_numeric");
+        }
+        else {
+            qSave.addParam(name = "permissionSubGroupId", value = null, cfsqltype = "cf_sql_numeric", null = true);
+        }
         
         if(variables.permissionId == null) {
             variables.permissionId = qSave.setSQL("INSERT INTO nephthys_user_permission
@@ -105,7 +111,7 @@ component {
     }
     
     private void function load() {
-        if(variables.permissionId == null) {
+        if(variables.permissionId != null) {
             var qGetPermission = new Query().setSQL("SELECT *
                                                        FROM nephthys_user_permission
                                                       WHERE permissionId = :permissionId")
