@@ -1,6 +1,4 @@
 component {
-    import "API.modules.com.Nephthys.user.*";
-    
     public pageRequest function init(required string link) {
         variables.resources = {
             "css" = [],

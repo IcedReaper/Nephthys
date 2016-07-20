@@ -16,7 +16,7 @@ component extends="abstractPerGallery" {
                                              date_part('Hour', s.visitDate) _date,
                                              s.galleryId
                                         FROM IcedReaper_gallery_statistics s
-                                       WHERE date_trunc('day', s.visitDate) >= :fromDate
+                                       WHERE date_trunc('day', s.visitDate) = :fromDate
                                     GROUP BY date_part('Hour', s.visitDate), s.galleryId
                                    ) stats
                    FULL OUTER JOIN (SELECT i _date, gallery.galleryId

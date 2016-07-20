@@ -6,7 +6,7 @@ component extends="abstractTotal" {
             var sql = "";
             var innerQuery = "SELECT COUNT(*) requestCount, date_part('Hour', visitDate) _date 
                                 FROM IcedReaper_gallery_statistics
-                               WHERE date_trunc('day', visitDate) >= :date ";
+                               WHERE date_trunc('day', visitDate) = :date ";
             
             if(variables.galleryId != null) {
                 innerQuery &= " AND galleryId = :galleryId ";

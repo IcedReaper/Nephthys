@@ -11,6 +11,63 @@ nephthysAdminApp
             showDatePicker:    false,
             showRefreshButton: false
         };
+        $scope.loginChart = {
+            options: {
+                fixedHeight: true,
+                height: 250,
+                legend: {
+                    display: true
+                },
+                tooltips: {
+                    mode: 'label'
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        };
+        $scope.pageChart = {
+            options: {
+                fixedHeight: true,
+                height: 250,
+                legend: {
+                    display: true
+                },
+                tooltips: {
+                    mode: 'label'
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        };
+        $scope.errorChart = {
+            options: {
+                fixedHeight: true,
+                height: 250,
+                legend: {
+                    display: true
+                },
+                tooltips: {
+                    mode: 'label'
+                },
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero:true
+                        }
+                    }]
+                }
+            }
+        };
         
         $scope.refresh = function () {
             $rootScope.$broadcast("nephthys-statistics-refresh");

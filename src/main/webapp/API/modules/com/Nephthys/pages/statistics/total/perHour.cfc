@@ -7,7 +7,7 @@ component extends="abstractTotal" {
             var innerQuery = "    SELECT COUNT(*) requestCount, date_part('Hour', visitDate) _date 
                                     FROM nephthys_page_statistics s
                               INNER JOIN nephthys_page_region r ON s.regionId = r.regionId
-                                   WHERE date_trunc('day', visitDate) >= :date ";
+                                   WHERE date_trunc('day', visitDate) = :date ";
             
             if(variables.pageId != null) {
                 innerQuery &= " AND pageId = :pageId ";

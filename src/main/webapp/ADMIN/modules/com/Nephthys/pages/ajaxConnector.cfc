@@ -524,14 +524,14 @@ component {
     remote struct function getPageRequests(required numeric pageId = null, required string sortOrder, required string fromDate, required string toDate) {
         var _fromDate = dateFormat(arguments.fromDate, "YYYY/MM/DD");
         var _toDate   = dateFormat(arguments.toDate, "YYYY/MM/DD");
-
+        
         return new statistics().getTotal(arguments.pageId,
                                          arguments.sortOrder,
                                          _fromDate,
                                          _toDate);
-    } 
+    }
     
-    remote struct function getPageRequestsSeperatedByPage(required string sortOrder, required string fromDate, required string toDate) {
+    remote struct function getPageRequestsSeparatedByPage(required string sortOrder, required string fromDate, required string toDate) {
         var _fromDate = dateFormat(arguments.fromDate, "YYYY/MM/DD");
         var _toDate   = dateFormat(arguments.toDate, "YYYY/MM/DD");
 
@@ -540,10 +540,10 @@ component {
                                                      _toDate);
     }
     
-    remote struct function getPageRequestsSeperatedByLink(required numeric pageId, required string sortOrder, required string fromDate, required string toDate) {
+    remote struct function getPageRequestsSeparatedByLink(required numeric pageId, required string sortOrder, required string fromDate, required string toDate) {
         var _fromDate = dateFormat(arguments.fromDate, "YYYY/MM/DD");
         var _toDate   = dateFormat(arguments.toDate, "YYYY/MM/DD");
-
+        
         return new statistics().getSplitPerPage(arguments.pageId,
                                                 arguments.sortOrder,
                                                 _fromDate,

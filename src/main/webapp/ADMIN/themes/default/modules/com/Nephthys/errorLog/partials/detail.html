@@ -1,0 +1,95 @@
+<div class="row m-b-2">
+    <div class="col-md-10 col-sm-8">
+        <a href="#/" class="btn btn-secondary"><i class="fa fa-area-chart"></i> Übersicht</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
+        <div class="pull-right">
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-block">
+            <div class="row m-b-2" ng-if="errorCode && fromDate && toDate">
+                <div class="col-md-10 col-sm-8">
+                    <a href="#/{{errorCode}}/{{fromDate.toUrlFormat()}}/{{toDate.toUrlFormat()}}/{{previousErrorId}}"
+                       class="btn btn-secondary"
+                       ng-if="previousErrorId"><i class="fa fa-chevron-left"></i></a>
+                </div>
+                <div class="col-md-2 col-sm-4">
+                    <div class="pull-right">
+                    <a href="#/{{errorCode}}/{{fromDate.toUrlFormat()}}/{{toDate.toUrlFormat()}}/{{nextErrorId}}"
+                       class="btn btn-secondary"
+                       ng-if="nextErrorId"><i class="fa fa-chevron-right"></i></a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-xs-6 col-sm-4 col-md-3">
+                    <strong>ErrorId</strong>
+                </div>
+                <div class="col-xs-6 col-sm-8 col-md-9">
+                    {{details.errorId}}
+                </div>
+            </div>
+            <div class="row m-t-1">
+                <div class="col-xs-6 col-sm-4 col-md-3">
+                    <strong>Datum</strong>
+                </div>
+                <div class="col-xs-6 col-sm-8 col-md-9">
+                    {{details.errorDate}}
+                </div>
+            </div>
+            <div class="row m-t-1">
+                <div class="col-xs-6 col-sm-4 col-md-3">
+                    <strong>Fehlercode</strong>
+                </div>
+                <div class="col-xs-6 col-sm-8 col-md-9">
+                    {{details.errorCode}}
+                </div>
+            </div>
+            <div class="row m-t-1">
+                <div class="col-xs-6 col-sm-4 col-md-3">
+                    <strong>Fehlermeldung</strong>
+                </div>
+                <div class="col-xs-6 col-sm-8 col-md-9">
+                    {{details.message}}
+                </div>
+            </div>
+            <div class="row m-t-1">
+                <div class="col-xs-6 col-sm-4 col-md-3">
+                    <strong>Link</strong>
+                </div>
+                <div class="col-xs-6 col-sm-8 col-md-9">
+                    {{details.link}}
+                </div>
+            </div>
+            <div class="row m-t-1">
+                <div class="col-xs-6 col-sm-4 col-md-3">
+                    <strong>Referrer</strong>
+                </div>
+                <div class="col-xs-6 col-sm-8 col-md-9">
+                    {{details.referrer}}
+                </div>
+            </div>
+            <div class="row m-t-1" ng-if="details.user.userId">
+                <div class="col-xs-6 col-sm-4 col-md-3">
+                    <strong>User</strong>
+                </div>
+                <div class="col-xs-6 col-sm-8 col-md-9">
+                    {{details.user.username}}
+                </div>
+            </div>
+            <div class="row m-t-1">
+                <div class="col-xs-6 col-sm-4 col-md-3">
+                    <strong>Stacktrace</strong>
+                </div>
+                <div class="col-xs-6 col-sm-8 col-md-9">
+                    {{details.stacktrace}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

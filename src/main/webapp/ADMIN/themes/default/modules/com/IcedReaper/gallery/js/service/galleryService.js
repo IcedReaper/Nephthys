@@ -98,6 +98,12 @@ nephthysAdminApp
                     galleryId: galleryId,
                     statusId:  statusId
                 });
+            },
+            
+            updatePictureSorting: function (pictures) {
+                return $http.post("/ajax/com/IcedReaper/gallery/updatePictureSorting", {
+                    pictures: pictures
+                });
             }
         };
     });

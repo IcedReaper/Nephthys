@@ -4,6 +4,10 @@ component extends="abstractSplitPerPage" {
         if(variables.fromDate != null && variables.toDate != null && variables.pageId != null) {
             var qPageRequests = new Query();
             
+            // the truncated dates are required for the series as they have to be on the first of every month
+            var fromDateTruncated = createDate(year(variables.fromDate), month(variables.fromDate), 1);
+            var toDateTruncated   = createDate(year(variables.toDate), month(variables.toDate), 1);
+            
             sql = "         SELECT tmp1._date, 
                                    CASE 
                                      WHEN tmp2.requestCount IS NOT NULL THEN
@@ -16,7 +20,7 @@ component extends="abstractSplitPerPage" {
                                                     stats.completeLink,
                                                     0 requestCount
                                       FROM (SELECT i :: date _date
-                                              FROM generate_series(:fromDate, :toDate, '1 month' :: interval) i) inter,
+                                              FROM generate_series(:fromDateTruncated, :toDateTruncated, '1 month' :: interval) i) inter,
                                                    (  SELECT COUNT(s.*) requestCount,
                                                              date_trunc('month', s.visitDate) _date,
                                                              s.completeLink
@@ -39,9 +43,11 @@ component extends="abstractSplitPerPage" {
                           ORDER BY tmp1._date " & variables.sortOrder & ", tmp1.completeLink ASC";
             
             variables.qRes = qPageRequests.setSQL(sql)
-                                          .addParam(name = "fromDate", value = variables.fromDate, cfsqltype = "cf_sql_date")
-                                          .addParam(name = "toDate",   value = variables.toDate,   cfsqltype = "cf_sql_date")
-                                          .addParam(name = "pageId",   value = variables.pageId,   cfsqltype = "cf_sql_numeric")
+                                          .addParam(name = "fromDateTruncated", value = fromDateTruncated,  cfsqltype = "cf_sql_date")
+                                          .addParam(name = "toDateTruncated",   value = toDateTruncated,    cfsqltype = "cf_sql_date")
+                                          .addParam(name = "fromDate",          value = variables.fromDate, cfsqltype = "cf_sql_date")
+                                          .addParam(name = "toDate",            value = variables.toDate,   cfsqltype = "cf_sql_date")
+                                          .addParam(name = "pageId",            value = variables.pageId,   cfsqltype = "cf_sql_numeric")
                                           .execute()
                                           .getResult();
             

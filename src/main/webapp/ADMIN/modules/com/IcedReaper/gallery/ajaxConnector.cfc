@@ -385,6 +385,30 @@ component {
         return statusData;
     }
     
+    remote array function updatePictureSorting(required array pictures) {
+        var updated = [];
+        transaction {
+            for(var i = 1; i <= arguments.pictures.len(); ++i) {
+                var pic = new picture(arguments.pictures[i].pictureId);
+                
+                if(pic.getSortId() != i) {
+                    updated.append({
+                        picId = pic.getPictureId(),
+                        oldSort = pic.getSortId(),
+                        newSort = i
+                    });
+                    
+                    pic.setSortId(i)
+                       .save();
+                }
+            }
+            
+            transactionCommit();
+        }
+        
+        return updated;
+    }
+    
     // private
     private struct function prepareDetailStruct(required gallery gallery) {
         var categories = [];
@@ -419,6 +443,7 @@ component {
         for(var p = 1; p <= arguments.pictures.len(); p++) {
             gPictures.append({
                 "pictureId"         = arguments.pictures[p].getPictureId(),
+                "sortId"            = arguments.pictures[p].getSortId(),
                 "pictureFilename"   = arguments.relativePath & arguments.pictures[p].getPictureFilename(),
                 "thumbnailFilename" = arguments.relativePath & arguments.pictures[p].getThumbnailFilename(),
                 "title"             = arguments.pictures[p].getTitle(),

@@ -13,8 +13,8 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
                     }
                 });
             },
-            getPageRequestsSeperatedByPage: function(sortOrder, fromDate, toDate) {
-                return $http.get('/ajax/com/Nephthys/pages/getPageRequestsSeperatedByPage', {
+            getPageRequestsSeparatedByPage: function(sortOrder, fromDate, toDate) {
+                return $http.get('/ajax/com/Nephthys/pages/getPageRequestsSeparatedByPage', {
                     params: {
                         sortOrder: sortOrder,
                         fromDate:  fromDate.toAjaxFormat(),
@@ -22,8 +22,8 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
                     }
                 });
             },
-            getPageRequestsSeperatedByLink: function(sortOrder, fromDate, toDate, pageId) {
-                return $http.get('/ajax/com/Nephthys/pages/getPageRequestsSeperatedByLink', {
+            getPageRequestsSeparatedByLink: function(sortOrder, fromDate, toDate, pageId) {
+                return $http.get('/ajax/com/Nephthys/pages/getPageRequestsSeparatedByLink', {
                     params: {
                         pageId:    pageId,
                         sortOrder: sortOrder,
@@ -116,11 +116,11 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
                     break;
                 }
                 case "perPage": {
-                    method = service.getPageRequestsSeperatedByPage;
+                    method = service.getPageRequestsSeparatedByPage;
                     break;
                 }
                 case "splitPerPage": {
-                    method = service.getPageRequestsSeperatedByLink;
+                    method = service.getPageRequestsSeparatedByLink;
                     break;
                 }
             }

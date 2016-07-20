@@ -884,9 +884,8 @@ create unique index UIDX_IcedReaper_permissionRequest_req_umrId ON IcedReaper_pe
 GRANT SELECT, INSERT ON TABLE IcedReaper_permissionRequest_request TO nephthys_user;
 GRANT SELECT, UPDATE ON SEQUENCE icedreaper_permissionrequest_request_requestid_seq TO nephthys_user;
 
-
--- 8.7.2016
-alter table nephthys_page_statistics add column regionId references nephthys_page_region on delete set null;
+-- 20.7.2016
+alter table nephthys_page_statistics add column regionId integer references nephthys_page_region on delete set null;
 
 update nephthys_page_statistics stats
    set regionId = (    SELECT sp.regionId
@@ -909,7 +908,27 @@ alter table nephthys_page_statistics alter column regionId SET NOT NULL;
 
 alter table nephthys_page_region add column showInStatistics boolean default true NOT NULL;
 
+create table IcedReaper_references_reference
+(
+    referenceId serial primary key,
+    
+    name character varying(250) unique,
+    since date not null,
+    quote text not null,
+    homepage character varying (1024),
+    imageName character varying(250),
+    
+    position integer not null unique,
+    
+    
+    creatorUserId integer not null references nephthys_user,
+    creationDate timestamp with time zone not null default now(),
+    
+    lastEditorUserId integer not null references nephthys_user,
+    lastEditDate timestamp with time zone not null default now()
+);
 
+GRANT SELECT ON TABLE IcedReaper_references_reference TO nephthys_user;
 
 create table nephthys_user_permissionRole
 (
@@ -956,7 +975,7 @@ create table nephthys_user_permission
 insert into nephthys_user_permission
 (
     userId,
-    roleId,
+    permissionRoleId,
     moduleId,
     
     creatorUserId,

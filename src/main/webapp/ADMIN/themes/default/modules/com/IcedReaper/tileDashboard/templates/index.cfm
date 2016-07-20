@@ -42,7 +42,7 @@
                 <p>{{newRegistrations}}</p>
             </div>
         </div>
-        <div class="tile tile-info">
+        <div class="tile tile-info clickable" onClick="window.location='/com.Nephthys.errorLog'">
             <div>
                 <h3>Fehler</h3>
                 <p>{{errors.count}}</p>

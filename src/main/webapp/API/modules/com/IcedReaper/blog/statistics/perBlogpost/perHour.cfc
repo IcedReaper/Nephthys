@@ -15,7 +15,7 @@ component extends="abstractPerBlogpost" {
                                              date_part('Hour', s.visitDate) _date,
                                              s.blogpostId
                                         FROM IcedReaper_blog_statistics s
-                                       WHERE date_trunc('day', s.visitDate) >= :fromDate
+                                       WHERE date_trunc('day', s.visitDate) = :fromDate
                                     GROUP BY date_part('Hour', s.visitDate), s.blogpostId
                                    ) stats
                    FULL OUTER JOIN (SELECT i _date, blogpost.blogpostId

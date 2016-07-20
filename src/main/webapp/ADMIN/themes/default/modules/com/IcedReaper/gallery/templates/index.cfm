@@ -49,4 +49,4 @@
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/gallery/js/service/statusService.js"></script>
 
 <nephthys-loading-bar></nephthys-loading-bar>
-<div ng-view></div>
+<div ng-view class="com-icedreaper-gallery"></div>

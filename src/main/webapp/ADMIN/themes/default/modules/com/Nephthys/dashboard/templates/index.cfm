@@ -6,10 +6,12 @@
 <script type="text/javascript" src="/themes/default/directive/nephthysLoadingBar/nephthysLoadingBar.js"></script>
 <script type="text/javascript" src="/themes/default/directive/nephthysUserInfo/nephthysUserInfo.js"></script>
 <script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
+
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/statistics/statistics.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/tasklist/tasklist.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/user/directives/loginLog/loginLog.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/user/directives/statistics/statistics.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/errorLog/directives/statistics/statistics.js"></script>
 
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/dashboardApp.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/serverInfo.js"></script>
@@ -41,20 +43,35 @@
                     <div class="col-md-8">
                         <div class="row">
                             <div class="col-md-12">
+                                <h4>Loginverlauf</h4>
                                 <nephthys-user-statistics chart-type          = "'line'"
                                                           selected-date       = "selectedDate"
                                                           show-date-picker    = "options.showDatePicker"
-                                                          show-refresh-button = "options.showRefreshButton"></nephthys-user-statistics>
+                                                          show-refresh-button = "options.showRefreshButton"
+                                                          chart-options       = "loginChart.options"></nephthys-user-statistics>
                             </div>
                         </div>
                         <div class="row m-t-1">
                             <div class="col-md-12">
+                                <h4>Besuchverlauf</h4>
                                 <nephthys-page-statistics request-type        = "'perPage'"
                                                           selected-date       = "selectedDate"
                                                           chart-type          = "'line'"
                                                           sort-order          = "ASC"
                                                           show-date-picker    = "options.showDatePicker"
-                                                          show-refresh-button = "options.showRefreshButton"></nephthys-page-statistics>
+                                                          show-refresh-button = "options.showRefreshButton"
+                                                          chart-options       = "pageChart.options"></nephthys-page-statistics>
+                            </div>
+                        </div>
+                        <div class="row m-t-1">
+                            <div class="col-md-12">
+                                <h4>Fehlerverlauf</h4>
+                                <nephthys-errorlog-statistics selected-date       = "selectedDate"
+                                                              chart-type          = "'line'"
+                                                              sort-order          = "ASC"
+                                                              show-date-picker    = "options.showDatePicker"
+                                                              show-refresh-button = "options.showRefreshButton"
+                                                              chart-options       = "errorChart.options"></nephthys-page-statistics>
                             </div>
                         </div>
                     </div>

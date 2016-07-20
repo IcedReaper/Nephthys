@@ -60,7 +60,7 @@ nephthysAdminApp
                     blogpostCopy[attrib] = $scope.blogpost[attrib];
                 }
             }
-            blogpostCopy.releaseDate = blogpostCopy.toAjaxFormat();
+            blogpostCopy.releaseDate = blogpostCopy.releaseDate.toAjaxFormat();
             blogpostCopy.story = convertContent();
             
             blogService

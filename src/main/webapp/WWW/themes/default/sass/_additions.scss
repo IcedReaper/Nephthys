@@ -160,6 +160,11 @@ body {
     .table-success {
         color: $body-bg;
     }
+    
+    .container-fluid {
+        padding-left: 0;
+        padding-right: 0;
+    }
 
     .container,
     .container-fluid {
