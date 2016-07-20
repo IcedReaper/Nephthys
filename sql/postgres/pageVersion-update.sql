@@ -1007,3 +1007,8 @@ GRANT SELECT ON TABLE nephthys_user_permissionRole TO nephthys_user;
 
 alter table nephthys_user_extPropertyKey add column type character varying(125) default 'string' not null;
 alter table nephthys_user_extPropertyKey add constraint check(type in ('string', 'date'));
+
+alter table nephthys_user_extPropertyKey add column sortOrder numeric;
+update nephthys_user_extPropertyKey SET sortOrder = extPropertyKeyId;
+alter table nephthys_user_extPropertyKey alter column sortOrder drop not null;
+alter table nephthys_user_extPropertyKey add unique (sortOrder);

@@ -20,19 +20,19 @@
                             #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.user.getRegistrationDate())#
                         </div>
                     </div>
-                    <cfset extProperties = attributes.user.getExtProperties().getAll(true)>
+                    <cfset extProperties = attributes.user.getExtProperties()>
                     <cfloop from="1" to="#extProperties.len()#" index="epIndex">
                         <div class="row">
                             <div class="col-md-3 col-lg-2">
-                                <strong>#extProperties[epIndex].description#:</strong>
+                                <strong>#extProperties[epIndex].getExtPropertyKey().getDescription()#:</strong>
                             </div>
                             <div class="col-md-9 col-lg-10">
-                                <cfswitch expression="#extProperties[epIndex].type#">
+                                <cfswitch expression="#extProperties[epIndex].getExtPropertyKey().getType()#">
                                     <cfcase value="date">
-                                        #application.system.settings.getValueOfKey("formatLibrary").formatDate(extProperties[epIndex].value, false)#
+                                        #application.system.settings.getValueOfKey("formatLibrary").formatDate(extProperties[epIndex].getValue(), false)#
                                     </cfcase>
                                     <cfdefaultcase>
-                                        #extProperties[epIndex].value#
+                                        #extProperties[epIndex].getValue()#
                                     </cfdefaultcase>
                                 </cfswitch>
                             </div>

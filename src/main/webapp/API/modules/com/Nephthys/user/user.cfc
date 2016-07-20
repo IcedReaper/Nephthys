@@ -165,8 +165,11 @@ component {
                                                 .getResultCount() == 1;
     }
     
-    public extProperties function getExtProperties() {
-        return variables.extProperties;
+    public array function getExtProperties() {
+        return new filter().setFor("extProperty").setUserId(variables.userId)
+                                                 .setPublic(true)
+                                                 .execute()
+                                                 .getResult();
     }
     
     // C R U D
@@ -276,7 +279,5 @@ component {
             variables.adminThemeId     = createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("ADMIN").getValue();
             variables.avatarFilename   = null;
         }
-        
-        variables.extProperties = new extProperties(variables.userId);
     }
 }

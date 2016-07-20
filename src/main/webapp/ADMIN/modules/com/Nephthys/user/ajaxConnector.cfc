@@ -118,6 +118,7 @@ component {
             for(var i = 1; i <= permissions.len(); ++i) {
                 if(permissions[i].moduleId == module.getModuleId()) {
                     found = true;
+                    break;
                 }
             }
             
@@ -213,70 +214,83 @@ component {
     remote array function getExtProperties(required numeric userId) {
         var extProperties = [];
         var user = new user(arguments.userId);
-        var extPropertyKeyLoader = new extPropertyKeyLoader();
-        var objExtProperties = user.getExtProperties();
-        var extPropertyKeys = extPropertyKeyLoader.load();
         
-        var extPropertyId = 0;
-        var value = "";
-        var public = false;
-        var prop = {};
+        var extPropertyFilter = new filter().setFor("extProperty")
+                                            .setUserId(arguments.userId)
+                                            .execute();
         
-        for(var i = 1; i <= extPropertyKeys.len(); ++i) {
-            prop = objExtProperties.get(extPropertyKeys[i].getKeyName(), false);
+        for(var extProperty in extPropertyFilter.getResult()) {
+            var value = extProperty.getValue();
             
-            if(! prop.isEmpty()) {
-                extPropertyId = prop.extPropertyId;
-                public        = prop.public;
-                switch(extPropertyKeys[i].getType()) {
-                    case "date": {
-                        if(prop.value != null) {
-                            value = dateFormat(prop.value, "YYYYMMDD");
-                        }
-                        else {
-                            value = prop.value;
-                        }
-                        break;
+            switch(extProperty.getExtPropertyKey().getType()) {
+                case "date": {
+                    if(extProperty.getValue() != null) {
+                        value = dateFormat(extProperty.getValue(), "YYYYMMDD");
                     }
-                    default: {
-                        value = prop.value;
-                    }
+                    break;
                 }
-            }
-            else {
-                extPropertyId = 0;
-                value         = "";
-                public        = false;
             }
             
             extProperties.append({
-                extPropertyId    = extPropertyId,
-                extPropertyKeyId = extPropertyKeys[i].getExtPropertyKeyId(),
+                extPropertyId    = extProperty.getExtPropertyId(),
+                extPropertyKeyId = extProperty.getExtPropertyKey().getExtPropertyKeyId(),
                 value            = value,
-                public           = public,
-                description      = extPropertyKeys[i].getDescription(),
-                type             = extPropertyKeys[i].getType()
+                public           = extProperty.getPublic(),
+                description      = extProperty.getExtPropertyKey().getDescription(),
+                type             = extProperty.getExtPropertyKey().getType()
             });
+        }
+        
+        var extPropertyKeyFilter = new filter().setFor("extPropertyKey").execute();
+        for(var extPropertyKey in extPropertyKeyFilter.getResult()) {
+            var found = false;
+            for(var i = 1; i <= extProperties.len(); ++i) {
+                if(extProperties[i].extPropertyKeyId == extPropertyKey.getExtPropertyKeyId()) {
+                    found = true;
+                    break;
+                }
+            }
+            
+            if(! found) {
+                extProperties.append({
+                    extPropertyId    = null,
+                    extPropertyKeyId = extPropertyKey.getExtPropertyKeyId(),
+                    value            = "",
+                    public           = false,
+                    description      = extPropertyKey.getDescription(),
+                    type             = extPropertyKey.getType()
+                });
+            }
         }
         
         return extProperties;
     }
     
     remote boolean function saveExtProperties(required numeric userId, required array extProperties) {
-        var extProperties = new extProperties(arguments.userId);
-        for(var i = 1; i <= arguments.extProperties.len(); ++i) {
-            var extPropertyKey = new extPropertyKey(arguments.extProperties[i].extPropertyKeyId);
-            
-            if(arguments.extProperties[i].value != "") {
-                extProperties.set(extPropertyKey.getKeyName(), arguments.extProperties[i].value, arguments.extProperties[i].public);
-            }
-            else{
-                if(arguments.extProperties[i].extPropertyId != 0) {
-                    extProperties.remove(extPropertyKey.getKeyName());
+        var user = new user(arguments.userId);
+        
+        transaction {
+            for(var i = 1; i <= arguments.extProperties.len(); ++i) {
+                if(arguments.extProperties[i].value != "") {
+                    var extProperty = new extProperty(arguments.extProperties[i].extPropertyId).setValue(arguments.extProperties[i].value)
+                                                                                               .setPublic(arguments.extProperties[i].public);
+                    
+                    if(arguments.extProperties[i].extPropertyId == null) {
+                        extProperty.setExtPropertyKey(new extPropertyKey(arguments.extProperties[i].extPropertyKeyId))
+                                   .setUser(user);
+                    }
+                    
+                    extProperty.save();
+                }
+                else {
+                    if(arguments.extProperties[i].extPropertyId != null) {
+                        var extProperty = new extProperty(arguments.extProperties[i].extPropertyId).delete();
+                    }
                 }
             }
+            
+            transactionCommit();
         }
-        extProperties.save();
         
         return true;
     }

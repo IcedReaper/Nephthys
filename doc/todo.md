@@ -2,13 +2,13 @@
 
 ## Actual Task TODO - Reminder:
 - required approvals
-- User ext properties mit sortierung versehen
 - User ext property sauber refactoren
 - +Attribut zu Module => Uses permissions (if false hide in permission screens)
 - Tasklist for user-module
 - nephthys => Nephthys
 - filter: min und limit per SQL (nicht per CF Logik)
 - dashboard: Beim 1. Aufruf werden nicht alle Charts angezeigt (1 wird random nicht angezeigt (Bekommt Dateänderung nicht mit))
+- weitere ext property types: link, ?github-, facebook-, twitter, instagram-, etc user?
 
 ## Allgemein
     1. Validierungen

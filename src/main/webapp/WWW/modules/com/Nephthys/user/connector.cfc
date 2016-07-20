@@ -174,7 +174,6 @@ component implements="WWW.interfaces.connector" {
                                     transaction {
                                         request.user.save();
                                         
-                                        var extProperties = request.user.getExtProperties();
                                         var lastExtPropertyKeyId = 0;
                                         for(var fieldName in listToArray(listSort(form.fieldNames, "text"), ",")) {
                                             if(left(fieldName, 13) == "extProperties") {
@@ -186,12 +185,19 @@ component implements="WWW.interfaces.connector" {
                                                     var val    = form["extProperties_" & extPropertyKeyId & "_" & extPropertyId & "_value"];
                                                     var public = form["extProperties_" & extPropertyKeyId & "_" & extPropertyId & "_public"];
                                                     
-                                                    var extPropertyKey = new extPropertyKey(extPropertyKeyId);
                                                     if(val != "") {
-                                                        extProperties.set(extPropertyKey.getKeyName(), val, public);
+                                                        var extProperty = new extProperty(extPropertyId).setValue(value)
+                                                                                                        .setPublic(public);
+                                                        
+                                                        if(extPropertyId == "") {
+                                                            extProperty.setExtPropertyKey(new extPropertyKey(extPropertyKeyId))
+                                                                       .setUser(request.user);
+                                                        }
+                                                        
+                                                        extProperty.save();
                                                     }
                                                     else {
-                                                        extProperties.remove(extPropertyKey.getKeyName());
+                                                        new extProperty(extPropertyId).delete();
                                                     }
                                                 }
                                             }
@@ -210,9 +216,27 @@ component implements="WWW.interfaces.connector" {
                                                                                                                 .setAvailableWww(true)
                                                                                                                 .execute();
                             
-                            var extPropertyFilter = new filter().setFor("extProperties")
+                            var extPropertyFilter = new filter().setFor("extProperty")
                                                                 .setUserId(request.user.getUserId())
                                                                 .execute();
+                            
+                            var extProperties = extPropertyFilter.getResult();
+                            
+                            var extPropertyKeyFilter = new filter().setFor("extPropertyKey")
+                                                                   .execute();
+                            for(var extPropertyKey in extPropertyKeyFilter.getResult()) {
+                                var found = false;
+                                for(var i = 1; i <= extProperties.len(); ++i) {
+                                    if(extProperties[i].getExtPropertyKey().getExtPropertyKeyId() == extPropertyKey.getExtPropertyKeyId()) {
+                                        found = true;
+                                        break;
+                                    }
+                                }
+                                
+                                if(! found) {
+                                    // TODO: Add not set properties
+                                }
+                            }
                             
                             return application.system.settings.getValueOfKey("templateRenderer")
                                 .setModulePath(getModulePath())
@@ -221,7 +245,7 @@ component implements="WWW.interfaces.connector" {
                                 .addParam("childContent",  arguments.childContent)
                                 .addParam("userPage",      getUserLink())
                                 .addParam("themes",        themeFilter.getResult())
-                                .addParam("extProperties", extPropertyFilter.getResult())
+                                .addParam("extProperties", extProperties)
                                 .addParam("result",        result)
                                 .render();
                         }

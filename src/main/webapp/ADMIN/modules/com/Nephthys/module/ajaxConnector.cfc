@@ -95,6 +95,7 @@ component {
             for(var i = 1; i <= permissions.len(); ++i) {
                 if(permissions[i].userId == user.getUserId()) {
                     found = true;
+                    break;
                 }
             }
             

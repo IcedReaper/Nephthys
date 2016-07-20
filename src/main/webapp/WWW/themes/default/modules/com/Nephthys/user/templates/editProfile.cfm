@@ -62,7 +62,6 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        
                         <h3>Erweiterte Angaben</h3>
                         <table class="table table-striped table-hover">
                             <thead>
@@ -76,15 +75,15 @@
                                 <cfloop from="1" to="#attributes.extProperties.len()#" index="epIndex">
                                     <tr class="form-group">
                                         <td>
-                                            #attributes.extProperties[epIndex].description#
+                                            #attributes.extProperties[epIndex].getExtPropertyKey().getDescription()#
                                         </td>
                                         <td>
-                                            <input type="text" name="extProperties_#attributes.extProperties[epIndex].extPropertyKeyId#_#attributes.extProperties[epIndex].extPropertyId#_value" maxlength="255" value="#attributes.extProperties[epIndex].value#" class="form-control">
+                                            <input type="text" name="extProperties_#attributes.extProperties[epIndex].getExtPropertyKey().getExtPropertyKeyId()#_#attributes.extProperties[epIndex].getExtPropertyId()#_value" maxlength="255" value="#attributes.extProperties[epIndex].getValue()#" class="form-control">
                                         </td>
                                         <td>
-                                            <select class="form-control" name="extProperties_#attributes.extProperties[epIndex].extPropertyKeyId#_#attributes.extProperties[epIndex].extPropertyId#_public">
-                                                <option value="true" <cfif attributes.extProperties[epIndex].public>selected="selected"</cfif>>Ja</option>
-                                                <option value="false" <cfif NOT attributes.extProperties[epIndex].public>selected="selected"</cfif>>Nein</option>
+                                            <select class="form-control" name="extProperties_#attributes.extProperties[epIndex].getExtPropertyKey().getExtPropertyKeyId()#_#attributes.extProperties[epIndex].getExtPropertyId()#_public">
+                                                <option value="true" <cfif attributes.extProperties[epIndex].getPublic()>selected="selected"</cfif>>Ja</option>
+                                                <option value="false" <cfif NOT attributes.extProperties[epIndex].getPublic()>selected="selected"</cfif>>Nein</option>
                                             </select>
                                         </td>
                                     </tr>

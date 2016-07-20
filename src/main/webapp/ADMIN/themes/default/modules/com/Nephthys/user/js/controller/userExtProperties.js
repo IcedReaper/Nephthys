@@ -8,7 +8,7 @@ nephthysAdminApp
                 .then($q.spread(function (extProperties) {
                     $scope.extProperties = extProperties;
                     
-                    for(var i = 0; i <= $scope.extProperties.length; ++i) {
+                    for(var i = 0; i < $scope.extProperties.length; ++i) {
                         if($scope.extProperties[i].type === 'date') {
                             $scope.extProperties[i].value = $scope.extProperties[i].value.urlFormatToDate();
                         }
