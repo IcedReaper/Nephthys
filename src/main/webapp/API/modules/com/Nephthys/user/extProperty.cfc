@@ -24,13 +24,13 @@ component {
     }
     
     public extProperty function setValue(required string value) {
-        variables.attributesChanged = (variables.value != arguments.value);
+        variables.attributesChanged = variables.attributesChanged ? variables.attributesChanged : (variables.value != arguments.value);
         
         variables.value = arguments.value;
         return this;
     }
     public extProperty function setPublic(required boolean public) {
-        variables.attributesChanged = (variables.public != arguments.public);
+        variables.attributesChanged = variables.attributesChanged ? variables.attributesChanged : (variables.public != arguments.public);
         
         variables.public = arguments.public;
         return this;
@@ -59,6 +59,7 @@ component {
                                .addParam(name = "extPropertyKeyId", value = variables.extPropertyKey.getExtPropertyKeyId(), cfsqltype = "cf_sql_numeric")
                                .addParam(name = "value",            value = variables.value,                                cfsqltype = "cf_sql_varchar")
                                .addParam(name = "public",           value = variables.public,                               cfsqltype = "cf_sql_bit");
+        
         if(variables.extPropertyId == null) {
             var extPropertyId = qSave.setSQL("INSERT INTO nephthys_user_extProperty
                                                           (
@@ -88,6 +89,8 @@ component {
                      .execute();
             }
         }
+        
+        variables.attributesChanged = false;
         
         return this;
     }

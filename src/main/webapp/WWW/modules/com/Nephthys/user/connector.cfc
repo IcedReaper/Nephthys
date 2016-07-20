@@ -181,28 +181,38 @@ component implements="WWW.interfaces.connector" {
                                                 if(extPropertyKeyId != lastExtPropertyKeyId) {
                                                     lastExtPropertyKeyId = extPropertyKeyId;
                                                     var extPropertyId = reReplace(fieldName, "extProperties_\d+_(\d*)_\w+", "\1");
+                                                    var extPropertyKey = new extPropertyKey(extPropertyKeyId);
                                                     
                                                     var val    = form["extProperties_" & extPropertyKeyId & "_" & extPropertyId & "_value"];
                                                     var public = form["extProperties_" & extPropertyKeyId & "_" & extPropertyId & "_public"];
                                                     
+                                                    if(extPropertyKey.getType() == "date") {
+                                                        val = replace(val, '-', '/', 'ALL');
+                                                    }
+                                                    
+                                                    if(extPropertyId == "") {
+                                                        extPropertyId = null;
+                                                    }
+                                                    
                                                     if(val != "") {
-                                                        var extProperty = new extProperty(extPropertyId).setValue(value)
+                                                        var extProperty = new extProperty(extPropertyId).setValue(val)
                                                                                                         .setPublic(public);
                                                         
                                                         if(extPropertyId == "") {
-                                                            extProperty.setExtPropertyKey(new extPropertyKey(extPropertyKeyId))
+                                                            extProperty.setExtPropertyKey(extPropertyKey)
                                                                        .setUser(request.user);
                                                         }
                                                         
                                                         extProperty.save();
                                                     }
                                                     else {
-                                                        new extProperty(extPropertyId).delete();
+                                                        if(extPropertyId != null) {
+                                                            new extProperty(extPropertyId).delete();
+                                                        }
                                                     }
                                                 }
                                             }
                                         }
-                                        extProperties.save();
                                         
                                         result.success = true;
                                         
@@ -234,7 +244,8 @@ component implements="WWW.interfaces.connector" {
                                 }
                                 
                                 if(! found) {
-                                    // TODO: Add not set properties
+                                    extProperties.append(new extProperty(null).setExtPropertyKey(extPropertyKey)
+                                                                              .setUser(request.user));
                                 }
                             }
                             

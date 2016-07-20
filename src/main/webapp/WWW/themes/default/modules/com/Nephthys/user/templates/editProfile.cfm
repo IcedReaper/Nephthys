@@ -78,7 +78,14 @@
                                             #attributes.extProperties[epIndex].getExtPropertyKey().getDescription()#
                                         </td>
                                         <td>
-                                            <input type="text" name="extProperties_#attributes.extProperties[epIndex].getExtPropertyKey().getExtPropertyKeyId()#_#attributes.extProperties[epIndex].getExtPropertyId()#_value" maxlength="255" value="#attributes.extProperties[epIndex].getValue()#" class="form-control">
+                                            <cfswitch expression="#attributes.extProperties[epIndex].getExtPropertyKey().getType()#">
+                                                <cfcase value="date">
+                                                    <input type="date" name="extProperties_#attributes.extProperties[epIndex].getExtPropertyKey().getExtPropertyKeyId()#_#attributes.extProperties[epIndex].getExtPropertyId()#_value" value="#replace(attributes.extProperties[epIndex].getValue(), '/', '-', 'ALL')#" class="form-control" max="#dateFormat(now(), 'yyyy-mm-dd')#">
+                                                </cfcase>
+                                                <cfdefaultcase>
+                                                    <input type="text" name="extProperties_#attributes.extProperties[epIndex].getExtPropertyKey().getExtPropertyKeyId()#_#attributes.extProperties[epIndex].getExtPropertyId()#_value" maxlength="255" value="#attributes.extProperties[epIndex].getValue()#" class="form-control">
+                                                </cfdefaultcase>
+                                            </cfswitch>
                                         </td>
                                         <td>
                                             <select class="form-control" name="extProperties_#attributes.extProperties[epIndex].getExtPropertyKey().getExtPropertyKeyId()#_#attributes.extProperties[epIndex].getExtPropertyId()#_public">

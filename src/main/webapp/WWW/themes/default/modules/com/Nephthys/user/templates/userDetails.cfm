@@ -31,6 +31,18 @@
                                     <cfcase value="date">
                                         #application.system.settings.getValueOfKey("formatLibrary").formatDate(extProperties[epIndex].getValue(), false)#
                                     </cfcase>
+                                    <cfcase value="githubuser">
+                                        <a href="https://www.github.com/#extProperties[epIndex].getValue()#" alt="#attributes.user.getUsername()# auf GitHub" target="_blank">#extProperties[epIndex].getValue()#</a>
+                                    </cfcase>
+                                    <cfcase value="facebookuser">
+                                        <a href="https://www.github.com/#extProperties[epIndex].getValue()#" alt="#attributes.user.getUsername()# auf Facebook" target="_blank">#extProperties[epIndex].getValue()#</a>
+                                    </cfcase>
+                                    <cfcase value="twitteruser">
+                                        <a href="https://www.twitter.com/#extProperties[epIndex].getValue()#" alt="#attributes.user.getUsername()# auf Twitter" target="_blank">#extProperties[epIndex].getValue()#</a>
+                                    </cfcase>
+                                    <cfcase value="facebookpage">
+                                        <a href="https://www.github.com/#extProperties[epIndex].getValue()#" alt="#attributes.user.getUsername()# auf Facebook" target="_blank">#extProperties[epIndex].getValue()#</a>
+                                    </cfcase>
                                     <cfdefaultcase>
                                         #extProperties[epIndex].getValue()#
                                     </cfdefaultcase>
