@@ -91,7 +91,6 @@
                 * Für onSlideEnd von blueimp image gallery muss per jQuery der Filename ausgelesen werden
                 * ColdFusion liefert nicht ohne weiteres Bilder aus - ich hab noch nix ergoogled - ggf Lucee-Forum anfunken
                 * imageServer.cfm?i=imagePage.jpg (Wohl beste aber auch nicht so das wahrste) | übern nginx drehen
-        4. Einstellungen wie im Blog-Modul
     2. Blog
         1. Mögliche Verbesserungen:
             * File resizing after upload is only applied by width and height attributes

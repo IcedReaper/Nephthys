@@ -1,4 +1,4 @@
-component {
+ component {
     import "API.modules.com.IcedReaper.blog.*";
     
     formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
@@ -241,24 +241,6 @@ component {
         var comment = new comment(arguments.commentId);
         
         comment.delete();
-        
-        return true;
-    }
-    
-    remote struct function getSettings() {
-        return application.system.settings.getAllSettingsForModuleName("com.IcedReaper.blog");
-    }
-    
-    remote boolean function saveSettings(required string settings) {
-        var newSettings = deserializeJSON(arguments.settings);
-        
-        for(var setting in newSettings) {
-            if(newSettings[setting].keyExists("rawValue")) {
-                application.system.settings.setValueOfKey(setting, newSettings[setting].rawValue);
-            }
-        }
-        
-        application.system.settings.save();
         
         return true;
     }

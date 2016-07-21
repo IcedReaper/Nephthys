@@ -9,4 +9,4 @@ angular.module("com.nephthys.global.userInfo", [])
             },
             templateUrl : "/themes/default/directive/nephthysUserInfo/nephthysUserInfo.html"
         };
-    })
+    });

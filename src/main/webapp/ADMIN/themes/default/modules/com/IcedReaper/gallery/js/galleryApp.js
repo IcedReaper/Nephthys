@@ -6,7 +6,8 @@ var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
                                                            "ui.tree",
                                                            "com.nephthys.global.loadingBar",
                                                            "com.IcedReaper.gallery.statistics",
-                                                           "com.IcedReaper.gallery.tasklist"]);
+                                                           "com.IcedReaper.gallery.tasklist",
+                                                           "com.nephthys.system.moduleSettings"]);
     
 nephthysAdminApp
     .config(["$routeProvider", function ($routeProvider) {
@@ -48,6 +49,10 @@ nephthysAdminApp
             .when("/status/:statusId", {
                 templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/statusDetail.html",
                 controller:  "statusDetailCtrl"
+            })
+            
+            .when("/settings", {
+                templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/settings.html"
             })
             
             

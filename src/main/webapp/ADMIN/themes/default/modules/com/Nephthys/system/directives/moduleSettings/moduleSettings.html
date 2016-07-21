@@ -1,0 +1,39 @@
+<div>
+    <form>
+        <div class="form-group row" ng-repeat="(settingName, settingData) in settings">
+            <label for="{{settingName}}" class="col-sm-5 form-control-label">{{settingData.description}}</label>
+            <div class="col-sm-7">
+                <input type="input"
+                       class="form-control"
+                       id="{{settingData.key}}"
+                       maxLength="100"
+                       ng-model="settingData.rawValue"
+                       ng-if="settingData.type.toLowerCase() == 'number' || settingData.type.toLowerCase() == 'string' || settingData.type.toLowerCase() == 'date' || settingData.type.toLowerCase() == 'datetime' || settingData.type.toLowerCase() == 'component'"
+                       ng-disabled="settingData.readonly">
+                <select class="form-control"
+                        id="{{settingData.key}}"
+                        ng-model="settingData.rawValue"
+                        ng-if="settingData.type.toLowerCase() == 'bit'"
+                        ng-disabled="settingData.readonly"
+                        ng-options="o.v as o.n for o in [{ n: 'Ja', v: '1' }, { n: 'Nein', v: '0' }, { n: 'null *', v: 'null' }]">
+                </select>
+                <select class="form-control"
+                        id="{{settingData.key}}"
+                        ng-model="settingData.rawValue"
+                        ng-if="settingData.type.toLowerCase() == 'boolean'"
+                        ng-disabled="settingData.readonly"
+                        ng-options="o.v as o.n for o in [{ n: 'Ja', v: 'true' }, { n: 'Nein', v: 'false' }, { n: 'null *', v: 'null' }]">
+                </select>
+                <select class="form-control"
+                        id="{{settingData.key}}"
+                        ng-model="settingData.rawValue"
+                        ng-if="settingData.type.toLowerCase() == 'enum' || settingData.type.toLowerCase() == 'foreignkey' && settingData.enumOptions != null"
+                        ng-disabled="settingData.readonly"
+                        ng-options="rawValue as name for (rawValue, name) in settingData.enumOptions">
+                </select>
+            </div>
+        </div>
+        
+        <button class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Einstellungen speichern</button>
+    </form>
+</div>

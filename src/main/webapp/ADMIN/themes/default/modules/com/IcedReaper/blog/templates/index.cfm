@@ -26,6 +26,8 @@
 <script type="text/javascript" src="/themes/default/directive/nephthysUserInfo/nephthysUserInfo.js"></script>
 <script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
 
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/system/directives/moduleSettings/moduleSettings.js"></script>
+
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/directives/statistics/statistics.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/directives/tasklist/tasklist.js"></script>
 
@@ -35,7 +37,6 @@
 <!--- services --->
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/service/blogService.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/service/categoryService.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/service/settingsService.js"></script>
 
 <!--- controller --->
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogList.js"></script>
@@ -46,8 +47,6 @@
 
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/categoryList.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/categoryDetail.js"></script>
-
-<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/settings.js"></script>
 
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/service/statusService.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/statusDetail.js"></script>

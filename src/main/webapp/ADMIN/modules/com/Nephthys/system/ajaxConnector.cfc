@@ -85,6 +85,31 @@ component {
         return true;
     }
     
+    
+    remote struct function getModuleSettings(required string moduleName) {
+        if(arguments.moduleName != "") {
+            return application.system.settings.getAllSettingsForModuleName(arguments.moduleName);
+        }
+        else {
+            throw(type = "nephthys.application.invalid", message = "Please specify a module");
+        }
+    }
+    
+    remote boolean function saveModuleSettings(required string moduleName, required string settings) {
+        var newSettings = deserializeJSON(arguments.settings);
+        
+        for(var setting in newSettings) {
+            if(newSettings[setting].keyExists("rawValue")) {
+                application.system.settings.setValueOfKey(setting, newSettings[setting].rawValue);
+            }
+        }
+        
+        application.system.settings.save();
+        
+        return true;
+    }
+    
+    
     private struct function getUserInformation(required user _user) {
         return {
             'userId'   = arguments._user.getUserId(),

@@ -7,7 +7,8 @@ var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
                                                            "ui.tree",
                                                            "com.nephthys.global.loadingBar",
                                                            "com.IcedReaper.blog.statistics",
-                                                           "com.IcedReaper.blog.tasklist"]);
+                                                           "com.IcedReaper.blog.tasklist",
+                                                           "com.nephthys.system.moduleSettings"]);
     
 nephthysAdminApp
     .config(["$routeProvider", function ($routeProvider) {
@@ -39,8 +40,7 @@ nephthysAdminApp
             })
             
             .when("/settings", {
-                templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/settings.html",
-                controller: "settingsCtrl"
+                templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/settings.html"
             })
             
             .when("/status/list", {
