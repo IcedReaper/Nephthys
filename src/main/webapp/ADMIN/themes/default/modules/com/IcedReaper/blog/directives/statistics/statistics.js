@@ -34,11 +34,6 @@ angular.module("com.IcedReaper.blog.statistics", ["chart.js",
                     $scope.chart.series = blogVisitStatisticsData.series;
                 }
             },
-            today = function () {
-                var now = new Date();
-                
-                return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            },
             setDefaultChartOptions = function () {
                 switch($scope.chart.type) {
                     case "horizontalBar": {

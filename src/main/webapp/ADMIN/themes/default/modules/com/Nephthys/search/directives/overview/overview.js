@@ -13,12 +13,6 @@ angular.module("com.nephthys.search.overview", ["ui.bootstrap",
         };
     })
     .controller('comNephthysSearchOverviewController', ["$rootScope", "$scope", "$q", "comNephthysSearchOverviewService", function ($rootScope, $scope, $q, service) {
-        var today = function () {
-                var now = new Date();
-                
-                return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            };
-        
         $scope.refresh = function () {
             if($scope.selectedDate.fromDate && $scope.selectedDate.toDate) {
                 service.getSearchOverview($scope.selectedDate.fromDate,

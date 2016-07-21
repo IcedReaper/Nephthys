@@ -92,3 +92,9 @@ structDeepCopy = function (struct) {
 structIsEmpty = function (struct) {
     return Object.keys(struct).length === 0 && struct.constructor === Object;
 };
+
+today = function () {
+    var now = new Date();
+    
+    return new Date(now.getFullYear(), now.getMonth(), now.getDate());
+};

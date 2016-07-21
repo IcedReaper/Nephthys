@@ -25,11 +25,6 @@ angular.module("com.nephthys.search.statistics", ["chart.js",
                     $scope.chart.series = searchChartData.series;
                 }
             },
-            today = function () {
-                var now = new Date();
-                
-                return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            },
             setDefaultChartOptions = function () {
                 switch($scope.chart.type) {
                     case "horizontalBar": {

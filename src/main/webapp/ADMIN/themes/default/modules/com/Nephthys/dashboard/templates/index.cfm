@@ -48,7 +48,8 @@
                                                           selected-date       = "selectedDate"
                                                           show-date-picker    = "options.showDatePicker"
                                                           show-refresh-button = "options.showRefreshButton"
-                                                          chart-options       = "loginChart.options"></nephthys-user-statistics>
+                                                          chart-options       = "loginChart.options"
+                                                          auto-load           = "true"></nephthys-user-statistics>
                             </div>
                         </div>
                         <div class="row m-t-1">
@@ -60,7 +61,8 @@
                                                           sort-order          = "ASC"
                                                           show-date-picker    = "options.showDatePicker"
                                                           show-refresh-button = "options.showRefreshButton"
-                                                          chart-options       = "pageChart.options"></nephthys-page-statistics>
+                                                          chart-options       = "pageChart.options"
+                                                          auto-load           = "true"></nephthys-page-statistics>
                             </div>
                         </div>
                         <div class="row m-t-1">
@@ -71,7 +73,8 @@
                                                               sort-order          = "ASC"
                                                               show-date-picker    = "options.showDatePicker"
                                                               show-refresh-button = "options.showRefreshButton"
-                                                              chart-options       = "errorChart.options"></nephthys-page-statistics>
+                                                              chart-options       = "errorChart.options"
+                                                              auto-load           = "true"></nephthys-page-statistics>
                             </div>
                         </div>
                     </div>
@@ -84,8 +87,6 @@
                     </div>
                 </div>
             </div>
-            
-            
         </div>
     </div>
     <cfif request.user.hasPermission("com.Nephthys.pages", "user")>

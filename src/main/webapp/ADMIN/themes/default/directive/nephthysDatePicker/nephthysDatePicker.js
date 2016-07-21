@@ -23,12 +23,6 @@ angular.module("com.nephthys.global.datePicker", ["ui.bootstrap"])
         $scope.format = $scope.format || "dd.MM.yyyy";
     }])
     .controller("datePickerModalController", ["$scope", "$uibModalInstance", "fromDate", "toDate", function ($scope, $uibModalInstance, fromDate, toDate) {
-        var today = function() {
-            var now = new Date();
-            
-            return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-        };
-        
         $scope.fromDate = fromDate;
         $scope.toDate   = toDate;
         

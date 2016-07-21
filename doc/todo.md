@@ -4,9 +4,6 @@
 - required approvals
 - +Attribut zu Module => Uses permissions (if false hide in permission screens)
 - Tasklist for user-module
-- nephthys => Nephthys
-- filter: min und limit per SQL (nicht per CF Logik)
-- dashboard: Beim 1. Aufruf werden nicht alle Charts angezeigt (1 wird random nicht angezeigt (Bekommt Dateänderung nicht mit))
 
 ## Allgemein
     1. Validierungen
@@ -104,7 +101,7 @@
         3. Adaptionen in der Übersicht
             * Kalenderübersicht hinzufügen => Klick auf Datum => zeigt alle Posts des Tages
         4. "Gallerie" am Ende hinzufügbar machen
-    3. Reviewsystem
+    3. Review
         => genre in tags umbenennen
         => Type in Kategorie umbennen
         * review edit

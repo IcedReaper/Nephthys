@@ -44,11 +44,6 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
                     $scope.chart.series = pageVisitStatisticsData.series;
                 }
             },
-            today = function () {
-                var now = new Date();
-                
-                return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            },
             setDefaultChartOptions = function () {
                 switch($scope.chart.type) {
                     case "horizontalBar": {
@@ -220,7 +215,9 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
             $scope.chart.options = $scope.chartOptions;
         }
         
-        $scope.selectedDate = {};
+        if($scope.selectedDate === undefined) {
+            $scope.selectedDate = {};
+        }
         
         if(! $scope.fromDate && ! $scope.selectedDate.fromDate) {
             var now = new Date();
@@ -320,6 +317,11 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
             dateChangedEvent();
             refreshEvent();
         });
+        
+        $scope.autoLoad = $scope.autoLoad || false;
+        if($scope.autoLoad) {
+            $scope.refresh();
+        }
     }])
     .directive("nephthysPageStatistics", function() {
         return {
@@ -337,7 +339,8 @@ angular.module("com.nephthys.page.statistics", ["chart.js",
                 requestType: "=?",
                 showDatePicker: "=?",
                 showRefreshButton: "=?",
-                selectedDate: "=?"
+                selectedDate: "=?",
+                autoLoad: "@"
             },
             templateUrl : "/themes/default/modules/com/Nephthys/pages/directives/statistics/statistics.html"
         };

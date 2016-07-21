@@ -1,11 +1,5 @@
 nephthysAdminApp
     .controller('errorLogListCtrl', ["$rootScope", "$scope", "errorLogService", function ($rootScope, $scope, errorLogService) {
-        var today = function () {
-                var now = new Date();
-                
-                return new Date(now.getFullYear(), now.getMonth(), now.getDate());
-            };
-        
         $scope.refresh = function () {
             errorLogService
                 .getList($scope.selectedDate.fromDate,
