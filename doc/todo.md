@@ -92,8 +92,6 @@
     2. Blog
         1. Mögliche Verbesserungen:
             * File resizing after upload is only applied by width and height attributes
-            * F5-Raiding beim Abschicken des Kommentars möglich (Siehe Allgemein 12)
-            * Implementierung verschiedener Designs, die per Option ausgesucht werden können
         2. Kommentarmöglichkeit
             * Verschachtelte Kommentarmöglichkeit
         3. Adaptionen in der Übersicht
