@@ -1015,3 +1015,21 @@ alter table nephthys_user_extPropertyKey add unique (sortOrder);
 
 alter table nephthys_user_extPropertyKey drop constraint nephthys_user_extPropertyKey_check;
 alter table nephthys_user_extPropertyKey add constraint nephthys_user_extPropertyKey_check check(type in ('string', 'date', 'link', 'githubuser', 'facebookuser', 'twitteruser', 'facebookpage'));
+
+
+CREATE TABLE IcedReaper_blog_picture
+(
+  pictureId SERIAL,
+  blogpostId integer NOT NULL references IcedReaper_blog_blogpost on delete cascade,
+  pictureFilename character varying(150) NOT NULL unique,
+  thumbnailFilename character varying(150) NOT NULL,
+  title character varying(250),
+  alt character varying(250),
+  caption character varying(300),
+  sortid integer NOT NULL,
+  
+  unique (blogpostId, sortId)
+);
+GRANT SELECT ON TABLE icedreaper_blog_picture TO nephthys_user;
+
+--alter table IcedReaper_blog_blogpost add column pictureLayout;

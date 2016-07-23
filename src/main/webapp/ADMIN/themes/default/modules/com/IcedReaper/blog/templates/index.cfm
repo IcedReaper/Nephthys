@@ -44,6 +44,7 @@
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogCategory.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogComments.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/UploadImageModal.js"></script> <!--- Image Add Dialog --->
+<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/blogpostPicture.js"></script>
 
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/categoryList.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/categoryDetail.js"></script>
@@ -54,4 +55,4 @@
 <script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/js/controller/statusList.js"></script>
 
 <nephthys-loading-bar></nephthys-loading-bar>
-<div ng-view></div>
+<div ng-view class="com-icedreaper-blog"></div>

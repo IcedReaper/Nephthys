@@ -133,6 +133,71 @@
             </div>
         </div>
     </uib-tab>
+    <uib-tab heading="Bilder" disable="blogpost.blogpostId == 0">
+        <div ng-controller="blogpostPictureCtrl">
+            <div class="row" ng-if="blogpost.isEditable">
+                <div class="col-md-12">
+                    <div class="card card-block">
+                        <h3>Neue Bilder hochladen</h3>
+                        <form novalidate>
+                            <div class="form-group">
+                                <button multiple accept="image/*" class="btn btn-primary"
+                                        ngf-select="upload($newFiles)" 
+                                        ngf-max-size="5MB" ngf-keep="'distinct'" ngf-fix-orientation="false">
+                                    <i class="fa fa-picture-o"></i> Bilder hinzufügen</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-if="pictures.length > 0">
+                <div class="col-md-12">
+                    <div class="card card-block">
+                        <h3>Vorhandene Bilder</h3>
+                        
+                        <div ui-tree>
+                            <div ui-tree-nodes="" class="row" ng-model="pictures">
+                                <div class="col-md-4" ng-repeat="picture in pictures" ui-tree-node>
+                                    <div class="card com-icedreaper-blogpost-picture-wrapper">
+                                        <img ng-src="{{picture.thumbnailFilename}}" class="card-img-top">
+                                        <div class="btn btn-secondary" ui-tree-handle ng-if="blogpost.isEditable"><i class="fa fa-arrows"></i></div>
+                                        <div class="com-icedreaper-blogpost-picture-details p-t-1 p-r-1 p-l-1">
+                                            <form novalidate>
+                                                <div class="form-group row">
+                                                    <label for="caption" class="col-sm-5 col-md-3 form-control-label">Bezeichnung</label>
+                                                    <div class="col-sm-7 col-md-9">
+                                                        <input type="text" class="form-control" ng-model="picture.caption" name="caption" id="caption" ng-disabled="! blogpost.isEditable">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="title" class="col-sm-5 col-md-3 form-control-label">Titel</label>
+                                                    <div class="col-sm-7 col-md-9">
+                                                        <input type="text" class="form-control" ng-model="picture.title" name="title" id="title" ng-disabled="! blogpost.isEditable">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <label for="alt" class="col-sm-5 col-md-3 form-control-label">Alt. Text</label>
+                                                    <div class="col-sm-7 col-md-9">
+                                                        <input type="text" class="form-control" ng-model="picture.alt" name="alt" id="alt" ng-disabled="! blogpost.isEditable">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group row">
+                                                    <button class="btn btn-xs btn-success pull-left m-l-1" ng-click="save(picture)" ng-disabled="! blogpost.isEditable"><span class="fa fa-save"></span> Aktualisieren</button>
+                                                    <button class="pull-right btn btn-xs btn-danger pull-right m-r-1" ng-click="delete(picture.pictureId)" ng-disabled="! blogpost.isEditable"><span class="fa fa-trash-o"></span> Löschen</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="btn btn-success" ng-click="saveSorting()"><i class="fa fa-random"></i> Sortierung speichern</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </uib-tab>
     <uib-tab heading="Kommentare" diable="blogpost.blogpostId == 0">
         <div ng-controller="blogCommentsCtrl">
             <div class="row">

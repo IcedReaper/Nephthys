@@ -416,6 +416,64 @@
         return statusData;
     }
     
+    
+    remote array function loadPictures(required numeric blogpostId) {
+        var blogpost = new blogpost(arguments.blogpostId);
+        
+        return preparePictureStruct(blogpost.getPictures(), blogpost.getRelativePath() & "/");
+    }
+    
+    remote boolean function uploadPictures(required numeric blogpostId) {
+        var blogpost = new blogpost(arguments.blogpostId);
+        
+        if(blogpost.isEditable(request.user.getUserID())) {
+            var newPicture = new picture(0);
+            newPicture.setBlogpostId(arguments.blogpostId)
+                      .upload();
+            
+            blogpost.addPicture(newPicture);
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
+    }
+    
+    remote boolean function updatePicture(required numeric pictureId,
+                                          required string  caption,
+                                          required string  alt,
+                                          required string  title) {
+        var picture = new picture(arguments.pictureId);
+        var blogpost = new blogpost(picture.getBlogpostId());
+        
+        if(blogpost.isEditable(request.user.getUserID())) {
+            picture.setCaption(arguments.caption)
+                   .setAlt(arguments.alt)
+                   .setTitle(arguments.title)
+                   .save();
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
+    }
+    
+    remote array function deletePicture(required numeric pictureId) {
+        var picture = new picture(arguments.pictureId);
+        var blogpost = new blogpost(picture.getBlogpostId());
+        
+        if(blogpost.isEditable(request.user.getUserID())) {
+            blogpost.removePicture(arguments.pictureId);
+            
+            return preparePictureStruct(blogpost.getPictures(), blogpost.getRelativePath() & "/");
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
+    }
+    
     // private
     private struct function prepareDetailStruct(required blogpost blogpost) {
         var categories = [];
@@ -442,8 +500,33 @@
             "creationDate"               = formatCtrl.formatDate(arguments.blogpost.getCreationDate()),
             "lastEditor"                 = getUserInformation(arguments.blogpost.getLastEditor()),
             "lastEditDate"               = formatCtrl.formatDate(arguments.blogpost.getLastEditDate()),
-            "statusId"                   = arguments.blogpost.getStatus().getStatusId()
+            "statusId"                   = arguments.blogpost.getStatus().getStatusId(),
+            "pictureCount"               = arguments.blogpost.getPictureCount()
         };
+    }
+    
+    remote array function updatePictureSorting(required array pictures) {
+        var updated = [];
+        transaction {
+            for(var i = 1; i <= arguments.pictures.len(); ++i) {
+                var pic = new picture(arguments.pictures[i].pictureId);
+                
+                if(pic.getSortId() != i) {
+                    updated.append({
+                        picId = pic.getPictureId(),
+                        oldSort = pic.getSortId(),
+                        newSort = i
+                    });
+                    
+                    pic.setSortId(i)
+                       .save();
+                }
+            }
+            
+            transactionCommit();
+        }
+        
+        return updated;
     }
     
     private array function prepareCategoryDetails(required array categories, required boolean getBlogposts = false) {
@@ -557,5 +640,22 @@
         }
         
         return preparedApprovalList;
+    }
+    
+    private array function preparePictureStruct(required array pictures, required string relativePath) {
+        var gPictures = [];
+        for(var p = 1; p <= arguments.pictures.len(); p++) {
+            gPictures.append({
+                "pictureId"         = arguments.pictures[p].getPictureId(),
+                "sortId"            = arguments.pictures[p].getSortId(),
+                "pictureFilename"   = arguments.relativePath & arguments.pictures[p].getPictureFilename(),
+                "thumbnailFilename" = arguments.relativePath & arguments.pictures[p].getThumbnailFilename(),
+                "title"             = arguments.pictures[p].getTitle(),
+                "alt"               = arguments.pictures[p].getAlt(),
+                "caption"           = arguments.pictures[p].getCaption()
+            });
+        }
+        
+        return gPictures;
     }
 }

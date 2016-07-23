@@ -4,6 +4,7 @@ component {
         
         variables.attributesChanged = false;
         variables.categoriesChanged = false;
+        variables.picturesChanged   = false;
         
         loadDetails();
         
@@ -139,6 +140,25 @@ component {
         
         return this;
     }
+    public blogpost function addPicture(required picture _picture) {
+        variables.pictures.append(duplicate(arguments._picture));
+        
+        variables.picturesChanged = true;
+        
+        return this;
+    }
+    public blogpost function removePicture(required numeric pictureId) {
+        for(var p = 1; p <= variables.pictures.len(); p++) {
+            if(variables.pictures[p].getPictureId() == arguments.pictureId) {
+                variables.pictures[p].delete();
+                variables.pictures.deleteAt(p);
+                
+                break;
+            }
+        }
+        
+        return this;
+    }
     
     public blogpost function setStatus(required status newStatus) {
         variables.status = arguments.newStatus;
@@ -229,6 +249,12 @@ component {
     
     public status function getStatus() {
         return variables.status;
+    }
+    public array function getPictures() {
+        return variables.pictures;
+    }
+    public numeric function getPictureCount() {
+        return variables.pictures.len();
     }
     
     
@@ -355,6 +381,14 @@ component {
                     }
                     
                     variables.attributesChanged = false;
+                    
+                    if(variables.picturesChanged) {
+                        for(var p = 1; p <= variables.pictures.len(); p++) {
+                            variables.pictures[p].save();
+                        }
+                    }
+                    variables.picturesChanged = false;
+                    
                 }
                 else {
                     throw(type = "nephthys.application.notAllowed", message = "You're not allowed to update the version that is online");
@@ -401,10 +435,11 @@ component {
         // delete all unused files
         var usedFiles = directoryList(getAbsolutePath(), false, "name");
         for(var i = 1; i <= usedFiles.len(); i++) {
-            if(! find(usedFiles[i], variables.story)) {
+            if(! find(usedFiles[i], variables.story) && ! imageUsedInPictures(usedFiles[i])) {
                 fileDelete(getAbsolutePath() & "/" & usedFiles[i]);
             }
         }
+        
         
         return this;
     }
@@ -419,6 +454,16 @@ component {
                    .execute();
         
         variables.blogpostId = 0;
+    }
+    
+    public blogpost function reloadPictures() {
+        if(variables.blogpostId != 0) {
+            loadPictures();
+            return this;
+        }
+        else {
+            throw(type  = "icedreaper.blogpost.notFound", message = "The pictures can only be reloaded for existing galleries.");
+        }
     }
     
     // I N T E R N A L
@@ -450,6 +495,7 @@ component {
                 variables.private                    = qBlogpost.private[1];
                 variables.status                     = new status(qBlogpost.statusId[1]);
                 
+                loadPictures();
                 loadComments();
                 loadCategories();
             }
@@ -473,6 +519,7 @@ component {
             variables.lastEditDate               = null;
             variables.categories                 = [];
             variables.comments                   = [];
+            variables.pictures                   = [];
             variables.folderName                 = createUUID();
             variables.viewCounter                = 0;
             variables.private                    = false;
@@ -494,5 +541,24 @@ component {
                                           .setSortDirection("DESC")
                                           .execute()
                                           .getResult();
+    }
+    
+    private void function loadPictures() {
+        variables.pictures = new filter().setFor("picture")
+                                         .setBlogpostId(variables.blogpostId)
+                                         .execute()
+                                         .getResult();
+        
+        variables.picturesChanged = false;
+    }
+    
+    private boolean function imageUsedInPictures(required string fileName) {
+        for(var i = 1; i <= variables.pictures.len(); ++i) {
+            if(variables.pictures[i].getPictureFileName() == arguments.fileName) {
+                return true;
+            }
+        }
+        
+        return false;
     }
 }

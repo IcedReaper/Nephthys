@@ -108,6 +108,43 @@ nephthysAdminApp
                     blogpostId: blogpostId,
                     statusId:   statusId
                 });
+            },
+            
+            loadPictures: function (blogpostId) {
+                return $http.get('/ajax/com/IcedReaper/blog/loadPictures', {
+                    params: {
+                        blogpostId: blogpostId
+                    }
+                });
+            },
+            
+            uploadPicture: function (picture, blogpostId) {
+                return Upload.upload({
+                    url: '/ajax/com/IcedReaper/blog/uploadPictures',
+                    data: {
+                        picture:   picture,
+                        blogpostId: blogpostId
+                    }
+                });
+            },
+            
+            updatePicture: function (picture) {
+                return $http.post('/ajax/com/IcedReaper/blog/updatePicture', picture);
+            },
+            
+            deletePicture: function (blogpostId, pictureId) {
+                return $http.delete('/ajax/com/IcedReaper/blog/deletePicture', {
+                    params: {
+                        blogpostId: blogpostId,
+                        pictureId: pictureId
+                    }
+                });
+            },
+            
+            updatePictureSorting: function (pictures) {
+                return $http.post("/ajax/com/IcedReaper/blog/updatePictureSorting", {
+                    pictures: pictures
+                });
             }
         };
     });

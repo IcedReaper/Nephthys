@@ -73,7 +73,7 @@
         * Anordnung
         * Module
     8. Alle (asset) js Files in der index.cfm laden
-    9. Responsive anpassungen
+    9. Responsiveanpassungen
     10. Design schick machen
 
 ## Module (in eigenen Repos/Projekten)
@@ -93,11 +93,11 @@
         1. Mögliche Verbesserungen:
             * File resizing after upload is only applied by width and height attributes
             * F5-Raiding beim Abschicken des Kommentars möglich (Siehe Allgemein 12)
+            * Implementierung verschiedener Designs, die per Option ausgesucht werden können
         2. Kommentarmöglichkeit
             * Verschachtelte Kommentarmöglichkeit
         3. Adaptionen in der Übersicht
             * Kalenderübersicht hinzufügen => Klick auf Datum => zeigt alle Posts des Tages
-        4. "Gallerie" am Ende hinzufügbar machen
     3. Review
         => genre in tags umbenennen
         => Type in Kategorie umbennen

@@ -497,11 +497,11 @@ component {
     
     private struct function getUserInformation(required user _user) {
         return {
-            'userId'   = arguments._user.getUserId(),
-            'userName' = arguments._user.getUserName()
+            "userId"   = arguments._user.getUserId(),
+            "userName" = arguments._user.getUserName(),
+            "avatar"   = arguments._user.getAvatarPath()
         };
-    }
-    
+    }    
     
     private struct function prepareStatus(required status status) {
         var nextStatusList = {};
@@ -567,13 +567,5 @@ component {
         }
         
         return preparedApprovalList;
-    }
-    
-    private struct function getUserInformation(required user _user) {
-        return {
-            "userId"   = arguments._user.getUserId(),
-            "userName" = arguments._user.getUserName(),
-            "avatar"   = arguments._user.getAvatarPath()
-        };
     }
 }
