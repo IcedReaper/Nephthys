@@ -1,5 +1,6 @@
 var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
-                                                           "com.nephthys.global.loadingBar"]);
+                                                           "com.nephthys.global.loadingBar",
+                                                           "com.nephthys.system.moduleSettings"]);
     
 nephthysAdminApp
     .config(["$routeProvider",
@@ -24,6 +25,10 @@ nephthysAdminApp
                 .when("/:moduleId/dbDump", {
                     templateUrl: "/themes/default/modules/com/Nephthys/module/partials/databaseDump.html",
                     controller:  "databaseDumpCtrl"
+                })
+                .when("/settings/:moduleName", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/module/partials/moduleSettings.html",
+                    controller:  "moduleSettingsCtrl"
                 })
                 .otherwise({
                     redirectTo: "/"

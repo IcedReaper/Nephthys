@@ -84,8 +84,6 @@
             * Bewertungen
                 * Anonym per Option
                 * Als eingeloggter User
-            * Bilderupload umbauen, sodass alle Bilder (5/10, wie auch immer) zusammen hochgeladen werden
-                * Aktuell werden alle parallel hochgeladen, was dazu führt, dass ab einer gewissen Menge der JavaHeap vollläuft und es elendig langsam ist.
         3. Statistiken pro Bild
             - Jegliche Idee zum Erfassen der Daten sind bisher crap
                 * Für onSlideEnd von blueimp image gallery muss per jQuery der Filename ausgelesen werden

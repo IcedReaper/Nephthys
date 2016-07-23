@@ -23,6 +23,7 @@ angular.module("com.nephthys.system.moduleSettings", [])
                 .get($scope.moduleName)
                 .then(function (settings) {
                     $scope.settings = settings;
+                    $scope.settingCount = Object.keys(settings).length;
                 });
         };
         
@@ -31,9 +32,16 @@ angular.module("com.nephthys.system.moduleSettings", [])
         };
         
         $scope.settings = {};
+        $scope.settingCount = 0;
         if($scope.moduleName) {
             $scope.load();
         }
+        
+        $scope.$watch("moduleName", function(newValue, oldValue) {
+            if(newValue != oldValue) {
+                $scope.load();
+            }
+        });
     }])
     .directive("nephthysSytemModulesettings", function() {
         return {
@@ -41,7 +49,7 @@ angular.module("com.nephthys.system.moduleSettings", [])
             restrict: "E",
             controller: "nephthysSystemModuleSettingsController",
             scope: {
-                moduleName: "@"
+                moduleName: "=?"
             },
             templateUrl : "/themes/default/modules/com/Nephthys/system/directives/moduleSettings/moduleSettings.html"
         };
