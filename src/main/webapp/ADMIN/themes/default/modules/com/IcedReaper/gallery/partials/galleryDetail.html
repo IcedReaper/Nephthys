@@ -153,7 +153,7 @@
                                 <div class="col-md-4" ng-repeat="picture in pictures" ui-tree-node>
                                     <div class="card com-icedreaper-gallery-picture-wrapper">
                                         <img ng-src="{{picture.thumbnailFilename}}" class="card-img-top">
-                                        <div class="btn btn-secondary" ui-tree-handle><i class="fa fa-arrows"></i></div>
+                                        <div class="btn btn-secondary" ui-tree-handle ng-if="gallery.isEditable"><i class="fa fa-arrows"></i></div>
                                         <div class="com-icedreaper-gallery-picture-details p-t-1 p-r-1 p-l-1">
                                             <form novalidate>
                                                 <div class="form-group row">

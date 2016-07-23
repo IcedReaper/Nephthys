@@ -22,23 +22,26 @@ nephthysAdminApp
         };
         
         $scope.upload = function (files) {
-            var uploads = [];
-            for(var i = 0; i < files.length; i++) {
-                uploads.push(galleryService.uploadPicture(files[i],
-                                                          $routeParams.galleryId));
-            }
-            
-            $q.all(uploads)
-                // and merging them
-                .then($q.spread(function () {
-                    var success = true;
-                    for(var i = 0; i < arguments.length; i++) {
-                        success = success ? arguments[i] : false;
-                        files[i].result = true;
+            var success = true,
+                upload = function(index) {
+                    if(index < files.length) {
+                        galleryService
+                            .uploadPicture(files[index],
+                                           $routeParams.galleryId)
+                            .then(function (suc) {
+                                success = success ? suc : false;
+                                files[index].result = true;
+                                
+                                upload(++index);
+                            });
                     }
-                    
-                    $scope.load();
-                }));
+                    else {
+                        $scope.load();
+                    }
+                };
+            
+            
+            upload(0);
         };
         
         $scope.rowCount = function (colCount) {

@@ -59,7 +59,10 @@ component {
         }
         
         var imageEditor = application.system.settings.getValueOfKey("imageEditLibrary");
-        imageEditor.resize(gallery.getAbsolutePath() & "/" & newFilename, 575, gallery.getAbsolutePath() & "/tn_" & newFilename);
+        imageEditor.resize(source        = gallery.getAbsolutePath() & "/" & newFilename,
+                           width         = 575,
+                           target        = gallery.getAbsolutePath() & "/tn_" & newFilename,
+                           interpolation = "bilinear");
         
         variables.pictureFilename   = newFilename;
         variables.thumbnailFilename = "tn_" & newFilename;
