@@ -195,7 +195,7 @@ component {
                                            .getResult();
             
             if(qConversation.getRecordCount() == 1) {
-                variables.initiator    = createObject("component", "API.modules.com.Nephthys.user.user").init(qConversation.initiatorUserId[1]);
+                variables.initiator    = createObject("component", "API.modules.com.Nephthys.userManager.user").init(qConversation.initiatorUserId[1]);
                 variables.participants = null;
                 variables.messages     = null;
             }
@@ -204,7 +204,7 @@ component {
             }
         }
         else {
-            variables.initiator    = createObject("component", "API.modules.com.Nephthys.user.user").init(request.user.getUserId());
+            variables.initiator    = createObject("component", "API.modules.com.Nephthys.userManager.user").init(request.user.getUserId());
             variables.participants = null;
             variables.messages     = null;
         }

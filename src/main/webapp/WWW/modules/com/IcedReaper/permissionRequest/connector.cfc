@@ -18,9 +18,9 @@ component implements="WWW.interfaces.connector" {
                 arguments.options.otherParameter[1] = "overview";
             }
             
-            var aPages = createObject("component", "API.modules.com.Nephthys.pages.filter").init()
+            var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init()
                                                                                            .setFor("pageWithModule")
-                                                                                           .setModuleName("com.Nephthys.user")
+                                                                                           .setModuleName("com.Nephthys.userManager")
                                                                                            .execute()
                                                                                            .getResult(); 
             var userPage = aPages.len() >= 1 ? aPages[1].link : "";
@@ -38,7 +38,7 @@ component implements="WWW.interfaces.connector" {
                         };
                         
                         if(! form.isEmpty() && form.keyExists("name") && form.name == "com.IcedReaper.permissionRequest") {
-                            var module = createObject("component", "API.modules.com.Nephthys.module.module").init(form.moduleId);
+                            var module = createObject("component", "API.modules.com.Nephthys.moduleManager.module").init(form.moduleId);
                             
                             if(! module.getActiveStatus() || ! module.getAvailableWWW()) {
                                 result.error = true;
@@ -46,7 +46,7 @@ component implements="WWW.interfaces.connector" {
                             }
                             
                             try {
-                                var role = createObject("component", "API.modules.com.Nephthys.user.permissionRole").init(form.roleId);
+                                var role = createObject("component", "API.modules.com.Nephthys.userManager.permissionRole").init(form.roleId);
                             }
                             catch(nephthys.notFound.role e) {
                                 result.error = true;
@@ -69,7 +69,7 @@ component implements="WWW.interfaces.connector" {
                             }
                         }
                         
-                        var modules = createObject("component", "API.modules.com.Nephthys.module.filter").init()
+                        var modules = createObject("component", "API.modules.com.Nephthys.moduleManager.filter").init()
                                                                                                          .setFor("module")
                                                                                                          .setActive(true)
                                                                                                          .setAvailableWww(true)
@@ -83,7 +83,7 @@ component implements="WWW.interfaces.connector" {
                             }
                         }
                         
-                        var permissionFilter = createObject("component", "API.modules.com.Nephthys.user.filter").setFor("permission")
+                        var permissionFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").setFor("permission")
                                                                                                                 .setUserId(request.user.getUserId())
                                                                                                                 .execute();
                         
@@ -99,7 +99,7 @@ component implements="WWW.interfaces.connector" {
                             });
                         }
                         
-                        var roleFilter = createObject("component", "API.modules.com.Nephthys.user.filter").setFor("permissionRole");
+                        var roleFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").setFor("permissionRole");
                         
                         return application.system.settings.getValueOfKey("templateRenderer")
                             .setModulePath(getModulePath())

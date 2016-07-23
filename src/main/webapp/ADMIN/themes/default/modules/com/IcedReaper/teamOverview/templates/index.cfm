@@ -41,7 +41,7 @@
             <tr ng-repeat="member in teamMember">
                 <td>{{member.userName}}</td>
                 <td>
-                    <a class="btn btn-info" href="/com.Nephthys.user#/{{member.userId}}"><i class="fa fa-eye"></i></a>
+                    <a class="btn btn-info" href="/com.Nephthys.userManager#/{{member.userId}}"><i class="fa fa-eye"></i></a>
                     <button class="btn btn-danger" ng-click="removeMember(member.memberId)"><i class="fa fa-trash"></i></button>
                     <button class="btn btn-primary" ng-click="sortUp(member.memberId)" ng-if="! $first"><i class="fa fa-arrow-up"></i></button>
                     <button class="btn btn-primary" ng-click="sortDown(member.memberId)" ng-if="! $last"><i class="fa fa-arrow-down"></i></button>

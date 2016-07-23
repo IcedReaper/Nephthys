@@ -11,7 +11,7 @@ nephthysAdminApp
                 });
             },
             getModuleList: function () {
-                return $http.get('/ajax/com/Nephthys/module/getList');
+                return $http.get('/ajax/com/Nephthys/moduleManager/getList');
             }
         };
     });

@@ -4,7 +4,7 @@ component {
     }
     
     remote numeric function getNewRegistrations() {
-        return createObject("component", "API.modules.com.Nephthys.user.filter").setFor("user")
+        return createObject("component", "API.modules.com.Nephthys.userManager.filter").setFor("user")
                                                                                 .setRegistrationFromDate(dateAdd("h", -24, now()))
                                                                                 .execute()
                                                                                 .getResultCount();
@@ -18,15 +18,15 @@ component {
     }
     
     remote numeric function getTotalPageRequests() {
-        return createObject("component", "API.modules.com.Nephthys.pages.statistics").getTotalPageRequestCount(dateAdd("h", -24, now()), now());
+        return createObject("component", "API.modules.com.Nephthys.pageManager.statistics").getTotalPageRequestCount(dateAdd("h", -24, now()), now());
     }
     
     remote struct function getTopPageRequest() {
-        return createObject("component", "API.modules.com.Nephthys.pages.statistics").getTopPageRequestCount(dateAdd("h", -24, now()), now());
+        return createObject("component", "API.modules.com.Nephthys.pageManager.statistics").getTopPageRequestCount(dateAdd("h", -24, now()), now());
     }
     
     remote struct function getLast24HourRequests() {
-        return createObject("component", "API.modules.com.Nephthys.pages.statistics").getLast24HoursTotal();
+        return createObject("component", "API.modules.com.Nephthys.pageManager.statistics").getLast24HoursTotal();
     }
     
     remote struct function getServerStatus() {

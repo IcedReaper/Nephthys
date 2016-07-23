@@ -1,5 +1,5 @@
 component {
-    import "API.modules.com.Nephthys.user.*";
+    import "API.modules.com.Nephthys.userManager.*";
     
     public error function init(required numeric errorId = 0) {
         variables.errorId = arguments.errorId;

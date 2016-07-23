@@ -33,8 +33,8 @@
                 </div>
             </form>
             
-            <p ng-show="genre.genreId != 0">Dieses Genre wurde am {{genre.creationDate}} angelegt von <a href="/com.Nephthys.user#/{{genre.creator.userId}}">{{genre.creator.userName}}</a></p>
-            <p ng-show="genre.genreId != 0">Dieses Genre wurde zuletzt am {{genre.creationDate}} geändert von <a href="/com.Nephthys.user#/{{genre.lastEditor.userId}}">{{genre.lastEditor.userName}}</a></p>
+            <p ng-show="genre.genreId != 0">Dieses Genre wurde am {{genre.creationDate}} angelegt von <a href="/com.Nephthys.userManager#/{{genre.creator.userId}}">{{genre.creator.userName}}</a></p>
+            <p ng-show="genre.genreId != 0">Dieses Genre wurde zuletzt am {{genre.creationDate}} geändert von <a href="/com.Nephthys.userManager#/{{genre.lastEditor.userId}}">{{genre.lastEditor.userName}}</a></p>
             
             <div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
                 <h3>{{message.headline}}</h3>

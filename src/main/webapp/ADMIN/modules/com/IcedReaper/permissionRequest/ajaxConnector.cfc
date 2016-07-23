@@ -37,7 +37,7 @@ component {
         transaction {
             var _request = new request(arguments.requestId).approve(arguments.comment);
             
-            var permissionFilter = createObject("API.modules.com.Nephthys.user.filter").setFor("permission");
+            var permissionFilter = createObject("API.modules.com.Nephthys.userManager.filter").setFor("permission");
             
             permissionFilter.setUserId(_request.getUserId())
                             .setModuleId(_request.getModuleId())
@@ -48,7 +48,7 @@ component {
                                                .save();
             }
             else {
-                var permission = createObject("component", "API.modules.com.Nephthys.user.permission").init(null);
+                var permission = createObject("component", "API.modules.com.Nephthys.userManager.permission").init(null);
                 permission.setUser(_request.getUser())
                           .setModule(_request.getModule())
                           .setPermissionRole(_request.getPermissionRole())

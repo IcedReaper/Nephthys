@@ -1,5 +1,5 @@
 component {
-    import "API.modules.com.Nephthys.user.*";
+    import "API.modules.com.Nephthys.userManager.*";
     
     public genre function init(required numeric genreId) {
         variables.genreId = arguments.genreId;

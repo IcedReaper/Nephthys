@@ -1,5 +1,5 @@
 component implements="WWW.interfaces.connector" {
-    import "API.modules.com.Nephthys.pages.*";
+    import "API.modules.com.Nephthys.pageManager.*";
     
     public connector function init() {
         return this;
@@ -60,7 +60,7 @@ component implements="WWW.interfaces.connector" {
     }
     
     private string function getUserLink() {
-        var aPages = createObject("component", "API.modules.com.Nephthys.pages.filter").init()
+        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init()
                                                                                        .setFor("pageWithModule")
                                                                                        .setModuleName("com.Nephthys.search")
                                                                                        .execute()

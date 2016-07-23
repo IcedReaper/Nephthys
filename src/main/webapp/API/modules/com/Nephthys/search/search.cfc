@@ -1,5 +1,5 @@
 component extends="API.abstractClasses.search" {
-    import "API.modules.com.Nephthys.module.*";
+    import "API.modules.com.Nephthys.moduleManager.*";
     
     public search function search() {
         var modules = getModules();

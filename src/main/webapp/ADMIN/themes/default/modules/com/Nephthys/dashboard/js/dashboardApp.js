@@ -1,8 +1,8 @@
 var nephthysAdminApp = angular.module("nephthysAdminApp", ["com.nephthys.global.loadingBar",
                                                            "com.nephthys.page.statistics",
                                                            "com.nephthys.page.tasklist",
-                                                           "com.nephthys.user.loginLog",
-                                                           "com.nephthys.user.statistics",
+                                                           "com.nephthys.userManager.loginLog",
+                                                           "com.nephthys.userManager.statistics",
                                                            "com.Nephthys.errorLog.statistics"]);
 
 nephthysAdminApp

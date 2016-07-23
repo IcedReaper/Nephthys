@@ -1,5 +1,5 @@
 <cfoutput>
-    <section class="com-Nephthys-teamOverview">
+    <section class="com-IcedReaper-teamOverview">
         <h2>Teamübersicht</h2>
 
         <cfloop from="1" to="#attributes.member.len()#" index="memberIndex">

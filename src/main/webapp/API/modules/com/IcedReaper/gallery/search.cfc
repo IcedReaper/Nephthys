@@ -41,7 +41,7 @@ component extends="API.abstractClasses.search" {
     }
     
     private string function getLink(required numeric galleryId) {
-        var aPages = createObject("component", "API.modules.com.Nephthys.pages.filter").init()
+        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init()
                                                                                        .setFor("pageWithModule")
                                                                                        .setModuleName("com.IcedReaper.gallery")
                                                                                        .execute()

@@ -32,7 +32,7 @@ component {
         }
         
         variables.userId = arguments.userId;
-        variables.user = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.userId);
+        variables.user = createObject("component", "API.modules.com.Nephthys.userManager.user").init(variables.userId);
         
         return this;
     }
@@ -260,7 +260,7 @@ component {
             variables.message        = "";
         }
         
-        variables.user = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.userId);
+        variables.user = createObject("component", "API.modules.com.Nephthys.userManager.user").init(variables.userId);
         variables.conversation = null;
         
         loadRead();
@@ -281,7 +281,7 @@ component {
             for(var i = 1; i <= readInfo.getRecordCount(); ++i) {
                 variables.read[i] = {
                     read     = true,
-                    user     = createObject("component", "API.modules.com.Nephthys.user.user").init(readInfo.userId[i]),
+                    user     = createObject("component", "API.modules.com.Nephthys.userManager.user").init(readInfo.userId[i]),
                     readDate = readInfo.readDate[i]
                 };
             }

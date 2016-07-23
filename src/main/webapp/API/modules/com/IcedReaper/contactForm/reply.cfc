@@ -1,5 +1,5 @@
 component {
-    import "API.modules.com.Nephthys.user.*";
+    import "API.modules.com.Nephthys.userManager.*";
     
     public reply function init(required numeric replyId) {
         variables.replyId   = arguments.replyId;

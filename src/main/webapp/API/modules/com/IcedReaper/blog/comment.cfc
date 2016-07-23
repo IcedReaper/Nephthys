@@ -1,5 +1,5 @@
 component {
-    import "API.modules.com.Nephthys.user.*";
+    import "API.modules.com.Nephthys.userManager.*";
     
     public comment function init(required numeric commentId) {
         variables.commentId = arguments.commentId;

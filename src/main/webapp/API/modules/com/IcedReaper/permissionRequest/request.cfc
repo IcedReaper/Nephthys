@@ -58,16 +58,16 @@ component {
     }
     
     public user function getUser() {
-        return createObject("component", "API.modules.com.Nephthys.user.user").init(variables.userId);
+        return createObject("component", "API.modules.com.Nephthys.userManager.user").init(variables.userId);
     }
     public user function getAdminUser() {
-        return createObject("component", "API.modules.com.Nephthys.user.user").init(variables.adminUserId);
+        return createObject("component", "API.modules.com.Nephthys.userManager.user").init(variables.adminUserId);
     }
     public module function getModule() {
-        return createObject("component", "API.modules.com.Nephthys.module.module").init(variables.moduleId);
+        return createObject("component", "API.modules.com.Nephthys.moduleManager.module").init(variables.moduleId);
     }
     public permissionRole function getPermissionRole() {
-        return createObject("component", "API.modules.com.Nephthys.user.permissionRole").init(variables.roleId);
+        return createObject("component", "API.modules.com.Nephthys.userManager.permissionRole").init(variables.roleId);
     }
     
     public boolean function isApproved() {

@@ -138,7 +138,7 @@ component {
     
     private void function resetPasswordOfAllUsers(required string newSecretKey, required string newAlgorithm,
                                                   required string oldSecretKey, required string oldAlgorithm) {
-        var userListCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
+        var userListCtrl = createObject("component", "API.modules.com.Nephthys.userManager.filter").init();
         
         for(var user in userListCtrl.execute().getResult()) {
             var rawPassword = decrypt(user.getPassword(), arguments.oldSecretKey, arguments.oldAlgorithm);

@@ -23,20 +23,20 @@
                 <p>{{uptime.formatAsTimeSince()}}</p>
             </div>
         </div>
-        <div class="tile tile-primary clickable" onClick="window.location='/com.Nephthys.pages#/statistic'">
+        <div class="tile tile-primary clickable" onClick="window.location='/com.Nephthys.pageManager#/statistic'">
             <div>
                 <h3>Seitenaufrufe</h3>
                 <p>{{pageRequests}}</p>
             </div>
         </div>
-        <div class="tile tile-success clickable" onClick="window.location='/com.Nephthys.pages#/statistic'">
+        <div class="tile tile-success clickable" onClick="window.location='/com.Nephthys.pageManager#/statistic'">
             <div>
                 <h3>Topseite</h3>
                 <p>{{topPage.title}}</p>
                 <p>{{topPage.requests}}</p>
             </div>
         </div>
-        <div class="tile tile-danger clickable" onClick="window.location='/com.Nephthys.user'">
+        <div class="tile tile-danger clickable" onClick="window.location='/com.Nephthys.userManager'">
             <div>
                 <h3>Neue Registrierungen</h3>
                 <p>{{newRegistrations}}</p>

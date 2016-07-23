@@ -1,5 +1,5 @@
 component {
-    import "API.modules.com.Nephthys.user.*";
+    import "API.modules.com.Nephthys.userManager.*";
     
     public category function init(required numeric categoryId) {
         variables.categoryId = arguments.categoryId;

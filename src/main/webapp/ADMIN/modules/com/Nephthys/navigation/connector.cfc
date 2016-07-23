@@ -1,5 +1,5 @@
 component extends="ADMIN.abstractClasses.connector" {
-    import "API.modules.com.Nephthys.module.*";
+    import "API.modules.com.Nephthys.moduleManager.*";
     
     public connector function init() {
         variables.moduleName = "com.Nephthys.navigation";

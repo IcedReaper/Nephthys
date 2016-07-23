@@ -1,5 +1,5 @@
 component {
-    import "API.modules.com.Nephthys.user.*";
+    import "API.modules.com.Nephthys.userManager.*";
     
     public approval function init(required numeric galleryId) {
         variables.galleryId = arguments.galleryId;

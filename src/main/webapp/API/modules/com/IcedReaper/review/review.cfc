@@ -1,5 +1,5 @@
 component {
-    import "API.modules.com.Nephthys.user.*";
+    import "API.modules.com.Nephthys.userManager.*";
     
     public review function init(required numeric reviewId) {
         variables.reviewId = arguments.reviewId;

@@ -1,5 +1,5 @@
 component {
-    import "API.modules.com.Nephthys.user.*";
+    import "API.modules.com.Nephthys.userManager.*";
     
     public member function init(required numeric memberId) {
         variables.memberId = arguments.memberId;

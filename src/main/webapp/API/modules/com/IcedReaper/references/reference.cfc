@@ -206,9 +206,9 @@ component {
                 variables.homepage     = qGetReference.homepage[1];
                 variables.imageName    = qGetReference.imageName[1];
                 variables.position     = qGetReference.position[1];
-                variables.creator      = createObject("component", "API.modules.com.Nephthys.user.user").init(qGetReference.creatorUserId[1]);
+                variables.creator      = createObject("component", "API.modules.com.Nephthys.userManager.user").init(qGetReference.creatorUserId[1]);
                 variables.creationDate = qGetReference.creationDate[1];
-                variables.lastEditor   = createObject("component", "API.modules.com.Nephthys.user.user").init(qGetReference.lastEditorUserId[1]);
+                variables.lastEditor   = createObject("component", "API.modules.com.Nephthys.userManager.user").init(qGetReference.lastEditorUserId[1]);
                 variables.lastEditDate = qGetReference.lastEditDate[1];
             }
             else {

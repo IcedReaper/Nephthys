@@ -56,7 +56,7 @@
                 <a href="#/{{request.requestId}}">{{request.subject}}</a>
             </td>
             <td ng-if="request.requestorUserId != 0 && request.requestorUserId != null">
-                <a href="/com.Nephthys.user#/{{request.requestorUserId}}">{{request.userName}}</a>
+                <a href="/com.Nephthys.userManager#/{{request.requestorUserId}}">{{request.userName}}</a>
             </td>
             <td ng-if="request.requestorUserId == 0 || request.requestorUserId == null">
                 {{request.userName}}

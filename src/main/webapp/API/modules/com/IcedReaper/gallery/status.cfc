@@ -1,5 +1,5 @@
 component {
-    import "API.modules.com.Nephthys.user.*";
+    import "API.modules.com.Nephthys.userManager.*";
     
     public status function init(required numeric statusId) {
         variables.statusId = arguments.statusId;

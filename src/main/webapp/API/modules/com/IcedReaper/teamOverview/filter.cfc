@@ -1,5 +1,5 @@
 component implements="API.interfaces.filter" {
-    import "API.modules.com.Nephthys.user.*";
+    import "API.modules.com.Nephthys.userManager.*";
     
     public filter function init() {
         variables.isMember = true;

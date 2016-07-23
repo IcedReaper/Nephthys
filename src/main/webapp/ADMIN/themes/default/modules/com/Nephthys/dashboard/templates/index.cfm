@@ -7,10 +7,10 @@
 <script type="text/javascript" src="/themes/default/directive/nephthysUserInfo/nephthysUserInfo.js"></script>
 <script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
 
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/statistics/statistics.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pages/directives/tasklist/tasklist.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/user/directives/loginLog/loginLog.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/user/directives/statistics/statistics.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/directives/statistics/statistics.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/directives/tasklist/tasklist.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/userManager/directives/loginLog/loginLog.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/userManager/directives/statistics/statistics.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/errorLog/directives/statistics/statistics.js"></script>
 
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/dashboardApp.js"></script>
@@ -89,7 +89,7 @@
             </div>
         </div>
     </div>
-    <cfif request.user.hasPermission("com.Nephthys.pages", "user")>
+    <cfif request.user.hasPermission("com.Nephthys.pageManager", "user")>
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-block">

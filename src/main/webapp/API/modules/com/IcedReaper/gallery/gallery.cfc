@@ -191,7 +191,7 @@ component {
     }
     public user function getCreator() {
         if(! variables.keyExists("creator")) {
-            variables.creator = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.creatorUserId);
+            variables.creator = createObject("component", "API.modules.com.Nephthys.userManager.user").init(variables.creatorUserId);
         }
         return variables.creator;
     }
@@ -200,7 +200,7 @@ component {
     }
     public user function getLastEditor() {
         if(! variables.keyExists("lastEditor")) {
-            variables.lastEditor = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.lastEditorUserId);
+            variables.lastEditor = createObject("component", "API.modules.com.Nephthys.userManager.user").init(variables.lastEditorUserId);
         }
         return variables.lastEditor;
     }
