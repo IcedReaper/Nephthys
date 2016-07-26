@@ -48,7 +48,7 @@ component extends="API.abstractClasses.search" {
         
         if(aPages.len() >= 1) {
             for(var i = 1; i <= aPages.len(); ++i) {
-                var galleryModules = getGalleryModules(deserializeJSON(aPages[i].getContent()));
+                var galleryModules = getGalleryModules(aPages[i].getContent());
                 for(var j = 1; j <= galleryModules.len(); j++) {
                     if(galleryModules[j].options.keyExists("galleryId") && isArray(galleryModules[j].options.galleryId) && ! galleryModules[j].options.galleryId.isEmpty()) {
                         if(galleryModules[j].options.galleryId.find(arguments.galleryId)) {

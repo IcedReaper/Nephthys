@@ -22,8 +22,13 @@
         
         <cfif attributes.searchPage NEQ "">
             <form action="#attributes.searchPage#" method="POST" class="form-inline navbar-form pull-right">
-                <input type="text" class="form-control" placeholder="Suchbegriff" name="searchStatement">
-                <button type="submit" class="btn btn-success"><span class="fa fa-search"></span> Suchen</button>
+                <input type="hidden" name="name" value="com.Nephthys.search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Suchbegriff" name="searchStatement">
+                    <span class="input-group-btn">
+                        <button type="submit" class="btn btn-success"><span class="fa fa-search"></span> Suchen</button>
+                    </span>
+                </div>
             </form>
         </cfif>
     </div>

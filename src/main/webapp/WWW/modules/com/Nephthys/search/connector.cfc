@@ -16,40 +16,42 @@ component implements="WWW.interfaces.connector" {
         var preparedOptions = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.Nephthys.search.cfc.prepareData").prepareOptions(arguments.options);
         var splitParameter  = listToArray(request.page.getParameter(), "/");
         
-        if(splitParameter.len() == 0 && form.isEmpty()) {
-            return application.system.settings.getValueOfKey("templateRenderer")
-                .setModulePath(getModulePath())
-                .setTemplate("searchForm.cfm")
-                .addParam("options", preparedOptions)
-                .addParam("childContent",  arguments.childContent)
-                .render();
-        }
-        else if(splitParameter.len() == 0 && ! form.isEmpty() && form.keyExists("searchStatement")) {
-            var searchComponent = new search();
-            
-            var results = searchComponent.setSearchPhrase(form.searchStatement)
-                                         .search()
-                                         .getResult();
-            
-            if(searchComponent.getCount() > 0) {
-                request.page.setTitle("Suchergebnisse");
+        if(splitParameter.len() == 0) {
+            if(splitParameter.len() == 0 && ! form.isEmpty() && form.keyExists("searchStatement") && form.searchStatement != "" && form.keyExists("name") && form.name == "com.Nephthys.search") {
+                var searchComponent = new search();
                 
-                return application.system.settings.getValueOfKey("templateRenderer")
-                    .setModulePath(getModulePath())
-                    .setTemplate("searchResults.cfm")
-                    .addParam("options", preparedOptions)
-                    .addParam("childContent",  arguments.childContent)
-                    .addParam("searchStatement", form.searchStatement)
-                    .addParam("results",         results)
-                    .addParam("resultCount",     searchComponent.getCount())
-                    .render();
+                var results = searchComponent.setSearchPhrase(form.searchStatement)
+                                             .search()
+                                             .getResult();
+                
+                if(searchComponent.getCount() > 0) {
+                    request.page.setTitle("Suchergebnisse");
+                    
+                    return application.system.settings.getValueOfKey("templateRenderer")
+                        .setModulePath(getModulePath())
+                        .setTemplate("searchResults.cfm")
+                        .addParam("options", preparedOptions)
+                        .addParam("childContent",  arguments.childContent)
+                        .addParam("searchStatement", form.searchStatement)
+                        .addParam("results",         results)
+                        .addParam("resultCount",     searchComponent.getCount())
+                        .render();
+                }
+                else {
+                    request.page.setTitle("Suche - Keine Ergebnisse");
+                    
+                    return application.system.settings.getValueOfKey("templateRenderer")
+                        .setModulePath(getModulePath())
+                        .setTemplate("noResults.cfm")
+                        .addParam("options", preparedOptions)
+                        .addParam("childContent",  arguments.childContent)
+                        .render();
+                }
             }
             else {
-                request.page.setTitle("Suche - Keine Ergebnisse");
-                
                 return application.system.settings.getValueOfKey("templateRenderer")
                     .setModulePath(getModulePath())
-                    .setTemplate("noResults.cfm")
+                    .setTemplate("searchForm.cfm")
                     .addParam("options", preparedOptions)
                     .addParam("childContent",  arguments.childContent)
                     .render();

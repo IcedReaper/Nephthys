@@ -17,29 +17,31 @@ component implements="WWW.interfaces.connector" {
         var splitParameter  = listToArray(request.page.getParameter(), "/");
         var userListCtrl    = new filter().setFor("user");
         
-        if(splitParameter.len() == 0 && form.isEmpty()) {
-            return application.system.settings.getValueOfKey("templateRenderer")
-                .setModulePath(getModulePath())
-                .setTemplate("userSearch.cfm")
-                .addParam("options",      preparedOptions)
-                .addParam("childContent", arguments.childContent)
-                .render();
-        }
-        else if(splitParameter.len() == 0 && ! form.isEmpty()) {
-            request.page.setTitle("Benutzersuche - Suchergebnisse");
-            var user = userListCtrl.setUserName(form.username)
-                                   .setUserNameLike(true)
-                                   .execute()
-                                   .getResult();
-            
-            return application.system.settings.getValueOfKey("templateRenderer")
-                .setModulePath(getModulePath())
-                .setTemplate("userSearchResults.cfm")
-                .addParam("options",      preparedOptions)
-                .addParam("childContent", arguments.childContent)
-                .addParam("searchQuery",  form.username)
-                .addParam("results",      user)
-                .render();
+        if(splitParameter.len() == 0) {
+            if(! form.isEmpty() && form.keyExists("username") && form.username != "" && form.keyExists("name") && form.name == "com.Nephthys.userManager") {
+                request.page.setTitle("Benutzersuche - Suchergebnisse");
+                var user = userListCtrl.setUserName(form.username)
+                                       .setUserNameLike(true)
+                                       .execute()
+                                       .getResult();
+                
+                return application.system.settings.getValueOfKey("templateRenderer")
+                    .setModulePath(getModulePath())
+                    .setTemplate("userSearchResults.cfm")
+                    .addParam("options",      preparedOptions)
+                    .addParam("childContent", arguments.childContent)
+                    .addParam("searchQuery",  form.username)
+                    .addParam("results",      user)
+                    .render();
+            }
+            else {
+                return application.system.settings.getValueOfKey("templateRenderer")
+                    .setModulePath(getModulePath())
+                    .setTemplate("userSearch.cfm")
+                    .addParam("options",      preparedOptions)
+                    .addParam("childContent", arguments.childContent)
+                    .render();
+            }
         }
         else if(splitParameter.len() == 1) {
             if(splitParameter[1] == "registrieren") {
