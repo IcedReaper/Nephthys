@@ -104,7 +104,7 @@
                         <button type="submit" class="btn btn-success"><i class="fa fa-floppy-o"></i> Profil aktualisieren</button>
                     </div>
                     <div class="col-md-6 text-md-right">
-                        <a href="#attributes.userPage#/#request.user.getUsername()#/delete" onClick="confirm('Bist Du Dir sicher, dass Du dein Profil löschen möchtest?');" class="btn btn-danger"><i class="fa fa-trash"></i> Mein Profil löschen</a>
+                        <cf_userLink userName="#request.user.getUsername()#" deepLink="/delete" onClick="confirm('Bist Du Dir sicher, dass Du dein Profil löschen möchtest?');" class="btn btn-danger"><i class="fa fa-trash"></i> Mein Profil löschen</cf_userLink>
                     </div>
                 </div>
             </form>

@@ -98,7 +98,7 @@
             <div class="row m-t-2">
                 <div class="col-sm-12">
                     <h4>Weitere Infos</h4>
-                    <p><small>Diese Gallerie wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.gallery.getCreationDate())# von <a href="#attributes.userPage#/#attributes.gallery.getCreator().getUsername()#">#attributes.gallery.getCreator().getUsername()#</a> erstellt und bisher #attributes.gallery.getViewCounter()# Mal aufgerufen.</small></p>
+                    <p><small>Diese Gallerie wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.gallery.getCreationDate())# von <cf_userLink userName="#attributes.gallery.getCreator().getUsername()#">#attributes.gallery.getCreator().getUsername()#</cf_userLink> erstellt und bisher #attributes.gallery.getViewCounter()# Mal aufgerufen.</small></p>
                 </div>
             </div>
             

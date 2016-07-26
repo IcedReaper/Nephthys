@@ -55,16 +55,15 @@ component implements="WWW.interfaces.connector" {
             .setModulePath(getModulePath())
             .setTemplate(arguments.template & ".cfm")
             .addParam("sitemap",  arguments.sitemap)
-            .addParam("searchPage", getUserLink())
+            .addParam("searchPage", getSearchLink())
             .render();
     }
     
-    private string function getUserLink() {
-        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init()
-                                                                                       .setFor("pageWithModule")
-                                                                                       .setModuleName("com.Nephthys.search")
-                                                                                       .execute()
-                                                                                       .getResult(); 
-        return aPages.len() >= 1 ? aPages[1].link : "";
+    private string function getSearchLink() {
+        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init().setFor("pageWithModule")
+                                                                                                    .setModuleName("com.Nephthys.search")
+                                                                                                    .execute()
+                                                                                                    .getResult(); 
+        return aPages.len() >= 1 ? aPages[1].getLink() : "";
     }
 }

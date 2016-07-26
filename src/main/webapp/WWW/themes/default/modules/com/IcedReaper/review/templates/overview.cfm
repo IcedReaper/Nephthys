@@ -71,7 +71,7 @@
                 </section>
                 <footer>
                     <p>
-                        <small>Diese Bewertung wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.reviews[reviewIndex].getCreationDate())# von <a href="#attributes.userPage#/#attributes.reviews[reviewIndex].getCreator().getUsername()#">#attributes.reviews[reviewIndex].getCreator().getUsername()#</a> in der Kategorie <a href="#request.page.getLink()#/Kategorie/#attributes.reviews[reviewIndex].getType().getName()#">#attributes.reviews[reviewIndex].getType().getName()#</a> erstellt.</small>
+                        <small>Diese Bewertung wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.reviews[reviewIndex].getCreationDate())# von <cf_userLink href="#attributes.reviews[reviewIndex].getCreator().getUsername()#">#attributes.reviews[reviewIndex].getCreator().getUsername()#</cf_userLink> in der Kategorie <a href="#request.page.getLink()#/Kategorie/#attributes.reviews[reviewIndex].getType().getName()#">#attributes.reviews[reviewIndex].getType().getName()#</a> erstellt.</small>
                     </p>
                     <cfset genre = attributes.reviews[reviewIndex].getGenre()>
                     <p>

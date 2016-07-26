@@ -9,7 +9,7 @@
             <section class="m-t-1">
                 <div class="card userDetails p-a-1">
                     <div class="card-block">
-                        <h4 class="card-title"><a href="#attributes.userPage#/#attributes.results[userIndex].getUsername()#">#attributes.results[userIndex].getUsername()#</a></h4>
+                        <h4 class="card-title"><cf_userLink userName="#attributes.results[userIndex].getUsername()#">#attributes.results[userIndex].getUsername()#</cf_userLink></h4>
                     </div>
                     <div class="row">
                         <div class="col-md-3">
@@ -33,7 +33,7 @@
         <div class="alert alert-danger" role="alert">
             Es konnte kein user mit dem Teil &ldquo;#HTMLEditFormat(attributes.searchQuery)#&rdquo; gefunden werden.
             
-            <a href="#attributes.userPage#">Zurück zur Suche</a>
+            <cf_userLink>Zurück zur Suche</cf_userLink>
         </div>
     </cfif>
 </section>

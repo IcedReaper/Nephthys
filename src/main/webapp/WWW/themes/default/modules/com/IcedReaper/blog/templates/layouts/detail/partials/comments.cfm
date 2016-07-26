@@ -16,7 +16,7 @@
                                 <div class="media-body">
                                     <h5 class="media-heading">
                                         <cfif comments[commentIndex].fromRegistrated()>
-                                            <a href="#attributes.userPage#/#comments[commentIndex].getUsername()#">#comments[commentIndex].getUsername()#</a>
+                                            <cf_userLink userName="#comments[commentIndex].getUsername()#">#comments[commentIndex].getUsername()#</cf_userLink>
                                         <cfelse>
                                             #comments[commentIndex].getUsername()#
                                         </cfif>

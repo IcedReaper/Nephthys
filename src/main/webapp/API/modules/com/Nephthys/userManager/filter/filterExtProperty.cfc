@@ -5,6 +5,7 @@ component implements="API.interfaces.filter" {
         variables.userId = null;
         
         variables.extPropertyKeyId = null;
+        variables.extPropertyKeyName = null;
         
         variables.public = null;
         
@@ -20,6 +21,10 @@ component implements="API.interfaces.filter" {
     }
     public filter function setExtPropertyKeyId(required numeric extPropertyKeyId) {
         variables.extPropertyKeyId = arguments.extPropertyKeyId;
+        return this;
+    }
+    public filter function setExtPropertyKeyName(required string extPropertyKeyName) {
+        variables.extPropertyKeyName = arguments.extPropertyKeyName;
         return this;
     }
     public filter function setPublic(required boolean public) {
@@ -46,6 +51,10 @@ component implements="API.interfaces.filter" {
         if(variables.extPropertyKeyId != null) {
             where &= (where == "" ? " WHERE " : " AND ") & " ep.extPropertyKeyId = :extPropertyKeyId";
             qryFilter.addParam(name = "extPropertyKeyId", value = variables.extPropertyKeyId, cfsqltype = "cf_sql_numeric");
+        }
+        if(variables.extPropertyKeyName != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & " epk.keyName = :extPropertyKeyName ";
+            qryFilter.addParam(name = "extPropertyKeyName", value = variables.extPropertyKeyName, cfsqltype = "cf_sql_varchar");
         }
         if(variables.public != null) {
             where &= (where == "" ? " WHERE " : " AND ") & " ep.public = :public";

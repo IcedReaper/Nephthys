@@ -23,7 +23,6 @@ component implements="WWW.interfaces.connector" {
                 .setTemplate("userSearch.cfm")
                 .addParam("options",      preparedOptions)
                 .addParam("childContent", arguments.childContent)
-                .addParam("userPage",     getUserLink())
                 .render();
         }
         else if(splitParameter.len() == 0 && ! form.isEmpty()) {
@@ -40,7 +39,6 @@ component implements="WWW.interfaces.connector" {
                 .addParam("childContent", arguments.childContent)
                 .addParam("searchQuery",  form.username)
                 .addParam("results",      user)
-                .addParam("userPage",     getUserLink())
                 .render();
         }
         else if(splitParameter.len() == 1) {
@@ -113,7 +111,6 @@ component implements="WWW.interfaces.connector" {
                     .setModulePath(getModulePath())
                     .setTemplate("register.cfm")
                     .addParam("errors",   errors)
-                    .addParam("userPage", getUserLink())
                     .render();
             }
             else {
@@ -130,7 +127,6 @@ component implements="WWW.interfaces.connector" {
                         .addParam("options",      preparedOptions)
                         .addParam("childContent", arguments.childContent)
                         .addParam("user",         user[1])
-                        .addParam("userPage",     getUserLink())
                         .render();
                 }
                 else {
@@ -141,7 +137,6 @@ component implements="WWW.interfaces.connector" {
                         .setTemplate("noResults.cfm")
                         .addParam("options",      preparedOptions)
                         .addParam("childContent", arguments.childContent)
-                        .addParam("userPage",     getUserLink())
                         .render();
                 }
             }
@@ -269,7 +264,6 @@ component implements="WWW.interfaces.connector" {
                                 .setTemplate("editProfile.cfm")
                                 .addParam("options",       preparedOptions)
                                 .addParam("childContent",  arguments.childContent)
-                                .addParam("userPage",      getUserLink())
                                 .addParam("themes",        themeFilter.getResult())
                                 .addParam("extProperties", extProperties)
                                 .addParam("result",        result)
@@ -315,7 +309,6 @@ component implements="WWW.interfaces.connector" {
                                     .addParam("options",   preparedOptions)
                                     .addParam("user",      user.getUsername())
                                     .addParam("subModule", "Private Nachrichten")
-                                    .addParam("userPage",  getUserLink())
                                     .render();
                             }
                         }
@@ -327,7 +320,6 @@ component implements="WWW.interfaces.connector" {
                                 .setTemplate("noResults.cfm")
                                 .addParam("options",      preparedOptions)
                                 .addParam("childContent", arguments.childContent)
-                                .addParam("userPage",     getUserLink())
                                 .render();
                         }
                     }
@@ -367,7 +359,6 @@ component implements="WWW.interfaces.connector" {
                                     .addParam("options",   preparedOptions)
                                     .addParam("user",      user.getUsername())
                                     .addParam("subModule", "Private Nachrichten")
-                                    .addParam("userPage",  getUserLink())
                                     .render();
                             }
                         }
@@ -379,7 +370,6 @@ component implements="WWW.interfaces.connector" {
                                 .setTemplate("noResults.cfm")
                                 .addParam("options",      preparedOptions)
                                 .addParam("childContent", arguments.childContent)
-                                .addParam("userPage",     getUserLink())
                                 .render();
                         }
                     }
@@ -417,16 +407,6 @@ component implements="WWW.interfaces.connector" {
             .setModulePath(getModulePath())
             .setTemplate("userMenu.cfm")
             .addParam("privateMessages", privateMessages)
-            .addParam("userPage", getUserLink())
             .render();
-    }
-    
-    private string function getUserLink() {
-        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init()
-                                                                                       .setFor("pageWithModule")
-                                                                                       .setModuleName("com.Nephthys.userManager")
-                                                                                       .execute()
-                                                                                       .getResult(); 
-        return aPages.len() >= 1 ? aPages[1].link : "";
     }
 }

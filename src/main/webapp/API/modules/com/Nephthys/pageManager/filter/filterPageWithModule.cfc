@@ -1,13 +1,3 @@
-/*
-    public string function getLink(required string moduleName) {
-        
-        
-        if(qGetPages.getRecordCount() == 1) {
-            return qGetPages.link[1];
-        }
-        
-        return "";
-    }*/
 component implements="API.interfaces.filter" {
     import "API.modules.com.Nephthys.pageManager.*";
     
@@ -34,7 +24,7 @@ component implements="API.interfaces.filter" {
         var orderBy = "";
         var innerQuery = "";
         
-        variables.qRes = new Query().setSQL("    SELECT pv.link, pv.content
+        variables.qRes = new Query().setSQL("    SELECT pv.pageVersionId
                                                    FROM nephthys_page_pageVersion pv
                                              INNER JOIN nephthys_page_sitemapPage sp  ON sp.pageId    = pv.pageId
                                              INNER JOIN nephthys_page_sitemap     s   ON sp.sitemapId = s.sitemapId
@@ -59,10 +49,7 @@ component implements="API.interfaces.filter" {
         if(variables.results == null) {
             variables.results = [];
             for(var i = 1; i <= variables.qRes.getRecordCount(); i++) {
-                variables.results.append({
-                    link    = variables.qRes.link[i],
-                    content = variables.qRes.content[i]
-                });
+                variables.results.append(new pageVersion(variables.qRes.pageVersionId[i]));
             }
         }
         return variables.results;

@@ -20,15 +20,6 @@ component implements="WWW.interfaces.connector" {
             .setTemplate("overview.cfm")
             .addParam("options",  arguments.options)
             .addParam("member",   member)
-            .addParam("userPage", getUserLink())
             .render();
-    }
-    
-    private string function getUserLink() {
-        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init().setFor("pageWithModule")
-                                                                                                    .setModuleName("com.Nephthys.userManager")
-                                                                                                    .execute()
-                                                                                                    .getResult();
-        return aPages.len() >= 1 ? aPages[1].link : "";
     }
 }

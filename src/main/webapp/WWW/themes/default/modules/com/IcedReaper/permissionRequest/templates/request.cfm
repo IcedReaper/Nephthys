@@ -2,7 +2,7 @@
 <div class="com-IcedReaper-permissionRequest">
     <div class="row">
         <div class="col-md-12">
-            <a href="#attributes.userPage#/#request.user.getUserName()#/permissionRequest/overview" class="btn btn-primary pull-right"><i class="fa fa-list"></i> Übersicht</a>
+            <cf_userLink userName="#request.user.getUserName()#" deepLink="/permissionRequest/overview" class="btn btn-primary pull-right"><i class="fa fa-list"></i> Übersicht</cf_userLink>
             
             <h1>Deine Anfrage <small>#attributes.request.getRequestId()#</small></h1>
             <div class="row">

@@ -2,10 +2,10 @@
 <div class="com-IcedReaper-privateMessage">
     <div class="row">
         <div class="col-md-12">
-            <a href="#attributes.userPage#/#request.user.getUserName()#/privateMessages" class="btn btn-primary pull-right"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
+            <cf_userLink userName="#request.user.getUserName()#" deepLink="/privateMessages" class="btn btn-primary pull-right"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</cf_userLink>
             <h2>Neue Konversation</h2>
             
-            <form method="POST" autocomplete="off" action="#attributes.userPage#/#request.user.getUserName()#/privateMessages/conversation/new" class="m-t-1">
+            <form method="POST" autocomplete="off" action="new" class="m-t-1">
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="form-group">

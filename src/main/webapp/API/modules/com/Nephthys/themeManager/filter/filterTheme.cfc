@@ -1,4 +1,6 @@
 component implements="API.interfaces.filter" {
+    import "API.modules.com.Nephthys.themeManager.*";
+    
     public filter function init() {
         variables.themeId   = null;
         variables.themeName = null;

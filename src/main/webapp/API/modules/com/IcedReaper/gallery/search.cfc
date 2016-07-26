@@ -41,19 +41,18 @@ component extends="API.abstractClasses.search" {
     }
     
     private string function getLink(required numeric galleryId) {
-        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init()
-                                                                                       .setFor("pageWithModule")
-                                                                                       .setModuleName("com.IcedReaper.gallery")
-                                                                                       .execute()
-                                                                                       .getResult();
+        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init().setFor("pageWithModule")
+                                                                                                    .setModuleName("com.IcedReaper.gallery")
+                                                                                                    .execute()
+                                                                                                    .getResult();
         
         if(aPages.len() >= 1) {
             for(var i = 1; i <= aPages.len(); ++i) {
-                var galleryModules = getGalleryModules(deserializeJSON(aPages[i].content));
+                var galleryModules = getGalleryModules(deserializeJSON(aPages[i].getContent()));
                 for(var j = 1; j <= galleryModules.len(); j++) {
                     if(galleryModules[j].options.keyExists("galleryId") && isArray(galleryModules[j].options.galleryId) && ! galleryModules[j].options.galleryId.isEmpty()) {
                         if(galleryModules[j].options.galleryId.find(arguments.galleryId)) {
-                            return aPages[i].link;
+                            return aPages[i].getLink();
                         }
                     }
                     if(galleryModules[j].options.keyExists("categoryId") && isArray(galleryModules[j].options.categoryId) && ! galleryModules[j].options.categoryId.isEmpty()) {
@@ -63,13 +62,13 @@ component extends="API.abstractClasses.search" {
                                                             .execute()
                                                             .getResultCount() >= 1;
                         if(galleryInCategory) {
-                            return aPages[i].link;
+                            return aPages[i].getLink();
                         }
                     }
                 }
             }
             
-            return aPages[1].link;
+            return aPages[1].getLink();
         }
         return "";
     }

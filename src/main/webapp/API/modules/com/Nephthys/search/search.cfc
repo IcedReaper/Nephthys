@@ -20,7 +20,9 @@ component extends="API.abstractClasses.search" {
     private array function getModules() {
         var modules = [];
         
-        var moduleFilter = new filter().setIntegratedSearch(true).execute();
+        var moduleFilter = new filter().setFor("module")
+                                       .setIntegratedSearch(true)
+                                       .execute();
         for(var module in moduleFilter.getResult()) {
             modules.append(module.getModuleName());
         }

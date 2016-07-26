@@ -2,7 +2,7 @@
 <div class="com-IcedReaper-permissionRequest">
     <div class="row">
         <div class="col-md-12">
-            <a href="#attributes.userPage#/#request.user.getUserName()#/permissionRequest/overview" class="btn btn-primary pull-right"><i class="fa fa-list"></i> Übersicht</a>
+            <cf_userLink userName="#request.user.getUserName()#" deepLink="/permissionRequest/overview" class="btn btn-primary pull-right"><i class="fa fa-list"></i> Übersicht</cf_userLink>
             
             <h2>Neue Berechtigung anfragen</h2>
             
@@ -26,7 +26,7 @@
                         </p>
                     </div>
                 </cfif>
-                <form method="POST" autocomplete="off" action="#attributes.userPage#/#request.user.getUserName()#/permissionRequest/new" class="m-t-1">
+                <form method="POST" autocomplete="off" action="new" class="m-t-1">
                     <input type="hidden" name="name" value="com.IcedReaper.permissionRequest">
                     <div class="form-group row<cfif attributes.result.errors.module> has-danger</cfif>">
                         <label class="form-label col-md-3" for="moduleId">Modul</label>

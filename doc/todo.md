@@ -13,7 +13,7 @@
     4. getUserInformation zentral ablegen | Aktuell mehrfach identisch vorhanden ?
         * user informationen für den ajax JSON Rückweg vorbereiten
     5. Installationssystem
-        * Datasources bei der Installation in einer JSON Datei ablegen und in den Applications auslesen
+        * Datasources bei der Installation im cfAdmin eintragen
     6. Updatesystem
     7. Repairmodus ?
     8. Lizenzen von Assets und Plugins überprüfen
@@ -61,6 +61,7 @@
         * Update
             - Per git Repo mit Branch/tag
             - per zip
+        * CustomTag path im cfadmin eintragen
     4. Backup
         * https://www.postgresql.org/docs/9.3/static/app-pgdump.html
     5. Sidebar auf Icons reduzieren
@@ -168,7 +169,6 @@
 ## Optimierungen
     1. Datenbank optimieren
     2. Tabellenprefix in Application verankern. Aus Datei auslesen.
-    3. Datasources aus Datei auslesen.
     4. (CFIDE/LuceeAdmin) Serversettings in Applikation verankern
     5. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
     6. Verwendung von nicht Klassenattributen (z.B. request.user) aus den Klassen entfernen und als Parameter erwarten

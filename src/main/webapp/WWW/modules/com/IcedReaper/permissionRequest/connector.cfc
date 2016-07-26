@@ -18,13 +18,6 @@ component implements="WWW.interfaces.connector" {
                 arguments.options.otherParameter[1] = "overview";
             }
             
-            var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init()
-                                                                                           .setFor("pageWithModule")
-                                                                                           .setModuleName("com.Nephthys.userManager")
-                                                                                           .execute()
-                                                                                           .getResult(); 
-            var userPage = aPages.len() >= 1 ? aPages[1].link : "";
-            
             if(arguments.options.keyExists("otherParameter") && arguments.options.otherParameter.len() > 0) {
                 switch(arguments.options.otherParameter[1]) {
                     case "new": {
@@ -69,12 +62,11 @@ component implements="WWW.interfaces.connector" {
                             }
                         }
                         
-                        var modules = createObject("component", "API.modules.com.Nephthys.moduleManager.filter").init()
-                                                                                                         .setFor("module")
-                                                                                                         .setActive(true)
-                                                                                                         .setAvailableWww(true)
-                                                                                                         .execute()
-                                                                                                         .getResult();
+                        var modules = createObject("component", "API.modules.com.Nephthys.moduleManager.filter").init().setFor("module")
+                                                                                                                       .setActive(true)
+                                                                                                                       .setAvailableWww(true)
+                                                                                                                       .execute()
+                                                                                                                       .getResult();
                         
                         for(var i = 1; i <= modules.len(); ++i) {
                             if(request.user.hasPermission(modules[i].getModuleName(), "admin")) {
@@ -84,8 +76,8 @@ component implements="WWW.interfaces.connector" {
                         }
                         
                         var permissionFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").setFor("permission")
-                                                                                                                .setUserId(request.user.getUserId())
-                                                                                                                .execute();
+                                                                                                                       .setUserId(request.user.getUserId())
+                                                                                                                       .execute();
                         
                         var existingPermissions = [];
                         for(var permission in permissionFilter.getResult()) {
@@ -105,7 +97,6 @@ component implements="WWW.interfaces.connector" {
                             .setModulePath(getModulePath())
                             .setTemplate("newRequest.cfm")
                             .addParam("options",             arguments.options)
-                            .addParam("userPage",            userPage)
                             .addParam("modules",             modules)
                             .addParam("roles",               roleFilter.execute().getResult())
                             .addParam("result",              result)
@@ -122,9 +113,8 @@ component implements="WWW.interfaces.connector" {
                                         return application.system.settings.getValueOfKey("templateRenderer")
                                             .setModulePath(getModulePath())
                                             .setTemplate("request.cfm")
-                                            .addParam("options",  arguments.options)
-                                            .addParam("request",  _request)
-                                            .addParam("userPage", userPage)
+                                            .addParam("options", arguments.options)
+                                            .addParam("request", _request)
                                             .render();
                                     }
                                 }
@@ -134,7 +124,6 @@ component implements="WWW.interfaces.connector" {
                                     .setModulePath(getModulePath())
                                     .setTemplate("requestNotFound.cfm")
                                     .addParam("options",  arguments.options)
-                                    .addParam("userPage", userPage)
                                     .render();
                             }
                         }
@@ -152,7 +141,6 @@ component implements="WWW.interfaces.connector" {
                             .setTemplate("overview.cfm")
                             .addParam("options",  arguments.options)
                             .addParam("requests", requestOverview)
-                            .addParam("userPage", userPage)
                             .render();
                     }
                     default: {

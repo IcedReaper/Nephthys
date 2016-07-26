@@ -56,7 +56,7 @@
         <cfif attributes.user.getUserId() == request.user.getUserId()>
             <div class="row m-t-1">
                 <div class="col-sm-12 text-xs-right">
-                    <a href="#attributes.userPage#/#attributes.user.getUsername()#/edit" class="btn btn-primary"><i class="fa fa-edit"></i> Profil bearbeiten</a>
+                    <cf_userLink userName="#attributes.user.getUsername()#" deepLink="/edit" class="btn btn-primary"><i class="fa fa-edit"></i> Profil bearbeiten</cf_userLink>
                 </div>
             </div>
         </cfif>

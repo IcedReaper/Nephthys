@@ -2,7 +2,7 @@
 <div class="com-IcedReaper-privateMessage">
     <div class="row">
         <div class="col-sm-12">
-            <a class="btn btn-primary pull-right" href="#attributes.userPage#/#request.user.getUserName()#/privateMessages"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
+            <cf_userLink userName="#request.user.getUserName()#" deepLink="/privateMessages" class="btn btn-primary pull-right"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</cf_userLink>
             <h3>
                 Unterhaltung zwischen
                 <span class="small">
@@ -13,14 +13,14 @@
                         <cfelseif participantIndex EQ participants.len()>
                             &nbsp;und&nbsp;
                         </cfif>
-                        <a href="#attributes.userPage#/#participants[participantIndex].getUserName()#" target="_blank">#participants[participantIndex].getUserName()#</a>
+                        <cf_userLink userName="#participants[participantIndex].getUserName()#" target="_blank">#participants[participantIndex].getUserName()#</cf_userLink>
                     </cfloop>
                 </span>
             </h3>
         </div>
     </div>
     
-    <form method="POST" autocomplete="off" class="m-t-1" action="#attributes.userPage#/#request.user.getUserName()#/privateMessages/conversation/#attributes.conversation.getConversationId()#">
+    <form method="POST" autocomplete="off" class="m-t-1" action="#attributes.conversation.getConversationId()#">
         <div class="row">
             <div class="col-sm-12">
                 <h4>Antworten</h4>
@@ -55,12 +55,12 @@
                     <div class="card m-t-1">
                         <div class="card-block">
                             <cfif messages[messageIndex].getUser().getUserId() EQ request.user.getUserId() AND messages[messageIndex].isReadByOther(request.user) EQ false AND messages[messageIndex].isDeleted() EQ false>
-                                <a href="#attributes.userPage#/#request.user.getUserName()#/privateMessages/conversation/#attributes.conversation.getConversationId()#?delete&messageId=#messages[messageIndex].getMessageId()#" class="close" title="Nachricht löschen">&times;</a>
+                                <cf_userLink userName="#request.user.getUserName()#" deepLink="/privateMessages/conversation/#attributes.conversation.getConversationId()#?delete&messageId=#messages[messageIndex].getMessageId()#" class="close" title="Nachricht löschen">&times;</cf_userLink>
                             </cfif>
                             <p>#application.system.settings.getValueOfKey("xssProtector").encodeForHTML(messages[messageIndex].getMessage()).replace(chr(10), "<br>", "ALL")#</p>
                         </div>
                         <div class="card-footer text-muted">
-                            Gesendet von <a href="#attributes.userPage#/#messages[messageIndex].getUser().getUserName()#">#messages[messageIndex].getUser().getUserName()#</a>
+                            Gesendet von <cf_userLink userName="#messages[messageIndex].getUser().getUserName()#">#messages[messageIndex].getUser().getUserName()#</cf_userLink>
                             am #dateFormat(messages[messageIndex].getSendDate(), "DD.MMM YYYY")#
                             um #timeFormat(messages[messageIndex].getSendDate(), "HH:MM")#
                             

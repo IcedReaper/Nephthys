@@ -34,7 +34,7 @@
                                 #attributes.blogposts[blogpostIndex].getStory()#
                             </section>
                             <footer>
-                                <p><small>Dieser Blogeintrag wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.blogposts[blogpostIndex].getCreationDate())# von <a href="#attributes.userPage#/#attributes.blogposts[blogpostIndex].getCreator().getUsername()#">#attributes.blogposts[blogpostIndex].getCreator().getUsername()#</a> erstellt.</small></p>
+                                <p><small>Dieser Blogeintrag wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.blogposts[blogpostIndex].getCreationDate())# von <cf_userLink userName="#attributes.blogposts[blogpostIndex].getCreator().getUsername()#">#attributes.blogposts[blogpostIndex].getCreator().getUsername()#</cf_userLink> erstellt.</small></p>
                                 <cfset categories = attributes.blogposts[blogpostIndex].getCategories()>
                                 <cfloop from="1" to="#categories.len()#" index="categoryIndex">
                                     <a class="tag tag-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>

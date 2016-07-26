@@ -20,7 +20,7 @@
                                     <div class="row">
                                         <div class="col-sm-6 col-md-10">
                                             <h4>
-                                                <a href="#attributes.userPage#/#request.user.getUserName()#/privateMessages/conversation/#attributes.conversations[conversationIndex].getConversationId()#">Unterhaltung zwischen</a>
+                                                <cf_userLink userName="#request.user.getUserName()#" deepLink="/privateMessages/conversation/#attributes.conversations[conversationIndex].getConversationId()#">Unterhaltung zwischen</cf_userLink>
                                                 <span class="small">
                                                     <cfset participants = attributes.conversations[conversationIndex].getParticipants()>
                                                     <cfloop from="1" to="#participants.len()#" index="participantIndex">
@@ -29,28 +29,28 @@
                                                         <cfelseif participantIndex EQ participants.len()>
                                                             &nbsp;und&nbsp;
                                                         </cfif>
-                                                        <a href="#attributes.userPage#/#participants[participantIndex].getUserName()#" target="_blank">#participants[participantIndex].getUserName()#</a>
+                                                        <cf_userLink userName="#participants[participantIndex].getUserName()#" target="_blank">#participants[participantIndex].getUserName()#</cf_userLink>
                                                     </cfloop>
                                                 </span>
                                             </h4>
                                         </div>
                                         <div class="col-sm-6 col-md-2">
-                                            <a class="btn btn-primary btn-sm pull-right" href="#attributes.userPage#/#request.user.getUserName()#/privateMessages/conversation/#attributes.conversations[conversationIndex].getConversationId()###reply">
+                                            <cf_userLink userName="#request.user.getUserName()#" deepLink="/privateMessages/conversation/#attributes.conversations[conversationIndex].getConversationId()###reply" class="btn btn-primary btn-sm pull-right">
                                                 <span class="fa-stack">
                                                     <i class="fa fa-comment fa-stack-lg"></i>
                                                     <i class="fa fa-arrow-right fa-stack-1x text-success overlay-lower-right"></i>
                                                 </span> Antworten
-                                            </a>
+                                            </cf_userLink>
                                         </div>
                                     </div>
                                     
                                     <p class="card-text">
-                                        #attributes.conversations[conversationIndex].getLastMessage().getMessage().replace(chr(10), "<br>", "ALL")#
+                                        #application.system.settings.getValueOfKey("xssProtector").encodeForHTML(attributes.conversations[conversationIndex].getLastMessage().getMessage().replace(chr(10), "<br>", "ALL"))#
                                     </p>
                                     
                                     <p class="card-text">
                                         <small class="text-muted">
-                                            Gesendet von <a href="#attributes.userPage#/#attributes.conversations[conversationIndex].getLastMessage().getUser().getUserName()#">#attributes.conversations[conversationIndex].getLastMessage().getUser().getUserName()#</a>
+                                            Gesendet von <cf_userLink userName="#attributes.conversations[conversationIndex].getLastMessage().getUser().getUserName()#">#attributes.conversations[conversationIndex].getLastMessage().getUser().getUserName()#</cf_userLink>
                                             am #dateFormat(attributes.conversations[conversationIndex].getLastMessage().getSendDate(), "DD.MMM YYYY")#
                                             um #timeFormat(attributes.conversations[conversationIndex].getLastMessage().getSendDate(), "HH:MM")#
                                         </small>

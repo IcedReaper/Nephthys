@@ -18,12 +18,11 @@ component implements="WWW.interfaces.connector" {
                 arguments.options.otherParameter[1] = "overview";
             }
             
-            var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init()
-                                                                                           .setFor("pageWithModule")
-                                                                                           .setModuleName("com.Nephthys.userManager")
-                                                                                           .execute()
-                                                                                           .getResult(); 
-            var userPage = aPages.len() >= 1 ? aPages[1].link : "";
+            var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init().setFor("pageWithModule")
+                                                                                                        .setModuleName("com.Nephthys.userManager")
+                                                                                                        .execute()
+                                                                                                        .getResult(); 
+            var userPage = aPages.len() >= 1 ? aPages[1].getLink() : "";
             
             if(arguments.options.keyExists("otherParameter") && arguments.options.otherParameter.len() > 0) {
                 switch(arguments.options.otherParameter[1]) {
@@ -35,7 +34,10 @@ component implements="WWW.interfaces.connector" {
                                 
                                 conversation.addParticipant(request.user);
                                 for(var userName in listToArray(form.participants, ";")) {
-                                    var participant = createObject("component", "API.modules.com.Nephthys.userManager.filter").init().setUsername(userName).execute().getResult();
+                                    var participant = createObject("component", "API.modules.com.Nephthys.userManager.filter").init().setFor("user")
+                                                                                                                                     .setUsername(userName)
+                                                                                                                                     .execute()
+                                                                                                                                     .getResult();
                                     if(participant.len() == 1) {
                                         conversation.addParticipant(participant[1]);
                                     }

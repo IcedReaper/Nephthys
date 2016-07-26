@@ -111,7 +111,6 @@ component implements="WWW.interfaces.connector" {
             .addParam("actualPage",         arguments.actualPage)
             .addParam("categories",         categoryFilter.execute().getResult())
             .addParam("activeCategory",     arguments.activeCategory)
-            .addParam("userPage",           getUserLink())
             .render();
     }
     
@@ -126,7 +125,6 @@ component implements="WWW.interfaces.connector" {
             .addParam("options",      arguments.options)
             .addParam("blogpost",     arguments.blogpost)
             .addParam("commentAdded", commentAdded)
-            .addParam("userPage",     getUserLink())
             .render();
     }
     
@@ -192,14 +190,5 @@ component implements="WWW.interfaces.connector" {
     
     private boolean function validateEmail(required string eMail) {
         return arguments.eMail != "" && application.system.settings.getValueOfKey("validator").validate(data=arguments.eMail, ruleName="Email");
-    }
-    
-    private string function getUserLink() {
-        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init()
-                                                                                       .setFor("pageWithModule")
-                                                                                       .setModuleName("com.Nephthys.userManager")
-                                                                                       .execute()
-                                                                                       .getResult();
-        return aPages.len() >= 1 ? aPages[1].link : "";
     }
 }
