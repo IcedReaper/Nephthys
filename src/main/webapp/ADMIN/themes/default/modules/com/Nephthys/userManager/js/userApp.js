@@ -2,6 +2,7 @@ var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
                                                            "ngFileUpload",
                                                            "ui.bootstrap",
                                                            "com.nephthys.global.loadingBar",
+                                                           "com.nephthys.global.userInfo",
                                                            "com.nephthys.userManager.statistics"]);
 
 nephthysAdminApp
@@ -11,6 +12,14 @@ nephthysAdminApp
                 .when("/", {
                     templateUrl: "/themes/default/modules/com/Nephthys/userManager/partials/userList.html",
                     controller:  "userListCtrl"
+                })
+                .when("/blacklist/list", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/userManager/partials/blacklistList.html",
+                    controller:  "blacklistListCtrl"
+                })
+                .when("/blacklist/:blacklistId", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/userManager/partials/blacklistEntry.html",
+                    controller:  "blacklistEntryCtrl"
                 })
                 .when("/:userId", {
                     templateUrl: "/themes/default/modules/com/Nephthys/userManager/partials/userDetail.html",

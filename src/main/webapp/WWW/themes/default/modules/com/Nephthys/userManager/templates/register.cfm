@@ -27,6 +27,9 @@
                             <cfif attributes.errors.usernameUsed>
                                 <p>Der Username ist schon vergeben</p>
                             </cfif>
+                            <cfif attributes.errors.usernameBlocked>
+                                <p>Der Username oder ein Teil des Username ist gesperrt</p>
+                            </cfif>
                             <cfif attributes.errors.emailUsed>
                                 <p>Die E-Mail Adresse ist schon vergeben</p>
                             </cfif>

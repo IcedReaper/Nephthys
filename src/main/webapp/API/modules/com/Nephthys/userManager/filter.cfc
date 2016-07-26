@@ -9,7 +9,8 @@ component {
             case "permission":
             case "permissionRole":
             case "extProperty":
-            case "extPropertyKey": {
+            case "extPropertyKey":
+            case "blacklist": {
                 arguments.for = uCase(arguments.for.left(1)) & arguments.for.right(arguments.for.len() - 1);
                 return createObject("component", "filter.filter" & arguments.for).init();
             }

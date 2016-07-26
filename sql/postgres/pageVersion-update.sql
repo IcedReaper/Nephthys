@@ -1019,7 +1019,7 @@ alter table nephthys_user_extPropertyKey add constraint nephthys_user_extPropert
 
 CREATE TABLE IcedReaper_blog_picture
 (
-  pictureId SERIAL,
+  pictureId SERIAL not null primary key,
   blogpostId integer NOT NULL references IcedReaper_blog_blogpost on delete cascade,
   pictureFilename character varying(150) NOT NULL unique,
   thumbnailFilename character varying(150) NOT NULL,
@@ -1033,3 +1033,30 @@ CREATE TABLE IcedReaper_blog_picture
 GRANT SELECT ON TABLE icedreaper_blog_picture TO nephthys_user;
 
 --alter table IcedReaper_blog_blogpost add column pictureLayout;
+
+
+
+create table nephthys_user_blacklist
+(
+    blacklistId serial not null primary key,
+    namepart character varying(100) not null unique,
+    
+    creationUserId integer not null references nephthys_user on delete set null,
+    creationDate timestamp with time zone not null default now()
+);
+GRANT SELECT ON TABLE nephthys_user_blacklist TO nephthys_user;
+
+CREATE OR REPLACE FUNCTION nephthys_user_checkUsername(IN username character varying(255))
+RETURNS BOOLEAN AS $$
+DECLARE usernameNotBlocked BOOLEAN;
+BEGIN
+        SELECT COUNT(*) = 0 INTO usernameNotBlocked
+          FROM nephthys_user_blacklist
+         WHERE lower($1) like '%' || lower(namepart) || '%';
+
+        RETURN usernameNotBlocked;
+END;
+$$ LANGUAGE plpgsql;
+GRANT EXECUTE ON FUNCTION nephthys_user_checkUsername(IN username character varying(255)) TO nephthys_user;
+
+alter table nephthys_user add constraint nephthys_user_username_check check(nephthys_user_checkUsername(username));

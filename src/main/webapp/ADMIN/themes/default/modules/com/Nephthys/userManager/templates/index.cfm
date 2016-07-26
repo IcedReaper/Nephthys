@@ -7,6 +7,7 @@
 <script type="text/javascript" src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
 
 <script type="text/javascript" src="/themes/default/directive/nephthysLoadingBar/nephthysLoadingBar.js"></script>
+<script type="text/javascript" src="/themes/default/directive/nephthysUserInfo/nephthysUserInfo.js"></script>
 <script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/userManager/directives/statistics/statistics.js"></script>
 
@@ -21,6 +22,8 @@
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/userManager/js/controller/userDetail.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/userManager/js/controller/userPermission.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/userManager/js/controller/userExtProperties.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/userManager/js/controller/blacklistList.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/userManager/js/controller/blacklistEntry.js"></script>
 
 <nephthys-loading-bar></nephthys-loading-bar>
 <div ng-view></div>

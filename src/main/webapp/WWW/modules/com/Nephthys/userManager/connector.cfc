@@ -52,6 +52,7 @@ component implements="WWW.interfaces.connector" {
                     emailUsed              = false,
                     username               = false,
                     usernameUsed           = false,
+                    usernameBlocked        = false,
                     password               = false
                 };
                 
@@ -71,11 +72,11 @@ component implements="WWW.interfaces.connector" {
                         errors.username = true;
                         errors.error = true;
                     }
-                    if(new filter().setUsername(form.username).execute().getResultCount() != 0) {
+                    if(new filter().setFor("user").setUsername(form.username).execute().getResultCount() != 0) {
                         errors.usernameUsed = true;
                         errors.error = true;
                     }
-                    if(new filter().setEmail(form.email).execute().getResultCount() != 0) {
+                    if(new filter().setFor("user").setEmail(form.email).execute().getResultCount() != 0) {
                         errors.emailUsed = true;
                         errors.error = true;
                     }
@@ -85,10 +86,24 @@ component implements="WWW.interfaces.connector" {
                                              .setEmail(form.email)
                                              .setPassword(encrypt(form.password,
                                                           application.system.settings.getValueOfKey("encryptionKey"),
-                                                          encryptionMethodLoader.getAlgorithm(application.system.settings.getValueOfKey("encryptionMethodId"))))
-                                             .save();
+                                                          encryptionMethodLoader.getAlgorithm(application.system.settings.getValueOfKey("encryptionMethodId"))));
+                        try {
+                            user.save();
+                        }
+                        catch(database dbe) {
+                            if(dbe.sqlState == 23514) {
+                                errors.username = true;
+                                errors.usernameBlocked = true;
+                                errors.error = true;
+                            }
+                            else {
+                                rethrow(dbe);
+                            }
+                        }
                         
-                        errors.registrationSuccessful = true;
+                        if(! errors.error) {
+                            errors.registrationSuccessful = true;
+                        }
                     }
                 }
                 

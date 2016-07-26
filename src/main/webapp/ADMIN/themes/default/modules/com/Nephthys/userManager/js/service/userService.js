@@ -19,7 +19,9 @@ nephthysAdminApp
             
             delete: function (userId) {
                 return $http.delete('/ajax/com/Nephthys/userManager/delete', {
-                    userId: userId
+                    params: {
+                        userId: userId
+                    }
                 });
             },
             
@@ -85,6 +87,29 @@ nephthysAdminApp
             
             getPermissionsOfActualUser: function () {
                 return $http.get("/ajax/com/Nephthys/userManager/getPermissionsOfActualUser");
+            },
+            
+            getBlacklist: function () {
+                return $http.get("/ajax/com/Nephthys/userManager/getBlacklist");
+            },
+            getBlacklistEntry: function (blacklistId) {
+                return $http.get("/ajax/com/Nephthys/userManager/getBlacklistEntry", {
+                    params: {
+                        blacklistId: blacklistId
+                    }
+                });
+            },
+            saveBlacklistEntry: function (blacklist) {
+                return $http.post("/ajax/com/Nephthys/userManager/saveBlacklistEntry", {
+                    blacklist: blacklist
+                });
+            },
+            deleteBlacklistEntry: function (blacklistId) {
+                return $http.delete("/ajax/com/Nephthys/userManager/deleteBlacklistEntry", {
+                    params: {
+                        blacklistId: blacklistId
+                    }
+                });
             }
         };
     });

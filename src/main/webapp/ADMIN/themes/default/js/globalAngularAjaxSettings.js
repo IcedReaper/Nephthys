@@ -31,26 +31,7 @@ var globalAngularAjaxSettings = function($httpProvider) {
                         $rootScope.$broadcast("nephthys-loading-bar-hide", {});
                     }
                     
-                    switch(response.config.method) {
-                        case "POST":
-                        case "DELETE": {
-                            var action = "Speichern";
-                            if(response.config.method === "DELETE") {
-                                action = "Löschen";
-                            }
-                            
-                            $rootScope.message = {
-                                "type":     "success",
-                                "headline": action + " war erfolgreich",
-                                "text":     "Das  " + action + " war erfolgreich"
-                            };
-                            
-                            $timeout(function() {
-                                $rootScope.message = null;
-                            }, 1000);
-                            break;
-                        }
-                    }
+                    $rootScope.message = {};
                     
                     $rootScope.$emit('session-refreshed', {});
                     

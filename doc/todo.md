@@ -20,24 +20,21 @@
     9. Mehrsprachigkeit/Internationalisierung
         * i18n
         * i10n
-    10. user => username überprüfen
-    11. user => blacklist erstellen | Innerhalb des Username überprüfen
-    12. F5-Raids bei Formularen unterbinden
-    13. FileUpload, etc in eine Extra-Component aus dem Model auslagern
-    14. Pakete
+    10. F5-Raids bei Formularen unterbinden
+    11. FileUpload, etc in eine Extra-Component aus dem Model auslagern
+    12. Pakete
         * Alles
         * Blog
         * Gallerie
         * Marketing/Produkt
-    15. QueryBuilder zur Unterstützung verschiedener DB-Systeme
+    13. QueryBuilder zur Unterstützung verschiedener DB-Systeme
         * Idee und erste Doku unter QueryBuilder-idea-notes.md
-    16. Zusätzliche Optionen
+    14. Zusätzliche Optionen
         * Berechtigungssystem auf Menüpunkte ausweiten
-    17. Erweiterte Sicherheit in Modulen
+    15. Erweiterte Sicherheit in Modulen
         * Personen freischalten => Nur normales Editieren
-        *
-    18. API-Statistics wie page.filter allen Modulen hinzufügen. - abwägen, und nach und nach
-    19. Eigenes Date objekt? Date auch als null möglich | date.format() möglich
+    16. API-Statistics wie page.filter allen Modulen hinzufügen. - abwägen, und nach und nach
+    17. Eigenes Date objekt? Date auch als null möglich | date.format() möglich
 
 ## Website
     1. Codeoptimierung
@@ -84,7 +81,7 @@
             * Bewertungen
                 * Anonym per Option
                 * Als eingeloggter User
-        3. Statistiken pro Bild
+        2. Statistiken pro Bild
             - Jegliche Idee zum Erfassen der Daten sind bisher crap
                 * Für onSlideEnd von blueimp image gallery muss per jQuery der Filename ausgelesen werden
                 * ColdFusion liefert nicht ohne weiteres Bilder aus - ich hab noch nix ergoogled - ggf Lucee-Forum anfunken
@@ -113,17 +110,14 @@
     4. Preis/Leistung
     5. YouTube Videoliste
         * Designauswahl
-
     6. Facebookpostfeed
         * Facebook pageId
         * Anzahl der posts
         * Designauswahl
-
     7. Schnittstelle zu Twitter
         * Username
         * Anzahl der Tweets
         * Designauswahl
-    
     8. Schnittstelle zu Last.fm
         * Username
         * Anzahl der Scrobbles
@@ -139,20 +133,17 @@
             * Zeitraum
         * Ggf Authentifizierung
         * Designauswahl
-    
     9. Schnittstelle zu Flickr
         (ggf in das Modul com.IcedReaper.gallery inkludieren)
         * UserId
         * AlbumId oder -name
         * Designauswahl
         * Upload der Bilder direkt nach Flickr. Erstellt das Album auf beiden Plattformen (API checken)
-    
     10. Schnittstelle zu DeviantArt
         (ggf in das Modul com.IcedReaper.gallery inkludieren)
         * UserId
         * AlbumId oder -name
         * Designauswahl
-    
     11. Downloadmodul
         * Kategorien
         * Tags
@@ -160,22 +151,18 @@
         * Admintool
         * Übersicht
         * Anzeige der letzten 4 Suchbegriffe
-    
     12. Adminchat
         * Globaler Channel
         * Private Chats/Channel
-    
     13. Private Nachrichten
         * Infos zu neuen Nachrichten per Websockets melden
-    
     14. Admintaskliste (Aufgabenverwaltung)
          * private / globale tasks
          * Status
              * Offen
              * in Bearbeitung
              * geschlossen
-        * "PostIt"-Setup des Desktops
-    
+         * "PostIt"-Setup des Desktops
     15. com.IcedReaper.tileDashboard
         * Anzahl an offenen Tasks (Gute Idee fehlt zum Managen der Module, die, und wie, eine Taskliste haben)
 
@@ -191,6 +178,5 @@
     9. Creator und lastEditor direkt als Objekte in Objekten erstellen
     10. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
     11. Charts responsive mit maxHeight!?
-    12. Checken, ob man Loading Bar und Error Message Box irgendwie Global verankern kann
-    13. Checkout Lucee REST Servlet (web.xml)
-    14. Client Side validation für Formulare
+    12. Checkout Lucee REST Servlet (web.xml)
+    13. Client Side validation für Formulare

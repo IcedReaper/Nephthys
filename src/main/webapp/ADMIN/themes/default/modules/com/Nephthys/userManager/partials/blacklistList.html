@@ -1,0 +1,50 @@
+<div class="row m-b-2">
+    <div class="col-md-10 col-sm-8">
+        <a href="#/" class="btn btn-secondary"><i class="fa fa-list"></i> Userliste</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
+        <div class="pull-right">
+            <a href="#/blacklist/0" class="btn btn-primary"><i class="fa fa-user-plus"></i> Neuen Namensteil blocken</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Liste der geblockten Namensteile</h1>
+    </div>
+</div>
+
+<table class="table table-inverse m-t-1">
+    <thead>
+        <th>ID</th>
+        <th>UserName</th>
+        <th>Email</th>
+        <th>Aktionen</th>
+    </thead>
+    <tbody>
+        <tr ng-repeat="entry in blacklist">
+            <td>{{entry.blacklistId}}</td>
+            <td>
+                <a href="#/blacklist/{{entry.blacklistId}}">{{entry.namepart}}</a>
+            </td>
+            <td>
+                <nephthys-user-info user="entry.creator" hide-name="true"></nephthys-user-info>
+                <span class="text-nowrap">{{entry.creationDate}}</span>
+            </td>
+            <td>
+                <a href="#/{{entry.blacklistId}}"
+                   class="btn btn-primary"
+                   title="Details">
+                    <i class="fa fa-cog"></i>
+                </a>
+                
+                <button class="btn btn-danger"
+                        ng-click="delete(entry.blacklistId)"
+                        title="Namensteil entblocken">
+                    <i class="fa fa-trash-o"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

@@ -2,6 +2,8 @@ component {
     import "API.modules.com.Nephthys.userManager.*";
     import "API.modules.com.Nephthys.userManager.statistics.*";
     
+    formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
+    
     remote array function getList() {
         var userListCtrl = new filter().setFor("user");
         
@@ -326,8 +328,34 @@ component {
         return userRoles;
     }
     
-    // P R I V A T E   M E T H O D S
+    remote array function getBlacklist() {
+        var blacklistEntries = [];
+        for(var blacklistEntry in new filter().setFor("blacklist").execute().getResult()) {
+            blacklistEntries.append(prepareBlacklistStruct(blacklistEntry));
+        }
+        
+        return blacklistEntries;
+    }
     
+    remote struct function getBlacklistEntry(required numeric blacklistId) {
+        return prepareBlacklistStruct(new blacklist(arguments.blacklistId));
+    }
+    
+    remote numeric function saveBlacklistEntry(required struct blacklist) {
+        return new blacklist(arguments.blacklist.blacklistId)
+                            .setNamepart(arguments.blacklist.namepart)
+                            .setCreator(request.user)
+                            .setCreationDate(now())
+                            .save()
+                            .getBlacklistId();
+    }
+    
+    remote boolean function deleteBlacklistEntry(required numeric blacklistId) {
+        new blacklist(arguments.blacklistId).delete();
+        return true;
+    }
+    
+    // P R I V A T E   M E T H O D S
     private struct function prepareDetailStruct(required user userObject) {
         return {
             "userId"       = arguments.userObject.getUserId(),
@@ -343,12 +371,27 @@ component {
     }
     
     private array function prepareLoginData(required array loginData) {
-        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
-        
         for(var i = 1; i <= arguments.loginData.len(); ++i) {
             arguments.loginData[i].loginDate = formatCtrl.formatDate(arguments.loginData[i].loginDate);
         }
         
         return arguments.loginData;
+    }
+    
+    private struct function prepareReducedDetailStruct(required user userObject) {
+        return {
+            "userId"   = arguments.userObject.getUserId(),
+            "username" = arguments.userObject.getUserName(),
+            "avatar"   = arguments.userObject.getAvatarPath()
+        };
+    }
+    
+    private struct function prepareBlacklistStruct(required blacklist blacklistEntry) {
+        return {
+            "blacklistId"  = arguments.blacklistEntry.getBlacklistId(),
+            "namepart"     = arguments.blacklistEntry.getNamepart(),
+            "creator"      = prepareReducedDetailStruct(arguments.blacklistEntry.getCreator()),
+            "creationDate" = formatCtrl.formatDate(arguments.blacklistEntry.getCreationDate())
+        };
     }
 }
