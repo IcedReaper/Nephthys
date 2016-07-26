@@ -33,8 +33,7 @@
         * Berechtigungssystem auf Menüpunkte ausweiten
     15. Erweiterte Sicherheit in Modulen
         * Personen freischalten => Nur normales Editieren
-    16. API-Statistics wie page.filter allen Modulen hinzufügen. - abwägen, und nach und nach
-    17. Eigenes Date objekt? Date auch als null möglich | date.format() möglich
+    16. Eigenes Date objekt? Date auch als null möglich | date.format() möglich
 
 ## Website
     1. Codeoptimierung
@@ -168,15 +167,14 @@
 
 ## Optimierungen
     1. Datenbank optimieren
-    2. Aktuell gibt es sowohl creationDate als auch createdDate => gleichziehen!!!
-    3. Tabellenprefix in Application verankern. Aus Datei auslesen.
-    4. Datasources aus Datei auslesen.
-    5. (CFIDE/LuceeAdmin) Serversettings in Applikation verankern
-    6. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
-    7. Verwendung von nicht Klassenattributen (z.B. request.user) aus den Klassen entfernen und als Parameter erwarten
-    8. Berechtigungen (Admin, Editor, User) in Module einbauen
-    9. Creator und lastEditor direkt als Objekte in Objekten erstellen
-    10. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
-    11. Charts responsive mit maxHeight!?
-    12. Checkout Lucee REST Servlet (web.xml)
-    13. Client Side validation für Formulare
+    2. Tabellenprefix in Application verankern. Aus Datei auslesen.
+    3. Datasources aus Datei auslesen.
+    4. (CFIDE/LuceeAdmin) Serversettings in Applikation verankern
+    5. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
+    6. Verwendung von nicht Klassenattributen (z.B. request.user) aus den Klassen entfernen und als Parameter erwarten
+    7. Berechtigungen (Admin, Editor, User) in Module einbauen
+    8. Creator und lastEditor direkt als Objekte in Objekten erstellen
+    9. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
+    10. Charts responsive mit maxHeight!?
+    11. Checkout Lucee REST Servlet (web.xml)
+    12. Client Side validation für Formulare

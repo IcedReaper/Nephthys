@@ -196,7 +196,7 @@ component {
     }
     
     remote array function getThemes() {
-        var filterCtrl = createObject("component", "API.modules.com.Nephthys.themeManager.filter").init();
+        var filterCtrl = createObject("component", "API.modules.com.Nephthys.themeManager.filter").init().setFor("theme");
         
         var themeData = [];
         for(var theme in filterCtrl.execute().getResult()) {

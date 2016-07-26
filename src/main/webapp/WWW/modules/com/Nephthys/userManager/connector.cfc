@@ -236,10 +236,10 @@ component implements="WWW.interfaces.connector" {
                                 }
                             }
                             
-                            var themeFilter = createObject("component", "API.modules.com.Nephthys.themeManager.filter").init()
-                                                                                                                .setActive(true)
-                                                                                                                .setAvailableWww(true)
-                                                                                                                .execute();
+                            var themeFilter = createObject("component", "API.modules.com.Nephthys.themeManager.filter").init().setFor("theme")
+                                                                                                                              .setActive(true)
+                                                                                                                              .setAvailableWww(true)
+                                                                                                                              .execute();
                             
                             var extPropertyFilter = new filter().setFor("extProperty")
                                                                 .setUserId(request.user.getUserId())

@@ -15,7 +15,7 @@ component implements="WWW.interfaces.connector" {
     public string function render(required struct options, required string childContent) {
         // prepare the options required for the theme
         var splitParameter = listToArray(request.page.getParameter(), "/");
-        var reviewFilter = new filter();
+        var reviewFilter = new filter().setFor("review");
         
         if(! arguments.options.keyExists("maxEntries")) {
             arguments.options.maxEntries = 5;
@@ -145,11 +145,10 @@ component implements="WWW.interfaces.connector" {
     }
     
     private string function getUserLink() {
-        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init()
-                                                                                       .setFor("pageWithModule")
-                                                                                       .setModuleName("com.Nephthys.userManager")
-                                                                                       .execute()
-                                                                                       .getResult(); 
+        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init().setFor("pageWithModule")
+                                                                                                    .setModuleName("com.Nephthys.userManager")
+                                                                                                    .execute()
+                                                                                                    .getResult();
         return aPages.len() >= 1 ? aPages[1].link : "";
     }
 }

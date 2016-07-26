@@ -45,8 +45,8 @@ component {
     public numeric function getCreatorUserId() {
         return variables.creatorUserId;
     }
-    public date function getCreatedDate() {
-        return variables.createdDate;
+    public date function getCreationDate() {
+        return variables.creationDate;
     }
     public numeric function getLastEditorUserId() {
         return variables.lastEditorUserId;
@@ -127,7 +127,7 @@ component {
         if((variables.extPropertyKeyId == 0 || variables.extPropertyKeyId == null) && (variables.keyName == "" || variables.keyName == null)) {
             variables.description      = "";
             variables.creatorUserId    = null;
-            variables.createdDate      = now();
+            variables.creationDate     = now();
             variables.lastEditorUserId = null;
             variables.lastEditDate     = now();
         }
@@ -155,7 +155,7 @@ component {
                 variables.description      = qExtPropertyKey.description[1];
                 variables.type             = qExtPropertyKey.type[1];
                 variables.creatorUserId    = qExtPropertyKey.creatorUserId[1];
-                variables.createdDate      = qExtPropertyKey.createdDate[1];
+                variables.creationDate     = qExtPropertyKey.creationDate[1];
                 variables.lastEditorUserId = qExtPropertyKey.lastEditorUserId[1];
                 variables.lastEditDate     = qExtPropertyKey.lastEditDate[1];
             }

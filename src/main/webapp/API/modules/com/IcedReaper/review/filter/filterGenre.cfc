@@ -1,7 +1,10 @@
 component implements="API.interfaces.filter" {
+    import "API.modules.com.IcedReaper.review.*";
+    
     public filter function init() {
         variables.offset        = 0;
         variables.count         = 0;
+        variables.likeName      = null;
         variables.sortBy        = "creationDate";
         variables.sortDirection = "DESC";
         variables.qRes          = null;
@@ -14,7 +17,6 @@ component implements="API.interfaces.filter" {
         switch(lCase(arguments.sortBy)) {
             case 'creationdate':
             case 'lasteditdate':
-            // case 'imageCount': // not yet implemented...
             case 'headline': {
                 variables.sortBy = arguments.sortBy;
                 
@@ -24,7 +26,6 @@ component implements="API.interfaces.filter" {
         
         return this;
     }
-    
     public filter function setSortDirection(required string sortDirection) {
         switch(lCase(arguments.sortDirection)) {
             case 'asc':
@@ -45,7 +46,6 @@ component implements="API.interfaces.filter" {
         
         return this;
     }
-    
     public filter function setCount(required numeric count) {
         if(arguments.count > 0) {
             variables.count = arguments.count;
@@ -54,12 +54,25 @@ component implements="API.interfaces.filter" {
         return this;
     }
     
+    public filter function setLikeName(required string likeName) {
+        variables.likeName = arguments.likeName;
+        
+        return this;
+    }
+    
+    
     public filter function execute() {
         var qryFilter = new Query();
         
-        var sql = "SELECT typeId 
-                     FROM IcedReaper_review_type ";
+        var sql = "SELECT genreId 
+                     FROM IcedReaper_review_genre ";
         var where = "";
+        
+        if(variables.likeName != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & " name LIKE :likeName ";
+            qryFilter.addParam(name = "likeName", value = "%" & variables.likeName & "%", cfsqltype = "cf_sql_varchar");
+        }
+        
         var orderBy = " ORDER BY " & variables.sortBy & " " & variables.sortDirection;
         
         sql &= where & orderBy;
@@ -84,7 +97,7 @@ component implements="API.interfaces.filter" {
         }
         
         for(var i = variables.offset + 1; i <= to; i++) {
-            variables.results.append(new type(variables.qRes.typeId[i]));
+            variables.results.append(new genre(variables.qRes.genreId[i]));
         }
         return variables.results;
     }

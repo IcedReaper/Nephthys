@@ -1060,3 +1060,5 @@ $$ LANGUAGE plpgsql;
 GRANT EXECUTE ON FUNCTION nephthys_user_checkUsername(IN username character varying(255)) TO nephthys_user;
 
 alter table nephthys_user add constraint nephthys_user_username_check check(nephthys_user_checkUsername(username));
+
+alter table nephthys_user_extPropertyKey rename column createdDate to creationDate;

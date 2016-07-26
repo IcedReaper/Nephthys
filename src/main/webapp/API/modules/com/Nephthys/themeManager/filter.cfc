@@ -1,93 +1,16 @@
-component implements="API.interfaces.filter" {
+component {
     public filter function init() {
-        variables.themeId   = null;
-        variables.themeName = null;
-        variables.active    = null;
-        
-        variables.availableWww = null;
-        variables.availableAdmin = null;
-        
-        variables.qRes = null;
-        variables.results = null;
-        
         return this;
     }
     
-    public filter function setThemeId(required numeric themeId) {
-        variables.themeId = arguments.themeId;
-        return this;
-    }
-    public filter function setThemeName(required string themeName) {
-        variables.themeName = arguments.themeName;
-        return this;
-    }
-    public filter function setActive(required boolean active) {
-        variables.active = arguments.active;
-        return this;
-    }
-    public filter function setAvailableWww(required boolean availableWww) {
-        variables.availableWww = arguments.availableWww;
-        return this;
-    }
-    public filter function setAvailableAdmin(required boolean availableAdmin) {
-        variables.availableAdmin = arguments.availableAdmin;
-        return this;
-    }
-    
-    public filter function execute() {
-        var qryFilter = new Query();
-        var sql = "SELECT themeId
-                     FROM nephthys_theme ";
-        
-        var where = "";
-        if(variables.themeId != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "themeId = :themeId";
-            qryFilter.addParam(name = "themeId", value = variables.themeId, cfsqltype = "cf_sql_numeric");
-        }
-        if(variables.themeName != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "lower(name) = :themeName";
-            qryFilter.addParam(name = "themeName", value = lCase(variables.themeName), cfsqltype = "cf_sql_varchar");
-        }
-        if(variables.active != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "active = :active";
-            qryFilter.addParam(name = "active", value = variables.active, cfsqltype = "cf_sql_bit");
-        }
-        if(variables.availableWww != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "availableWww = :availableWww";
-            qryFilter.addParam(name = "availableWww", value = variables.availableWww, cfsqltype = "cf_sql_bit");
-        }
-        if(variables.availableAdmin != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "availableAdmin = :availableAdmin";
-            qryFilter.addParam(name = "availableAdmin", value = variables.availableAdmin, cfsqltype = "cf_sql_bit");
-        }
-        
-        sql &= where & " ORDER BY name ASC";
-        
-        variables.qRes = qryFilter.setSQL(sql)
-                                  .execute()
-                                  .getResult();
-        return this;
-    }
-    
-    public array function getResult() {
-        if(! isQuery(variables.qRes)) {
-            throw(type = "nephthys.application.invalidResource", message = "Please be sure that you called execute() before you're trying to get the results");
-        }
-        
-        if(variables.results == null) {
-            variables.results = [];
-            for(var i = 1; i <= variables.qRes.getRecordCount(); i++) {
-                variables.results.append(new theme(variables.qRes.themeId[i]));
+    public filter function setFor(required string for) {
+        switch(arguments.for) {
+            case "theme": {
+                arguments.for = uCase(arguments.for.left(1)) & arguments.for.right(arguments.for.len() - 1);
+                return createObject("component", "filter.filter" & arguments.for).init();
             }
         }
-        return variables.results;
-    }
-    
-    public numeric function getResultCount() {
-        if(! isQuery(variables.qRes)) {
-            throw(type = "nephthys.application.invalidResource", message = "Please be sure that you called execute() before you're trying to get the result count");
-        }
         
-        return variables.qRes.getRecordCount();
+        throw(type = "nephthys.notFound.general", message = "Could not find the required filter");
     }
 }

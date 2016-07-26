@@ -43,7 +43,6 @@ component implements="API.interfaces.filter" {
         switch(lCase(arguments.sortBy)) {
             case 'creationdate':
             case 'lasteditdate':
-            // case 'imageCount': // not yet implemented...
             case 'headline': {
                 variables.sortBy = arguments.sortBy;
                 
