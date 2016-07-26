@@ -15,7 +15,7 @@ component implements="WWW.interfaces.connector" {
     public string function render(required struct options, required string childContent) {
         // prepare the options required for the theme
         var splitParameter = listToArray(request.page.getParameter(), "/");
-        var reviewFilter = new filter().setFor("review");
+        var reviewFilter = new filter().for("review");
         
         if(! arguments.options.keyExists("maxEntries")) {
             arguments.options.maxEntries = 5;

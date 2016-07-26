@@ -2,7 +2,7 @@ component {
     import "API.modules.com.IcedReaper.review.*";
     
     remote array function getList() {
-        var reviewFilter = new filter().setFor("review");
+        var reviewFilter = new filter().for("review");
         
         reviewFilter.setSortBy("description")
                     .setSortDirection("ASC");
@@ -37,7 +37,7 @@ component {
     }
     
     remote array function loadAutoCompleteGenres(required string queryString) {
-        var genreFilter = new filter().setFor("genre");
+        var genreFilter = new filter().for("genre");
         
         var genres = genreFilter
                         .setLikeName(arguments.queryString)
@@ -175,7 +175,7 @@ component {
     
     // genre and their details
     remote array function getGenreList() {
-        var genreFilter = new filter().setFor("genre");
+        var genreFilter = new filter().for("genre");
         
         genreFilter.setSortBy("name")
                    .setSortDirection("ASC");
@@ -220,7 +220,7 @@ component {
     
     // types and their details
     remote array function getTypeList() {
-        var typeFilter = new filter().setFor("type");
+        var typeFilter = new filter().for("type");
         
         typeFilter.setSortBy("name")
                   .setSortDirection("ASC");

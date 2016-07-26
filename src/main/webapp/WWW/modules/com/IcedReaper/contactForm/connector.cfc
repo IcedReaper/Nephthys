@@ -48,11 +48,11 @@ component implements="WWW.interfaces.connector" {
                     errors.email = true;
                     errors.error = true;
                 }
-                if(createObject("component", "API.modules.com.Nephthys.userManager.filter").init().setFor("user").setUsername(form.username).setActive(true).execute().getResultCount() != 0) {
+                if(createObject("component", "API.modules.com.Nephthys.userManager.filter").init().for("user").setUsername(form.username).setActive(true).execute().getResultCount() != 0) {
                     errors.usernameUsed = true;
                     errors.error = true;
                 }
-                if(createObject("component", "API.modules.com.Nephthys.userManager.filter").init().setFor("user").setEmail(form.email).setActive(true).execute().getResultCount() != 0) {
+                if(createObject("component", "API.modules.com.Nephthys.userManager.filter").init().for("user").setEmail(form.email).setActive(true).execute().getResultCount() != 0) {
                     errors.emailUsed = true;
                     errors.error = true;
                 }

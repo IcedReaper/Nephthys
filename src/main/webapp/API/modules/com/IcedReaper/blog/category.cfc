@@ -48,7 +48,7 @@ component {
     
     
     public numeric function getUseCount() {
-        return new filter().setFor("blogpost")
+        return new filter().for("blogpost")
                            .setCategoryId(variables.categoryId)
                            .execute()
                            .getResultCount();

@@ -4,7 +4,7 @@
     formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
     
     remote array function getList() {
-        var blogpostFilterCtrl = new filter().setFor("blogpost");
+        var blogpostFilterCtrl = new filter().for("blogpost");
         
         var blogposts = blogpostFilterCtrl.execute().getResult();
         var data = [];
@@ -29,7 +29,7 @@
     }
     
     remote array function loadAutoCompleteCategories(required string queryString) {
-        var categoryFilter = new filter().setFor("category");
+        var categoryFilter = new filter().for("category");
         
         var categories = categoryFilter.setName(arguments.queryString)
                                        .execute()
@@ -160,7 +160,7 @@
     
     // categories and their details
     remote array function getCategoryList() {
-        var categoryFilter = new filter().setFor("category");
+        var categoryFilter = new filter().for("category");
         
         return prepareCategoryDetails(categoryFilter.execute().getResult(), true);
     }
@@ -270,7 +270,7 @@
     }
     
     remote struct function getStatusList() {
-        var statusLoader = new filter().setFor("status");
+        var statusLoader = new filter().for("status");
         
         var prepStatus = {};
         
@@ -282,7 +282,7 @@
     }
     
     remote array function getStatusListAsArray() {
-        var statusLoader = new filter().setFor("status");
+        var statusLoader = new filter().for("status");
         
         var prepStatus = [];
         
@@ -317,7 +317,7 @@
             throw(type = "nephthys.application.notAllowed", message = "You cannot delete the start status. Please reset the start status in the system settings");
         }
         
-        var blogpostsStillWithThisStatus = new filter().setFor("blogpost")
+        var blogpostsStillWithThisStatus = new filter().for("blogpost")
                                                        .setStatusId(arguments.statusId)
                                                        .execute()
                                                        .getResultCount();
@@ -395,11 +395,11 @@
     }
     
     remote array function getBlogpostsInTasklist() {
-        var statusFilterCtrl = new filter().setFor("status")
+        var statusFilterCtrl = new filter().for("status")
                                            .setShowInTasklist(true)
                                            .execute();
         
-        var blogpostFilterCtrl = new filter().setFor("blogpost");
+        var blogpostFilterCtrl = new filter().for("blogpost");
         
         var statusData = [];
         var index = 0;
@@ -531,7 +531,7 @@
     
     private array function prepareCategoryDetails(required array categories, required boolean getBlogposts = false) {
         var gCategories = [];
-        var blogpostFilterCtrl = new filter().setFor("blogpost");
+        var blogpostFilterCtrl = new filter().for("blogpost");
         
         for(var c = 1; c <= arguments.categories.len(); c++) {
             gCategories.append({

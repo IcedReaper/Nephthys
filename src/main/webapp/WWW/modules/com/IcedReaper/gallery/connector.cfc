@@ -30,7 +30,7 @@ component implements="WWW.interfaces.connector" {
                         return renderDetails(arguments.options, gallery);
                     }
                     else if(arguments.options.galleryId.len() > 1) {
-                        var galleryFilterCtrl = new filter().setFor("gallery");
+                        var galleryFilterCtrl = new filter().for("gallery");
                         if(! arguments.options.keyExists("maxEntries")) {
                             arguments.options.maxEntries = 5;
                         }
@@ -46,7 +46,7 @@ component implements="WWW.interfaces.connector" {
             
             if(arguments.options.keyExists("categoryId")) {
                 if(isArray(arguments.options.categoryId)) {
-                    var galleryFilterCtrl = new filter().setFor("gallery");
+                    var galleryFilterCtrl = new filter().for("gallery");
                     if(! arguments.options.keyExists("maxEntries")) {
                         arguments.options.maxEntries = 5;
                     }
@@ -60,7 +60,7 @@ component implements="WWW.interfaces.connector" {
             }
         }
         
-        var galleryFilterCtrl = new filter().setFor("gallery");
+        var galleryFilterCtrl = new filter().for("gallery");
         
         if(! arguments.options.keyExists("maxEntries")) {
             arguments.options.maxEntries = 5;

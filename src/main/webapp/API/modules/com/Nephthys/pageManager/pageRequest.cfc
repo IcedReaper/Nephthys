@@ -316,7 +316,7 @@ component {
             }
         }
         else {
-            var pageRequestFilter = new filter().setFor("pageRequest")
+            var pageRequestFilter = new filter().for("pageRequest")
                                                 .setLink(variables.link);
             
             if(pageRequestFilter.execute().getResultCount() == 1) {
@@ -324,14 +324,14 @@ component {
                 variables.page      = filterResult.page;
                 variables.parameter = filterResult.parameter;
                 
-                var sitemap = new filter().setFor("sitemap")
+                var sitemap = new filter().for("sitemap")
                                           .setOnline(true)
                                           .execute()
                                           .getResult();
                 if(sitemap.len() >= 1) {
                     var sitemapId = sitemap[1].getSitemapId();
                     
-                    var sitemapPages = new filter().setFor("sitemapPage")
+                    var sitemapPages = new filter().for("sitemapPage")
                                                    .setSitemapId(sitemapId)
                                                    .setPageId(variables.page.getPageId())
                                                    .execute()
@@ -348,14 +348,14 @@ component {
                     // if we have the root page and it doesn't exist we'll get the first existing page
                     variables.parameter = "";
                     
-                    var sitemap = new filter().setFor("sitemap")
+                    var sitemap = new filter().for("sitemap")
                                               .setOnline(true)
                                               .execute()
                                               .getResult();
                     if(sitemap.len() >= 1) {
                         var sitemapId = sitemap[1].getSitemapId();
                         
-                        var sitemapPages = new filter().setFor("sitemapPage")
+                        var sitemapPages = new filter().for("sitemapPage")
                                                        .setSitemapId(sitemapId)
                                                        .execute()
                                                        .getResult();

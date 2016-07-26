@@ -3,7 +3,7 @@ component {
         return this;
     }
     
-    public filter function setFor(required string for) {
+    public filter function for(required string for) {
         switch(arguments.for) {
             case "user":
             case "permission":

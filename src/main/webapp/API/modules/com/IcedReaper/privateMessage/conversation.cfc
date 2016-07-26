@@ -211,7 +211,7 @@ component {
     }
     
     private void function loadMessages() {
-        variables.messages = new filter().setFor("message")
+        variables.messages = new filter().for("message")
                                          .setConversationId(variables.conversationId)
                                          .setSortBy("sendDate")
                                          .setSortDirection("DESC")
@@ -220,7 +220,7 @@ component {
     }
     
     private void function loadParticipants() {
-        variables.participants = new filter().setFor("participant")
+        variables.participants = new filter().for("participant")
                                              .setConversationId(variables.conversationId)
                                              .execute()
                                              .getResult();

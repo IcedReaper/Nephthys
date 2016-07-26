@@ -4,14 +4,14 @@ component {
     }
     
     remote numeric function getNewRegistrations() {
-        return createObject("component", "API.modules.com.Nephthys.userManager.filter").setFor("user")
+        return createObject("component", "API.modules.com.Nephthys.userManager.filter").for("user")
                                                                                 .setRegistrationFromDate(dateAdd("h", -24, now()))
                                                                                 .execute()
                                                                                 .getResultCount();
     }
     
     remote numeric function getErrorCount() {
-        return createObject("component", "API.modules.com.Nephthys.errorLog.filter").setFor("error")
+        return createObject("component", "API.modules.com.Nephthys.errorLog.filter").for("error")
                                                                                     .setFromDatetime(dateAdd("h", -24, now()))
                                                                                     .execute()
                                                                                     .getResultCount();

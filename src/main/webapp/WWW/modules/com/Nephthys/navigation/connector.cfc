@@ -25,14 +25,14 @@ component implements="WWW.interfaces.connector" {
     }
     
     private array function getSitemap(required numeric regionId) {
-        var sitemap = new filter().setFor("sitemap")
+        var sitemap = new filter().for("sitemap")
                                           .setOnline(true)
                                           .execute()
                                           .getResult();
         if(sitemap.len() >= 1) {
             var sitemapId = sitemap[1].getSitemapId();
             
-            var sitemapPages = new filter().setFor("sitemapPage")
+            var sitemapPages = new filter().for("sitemapPage")
                                            .setSitemapId(sitemapId)
                                            .setRegionId(arguments.regionId)
                                            .execute()
@@ -60,7 +60,7 @@ component implements="WWW.interfaces.connector" {
     }
     
     private string function getSearchLink() {
-        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init().setFor("pageWithModule")
+        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init().for("pageWithModule")
                                                                                                     .setModuleName("com.Nephthys.search")
                                                                                                     .execute()
                                                                                                     .getResult(); 

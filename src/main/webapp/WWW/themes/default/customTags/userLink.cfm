@@ -8,7 +8,7 @@
         
         param name = "thisTag.generatedContent" param = "";
         
-        thisTag.pages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init().setFor("pageWithModule")
+        thisTag.pages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init().for("pageWithModule")
                                                                                                        .setModuleName("com.Nephthys.userManager")
                                                                                                        .execute()
                                                                                                        .getResult();

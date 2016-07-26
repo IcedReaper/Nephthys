@@ -528,14 +528,14 @@ component {
     }
     
     private void function loadCategories() {
-        variables.categories = new filter().setFor("category")
+        variables.categories = new filter().for("category")
                                            .setBlogpostId(variables.blogpostId)
                                            .execute()
                                            .getResult();
     }
     
     private void function loadComments() {
-         variables.comments = new filter().setFor("comment")
+         variables.comments = new filter().for("comment")
                                           .setBlogpostId(variables.blogpostId)
                                           .setSortBy("creationDate")
                                           .setSortDirection("DESC")
@@ -544,7 +544,7 @@ component {
     }
     
     private void function loadPictures() {
-        variables.pictures = new filter().setFor("picture")
+        variables.pictures = new filter().for("picture")
                                          .setBlogpostId(variables.blogpostId)
                                          .execute()
                                          .getResult();

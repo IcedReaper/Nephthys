@@ -13,7 +13,7 @@ component implements="WWW.interfaces.connector" {
     }
     
     public string function render(required struct options, required string childContent) {
-        var member = new filter().setFor("member").execute().getResult();
+        var member = new filter().for("member").execute().getResult();
         
         return application.system.settings.getValueOfKey("templateRenderer")
             .setModulePath(getModulePath())

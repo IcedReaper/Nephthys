@@ -3,7 +3,7 @@ component {
         return this;
     }
     
-    public filter function setFor(required string for) {
+    public filter function for(required string for) {
         switch(arguments.for) {
             case "theme": {
                 arguments.for = uCase(arguments.for.left(1)) & arguments.for.right(arguments.for.len() - 1);

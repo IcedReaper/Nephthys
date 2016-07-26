@@ -62,7 +62,7 @@ component implements="WWW.interfaces.connector" {
                             }
                         }
                         
-                        var modules = createObject("component", "API.modules.com.Nephthys.moduleManager.filter").init().setFor("module")
+                        var modules = createObject("component", "API.modules.com.Nephthys.moduleManager.filter").init().for("module")
                                                                                                                        .setActive(true)
                                                                                                                        .setAvailableWww(true)
                                                                                                                        .execute()
@@ -75,7 +75,7 @@ component implements="WWW.interfaces.connector" {
                             }
                         }
                         
-                        var permissionFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").setFor("permission")
+                        var permissionFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").for("permission")
                                                                                                                        .setUserId(request.user.getUserId())
                                                                                                                        .execute();
                         
@@ -91,7 +91,7 @@ component implements="WWW.interfaces.connector" {
                             });
                         }
                         
-                        var roleFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").setFor("permissionRole");
+                        var roleFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").for("permissionRole");
                         
                         return application.system.settings.getValueOfKey("templateRenderer")
                             .setModulePath(getModulePath())
@@ -130,7 +130,7 @@ component implements="WWW.interfaces.connector" {
                         break;
                     }
                     case "overview": {
-                        var requestOverview = new filter().setFor("request")
+                        var requestOverview = new filter().for("request")
                                                           .setUserId(request.user.getUserId())
                                                           .setSince(dateAdd("d", -10, now()))
                                                           .execute()

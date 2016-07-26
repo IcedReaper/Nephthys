@@ -41,7 +41,7 @@ component extends="API.abstractClasses.search" {
     }
     
     private string function getLink(required numeric galleryId) {
-        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init().setFor("pageWithModule")
+        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init().for("pageWithModule")
                                                                                                     .setModuleName("com.IcedReaper.gallery")
                                                                                                     .execute()
                                                                                                     .getResult();
@@ -56,7 +56,7 @@ component extends="API.abstractClasses.search" {
                         }
                     }
                     if(galleryModules[j].options.keyExists("categoryId") && isArray(galleryModules[j].options.categoryId) && ! galleryModules[j].options.categoryId.isEmpty()) {
-                        var galleryInCategory = new filter().setFor("gallery")
+                        var galleryInCategory = new filter().for("gallery")
                                                             .setGalleryId(arguments.galleryId)
                                                             .setCategoryIdList(galleryModules[j].options.categoryId.toList(","))
                                                             .execute()

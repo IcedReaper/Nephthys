@@ -4,7 +4,7 @@ component {
     formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
     
     remote array function getList() {
-        var galleryFilterCtrl = new filter().setFor("gallery");
+        var galleryFilterCtrl = new filter().for("gallery");
         
         var galleries = galleryFilterCtrl.execute().getResult();
         var data = [];
@@ -35,7 +35,7 @@ component {
     }
     
     remote array function loadAutoCompleteCategories(required string queryString) {
-        var categoryFilter = new filter().setFor("category");
+        var categoryFilter = new filter().for("category");
         
         var categories = categoryFilter.setName(arguments.queryString)
                                        .execute()
@@ -183,7 +183,7 @@ component {
     
     // categories and their details
     remote array function getCategoryList() {
-        var categoryFilter = new filter().setFor("category");
+        var categoryFilter = new filter().for("category");
         
         return prepareCategoryDetails(categoryFilter.execute().getResult(), true);
     }
@@ -239,7 +239,7 @@ component {
     }
     
     remote struct function getStatusList() {
-        var statusLoader = new filter().setFor("status");
+        var statusLoader = new filter().for("status");
         
         var prepStatus = {};
         
@@ -251,7 +251,7 @@ component {
     }
     
     remote array function getStatusListAsArray() {
-        var statusLoader = new filter().setFor("status");
+        var statusLoader = new filter().for("status");
         
         var prepStatus = [];
         
@@ -286,7 +286,7 @@ component {
             throw(type = "nephthys.application.notAllowed", message = "You cannot delete the start status. Please reset the start status in the system settings");
         }
         
-        var galleriesStillWithThisStatus = new filter().setFor("gallery")
+        var galleriesStillWithThisStatus = new filter().for("gallery")
                                                        .setStatusId(arguments.statusId)
                                                        .execute()
                                                        .getResultCount();
@@ -364,11 +364,11 @@ component {
     }
     
     remote array function getGalleriesInTasklist() {
-        var statusFilterCtrl = new filter().setFor("status")
+        var statusFilterCtrl = new filter().for("status")
                                            .setShowInTasklist(true)
                                            .execute();
         
-        var galleryFilterCtrl = new filter().setFor("gallery");
+        var galleryFilterCtrl = new filter().for("gallery");
         
         var statusData = [];
         var index = 0;
@@ -457,7 +457,7 @@ component {
     
     private array function prepareCategoryDetails(required array categories, required boolean getGalleries = false) {
         var gCategories = [];
-        var galleryFilterCtrl = new filter().setFor("gallery");
+        var galleryFilterCtrl = new filter().for("gallery");
         
         for(var c = 1; c <= arguments.categories.len(); c++) {
             gCategories.append({

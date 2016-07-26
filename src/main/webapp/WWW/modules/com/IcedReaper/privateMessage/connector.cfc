@@ -18,7 +18,7 @@ component implements="WWW.interfaces.connector" {
                 arguments.options.otherParameter[1] = "overview";
             }
             
-            var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init().setFor("pageWithModule")
+            var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init().for("pageWithModule")
                                                                                                         .setModuleName("com.Nephthys.userManager")
                                                                                                         .execute()
                                                                                                         .getResult(); 
@@ -34,7 +34,7 @@ component implements="WWW.interfaces.connector" {
                                 
                                 conversation.addParticipant(request.user);
                                 for(var userName in listToArray(form.participants, ";")) {
-                                    var participant = createObject("component", "API.modules.com.Nephthys.userManager.filter").init().setFor("user")
+                                    var participant = createObject("component", "API.modules.com.Nephthys.userManager.filter").init().for("user")
                                                                                                                                      .setUsername(userName)
                                                                                                                                      .execute()
                                                                                                                                      .getResult();
@@ -104,7 +104,7 @@ component implements="WWW.interfaces.connector" {
                         
                         if(arguments.options.otherParameter.len() == 2) {
                             if(isNumeric(arguments.options.otherParameter[2])) {
-                                var conversation = new filter().setFor("conversation")
+                                var conversation = new filter().for("conversation")
                                                                .setParticipantId(request.user.getUserId())
                                                                .setConversationId(arguments.options.otherParameter[2])
                                                                .execute()
@@ -142,7 +142,7 @@ component implements="WWW.interfaces.connector" {
                         break;
                     }
                     case "overview": {
-                        var conversationOverview = new filter().setFor("conversation")
+                        var conversationOverview = new filter().for("conversation")
                                                                .setParticipantId(request.user.getUserId())
                                                                .execute()
                                                                .getResult();

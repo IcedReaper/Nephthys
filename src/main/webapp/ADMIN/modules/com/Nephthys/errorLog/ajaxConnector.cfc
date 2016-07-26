@@ -15,7 +15,7 @@ component {
         var error = null;
         var previousErrorId = null;
         var nextErrorId = null;
-        var errorFilter = new filter().setFor("error")
+        var errorFilter = new filter().for("error")
                                       .setFromDate(arguments.fromDate)
                                       .setToDate(arguments.toDate)
                                       .setSortOrder("DESC")
@@ -35,7 +35,7 @@ component {
         
         var details = {};
         if(! isNull(error)) {
-            var previousErrorFilter = new filter().setFor("error")
+            var previousErrorFilter = new filter().for("error")
                                                   .setFromDate(arguments.fromDate)
                                                   .setToDate(arguments.toDate)
                                                   .setSortOrder("ASC")

@@ -106,7 +106,7 @@ component {
             if(variables.status.isOnline()) {
                 var offlineStatus = new status(application.system.settings.getValueOfKey("endStatus"));
                
-               var actualOnlineCtrl = new filter().setFor("sitemap")
+               var actualOnlineCtrl = new filter().for("sitemap")
                                                   .setOnline(true)
                                                   .execute();
                
@@ -118,7 +118,7 @@ component {
             
             save();
             
-            new approval(variables.sitemapId).setFor("sitemap")
+            new approval(variables.sitemapId).for("sitemap")
                                                .approve(actualStatus.getStatusId(), variables.status.getStatusId(), request.user.getUserId());
             
             transactionCommit();

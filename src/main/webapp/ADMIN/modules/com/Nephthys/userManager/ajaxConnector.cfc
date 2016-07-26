@@ -5,7 +5,7 @@ component {
     formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
     
     remote array function getList() {
-        var userListCtrl = new filter().setFor("user");
+        var userListCtrl = new filter().for("user");
         
         var data = [];
         
@@ -95,7 +95,7 @@ component {
     }
     
     remote array function getPermissions(required numeric userId) {
-        var permissionFilter = new filter().setFor("permission").setUserId(arguments.userId)
+        var permissionFilter = new filter().for("permission").setUserId(arguments.userId)
                                                                 .execute();
         
         var permissions = [];
@@ -111,7 +111,7 @@ component {
         }
         
         var moduleFilter = createObject("component", "API.modules.com.Nephthys.moduleManager.filter").init()
-                                                                                              .setFor("module")
+                                                                                              .for("module")
                                                                                               .setActive(true)
                                                                                               .execute();
         
@@ -140,7 +140,7 @@ component {
     }
     
     remote array function getRoles() {
-        var roleFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").setFor("permissionRole");
+        var roleFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").for("permissionRole");
         
         var roles = [];
         for(var role in roleFilter.execute().getResult()) {
@@ -196,7 +196,7 @@ component {
     }
     
     remote array function getThemes() {
-        var filterCtrl = createObject("component", "API.modules.com.Nephthys.themeManager.filter").init().setFor("theme");
+        var filterCtrl = createObject("component", "API.modules.com.Nephthys.themeManager.filter").init().for("theme");
         
         var themeData = [];
         for(var theme in filterCtrl.execute().getResult()) {
@@ -217,7 +217,7 @@ component {
         var extProperties = [];
         var user = new user(arguments.userId);
         
-        var extPropertyFilter = new filter().setFor("extProperty")
+        var extPropertyFilter = new filter().for("extProperty")
                                             .setUserId(arguments.userId)
                                             .execute();
         
@@ -243,7 +243,7 @@ component {
             });
         }
         
-        var extPropertyKeyFilter = new filter().setFor("extPropertyKey").execute();
+        var extPropertyKeyFilter = new filter().for("extPropertyKey").execute();
         for(var extPropertyKey in extPropertyKeyFilter.getResult()) {
             var found = false;
             for(var i = 1; i <= extProperties.len(); ++i) {
@@ -319,7 +319,7 @@ component {
     }
     
     remote struct function getPermissionsOfActualUser() {
-        var roleFilter = new filter().setFor("permissionRole").execute();
+        var roleFilter = new filter().for("permissionRole").execute();
         var roles = {};
         for(var role in roleFilter.getResult()) {
             userRoles[role.getName()] = request.user.hasPermission("com.Nephthys.userManager", role.getName());
@@ -330,7 +330,7 @@ component {
     
     remote array function getBlacklist() {
         var blacklistEntries = [];
-        for(var blacklistEntry in new filter().setFor("blacklist").execute().getResult()) {
+        for(var blacklistEntry in new filter().for("blacklist").execute().getResult()) {
             blacklistEntries.append(prepareBlacklistStruct(blacklistEntry));
         }
         

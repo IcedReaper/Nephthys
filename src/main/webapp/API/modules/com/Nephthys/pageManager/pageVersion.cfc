@@ -171,7 +171,7 @@ component {
                         
                         var oldPageVersion = page.getActualPageVersion();
                         if(oldPageVersion.getPageVersionId() != variables.pageVersionId) {
-                            new approval(oldPageVersion.getPageVersionId()).setFor("pageVersion")
+                            new approval(oldPageVersion.getPageVersionId()).for("pageVersion")
                                                                            .approve(oldPageVersion.getStatusId(),
                                                                                     offlineStatusId,
                                                                                     arguments.user.getUserId());
@@ -184,7 +184,7 @@ component {
                             .save();
                     }
                     
-                    new approval(variables.pageVersionId).setFor("pageVersion")
+                    new approval(variables.pageVersionId).for("pageVersion")
                                                          .approve(actualStatus.getStatusId(),
                                                                   newStatus.getStatusId(),
                                                                   arguments.user.getUserId());

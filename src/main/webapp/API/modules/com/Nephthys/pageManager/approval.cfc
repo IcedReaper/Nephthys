@@ -8,7 +8,7 @@ component {
         return this;
     }
     
-    public approval function setFor(required string for) {
+    public approval function for(required string for) {
         switch(arguments.for) {
             case "pageVersion":
             case "page":

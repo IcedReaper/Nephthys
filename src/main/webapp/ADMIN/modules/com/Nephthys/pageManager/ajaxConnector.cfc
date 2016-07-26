@@ -4,7 +4,7 @@ component {
     formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
     
     remote array function getList() {
-        var pageFilterCtrl = new filter().setFor("page").execute();
+        var pageFilterCtrl = new filter().for("page").execute();
         
         var pageData = [];
         for(var page in pageFilterCtrl.getResult()) {
@@ -35,11 +35,11 @@ component {
     }
     
     remote array function getPageVersionInTasklist() {
-        var statusFilterCtrl = new filter().setFor("status")
+        var statusFilterCtrl = new filter().for("status")
                                            .setShowInTasklist(true)
                                            .execute();
         
-        var pageVersionFilterCtrl = new filter().setFor("pageVersion");
+        var pageVersionFilterCtrl = new filter().for("pageVersion");
         
         var statusData = [];
         var index = 0;
@@ -100,7 +100,7 @@ component {
             returnValue.versions[actualPageVersion.getMajorVersion()] = {};
             returnValue.versions[actualPageVersion.getMajorVersion()][actualPageVersion.getMinorVersion()] = preparePageVersion(actualPageVersion);;
             
-            var pageVersions = new filter().setFor("pageVersion").setPageId(page.getPageId()).execute().getResult();
+            var pageVersions = new filter().for("pageVersion").setPageId(page.getPageId()).execute().getResult();
             for(var pageVersion in pageVersions) {
                 if(! returnValue["availableVersions"].keyExists(pageVersion.getMajorVersion())) {
                     returnValue["availableVersions"][pageVersion.getMajorVersion()] = [];
@@ -124,7 +124,7 @@ component {
     }
     
     remote struct function getDetailsForVersion(required numeric pageId, required numeric majorVersion, required numeric minorVersion) {
-        return preparePageVersion(new filter().setFor("pageVersion")
+        return preparePageVersion(new filter().for("pageVersion")
                                               .setPageId(arguments.pageId)
                                               .setMajorVersion(arguments.majorVersion)
                                               .setMinorVersion(arguments.minorVersion)
@@ -204,7 +204,7 @@ component {
     // STATUS
     
     remote struct function getStatusList() {
-        var statusLoader = new filter().setFor("status");
+        var statusLoader = new filter().for("status");
         
         var prepStatus = {};
         
@@ -216,7 +216,7 @@ component {
     }
     
     remote array function getStatusListAsArray() {
-        var statusLoader = new filter().setFor("status");
+        var statusLoader = new filter().for("status");
         
         var prepStatus = [];
         
@@ -257,11 +257,11 @@ component {
             throw(type = "nephthys.application.notAllowed", message = "You cannot remove the end status. Please reset the end status in the system settings");
         }
         
-        var pagesStillWithThisStatus = new filter().setFor("page")
+        var pagesStillWithThisStatus = new filter().for("page")
                                                    .setStatusId(arguments.statusId)
                                                    .execute()
                                                    .getResultCount();
-        var sitemapsStillWithThisStatus = new filter().setFor("sitemap")
+        var sitemapsStillWithThisStatus = new filter().for("sitemap")
                                                          .setStatusId(arguments.statusId)
                                                          .execute()
                                                          .getResultCount();
@@ -340,7 +340,7 @@ component {
     
     remote struct function getModule() {
         var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.moduleManager.filter").init()
-                                                                                                  .setFor("module");
+                                                                                                  .for("module");
         
         moduleFilterCtrl.setAvailableWWW(true)
                         .execute();
@@ -373,17 +373,17 @@ component {
     }
     
     remote array function getSitemap() {
-        var regions = new filter().setFor("region")
+        var regions = new filter().for("region")
                                   .execute()
                                   .getResult();
         
-        var sitemaps = new filter().setFor("sitemap")
+        var sitemaps = new filter().for("sitemap")
                                       .execute()
                                       .getResult();
         
         var preparedSitemaps = [];
         for(var sitemap in sitemaps) {
-            var preparedApprovalList = prepareApprovalList(new approval(sitemap.getSitemapId()).setFor("sitemap").getApprovalList());
+            var preparedApprovalList = prepareApprovalList(new approval(sitemap.getSitemapId()).for("sitemap").getApprovalList());
             
             var preparedRegions = [];
             for(region in regions) {
@@ -415,12 +415,12 @@ component {
     }
     
     remote array function getSitemapInTasklist() {
-        var statusFilterCtrl = new filter().setFor("status")
+        var statusFilterCtrl = new filter().for("status")
                                            .setShowInTasklist(true)
                                            .execute();
         
-        var sitemapFilterCtrl = new filter().setFor("sitemap");
-        var sitemapPageFilterCtrl = new filter().setFor("sitemapPage");
+        var sitemapFilterCtrl = new filter().for("sitemap");
+        var sitemapPageFilterCtrl = new filter().for("sitemapPage");
         
         var statusData = [];
         var index = 0;
@@ -556,14 +556,14 @@ component {
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         if(arguments.regionId != null) {
-            var pageFilterCtrl = new filter().setFor("page")
+            var pageFilterCtrl = new filter().for("page")
                                              .setInSitemap(true)
                                              .setParentId(arguments.parentId)
                                              .setSitemapId(arguments.sitemapId)
                                              .setRegionId(arguments.regionId);
         }
         else {
-            var pageFilterCtrl = new filter().setFor("pagesNotInSitemap")
+            var pageFilterCtrl = new filter().for("pagesNotInSitemap")
                                              .setSitemapId(arguments.sitemapId);
         }
         
@@ -666,7 +666,7 @@ component {
     }
     
     private struct function preparePageVersion(required pageVersion pageVersion) {
-        var preparedApprovalList = prepareApprovalList(new approval(arguments.pageVersion.getPageVersionId()).setFor("pageVersion").getApprovalList());
+        var preparedApprovalList = prepareApprovalList(new approval(arguments.pageVersion.getPageVersionId()).for("pageVersion").getApprovalList());
         
         return  {
             "pageVersionId"      = arguments.pageVersion.getPageVersionId(),

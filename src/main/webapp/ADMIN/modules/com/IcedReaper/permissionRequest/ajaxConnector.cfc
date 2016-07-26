@@ -4,7 +4,7 @@ component {
     formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
     
     remote array function getRequestsInTasklist() {
-        var requests = new filter().setFor("request")
+        var requests = new filter().for("request")
                                    .setStatus(0)
                                    .execute()
                                    .getResult();
@@ -37,7 +37,7 @@ component {
         transaction {
             var _request = new request(arguments.requestId).approve(arguments.comment);
             
-            var permissionFilter = createObject("API.modules.com.Nephthys.userManager.filter").setFor("permission");
+            var permissionFilter = createObject("API.modules.com.Nephthys.userManager.filter").for("permission");
             
             permissionFilter.setUserId(_request.getUserId())
                             .setModuleId(_request.getModuleId())
@@ -96,7 +96,7 @@ component {
     }
     
     remote array function getList() {
-        var requests = new filter().setFor("request")
+        var requests = new filter().for("request")
                                    .execute()
                                    .getResult();
         

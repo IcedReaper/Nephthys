@@ -2,7 +2,7 @@ component {
     import "API.modules.com.Nephthys.moduleManager.*";
     
     remote array function getList() {
-        var filterCtrl = new filter().setFor("module");
+        var filterCtrl = new filter().for("module");
         
         var installedModules = filterCtrl.execute()
                                          .getResult();
@@ -57,7 +57,7 @@ component {
     }
     
     remote array function getRoles() {
-        var roleFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").setFor("permissionRole");
+        var roleFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").for("permissionRole");
         
         var roles = [];
         for(var role in roleFilter.execute().getResult()) {
@@ -72,7 +72,7 @@ component {
     }
     
     remote array function getUser(required numeric moduleId) {
-        var permissionFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").setFor("permission")
+        var permissionFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").for("permission")
                                                                                                 .setModuleId(arguments.moduleId)
                                                                                                 .execute();
         
@@ -86,7 +86,7 @@ component {
             });
         }
         
-        var userFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").setFor("user")
+        var userFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").for("user")
                                                                                           .setActive(true)
                                                                                           .execute();
         
@@ -178,7 +178,7 @@ component {
     }
     
     remote array function getUnusedSubModules(required numeric moduleId) {
-        var moduleFilterCtrl = new filter().setFor("module");
+        var moduleFilterCtrl = new filter().for("module");
         
         moduleFilterCtrl.setParentId(arguments.moduleId)
                         .setAvailableWWW(true);
@@ -193,7 +193,7 @@ component {
     
     remote boolean function addSubModules(required numeric moduleId, required array subModules) {
         var module = new module(arguments.moduleId);
-        var moduleFilterCtrl = new filter().setFor("module");
+        var moduleFilterCtrl = new filter().for("module");
         
         var subModule = null;
         for(var i = 1; i <= arguments.subModules.len(); ++i) {

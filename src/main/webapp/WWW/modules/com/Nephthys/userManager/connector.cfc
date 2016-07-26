@@ -15,7 +15,7 @@ component implements="WWW.interfaces.connector" {
     public string function render(required struct options, required string childContent) {
         var preparedOptions = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.Nephthys.userManager.cfc.prepareData").prepareOptions(arguments.options);
         var splitParameter  = listToArray(request.page.getParameter(), "/");
-        var userListCtrl    = new filter().setFor("user");
+        var userListCtrl    = new filter().for("user");
         
         if(splitParameter.len() == 0) {
             if(! form.isEmpty() && form.keyExists("username") && form.username != "" && form.keyExists("name") && form.name == "com.Nephthys.userManager") {
@@ -72,11 +72,11 @@ component implements="WWW.interfaces.connector" {
                         errors.username = true;
                         errors.error = true;
                     }
-                    if(new filter().setFor("user").setUsername(form.username).execute().getResultCount() != 0) {
+                    if(new filter().for("user").setUsername(form.username).execute().getResultCount() != 0) {
                         errors.usernameUsed = true;
                         errors.error = true;
                     }
-                    if(new filter().setFor("user").setEmail(form.email).execute().getResultCount() != 0) {
+                    if(new filter().for("user").setEmail(form.email).execute().getResultCount() != 0) {
                         errors.emailUsed = true;
                         errors.error = true;
                     }
@@ -233,18 +233,18 @@ component implements="WWW.interfaces.connector" {
                                 }
                             }
                             
-                            var themeFilter = createObject("component", "API.modules.com.Nephthys.themeManager.filter").init().setFor("theme")
+                            var themeFilter = createObject("component", "API.modules.com.Nephthys.themeManager.filter").init().for("theme")
                                                                                                                               .setActive(true)
                                                                                                                               .setAvailableWww(true)
                                                                                                                               .execute();
                             
-                            var extPropertyFilter = new filter().setFor("extProperty")
+                            var extPropertyFilter = new filter().for("extProperty")
                                                                 .setUserId(request.user.getUserId())
                                                                 .execute();
                             
                             var extProperties = extPropertyFilter.getResult();
                             
-                            var extPropertyKeyFilter = new filter().setFor("extPropertyKey")
+                            var extPropertyKeyFilter = new filter().for("extPropertyKey")
                                                                    .execute();
                             for(var extPropertyKey in extPropertyKeyFilter.getResult()) {
                                 var found = false;
@@ -398,7 +398,7 @@ component implements="WWW.interfaces.connector" {
         if(privateMessagesModule != null && request.user.isActive()) {
             privateMessages = createObject("API.modules." & privateMessagesModule & ".filter")
                                   .init()
-                                  .setFor("conversation")
+                                  .for("conversation")
                                   .setParticipantId(request.user.getUserId())
                                   .setUnreadOnly(true)
                                   .execute()

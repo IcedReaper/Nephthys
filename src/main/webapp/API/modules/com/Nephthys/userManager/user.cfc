@@ -158,7 +158,7 @@ component {
         if(variables.userId == 0 || variables.userId == null)
             return false;
         
-        return new filter().setFor("permission").setUserId(variables.userId)
+        return new filter().for("permission").setUserId(variables.userId)
                                                 .setModuleName(arguments.moduleName)
                                                 .setRoleName(arguments.roleName)
                                                 .execute()
@@ -166,7 +166,7 @@ component {
     }
     
     public array function getExtProperties() {
-        return new filter().setFor("extProperty").setUserId(variables.userId)
+        return new filter().for("extProperty").setUserId(variables.userId)
                                                  .setPublic(true)
                                                  .execute()
                                                  .getResult();

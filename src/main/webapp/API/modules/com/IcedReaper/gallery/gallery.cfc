@@ -474,7 +474,7 @@ component {
     }
     
     private void function loadPictures() {
-        variables.pictures = new filter().setFor("picture")
+        variables.pictures = new filter().for("picture")
                                          .setGalleryId(variables.galleryId)
                                          .execute()
                                          .getResult();
@@ -483,7 +483,7 @@ component {
     }
     
     private void function loadCategories() {
-        variables.categories = new filter().setFor("category")
+        variables.categories = new filter().for("category")
                                            .setGalleryId(variables.galleryId)
                                            .execute()
                                            .getResult();

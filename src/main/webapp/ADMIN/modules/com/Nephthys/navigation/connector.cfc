@@ -8,7 +8,7 @@ component extends="ADMIN.abstractClasses.connector" {
     }
     
     public void function render() {
-        var filterCtrl = new filter().setFor("module");
+        var filterCtrl = new filter().for("module");
         
         var installedModules = filterCtrl.setAvailableAdmin(true)
                                          .execute()

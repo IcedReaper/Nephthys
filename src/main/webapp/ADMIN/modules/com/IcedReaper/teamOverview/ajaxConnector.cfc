@@ -2,7 +2,7 @@ component {
     import "API.modules.com.IcedReaper.teamOverview.*";
     
     remote array function getMember() {
-        var filterCtrl = new filter().setFor("member");
+        var filterCtrl = new filter().for("member");
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
 
         var members = [];
@@ -18,7 +18,7 @@ component {
     }
     
     remote array function getRemainingUser() {
-        var filterCtrl = new filter().setFor("user");
+        var filterCtrl = new filter().for("user");
         
         var noMember = [];
         for(var user in filterCtrl.execute().getResult()) {
@@ -39,7 +39,7 @@ component {
     }
     
     remote boolean function removeUser(required numeric userId) {
-        var filterCtrl = new filter().setFor("member");
+        var filterCtrl = new filter().for("member");
         var member = filterCtrl.setUserId(arguments.userId).execute().getResult();
         if(member.len() == 1) {
             removeMember(member[1].getUserId());
@@ -63,7 +63,7 @@ component {
         
         var actualSortId = actualMember.getSortId();
         
-        var filterCtrl = new filter().setFor("member");
+        var filterCtrl = new filter().for("member");
         var higherMember = filterCtrl.setSortId(actualSortId - 1).execute().getResult()[1];
         
         transaction {
@@ -91,7 +91,7 @@ component {
         
         var actualSortId = actualMember.getSortId();
         
-        var filterCtrl = new filter().setFor("member");
+        var filterCtrl = new filter().for("member");
         var lowerMember = filterCtrl.setSortId(actualSortId + 1).execute().getResult()[1];
         
         transaction {

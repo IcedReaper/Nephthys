@@ -4,7 +4,7 @@ component {
     formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
     
     remote array function getList() {
-        var referenceFilter = new filter().setFor("reference").execute();
+        var referenceFilter = new filter().for("reference").execute();
         
         var references = [];
         for(var reference in referenceFilter.getResult()) {

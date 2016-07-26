@@ -2,7 +2,7 @@ component {
     import "API.modules.com.Nephthys.themeManager.*";
     
     remote array function getList() {
-        var filterCtrl = new filter().setFor("theme");
+        var filterCtrl = new filter().for("theme");
         
         var themeData = [];
         for(var theme in filterCtrl.execute().getResult()) {

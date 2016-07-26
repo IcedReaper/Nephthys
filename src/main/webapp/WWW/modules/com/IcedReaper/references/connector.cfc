@@ -13,7 +13,7 @@ component implements="WWW.interfaces.connector" {
     }
     
     public string function render(required struct options, required string childContent) {
-        var referenceFilter = new filter().setFor("reference").execute();
+        var referenceFilter = new filter().for("reference").execute();
         
         if(! arguments.options.keyExists("layout")) {
             arguments.options.layout = 1;

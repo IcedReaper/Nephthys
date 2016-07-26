@@ -12,7 +12,7 @@ component extends="API.abstractClasses.search" {
         };
         variables.resultCount = 0;
         
-        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init().setFor("pageWithModule")
+        var aPages = createObject("component", "API.modules.com.Nephthys.pageManager.filter").init().for("pageWithModule")
                                                                                                     .setModuleName("com.Nephthys.userManager")
                                                                                                     .execute()
                                                                                                     .getResult(); 
@@ -22,7 +22,7 @@ component extends="API.abstractClasses.search" {
                 var user        = new user(qSearchResults.userId[i]);
                 var description = "";
                 
-                var extPropertyFilter = new filter().setFor("extProperty")
+                var extPropertyFilter = new filter().for("extProperty")
                                                     .setUserId(qSearchResults.userId[i])
                                                     .setExtPropertyKeyName("description")
                                                     .execute()

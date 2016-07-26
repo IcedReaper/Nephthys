@@ -222,7 +222,7 @@ component {
             variables.homepage  = "";
             variables.imageName = "";
             
-            variables.position = new filter().setFor("reference").execute().getResultCount() + 1;
+            variables.position = new filter().for("reference").execute().getResultCount() + 1;
             
             variables.creator      = request.user;
             variables.creationDate = now();

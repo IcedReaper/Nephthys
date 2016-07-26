@@ -20,7 +20,7 @@ component implements="WWW.interfaces.connector" {
         themeIndividualizer.invokeResources();
         
         var splitParameter = listToArray(request.page.getParameter(), "/");
-        var blogpostFilterCtrl = new filter().setFor("blogpost");
+        var blogpostFilterCtrl = new filter().for("blogpost");
         
         if(! arguments.options.keyExists("maxEntries")) {
             arguments.options.maxEntries = 5;
@@ -99,7 +99,7 @@ component implements="WWW.interfaces.connector" {
                                            required filter  blogpostFilterCtrl,
                                            required numeric actualPage,
                                                     string  activeCategory = "") {
-        var categoryFilter = new filter().setFor("category").setUsed(true);
+        var categoryFilter = new filter().for("category").setUsed(true);
         
         return application.system.settings.getValueOfKey("templateRenderer")
             .setModulePath(getModulePath())
