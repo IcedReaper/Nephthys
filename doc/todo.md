@@ -4,6 +4,10 @@
 - required approvals
 - +Attribut zu Module => Uses permissions (if false hide in permission screens)
 - Tasklist for user-module
+- Approval refactoren?!
+- pushToStatus(status, user) anstatt pushToStatus(newStatusId, user)
+- pageVersion: setStatusId(numeric) => setStatus(status)
+- Statusübersicht => Mögliche Folgestatus als Pills mit Links
 
 ## Allgemein
     1. Validierungen

@@ -35,7 +35,7 @@ component implements="WWW.interfaces.connector" {
                 errors.message = true;
                 errors.error = true;
             }
-            if(! request.user.isActive()) {
+            if(! request.user.getStatus().getCanLogin()) {
                 if(form.username == "") {
                     errors.username = true;
                     errors.error = true;
@@ -63,7 +63,7 @@ component implements="WWW.interfaces.connector" {
                 contactFormRequest.setSubject(form.subject)
                                   .setMessage(form.message);
                 
-                if(request.user.isActive()) {
+                if(request.user.getStatus().getCanLogin()) {
                     contactFormRequest.setRequestorUserId(request.user.getUserId())
                                       .setUsername(request.user.getUsername())
                                       .setEmail(request.user.getEmail());

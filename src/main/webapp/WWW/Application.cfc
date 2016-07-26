@@ -95,6 +95,8 @@ component {
     }
     
     public void function onError(required any exception) {
+        writeDump(var=arguments.exception);
+        abort;
         try {
             var errorLogger = application.system.settings.getValueOfKey("errorLogger");
             errorLogger.setException(arguments.exception)
@@ -155,16 +157,11 @@ component {
             return false;
         }
         else {
-            if(url.keyExists("logout") || ! request.user.isActive()) {
+            if(url.keyExists("logout") || ! request.user.getStatus().getCanLogin()) {
                 logout();
                 return false;
             }
             else {
-                if(request.user.getActiveStatus() == 0) {
-                    logout();
-                    return false;
-                }
-                
                 return true;
             }
         }

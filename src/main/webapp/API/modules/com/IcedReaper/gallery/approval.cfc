@@ -1,6 +1,4 @@
 component {
-    import "API.modules.com.Nephthys.userManager.*";
-    
     public approval function init(required numeric galleryId) {
         variables.galleryId = arguments.galleryId;
         
@@ -24,7 +22,7 @@ component {
             var approvalList = [];
             for(var i = 1; i <= qApprovalList.getRecordCount(); ++i) {
                 approvalList.append({
-                    user           = new user(qApprovalList.userId[i]),
+                    user           = createObject("component", "API.modules.com.Nephthys.userManager.user").init(qApprovalList.userId[i]),
                     approvalDate   = qApprovalList.approvalDate[i],
                     previousStatus = new status(qApprovalList.prevStatusId[i]),
                     newStatus      = new status(qApprovalList.nextStatusId[i])

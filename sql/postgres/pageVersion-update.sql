@@ -1062,3 +1062,98 @@ GRANT EXECUTE ON FUNCTION nephthys_user_checkUsername(IN username character vary
 alter table nephthys_user add constraint nephthys_user_username_check check(nephthys_user_checkUsername(username));
 
 alter table nephthys_user_extPropertyKey rename column createdDate to creationDate;
+
+
+
+create table nephthys_user_status
+(
+    statusId serial primary key,
+    name character varying(100) not null unique,
+    active boolean not null default true,
+    
+    canLogin boolean not null default false,
+    showInTasklist boolean not null default false,
+    
+    creationUserId integer not null references nephthys_user,
+    creationDate timestamp with time zone not null default now(),
+    
+    lastEditUserId integer not null references nephthys_user,
+    lastEditDate timestamp with time zone not null default now()
+);
+
+create table nephthys_user_statusFlow
+(
+    statusFlowId serial primary key,
+    statusId integer not null references nephthys_user_status,
+    nextStatusId integer not null references nephthys_user_status
+);
+
+create table nephthys_user_approval
+(
+    approvalId serial primary key,
+    userId integer not null references nephthys_user,
+    
+    prevStatusId integer references nephthys_user_status,
+    nextStatusId integer not null references nephthys_user_status,
+    
+    approvalUserId integer not null references nephthys_user,
+    approvalDate timestamp with time zone not null default now()
+);
+
+alter table nephthys_user add column statusId integer references nephthys_user_status;
+
+INSERT INTO nephthys_user_status VALUES
+(
+    1,
+    'Registriert',
+    true,
+    
+    false,
+    true,
+    
+    1,
+    now(),
+    
+    1,
+    now()
+);
+
+INSERT INTO nephthys_user_status VALUES
+(
+    2,
+    'Freigeschaltet',
+    true,
+    
+    true,
+    false,
+    
+    1,
+    now(),
+    
+    1,
+    now()
+);
+
+INSERT INTO nephthys_user_status VALUES
+(
+    3,
+    'Abgelehnt',
+    true,
+    
+    false,
+    false,
+    
+    1,
+    now(),
+    
+    1,
+    now()
+);
+
+update nephthys_user SET statusId = 2;
+
+alter table nephthys_user alter column statusId SET NOT NULL;
+alter table nephthys_user drop column active;
+
+
+GRANT SELECT ON TABLE nephthys_user_status TO nephthys_user;

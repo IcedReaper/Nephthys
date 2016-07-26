@@ -26,7 +26,7 @@
         
         <form autocomplete="off" method="post" action="?">
             <input type="hidden" name="name" value="com.IcedReaper.contactForm">
-            <cfif request.user.isActive()>
+            <cfif request.user.getStatus().getCanLogin()>
                 <p>Anfrage wird von durch Ihren Account #request.user.getUsername()# verschickt.</p>
             <cfelse>
                 <div class="row">

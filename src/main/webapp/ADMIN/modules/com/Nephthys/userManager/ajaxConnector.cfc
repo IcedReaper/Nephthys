@@ -14,7 +14,7 @@ component {
                 "userId"   = user.getUserId(),
                 "username" = user.getUserName(),
                 "email"    = user.getEmail(),
-                "active"   = user.getActiveStatus()
+                "statusId" = user.getStatus().getStatusId()
             });
         }
         
@@ -30,7 +30,7 @@ component {
     remote struct function save(required numeric userId,
                                 required string  userName,
                                 required string  eMail,
-                                required boolean active,
+                                required numeric statusId,
                                 required string  password,
                                 required numeric wwwThemeId,
                                 required numeric adminThemeId) {
@@ -42,7 +42,7 @@ component {
         }
         
         user.setEmail(arguments.eMail)
-            .setActiveStatus(arguments.active)
+            .setStatus(new status(arguments.statusId))
             .setWwwThemeId(arguments.wwwThemeId)
             .setAdminThemeId(arguments.adminThemeId);
         
@@ -64,18 +64,8 @@ component {
         return true;
     }
     
-    remote boolean function activate(required numeric userId) {
-        var user = new user(arguments.userId);
-        user.setActiveStatus(1)
-            .save();
-        
-        return true;
-    }
-    
-    remote boolean function deactivate(required numeric userId) {
-        var user = new user(arguments.userId);
-        user.setActiveStatus(0)
-            .save();
+    remote boolean function pushToStatus(required numeric userId, required numeric statusId) {
+        new user(arguments.userId).pushToStatus(new status(arguments.statusId), request.user);
         
         return true;
     }
@@ -96,7 +86,7 @@ component {
     
     remote array function getPermissions(required numeric userId) {
         var permissionFilter = new filter().for("permission").setUserId(arguments.userId)
-                                                                .execute();
+                                                             .execute();
         
         var permissions = [];
         for(var permission in permissionFilter.getResult()) {
@@ -110,10 +100,9 @@ component {
             });
         }
         
-        var moduleFilter = createObject("component", "API.modules.com.Nephthys.moduleManager.filter").init()
-                                                                                              .for("module")
-                                                                                              .setActive(true)
-                                                                                              .execute();
+        var moduleFilter = createObject("component", "API.modules.com.Nephthys.moduleManager.filter").init().for("module")
+                                                                                                            .setActive(true)
+                                                                                                            .execute();
         
         for(var module in moduleFilter.getResult()) {
             var found = false;
@@ -355,13 +344,142 @@ component {
         return true;
     }
     
+    
+    
+    remote struct function getStatusList() {
+        var statusLoader = new filter().for("status");
+        
+        var prepStatus = {};
+        
+        for(var status in statusLoader.execute().getResult()) {
+            prepStatus[status.getStatusId()] = prepareStatus(status);
+        }
+        
+        return prepStatus;
+    }
+    
+    remote array function getStatusListAsArray() {
+        var statusLoader = new filter().for("status");
+        
+        var prepStatus = [];
+        
+        for(var status in statusLoader.execute().getResult()) {
+            prepStatus.append(prepareStatusAsArray(status));
+        }
+        
+        return prepStatus;
+    }
+    
+    remote struct function getStatusDetails(required numeric statusId) {
+        return prepareStatus(new status(arguments.statusId));
+    }
+    
+    remote boolean function saveStatus(required struct status) {
+        transaction {
+            var status = new status(arguments.status.statusId);
+            
+            status.setActiveStatus(arguments.status.active)
+                  .setCanLogin(arguments.status.canLogin)
+                  .setName(arguments.status.name)
+                  .setShowInTasklist(arguments.status.showInTasklist)
+                  .setLastEditor(request.user)
+                  .save();
+            
+            transactionCommit();
+            return true;
+        }
+    }
+    
+    remote boolean function deleteStatus(required numeric statusId) {
+        if(arguments.statusId == application.system.settings.getValueOfKey("com.Nephthys.userManager.defaultStatus")) {
+            throw(type = "nephthys.application.notAllowed", message = "You cannot delete the start status. Please reset the start status in the system settings");
+        }
+        
+        var userStillWithThisStatus = new filter().for("user")
+                                                  .setStatusId(arguments.statusId)
+                                                  .execute()
+                                                  .getResultCount();
+        
+        if(userStillWithThisStatus == 0) {
+            new status(arguments.statusId).delete();
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.application.notAllowed", message = "You cannot delete a status that is still used. There are still " & userStillWithThisStatus & " user on this status.");
+        }
+    }
+    
+    remote boolean function activateStatus(required numeric statusId) {
+        var status = new status(arguments.statusId);
+        
+        status.setActiveStatus(true)
+              .save();
+        
+        return true;
+    }
+    
+    remote boolean function deactivateStatus(required numeric statusId) {
+        new status(arguments.statusId).setActiveStatus(false)
+                                      .save();
+        
+        return true;
+    }
+    
+    remote boolean function saveStatusFlow(required array statusFlow) {
+        var i = 0;
+        var j = 0;
+        var k = 0;
+        var found = false;
+        transaction {
+            for(i = 1; i <= arguments.statusFlow.len(); ++i) {
+                var status = new status(arguments.statusFlow[i].statusId);
+                
+                var nextStatus = status.getNextStatus();
+                
+                for(j = 1; j <= nextStatus.len(); ++j) {
+                    found = false;
+                    for(k = 1; k <= arguments.statusFlow[i].nextStatus.len() && ! found; ++k) {
+                        if(nextStatus[j].getStatusId() == arguments.statusFlow[i].nextStatus[k].statusId) {
+                            found = true;
+                        }
+                    }
+                    
+                    if(! found) {
+                        status.removeNextStatus(nextStatus[j].getStatusId());
+                    }
+                }
+                
+                for(j = 1; j <= arguments.statusFlow[i].nextStatus.len(); ++j) {
+                    found = false;
+                    for(k = 1; k <= nextStatus.len() && ! found; ++k) {
+                        if(nextStatus[k].getStatusId() == arguments.statusFlow[i].nextStatus[j].statusId) {
+                            found = true;
+                        }
+                    }
+                    
+                    if(! found) {
+                        status.addNextStatus(arguments.statusFlow[i].nextStatus[j].statusId);
+                    }
+                }
+                
+                status.save();
+            }
+            
+            transactionCommit();
+        }
+        
+        return false;
+    }
+    
+    
     // P R I V A T E   M E T H O D S
     private struct function prepareDetailStruct(required user userObject) {
         return {
             "userId"       = arguments.userObject.getUserId(),
             "username"     = arguments.userObject.getUserName(),
             "email"        = arguments.userObject.getEmail(),
-            "active"       = arguments.userObject.getActiveStatus(),
+            "statusId"     = arguments.userObject.getStatus().getStatusId(),
             "password"     = "      ",
             "avatar"       = arguments.userObject.getAvatarPath(false),
             "actualUser"   = arguments.userObject.getUserId() == request.user.getUserId(),
@@ -392,6 +510,52 @@ component {
             "namepart"     = arguments.blacklistEntry.getNamepart(),
             "creator"      = prepareReducedDetailStruct(arguments.blacklistEntry.getCreator()),
             "creationDate" = formatCtrl.formatDate(arguments.blacklistEntry.getCreationDate())
+        };
+    }
+    
+    private struct function prepareStatus(required status status) {
+        var nextStatusList = {};
+        for(var nextStatus in arguments.status.getNextStatus()) {
+            if(nextStatus.isActive()) {
+                nextStatusList[nextStatus.getStatusId()] = {
+                    "statusId"       = nextStatus.getStatusId(),
+                    "name"           = nextStatus.getName(),
+                    "active"         = nextStatus.isActive(),
+                    "canLogin"       = nextStatus.getCanLogin()
+                };
+            }
+        }
+        
+        return {
+            "statusId"       = arguments.status.getStatusId(),
+            "name"           = arguments.status.getName(),
+            "active"         = arguments.status.isActive(),
+            "canLogin"       = arguments.status.getCanLogin(),
+            "showInTasklist" = arguments.status.getShowInTasklist(),
+            "nextStatus"     = nextStatusList
+        };
+    }
+    
+    private struct function prepareStatusAsArray(required status status) {
+        var nextStatusList = [];
+        for(var nextStatus in arguments.status.getNextStatus()) {
+            if(nextStatus.isActive()) {
+                nextStatusList.append({
+                    "statusId"       = nextStatus.getStatusId(),
+                    "name"           = nextStatus.getName(),
+                    "active"         = nextStatus.isActive(),
+                    "canLogin"       = nextStatus.getCanLogin()
+                });
+            }
+        }
+        
+        return {
+            "statusId"       = arguments.status.getStatusId(),
+            "name"           = arguments.status.getName(),
+            "active"         = arguments.status.isActive(),
+            "canLogin"       = arguments.status.getCanLogin(),
+            "showInTasklist" = arguments.status.getShowInTasklist(),
+            "nextStatus"     = nextStatusList
         };
     }
 }

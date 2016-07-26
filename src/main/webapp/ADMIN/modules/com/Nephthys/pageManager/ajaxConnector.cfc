@@ -236,7 +236,7 @@ component {
             var status = new status(arguments.status.statusId);
             
             status.setActiveStatus(arguments.status.active)
-                  .setEditable(arguments.status.showInTasklist)
+                  .setEditable(arguments.status.editable)
                   .setName(arguments.status.name)
                   .setOnlineStatus(arguments.status.online)
                   .setDeleteable(arguments.status.deleteable)

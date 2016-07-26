@@ -27,11 +27,6 @@ component {
         
         return this;
     }
-    public user function setActiveStatus(required boolean active) {
-        variables.active = arguments.active;
-        
-        return this;
-    }
     public user function setWwwThemeId(required numeric wwwThemeId) {
         variables.wwwThemeId = arguments.wwwThemeId;
         variables.wwwTheme = new theme(variables.wwwThemeId);
@@ -75,6 +70,10 @@ component {
             throw(type = "nephthys.application.notAllowed", message = "Cannot upload an avatar to a non existing user.");
         }
         
+        return this;
+    }
+    public user function setStatus(required status status) {
+        variables.statusId = arguments.status.getStatusId();
         return this;
     }
     
@@ -128,9 +127,6 @@ component {
         }
         return adminTheme;
     }
-    public boolean function getActiveStatus() {
-        return variables.active == 1;
-    }
     public date function getRegistrationDate() {
         return variables.registrationDate;
     }
@@ -150,10 +146,10 @@ component {
             }
         }
     }
-    
-    public boolean function isActive() {
-        return variables.active == 1;
+    public status function getStatus() {
+        return new status(variables.statusId);
     }
+    
     public boolean function hasPermission(required string moduleName, string roleName = "") {
         if(variables.userId == 0 || variables.userId == null)
             return false;
@@ -172,57 +168,86 @@ component {
                                                  .getResult();
     }
     
-    // C R U D
+    public user function pushToStatus(required status newStatus, required user user) {
+        var actualStatus = new status(variables.statusId);
+        
+        var newStatusOK = false;
+        
+        for(var nextStatus in actualStatus.getNextStatus()) {
+            if(nextStatus.getStatusId() == arguments.newStatus.getStatusId()) {
+                newStatusOk = true;
+            }
+        }
+        
+        if(newStatusOk) {
+            if(arguments.newStatus.isApprovalValid(arguments.user.getUserId())) {
+                transaction {
+                    setStatus(arguments.newStatus);
+                    save();
+                    
+                    new approval(variables.userId).approve(actualStatus.getStatusId(),
+                                                           arguments.newStatus.getStatusId(),
+                                                           arguments.user.getUserId());
+                    
+                    transactionCommit();
+                }
+                
+                return this;
+            }
+            else {
+                throw(type = "nephthys.application.notAllowed", message = "You don't have the required permissions for this operation");
+            }
+        }
+        else {
+            throw(type = "nephthys.application.notAllowed", message = "The new status isn't allowed!");
+        }
+    }
+    
     public user function save() {
+        var qSave = new Query().addParam(name = "eMail",          value = variables.eMail,          cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "password",       value = variables.password,       cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "wwwThemeId",     value = variables.wwwThemeId,     cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "adminThemeId",   value = variables.adminThemeId,   cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "avatarFilename", value = variables.avatarFilename, cfsqltype = "cf_sql_varchar", null = (variables.avatarFilename == "" || variables.avatarFileName == null))
+                               .addParam(name = "statusId",       value = variables.statusId,       cfsqltype = "cf_sql_numeric");
+        
         if(variables.userId == 0) { // create a new user
-            variables.userId = new Query().setSQL("INSERT INTO nephthys_user
-                                                               (
-                                                                   userName,
-                                                                   eMail,
-                                                                   password,
-                                                                   active,
-                                                                   wwwThemeId,
-                                                                   adminThemeId,
-                                                                   avatarFilename
-                                                               )
-                                                        VALUES (
-                                                                   :userName,
-                                                                   :eMail,
-                                                                   :password,
-                                                                   :active,
-                                                                   :wwwThemeId,
-                                                                   :adminThemeId,
-                                                                   :avatarFilename
-                                                               );
-                                                  SELECT currval('seq_nephthys_user_id') newUserId;")
-                                          .addParam(name = "userName",       value = variables.userName,       cfsqltype = "cf_sql_varchar")
-                                          .addParam(name = "eMail",          value = variables.eMail,          cfsqltype = "cf_sql_varchar")
-                                          .addParam(name = "password",       value = variables.password,       cfsqltype = "cf_sql_varchar")
-                                          .addParam(name = "active",         value = variables.active,         cfsqltype = "cf_sql_bit")
-                                          .addParam(name = "wwwThemeId",     value = variables.wwwThemeId,     cfsqltype = "cf_sql_numeric")
-                                          .addParam(name = "adminThemeId",   value = variables.adminThemeId,   cfsqltype = "cf_sql_numeric")
-                                          .addParam(name = "avatarFilename", value = variables.avatarFilename, cfsqltype = "cf_sql_varchar", null = (variables.avatarFilename == "" || variables.avatarFileName == null))
-                                          .execute()
-                                          .getResult()
-                                          .newUserId[1];
+            variables.userId = qSave.setSQL("INSERT INTO nephthys_user
+                                                         (
+                                                             userName,
+                                                             eMail,
+                                                             password,
+                                                             wwwThemeId,
+                                                             adminThemeId,
+                                                             avatarFilename,
+                                                             statusId
+                                                         )
+                                                  VALUES (
+                                                             :userName,
+                                                             :eMail,
+                                                             :password,
+                                                             :wwwThemeId,
+                                                             :adminThemeId,
+                                                             :avatarFilename,
+                                                             :statusId
+                                                         );
+                                            SELECT currval('seq_nephthys_user_id') newUserId;")
+                                    .addParam(name = "userName", value = variables.userName, cfsqltype = "cf_sql_varchar")
+                                    .execute()
+                                    .getResult()
+                                    .newUserId[1];
         }
         else { // update an existing user
-            new Query().setSQL("UPDATE nephthys_user 
-                                   SET email          = :eMail,
-                                       password       = :password,
-                                       active         = :active,
-                                       wwwThemeId     = :wwwThemeId,
-                                       adminThemeId   = :adminThemeId,
-                                       avatarFilename = :avatarFilename
-                                 WHERE userId = :userId")
-                       .addParam(name = "userId",         value = variables.userId,         cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "eMail",          value = variables.eMail,          cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "password",       value = variables.password,       cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "active",         value = variables.active,         cfsqltype = "cf_sql_bit")
-                       .addParam(name = "wwwThemeId",     value = variables.wwwThemeId,     cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "adminThemeId",   value = variables.adminThemeId,   cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "avatarFilename", value = variables.avatarFilename, cfsqltype = "cf_sql_varchar", null = (variables.avatarFilename == "" || variables.avatarFileName == null))
-                       .execute();
+            qSave.setSQL("UPDATE nephthys_user 
+                             SET email          = :eMail,
+                                 password       = :password,
+                                 wwwThemeId     = :wwwThemeId,
+                                 adminThemeId   = :adminThemeId,
+                                 avatarFilename = :avatarFilename,
+                                 statusId       = :statusId
+                           WHERE userId = :userId")
+                 .addParam(name = "userId", value = variables.userId, cfsqltype = "cf_sql_numeric")
+                 .execute();
             
             if(variables.keyExists("oldAvatarFilename") && variables.oldAvatarFilename != "" && variables.oldAvatarFilename != null && fileExists(expandPath(variables.avatarFolder) & oldAvatarFilename)) {
                 fileDelete(expandPath(variables.avatarFolder) & variables.oldAvatarFilename);
@@ -258,12 +283,12 @@ component {
             if(qUser.getRecordCount() == 1) {
                 variables.userName         = qUser.username[1];
                 variables.eMail            = qUser.email[1];
-                variables.active           = qUser.active[1];
                 variables.password         = qUser.password[1];
                 variables.registrationDate = qUser.registrationDate[1];
                 variables.wwwThemeId       = qUser.wwwThemeId[1];
                 variables.adminThemeId     = qUser.adminThemeId[1];
                 variables.avatarFilename   = qUser.avatarFilename[1];
+                variables.statusId         = qUser.statusId[1];
             }
             else {
                 throw(type = "nephthys.notFound.user", message = "Could not find user by ID ", detail = variables.userId);
@@ -273,11 +298,11 @@ component {
             variables.userName         = "Not registrated";
             variables.eMail            = "";
             variables.password         = "";
-            variables.active           = false;
             variables.registrationDate = now();
             variables.wwwThemeId       = createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("WWW").getValue();
             variables.adminThemeId     = createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("ADMIN").getValue();
             variables.avatarFilename   = null;
+            variables.statusId         = application.system.settings.getValueOfKey("com.Nephthys.userManager.defaultStatus");
         }
     }
 }

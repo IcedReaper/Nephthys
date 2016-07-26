@@ -17,19 +17,17 @@
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/directives/statistics/statistics.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/directives/tasklist/tasklist.js"></script>
 
-<!--- app --->
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/js/pagesApp.js"></script>
 
-<!--- services --->
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/js/service/pagesService.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/js/service/pageStatusService.js"></script>
-
-<!--- controller --->
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/js/controller/pagesList.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/js/controller/pagesDetail.js"></script>
+
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/js/controller/sitemap.js"></script>
+
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/js/service/pageStatusService.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/js/controller/statusList.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/js/controller/statusDetail.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/js/controller/sitemap.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/js/controller/statusFlow.js"></script>
 
 <nephthys-loading-bar></nephthys-loading-bar>

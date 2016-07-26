@@ -7,12 +7,15 @@ component implements="API.interfaces.filter" {
         variables.userName     = null;
         variables.userNameLike = false;
         
+        variables.password = null;
+        
         variables.email = null;
         
         variables.registerFromDate = null;
         variables.registerToDate   = null;
         
         variables.active = null;
+        variables.statusId = null;
         
         variables.qRes = null;
         variables.results = null;
@@ -53,6 +56,14 @@ component implements="API.interfaces.filter" {
         variables.active = arguments.active;
         return this;
     }
+    public filter function setStatusId(required numeric statusId) {
+        variables.statusId = arguments.statusId;
+        return this;
+    }
+    public filter function setPassword(required string password) {
+        variables.password = arguments.password;
+        return this;
+    }
     
     public filter function execute() {
         variables.qRes = null;
@@ -64,37 +75,45 @@ component implements="API.interfaces.filter" {
         
         var where = "";
         if(variables.userId != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "userId = :userId";
+            where &= (where == "" ? " WHERE " : " AND ") & " userId = :userId";
             qryFilter.addParam(name = "userId", value = variables.userId, cfsqltype = "cf_sql_numeric");
+        }
+        if(variables.password != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & " password = :password";
+            qryFilter.addParam(name = "password", value = variables.password, cfsqltype = "cf_sql_varchar");
         }
         
         if(variables.userName != null) {
             if(variables.userNameLike) {
-                where &= (where == "" ? " WHERE " : " AND ") & "lower(userName) LIKE :userName";
+                where &= (where == "" ? " WHERE " : " AND ") & " lower(userName) LIKE :userName";
                 qryFilter.addParam(name = "userName", value = "%" & lCase(variables.userName) & "%", cfsqltype = "cf_sql_varchar");
             }
             else {
-                where &= (where == "" ? " WHERE " : " AND ") & "lower(userName) = :userName";
+                where &= (where == "" ? " WHERE " : " AND ") & " lower(userName) = :userName";
                 qryFilter.addParam(name = "userName", value = lCase(variables.userName), cfsqltype = "cf_sql_varchar");
             }
         }
         
         if(variables.registerFromDate != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "registrationDate >= :regFromDate";
+            where &= (where == "" ? " WHERE " : " AND ") & " registrationDate >= :regFromDate";
             qryFilter.addParam(name = "regFromDate", value = variables.registerFromDate, cfsqltype = "cf_sql_date");
         }
         if(variables.registerToDate != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "registrationDate < :regToDate";
+            where &= (where == "" ? " WHERE " : " AND ") & " registrationDate < :regToDate";
             qryFilter.addParam(name = "regToDate", value = variables.registerToDate, cfsqltype = "cf_sql_date");
         }
         
         if(variables.active != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "active = :active";
-            qryFilter.addParam(name = "active", value = variables.active, cfsqltype = "cf_sql_bit");
+            where &= (where == "" ? " WHERE " : " AND ") & " statusId IN (SELECT statusId FROM nephthys_user_status WHERE canLogin = :canLogin) ";
+            qryFilter.addParam(name = "canLogin", value = variables.active, cfsqltype = "cf_sql_bit");
+        }
+        if(variables.statusId != null) {
+            where &= (where == "" ? " WHERE " : " AND ") & " statusId = :statusId";
+            qryFilter.addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric");
         }
         
         if(variables.email != null) {
-            where &= (where == "" ? " WHERE " : " AND ") & "email = :email";
+            where &= (where == "" ? " WHERE " : " AND ") & " email = :email";
             qryFilter.addParam(name = "email", value = variables.email, cfsqltype = "cf_sql_varchar");
         }
         

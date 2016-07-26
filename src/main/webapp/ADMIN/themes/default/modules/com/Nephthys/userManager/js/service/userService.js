@@ -110,6 +110,17 @@ nephthysAdminApp
                         blacklistId: blacklistId
                     }
                 });
+            },
+            
+            pushToStatus: function (userId, statusId) {
+                return $http.post('/ajax/com/Nephthys/userManager/pushToStatus', {
+                    userId:   userId,
+                    statusId: statusId
+                });
+            },
+            
+            getStatus: function () {
+                return $http.get("/ajax/com/Nephthys/userManager/getStatusList");
             }
         };
     });

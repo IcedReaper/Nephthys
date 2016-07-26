@@ -2,6 +2,8 @@
     <div class="col-md-10 col-sm-8">
         <a href="#/" class="btn btn-secondary"><i class="fa fa-list"></i> Userliste</a>
         <a href="#/blacklist/list" class="btn btn-secondary"><i class="fa fa-list"></i> Liste der geblockten Namensteile</a>
+        <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
     </div>
     <div class="col-md-2 col-sm-4">
         <div class="pull-right">
@@ -35,12 +37,6 @@
                             <input type="password" class="form-control" id="password" placeholder="Password" ng-model="user.password">
                         </div>
                         <div class="form-group">
-                            <label for="active">Aktiv</label>
-                            <select class="form-control" ng-model="user.active"
-                                    ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]">
-                            </select>
-                        </div>
-                        <div class="form-group">
                             <label for="active">Theme der Website</label>
                             <select class="form-control" ng-model="user.wwwThemeId" ng-options="o.themeId as o.name for o in themes | filter: availableWww"></select>
                         </div>
@@ -50,6 +46,16 @@
                         </div>
                         
                         <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+                        
+                        <div ng-if="actualPermissions.admin && user.userId && ! structIsEmpty(status[ user.statusId ].nextStatus)" class="m-t-1">
+                            <h4>Status ändern in</h4>
+                            <button type="submit"
+                                    class="btn m-r-1"
+                                    ng-repeat="ps in status[ user.statusId ].nextStatus"
+                                    ng-class="statusButtonClass(status[ user.statusId ].canLogin, ps.canLogin)"
+                                    ng-click="pushToStatus(ps.statusId);">{{ps.name}}</button>
+                        </div>
+                        
                     </form>
                 </div>
                 

@@ -147,16 +147,11 @@ component {
             return false;
         }
         else {
-            if(url.keyExists("logout") || ! request.user.isActive()) {
+            if(url.keyExists("logout") || ! request.user.getStatus().getCanLogin()) {
                 session.userId = 0;
                 return false;
             }
             else {
-                if(request.user.getActiveStatus() == 0) {
-                    session.userId = 0;
-                    return false;
-                }
-                
                 return true;
             }
         }
