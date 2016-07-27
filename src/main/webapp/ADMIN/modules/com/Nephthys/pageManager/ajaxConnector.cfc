@@ -49,20 +49,35 @@ component {
             statusData[index]["pages"] = [];
             
             for(var pageVersion in pageVersionFilterCtrl.setStatusId(status.getStatusId()).execute().getResult()) {
+                var lastApproverFilter = new filter().for("approval")
+                                                     .setPageVersionId(pageVersion.getPageVersionId())
+                                                     .setLimit(1)
+                                                     .setSortDirection("DESC")
+                                                     .execute();
+                var lastApprover = {};
+                var lastApprovalDate = "";
+                if(lastApproverFilter.getResultCount() == 1) {
+                    var approval = lastApproverFilter.getResult()[1];
+                    lastApprover = getUserInformation(approval.getApprover());
+                    lastApprovalDate = formatCtrl.formatDate(approval.getApprovalDate());
+                }
+                
                 statusData[index]["pages"].append({
-                    "pageId"        = pageVersion.getPageId(),
-                    "pageVersionId" = pageVersion.getPageVersionId(),
-                    "linktext"      = pageVersion.getLinktext(),
-                    "link"          = pageVersion.getLink(),
-                    "title"         = pageVersion.getTitle(),
-                    "description"   = pageVersion.getDescription(),
-                    "creator"       = getUserInformation(pageVersion.getCreator()),
-                    "creationDate"  = formatCtrl.formatDate(pageVersion.getCreationDate()),
-                    "lastEditor"    = getUserInformation(pageVersion.getLastEditor()),
-                    "lastEditDate"  = formatCtrl.formatDate(pageVersion.getLastEditDate()),
-                    "version"       = pageVersion.getVersion(),
-                    "majorVersion"  = pageVersion.getMajorVersion(),
-                    "minorVersion"  = pageVersion.getMinorVersion()
+                    "pageId"           = pageVersion.getPageId(),
+                    "pageVersionId"    = pageVersion.getPageVersionId(),
+                    "linktext"         = pageVersion.getLinktext(),
+                    "link"             = pageVersion.getLink(),
+                    "title"            = pageVersion.getTitle(),
+                    "description"      = pageVersion.getDescription(),
+                    "creator"          = getUserInformation(pageVersion.getCreator()),
+                    "creationDate"     = formatCtrl.formatDate(pageVersion.getCreationDate()),
+                    "lastEditor"       = getUserInformation(pageVersion.getLastEditor()),
+                    "lastEditDate"     = formatCtrl.formatDate(pageVersion.getLastEditDate()),
+                    "version"          = pageVersion.getVersion(),
+                    "majorVersion"     = pageVersion.getMajorVersion(),
+                    "minorVersion"     = pageVersion.getMinorVersion(),
+                    "lastApprover"     = lastApprover,
+                    "lastApprovalDate" = lastApprovalDate
                 });
             }
         }
@@ -383,7 +398,10 @@ component {
         
         var preparedSitemaps = [];
         for(var sitemap in sitemaps) {
-            var preparedApprovalList = prepareApprovalList(new approval(sitemap.getSitemapId()).for("sitemap").getApprovalList());
+            var preparedApprovalList = prepareApprovalList(new filter().for("approval")
+                                                                       .setSitemapId(sitemap.getSitemapId())
+                                                                       .execute()
+                                                                       .getResult());
             
             var preparedRegions = [];
             for(region in regions) {
@@ -430,6 +448,19 @@ component {
             statusData[index]["sitemaps"] = [];
             
             for(var sitemap in sitemapFilterCtrl.setStatusId(status.getStatusId()).execute().getResult()) {
+                var lastApproverFilter = new filter().for("approval")
+                                                     .setSitemapId(sitemap.getSitemapId())
+                                                     .setLimit(1)
+                                                     .setSortDirection("DESC")
+                                                     .execute();
+                var lastApprover = {};
+                var lastApprovalDate = "";
+                if(lastApproverFilter.getResultCount() == 1) {
+                    var approval = lastApproverFilter.getResult()[1];
+                    lastApprover = getUserInformation(approval.getApprover());
+                    lastApprovalDate = formatCtrl.formatDate(approval.getApprovalDate());
+                }
+                
                 statusData[index]["sitemaps"].append({
                     "sitemapId"        = sitemap.getSitemapId(),
                     "version"          = sitemap.getVersion(),
@@ -666,7 +697,10 @@ component {
     }
     
     private struct function preparePageVersion(required pageVersion pageVersion) {
-        var preparedApprovalList = prepareApprovalList(new approval(arguments.pageVersion.getPageVersionId()).for("pageVersion").getApprovalList());
+        var preparedApprovalList = prepareApprovalList(new filter().for("approval")
+                                                                   .setPageVersionId(arguments.pageVersion.getPageVersionId())
+                                                                   .execute()
+                                                                   .getResult());
         
         return  {
             "pageVersionId"      = arguments.pageVersion.getPageVersionId(),
@@ -743,10 +777,10 @@ component {
         var preparedApprovalList = [];
         for(var approval in arguments.approvalList) {
             preparedApprovalList.append({
-                "user"               = getUserInformation(approval.user),
-                "approvalDate"       = formatCtrl.formatDate(approval.approvalDate),
-                "previousStatusName" = approval.previousStatus.getName(),
-                "newStatusName"      = approval.newStatus.getName()
+                "user"               = getUserInformation(approval.getApprover()),
+                "approvalDate"       = formatCtrl.formatDate(approval.getApprovalDate()),
+                "previousStatusName" = approval.getPrevStatus().getName(),
+                "newStatusName"      = approval.getNewStatus().getName()
             });
         }
         

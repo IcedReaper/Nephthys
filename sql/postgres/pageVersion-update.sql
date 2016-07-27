@@ -1157,3 +1157,15 @@ alter table nephthys_user drop column active;
 
 
 GRANT SELECT ON TABLE nephthys_user_status TO nephthys_user;
+
+
+
+alter table IcedReaper_gallery_approval rename column userId to approvalUserId;
+alter table IcedReaper_blog_approval rename column userId to approvalUserId;
+alter table Nephthys_page_approval rename column userId to approvalUserId;
+
+
+alter table IcedReaper_gallery_approval rename column nextStatusId to newStatusId;
+alter table IcedReaper_blog_approval rename column nextStatusId to newStatusId;
+alter table Nephthys_page_approval rename column nextStatusId to newStatusId;
+alter table Nephthys_user_approval rename column nextStatusId to newStatusId;

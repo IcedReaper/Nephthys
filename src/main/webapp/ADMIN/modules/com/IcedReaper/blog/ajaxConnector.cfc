@@ -409,7 +409,22 @@
             statusData[index]["blogposts"] = [];
             
             for(var blogpost in blogpostFilterCtrl.setStatusId(status.getStatusId()).execute().getResult()) {
+                var lastApproverFilter = new filter().for("approval")
+                                                     .setBlogpostId(blogpost.getBlogpostId())
+                                                     .setLimit(1)
+                                                     .setSortDirection("DESC")
+                                                     .execute();
+                var lastApprover = {};
+                var lastApprovalDate = "";
+                if(lastApproverFilter.getResultCount() == 1) {
+                    var approval = lastApproverFilter.getResult()[1];
+                    lastApprover = getUserInformation(approval.getApprover());
+                    lastApprovalDate = formatCtrl.formatDate(approval.getApprovalDate());
+                }
+                
                 statusData[index]["blogposts"].append(prepareDetailStruct(blogpost));
+                statusData[index]["blogposts"].last()["lastApprover"] = lastApprover;
+                statusData[index]["blogposts"].last()["lastApprovalDate"] = lastApprovalDate;
             }
         }
         
@@ -627,7 +642,7 @@
             "nextStatus"     = nextStatusList
         };
     }
-    
+    /*
     private array function prepareApprovalList(required array approvalList) {
         var preparedApprovalList = [];
         for(var approval in arguments.approvalList) {
@@ -640,7 +655,7 @@
         }
         
         return preparedApprovalList;
-    }
+    }*/
     
     private array function preparePictureStruct(required array pictures, required string relativePath) {
         var gPictures = [];

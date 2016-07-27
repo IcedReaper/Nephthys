@@ -3,11 +3,10 @@
 ## Actual Task TODO - Reminder:
 - required approvals
 - +Attribut zu Module => Uses permissions (if false hide in permission screens)
-- Approval refactoren?!
 - pushToStatus(status, user) anstatt pushToStatus(newStatusId, user)
 - pageVersion: setStatusId(numeric) => setStatus(status)
-- letzter Approver bei den tasklisten hinzufügen
-- Globale Tasklist (dashboard | com.IcedReaper.tileDashboard) variables gestalten
+- Globale Tasklist (dashboard | com.IcedReaper.tileDashboard) variabel gestalten
+- Approvalliste dem User-, Gallery- und Blogmodul hinzufügen
 
 ## Allgemein
     1. Validierungen

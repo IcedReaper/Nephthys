@@ -116,8 +116,12 @@ component {
             
             save();
             
-            new approval(variables.sitemapId).for("sitemap")
-                                               .approve(actualStatus.getStatusId(), variables.status.getStatusId(), request.user.getUserId());
+            new approval(null).setSitemap(this)
+                              .setPrevStatus(actualStatus)
+                              .setNewStatus(newStatus)
+                              .setApprover(request.user)
+                              .setApprovalDate(now())
+                              .save();
             
             transactionCommit();
         }

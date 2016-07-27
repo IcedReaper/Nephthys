@@ -281,9 +281,12 @@ component {
                                .addParam(name = "statusId",   value = variables.status.getStatusId(), cfsqltype = "cf_sql_numeric")
                                .execute();
                     
-                    new approval(variables.blogpostId).approve(actualStatus.getStatusId(),
-                                                               newStatus.getStatusId(),
-                                                               arguments.user.getUserId());
+                    new approval(null).setBlogpost(this)
+                                      .setPrevStatus(actualStatus)
+                                      .setNewStatus(newStatus)
+                                      .setApprover(arguments.user)
+                                      .setApprovalDate(now())
+                                      .save();
                     
                     transactionCommit();
                 }

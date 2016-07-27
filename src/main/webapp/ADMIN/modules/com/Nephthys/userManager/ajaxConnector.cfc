@@ -488,12 +488,27 @@ component {
             statusData[index]["user"] = [];
             
             for(var user in userFilter.setStatusId(status.getStatusId()).execute().getResult()) {
+                var lastApproverFilter = new filter().for("approval")
+                                                     .setUserId(user.getUserId())
+                                                     .setLimit(1)
+                                                     .setSortDirection("DESC")
+                                                     .execute();
+                var lastApprover = {};
+                var lastApprovalDate = "";
+                if(lastApproverFilter.getResultCount() == 1) {
+                    var approval = lastApproverFilter.getResult()[1];
+                    lastApprover = prepareReducedDetailStruct(approval.getApprover());
+                    lastApprovalDate = formatCtrl.formatDate(approval.getApprovalDate());
+                }
+                
                 statusData[index]["user"].append({
-                    "userId"   = user.getUserId(),
-                    "username" = user.getUserName(),
-                    "email"    = user.getEmail(),
-                    "statusId" = user.getStatus().getStatusId(),
-                    "avatar"   = user.getAvatarPath()
+                    "userId"           = user.getUserId(),
+                    "username"         = user.getUserName(),
+                    "email"            = user.getEmail(),
+                    "statusId"         = user.getStatus().getStatusId(),
+                    "avatar"           = user.getAvatarPath(),
+                    "lastApprover"     = lastApprover,
+                    "lastApprovalDate" = lastApprovalDate
                 });
             }
         }

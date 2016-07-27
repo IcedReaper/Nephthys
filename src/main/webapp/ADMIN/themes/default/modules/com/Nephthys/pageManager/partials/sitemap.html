@@ -39,7 +39,7 @@
                             <div class="col-md-4">
                                 <h4>Aktueller Status: <small>{{status[ sitemap[selectedIndex].statusId ].name}}</small></h4>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div ng-if="status[ sitemap[selectedIndex].statusId ].nextStatus && sitemap[selectedIndex].sitemapId != null">
                                     <h4>Status ändern in</h4>
                                     <button type="submit"
@@ -49,7 +49,7 @@
                                             ng-click="pushToStatus(ps.statusId);">{{ps.name}}</button>
                                 </div>
                             </div>
-                            <div class="col-md-4" ng-if="status[ sitemap[selectedIndex].statusId ].editable">
+                            <div class="col-md-2" ng-if="status[ sitemap[selectedIndex].statusId ].editable">
                                 <div class="pull-right">
                                     <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
                                 </div>

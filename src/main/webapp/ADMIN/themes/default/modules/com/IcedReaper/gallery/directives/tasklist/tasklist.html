@@ -1,7 +1,7 @@
 <div>
     <div class="row m-t-2" ng-repeat="status in tasklist" ng-if="status.galleries.length > 0">
         <div class="col-md-12">
-            <h3>Seiten <small>{{status.name}}</small></h3>
+            <h3>Gallerien <small>{{status.name}}</small></h3>
             
             <table class="table table-striped" ng-class="tableClass">
                 <thead>
@@ -10,6 +10,7 @@
                     <th class="text-nowrap">Bilderanzahl</th>
                     <th class="text-nowrap">Erstellt durch</th>
                     <th class="text-nowrap">Letzte Änderungen durch</th>
+                    <th class="text-nowrap">Letztes Approval durch</th>
                     <th class="text-nowrap" ng-if="showActions">Aktionen</th>
                 </thead>
                 <tbody>
@@ -29,6 +30,12 @@
                             <p>
                                 <nephthys-user-info user="gallery.lastEditor" hide-name="true"></nephthys-user-info>
                                 <span class="text-nowrap">{{gallery.lastEditDate}}</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="gallery.lastApprover"></nephthys-user-info>
+                                <span class="text-nowrap">{{gallery.lastApprovalDate}}</span>
                             </p>
                         </td>
                         <td ng-if="showActions" class="text-nowrap">

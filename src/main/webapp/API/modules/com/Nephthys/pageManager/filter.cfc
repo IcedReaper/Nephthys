@@ -13,7 +13,8 @@ component {
             case "pageVersion":
             case "status":
             case "pageRequest":
-            case "pageWithModule": {
+            case "pageWithModule":
+            case "approval": {
                 arguments.for = uCase(arguments.for.left(1)) & arguments.for.right(arguments.for.len() - 1);
                 return createObject("component", "filter.filter" & arguments.for).init();
             }

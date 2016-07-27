@@ -1,22 +1,24 @@
 <div>
     <div class="row m-t-2" ng-repeat="status in tasklist" ng-if="status.user.length > 0">
         <div class="col-md-12">
-            <h3>Seiten <small>{{status.name}}</small></h3>
+            <h3>User <small>{{status.name}}</small></h3>
             
             <table class="table table-striped" ng-class="tableClass">
                 <thead>
                     <th class="text-nowrap">ID</th>
                     <th class="text-nowrap">Username</th>
+                    <th class="text-nowrap">Email</th>
                     <th class="text-nowrap">Letztes Approval durch</th>
                     <th class="text-nowrap" ng-if="showActions">Aktionen</th>
                 </thead>
                 <tbody>
                     <tr ng-repeat="user in status.user">
                         <td>{{user.userId}}</td>
-                        <td><a href="#/user/{{user.userId}}">{{user.username}}</a></td>
+                        <td><a href="/com.Nephthys.userManager#/user/{{user.userId}}">{{user.username}}</a></td>
+                        <td><a href="/com.Nephthys.userManager#/user/{{user.userId}}">{{user.email}}</a></td>
                         <td>
                             <p>
-                                <nephthys-user-info user="user.lastApproval" hide-name="true"></nephthys-user-info>
+                                <nephthys-user-info user="user.lastApprover"></nephthys-user-info>
                                 <span class="text-nowrap">{{user.lastApprovalDate}}</span>
                             </p>
                         </td>

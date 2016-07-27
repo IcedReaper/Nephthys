@@ -7,6 +7,11 @@ angular.module("com.Nephthys.global.userInfo", [])
                 user: "=?",
                 hideName: "@"
             },
-            templateUrl : "/themes/default/directive/nephthysUserInfo/nephthysUserInfo.html"
+            templateUrl : "/themes/default/directive/nephthysUserInfo/nephthysUserInfo.html",
+            link: function (scope, element, attrs) {
+                if(scope.hideName === undefined) {
+                    scope.hideName = false;
+                }
+            }
         };
     });

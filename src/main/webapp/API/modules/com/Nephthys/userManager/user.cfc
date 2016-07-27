@@ -185,9 +185,12 @@ component {
                     setStatus(arguments.newStatus);
                     save();
                     
-                    new approval(variables.userId).approve(actualStatus.getStatusId(),
-                                                           arguments.newStatus.getStatusId(),
-                                                           arguments.user.getUserId());
+                    new approval(null).setUser(this)
+                                      .setPrevStatus(actualStatus)
+                                      .setNewStatus(arguments.newStatus)
+                                      .setApprover(arguments.user)
+                                      .setApprovalDate(now())
+                                      .save();
                     
                     transactionCommit();
                 }

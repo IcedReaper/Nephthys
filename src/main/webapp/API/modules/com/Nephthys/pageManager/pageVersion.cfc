@@ -171,10 +171,12 @@ component {
                         
                         var oldPageVersion = page.getActualPageVersion();
                         if(oldPageVersion.getPageVersionId() != variables.pageVersionId) {
-                            new approval(oldPageVersion.getPageVersionId()).for("pageVersion")
-                                                                           .approve(oldPageVersion.getStatusId(),
-                                                                                    offlineStatusId,
-                                                                                    arguments.user.getUserId());
+                            new approval(null).setPageVersion(oldPageVersion)
+                                              .setPrevStatus(oldPageVersion.getStatus())
+                                              .setNewStatus(new status(offlineStatusId))
+                                              .setApprover(arguments.user)
+                                              .setApprovalDate(now())
+                                              .save();
                             
                             oldPageVersion.setStatusId(offlineStatusId)
                                           .save();
@@ -184,10 +186,12 @@ component {
                             .save();
                     }
                     
-                    new approval(variables.pageVersionId).for("pageVersion")
-                                                         .approve(actualStatus.getStatusId(),
-                                                                  newStatus.getStatusId(),
-                                                                  arguments.user.getUserId());
+                    new approval(null).setPageVersion(this)
+                                      .setPrevStatus(actualStatus)
+                                      .setNewStatus(newStatus)
+                                      .setApprover(arguments.user)
+                                      .setApprovalDate(now())
+                                      .save();
                     
                     transactionCommit();
                 }

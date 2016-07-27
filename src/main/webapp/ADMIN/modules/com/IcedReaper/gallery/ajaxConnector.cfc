@@ -378,7 +378,22 @@ component {
             statusData[index]["galleries"] = [];
             
             for(var gallery in galleryFilterCtrl.setStatusId(status.getStatusId()).execute().getResult()) {
+                var lastApproverFilter = new filter().for("approval")
+                                                     .setGalleryId(gallery.getGalleryId())
+                                                     .setLimit(1)
+                                                     .setSortDirection("DESC")
+                                                     .execute();
+                var lastApprover = {};
+                var lastApprovalDate = "";
+                if(lastApproverFilter.getResultCount() == 1) {
+                    var approval = lastApproverFilter.getResult()[1];
+                    lastApprover = getUserInformation(approval.getApprover());
+                    lastApprovalDate = formatCtrl.formatDate(approval.getApprovalDate());
+                }
+                
                 statusData[index]["galleries"].append(prepareDetailStruct(gallery));
+                statusData[index]["galleries"].last()["lastApprover"] = lastApprover;
+                statusData[index]["galleries"].last()["lastApprovalDate"] = lastApprovalDate;
             }
         }
         
@@ -554,7 +569,7 @@ component {
             "nextStatus"     = nextStatusList
         };
     }
-    
+    /*
     private array function prepareApprovalList(required array approvalList) {
         var preparedApprovalList = [];
         for(var approval in arguments.approvalList) {
@@ -567,5 +582,5 @@ component {
         }
         
         return preparedApprovalList;
-    }
+    }*/
 }

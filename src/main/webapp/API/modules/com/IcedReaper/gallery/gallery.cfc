@@ -264,9 +264,12 @@ component {
                                .addParam(name = "statusId",  value = variables.status.getStatusId(), cfsqltype = "cf_sql_numeric")
                                .execute();
                     
-                    new approval(variables.galleryId).approve(actualStatus.getStatusId(),
-                                                              newStatus.getStatusId(),
-                                                              arguments.user.getUserId());
+                    new approval(null).setGallery(this)
+                                      .setPrevStatus(actualStatus)
+                                      .setNewStatus(newStatus)
+                                      .setApprover(arguments.user)
+                                      .setApprovalDate(now())
+                                      .save();
                     
                     transactionCommit();
                 }

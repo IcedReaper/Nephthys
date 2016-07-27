@@ -11,7 +11,8 @@ component {
             case "extProperty":
             case "extPropertyKey":
             case "blacklist":
-            case "status": {
+            case "status":
+            case "approval": {
                 arguments.for = uCase(arguments.for.left(1)) & arguments.for.right(arguments.for.len() - 1);
                 return createObject("component", "filter.filter" & arguments.for).init();
             }

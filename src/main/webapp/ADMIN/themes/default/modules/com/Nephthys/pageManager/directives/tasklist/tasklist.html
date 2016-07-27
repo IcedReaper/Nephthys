@@ -5,12 +5,13 @@
             
             <table class="table table-striped" ng-class="tableClass">
                 <thead>
-                    <th>ID</th>
-                    <th>Linktext</th>
-                    <th>Link</th>
+                    <th class="text-nowrap">ID</th>
+                    <th class="text-nowrap">Linktext</th>
+                    <th class="text-nowrap">Link</th>
                     <th>Erstellt durch</th>
-                    <th>Letzte Änderungen durch</th>
-                    <th ng-if="showActions">Aktionen</th>
+                    <th class="text-nowrap">Letzte Änderungen durch</th>
+                    <th class="text-nowrap">Letztes Approval durch</th>
+                    <th class="text-nowrap" ng-if="showActions">Aktionen</th>
                 </thead>
                 <tbody>
                     <tr ng-repeat="page in status.pages">
@@ -29,6 +30,12 @@
                             <p>
                                 <nephthys-user-info user="page.lastEditor" hide-name="true"></nephthys-user-info>
                                 <span class="text-nowrap">{{page.lastEditDate}}</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="page.lastApprover"></nephthys-user-info>
+                                <span class="text-nowrap">{{page.lastApprovalDate}}</span>
                             </p>
                         </td>
                         <td ng-if="showActions">
@@ -74,6 +81,7 @@
                     <th>Anzahl an Seiten</th>
                     <th>Erstellt durch</th>
                     <th>Letzte Änderungen durch</th>
+                    <th class="text-nowrap">Letztes Approval durch</th>
                     <th ng-if="showActions">Aktionen</th>
                 </thead>
                 <tbody>
@@ -90,6 +98,12 @@
                             <p>
                                 <nephthys-user-info user="sitemap.lastEditor" hide-name="true"></nephthys-user-info>
                                 <span class="text-nowrap">{{sitemap.lastEditDate}}</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="sitemap.lastApprover"></nephthys-user-info>
+                                <span class="text-nowrap">{{sitemap.lastApprovalDate}}</span>
                             </p>
                         </td>
                         <td ng-if="showActions">
