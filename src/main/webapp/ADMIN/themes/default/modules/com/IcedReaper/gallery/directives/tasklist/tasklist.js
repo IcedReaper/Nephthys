@@ -1,5 +1,5 @@
-angular.module("com.IcedReaper.gallery.tasklist", ["com.nephthys.global.userInfo"])
-    .service("tasklistService", function($http) {
+angular.module("com.IcedReaper.gallery.tasklist", ["com.Nephthys.global.userInfo"])
+    .service("comIcedReaperGalleryTasklistService", function($http) {
         return {
             getGalleriesInTasklist: function () {
                 return $http.get("/ajax/com/IcedReaper/gallery/getGalleriesInTasklist");
@@ -13,7 +13,7 @@ angular.module("com.IcedReaper.gallery.tasklist", ["com.nephthys.global.userInfo
             }
         };
     })
-    .controller("tasklistController", ["$scope", "tasklistService", function ($scope, tasklistService) {
+    .controller("comIcedReaperGalleryTasklistController", ["$rootScope", "$scope", "comIcedReaperGalleryTasklistService", function ($rootScope, $scope, tasklistService) {
         $scope.load = function () {
             $scope.tasklist = {};
             
@@ -21,6 +21,11 @@ angular.module("com.IcedReaper.gallery.tasklist", ["com.nephthys.global.userInfo
                 .getGalleriesInTasklist()
                 .then(function (tasklist) {
                     $scope.tasklist = tasklist;
+                    
+                    $rootScope.$broadcast("tasklist-count-update", {
+                        module:    "com.IcedReaper.gallery",
+                        taskcount: $scope.tasklist.sumOfSubArrayLength('galleries')
+                    });
                 })
         };
         
@@ -62,6 +67,9 @@ angular.module("com.IcedReaper.gallery.tasklist", ["com.nephthys.global.userInfo
         if($scope.combineNextStatusButton === undefined) {
             $scope.combineNextStatusButton = true;
         }
+        if($scope.showNoWorkMessage === undefined) {
+            $scope.showNoWorkMessage = true;
+        }
         
         $scope.tasklist = {};
         $scope.load();
@@ -70,13 +78,14 @@ angular.module("com.IcedReaper.gallery.tasklist", ["com.nephthys.global.userInfo
         return {
             replace: true,
             restrict: "E",
-            controller: "tasklistController",
+            controller: "comIcedReaperGalleryTasklistController",
             scope: {
                 tableClass: "@",
                 class: "@",
                 showActions: "=?",
                 showPageButton: "=?",
-                combineNextStatusButton: "=?"
+                combineNextStatusButton: "=?",
+                showNoWorkMessage: "=?"
             },
             templateUrl : "/themes/default/modules/com/IcedReaper/gallery/directives/tasklist/tasklist.html"
         };

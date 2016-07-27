@@ -1,5 +1,5 @@
 var nephthysAdminApp = angular.module("nephthysAdminApp", ["chart.js",
-                                                           "com.nephthys.global.loadingBar"]);
+                                                           "com.Nephthys.global.loadingBar"]);
     
 nephthysAdminApp
     .config(["$httpProvider", globalAngularAjaxSettings])

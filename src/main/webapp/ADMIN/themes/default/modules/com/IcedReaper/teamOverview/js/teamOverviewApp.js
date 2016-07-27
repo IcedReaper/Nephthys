@@ -1,4 +1,4 @@
-var nephthysAdminApp = angular.module("nephthysAdminApp", ["com.nephthys.global.loadingBar"]);
+var nephthysAdminApp = angular.module("nephthysAdminApp", ["com.Nephthys.global.loadingBar"]);
     
 nephthysAdminApp
     .config(["$httpProvider", globalAngularAjaxSettings])

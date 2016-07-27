@@ -1,6 +1,6 @@
-angular.module("com.nephthys.page.statistics", ["chart.js",
+angular.module("com.Nephthys.pageManager.statistics", ["chart.js",
                                                "ui.bootstrap",
-                                               "com.nephthys.global.datePicker"])
+                                               "com.Nephthys.global.datePicker"])
     .service("comNephthysPageStatisticsService", function($http) {
         return {
             getPageRequests: function(sortOrder, fromDate, toDate, pageId) {

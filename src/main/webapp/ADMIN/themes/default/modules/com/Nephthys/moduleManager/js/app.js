@@ -1,6 +1,6 @@
 var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
-                                                           "com.nephthys.global.loadingBar",
-                                                           "com.nephthys.system.moduleSettings"]);
+                                                           "com.Nephthys.global.loadingBar",
+                                                           "com.Nephthys.system.moduleSettings"]);
     
 nephthysAdminApp
     .config(["$routeProvider",

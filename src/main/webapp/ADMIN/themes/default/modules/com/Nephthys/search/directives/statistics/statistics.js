@@ -1,6 +1,6 @@
-angular.module("com.nephthys.search.statistics", ["chart.js",
+angular.module("com.Nephthys.search.statistics", ["chart.js",
                                                 "ui.bootstrap",
-                                                "com.nephthys.global.datePicker"])
+                                                "com.Nephthys.global.datePicker"])
     .service("comNephthysSearchStatisticsService", function($http) {
         return {
             getSearchStatistics: function(sortOrder, fromDate, toDate, total) {

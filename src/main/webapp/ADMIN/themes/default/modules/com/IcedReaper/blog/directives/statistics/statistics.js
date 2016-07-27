@@ -1,6 +1,6 @@
 angular.module("com.IcedReaper.blog.statistics", ["chart.js",
                                                   "ui.bootstrap",
-                                                  "com.nephthys.global.datePicker"])
+                                                  "com.Nephthys.global.datePicker"])
     .service("comIcedReaperBlogStatisticsService", function($http) {
         return {
             getBlogStatistics: function(sortOrder, fromDate, toDate, blogpostId) {

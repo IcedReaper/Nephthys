@@ -1,4 +1,4 @@
-angular.module("com.nephthys.system.moduleSettings", [])
+angular.module("com.Nephthys.system.moduleSettings", [])
     .service("settingsService", function($http) {
         return {
             get: function (moduleName) {

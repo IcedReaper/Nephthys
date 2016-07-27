@@ -1,6 +1,6 @@
 angular.module("com.Nephthys.errorLog.statistics", ["chart.js",
                                                     "ui.bootstrap",
-                                                    "com.nephthys.global.datePicker"])
+                                                    "com.Nephthys.global.datePicker"])
     .service("comNephthysErrorlogStatisticsService", function($http) {
         return {
             getStatisticsChartTotal: function(sortOrder, fromDate, toDate) {

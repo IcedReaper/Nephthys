@@ -1,4 +1,4 @@
-angular.module("com.nephthys.global.loadingBar", [])
+angular.module("com.Nephthys.global.loadingBar", [])
     .controller("nephthysLoadingBarController", ["$rootScope", "$scope", function($rootScope, $scope) {
         $scope.showLoadingBar = true;
         

@@ -1,5 +1,5 @@
-angular.module("com.nephthys.page.tasklist", ["com.nephthys.global.userInfo"])
-    .service("tasklistService", function($http) {
+angular.module("com.Nephthys.pageManager.tasklist", ["com.Nephthys.global.userInfo"])
+    .service("comNephthysPageManagerTasklistService", function($http) {
         return {
             getPageVersionInTasklist: function () {
                 return $http.get("/ajax/com/Nephthys/pageManager/getPageVersionInTasklist");
@@ -24,7 +24,7 @@ angular.module("com.nephthys.page.tasklist", ["com.nephthys.global.userInfo"])
             }
         };
     })
-    .controller("tasklistController", ["$scope", "tasklistService", function ($scope, tasklistService) {
+    .controller("comNephthysPageManagerTasklistController", ["$rootScope", "$scope", "comNephthysPageManagerTasklistService", function ($rootScope, $scope, tasklistService) {
         $scope.loadPages = function () {
             $scope.tasklist.pages = {};
             
@@ -32,6 +32,12 @@ angular.module("com.nephthys.page.tasklist", ["com.nephthys.global.userInfo"])
                 .getPageVersionInTasklist()
                 .then(function (tasklist) {
                     $scope.tasklist.pages = tasklist;
+                    
+                    $rootScope.$broadcast("tasklist-count-update", {
+                        module: "com.Nephthys.pageManager",
+                        subList: "pages",
+                        taskcount: $scope.tasklist.pages.sumOfSubArrayLength('pages')
+                    });
                 })
         };
         $scope.loadSitemap = function () {
@@ -41,6 +47,12 @@ angular.module("com.nephthys.page.tasklist", ["com.nephthys.global.userInfo"])
                 .getSitemapInTasklist()
                 .then(function (tasklist) {
                     $scope.tasklist.sitemap = tasklist;
+                    
+                    $rootScope.$broadcast("tasklist-count-update", {
+                        module:    "com.Nephthys.pageManager",
+                        subList:   "sitemaps",
+                        taskcount: $scope.tasklist.sitemap.sumOfSubArrayLength('sitemaps')
+                    });
                 })
         };
         
@@ -98,19 +110,26 @@ angular.module("com.nephthys.page.tasklist", ["com.nephthys.global.userInfo"])
         if($scope.combineNextStatusButton === undefined) {
             $scope.combineNextStatusButton = true;
         }
+        if($scope.showNoWorkMessage === undefined) {
+            $scope.showNoWorkMessage = true;
+        }
         
         $scope.tasklist = {
             pages: {},
             sitemap: {}
         };
-        $scope.loadPages();
-        $scope.loadSitemap();
+        if($scope.showPages) {
+            $scope.loadPages();
+        }
+        if($scope.showSitemaps) {
+            $scope.loadSitemap();
+        }
     }])
     .directive("nephthysPageTasklist", function() {
         return {
             replace: true,
             restrict: "E",
-            controller: "tasklistController",
+            controller: "comNephthysPageManagerTasklistController",
             scope: {
                 tableClass: "@",
                 class: "@",
@@ -118,7 +137,8 @@ angular.module("com.nephthys.page.tasklist", ["com.nephthys.global.userInfo"])
                 showSitemaps: "=?",
                 showActions: "=?",
                 showPageButton: "=?",
-                combineNextStatusButton: "=?"
+                combineNextStatusButton: "=?",
+                showNoWorkMessage: "=?"
             },
             templateUrl : "/themes/default/modules/com/Nephthys/pageManager/directives/tasklist/tasklist.html"
         };

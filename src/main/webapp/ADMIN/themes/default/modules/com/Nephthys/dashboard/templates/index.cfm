@@ -8,15 +8,20 @@
 <script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
 
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/directives/statistics/statistics.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/directives/tasklist/tasklist.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/userManager/directives/loginLog/loginLog.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/userManager/directives/statistics/statistics.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/errorLog/directives/statistics/statistics.js"></script>
+
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/directives/tasklist/tasklist.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/userManager/directives/tasklist/tasklist.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/gallery/directives/tasklist/tasklist.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/directives/tasklist/tasklist.js"></script>
 
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/dashboardApp.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/serverInfo.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/news.js"></script>
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/service/dashboard.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/tasklist.js"></script>
 
 <nephthys-loading-bar></nephthys-loading-bar>
 <div class="com-Nephthys-dashboard">
@@ -90,13 +95,32 @@
         </div>
     </div>
     <cfif request.user.hasPermission("com.Nephthys.pageManager", "user")>
-        <div class="row">
+        <div class="row" ng-controller="tasklistCtrl">
             <div class="col-md-12">
                 <div class="card card-block">
-                    <h2>Aufgabenliste</h2>
+                    <h2>Aufgabenliste <small>Aktuelle Aufgaben: {{taskCount.sumOfKey('taskcount')}}</small></h2>
                     <nephthys-page-tasklist class="tasklist-sm"
                                             show-page-button="'false'"
-                                            combine-next-status-button="'true'"></nephthys-page-tasklist>
+                                            combine-next-status-button="'true'"
+                                            show-no-work-message="showNoWorkMessages"></nephthys-page-tasklist>
+                    <nephthys-usermanager-tasklist class="tasklist-sm"
+                                                   show-page-button="'false'"
+                                                   combine-next-status-button="'true'"
+                                                   show-no-work-message="showNoWorkMessages"></nephthys-usermanager-tasklist>
+                    <icedreaper-gallery-tasklist class="tasklist-sm"
+                                                 show-page-button="'false'"
+                                                 combine-next-status-button="'true'"
+                                                 show-no-work-message="showNoWorkMessages"></icedreaper-gallery-tasklist>
+                    <icedreaper-blog-tasklist class="tasklist-sm"
+                                              show-page-button="'false'"
+                                              combine-next-status-button="'true'"
+                                              show-no-work-message="showNoWorkMessages"></icedreaper-blog-tasklist>
+                    
+                    <div ng-if="taskCount.sumOfKey('taskcount') === 0">
+                        <div class="alert alert-success m-t-1" role="alert">
+                            <h2><i class="fa fa-check"></i> Aktuell sind keine Aufgaben offen</h2>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

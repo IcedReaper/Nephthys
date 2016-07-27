@@ -1,4 +1,4 @@
-angular.module("com.nephthys.global.userInfo", [])
+angular.module("com.Nephthys.global.userInfo", [])
     .directive("nephthysUserInfo", function() {
         return {
             replace: true,

@@ -1,4 +1,4 @@
-angular.module("com.IcedReaper.permissionRequest.tasklist", ["com.nephthys.global.userInfo"])
+angular.module("com.IcedReaper.permissionRequest.tasklist", ["com.Nephthys.global.userInfo"])
     .service("tasklistService", function($http) {
         return {
             getRequestsInTasklist: function () {

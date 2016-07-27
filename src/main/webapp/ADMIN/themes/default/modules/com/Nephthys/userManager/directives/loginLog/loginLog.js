@@ -1,4 +1,4 @@
-angular.module("com.nephthys.userManager.loginLog", [])
+angular.module("com.Nephthys.userManager.loginLog", [])
     .service("loginLogService", function($http) {
         return {
             getList: function () {

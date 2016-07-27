@@ -1,6 +1,6 @@
 angular.module("com.IcedReaper.gallery.statistics", ["chart.js",
                                                      "ui.bootstrap",
-                                                     "com.nephthys.global.datePicker"])
+                                                     "com.Nephthys.global.datePicker"])
     .service("comIcedReaperGalleryStatisticsService", function($http) {
         return {
             getGalleryStatistics: function(sortOrder, fromDate, toDate, galleryId) {

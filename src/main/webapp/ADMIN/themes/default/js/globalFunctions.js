@@ -18,10 +18,21 @@ Array.prototype.sum = function (prop) {
 Array.prototype.sumOfSubArrayLength = function (prop) {
     var total = 0;
     for(var i = 0, _len = this.length; i < _len; i++) {
-        total += this[i][prop].length;
+        if(this[i][prop]) {
+            total += this[i][prop].length;
+        }
     }
     return total;
 };
+Array.prototype.sumOfKey = function (prop) {
+    var total = 0;
+    for(var i = 0, _len = this.length; i < _len; i++) {
+        if(this[i][prop]) {
+            total += this[i][prop];
+        }
+    }
+    return total;
+}
 Number.prototype.formatAsTimeSince = function () {
     var sec_num = parseInt(this, 10); // don't forget the second param
     

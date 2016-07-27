@@ -1,6 +1,6 @@
 var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
-                                                           "com.nephthys.global.loadingBar",
-                                                           "com.nephthys.global.userInfo",
+                                                           "com.Nephthys.global.loadingBar",
+                                                           "com.Nephthys.global.userInfo",
                                                            "com.IcedReaper.permissionRequest.tasklist"]);
     
 nephthysAdminApp

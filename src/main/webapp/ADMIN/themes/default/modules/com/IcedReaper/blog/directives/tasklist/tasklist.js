@@ -1,5 +1,5 @@
-angular.module("com.IcedReaper.blog.tasklist", ["com.nephthys.global.userInfo"])
-    .service("tasklistService", function($http) {
+angular.module("com.IcedReaper.blog.tasklist", ["com.Nephthys.global.userInfo"])
+    .service("comIcedReaperBlogTasklistService", function($http) {
         return {
             getBlogpostsInTasklist: function () {
                 return $http.get("/ajax/com/IcedReaper/blog/getBlogpostsInTasklist");
@@ -13,7 +13,7 @@ angular.module("com.IcedReaper.blog.tasklist", ["com.nephthys.global.userInfo"])
             }
         };
     })
-    .controller("tasklistController", ["$scope", "tasklistService", function ($scope, tasklistService) {
+    .controller("comIcedReaperBlogTasklistController", ["$rootScope", "$scope", "comIcedReaperBlogTasklistService", function ($rootScope, $scope, tasklistService) {
         $scope.load = function () {
             $scope.tasklist = {};
             
@@ -21,6 +21,11 @@ angular.module("com.IcedReaper.blog.tasklist", ["com.nephthys.global.userInfo"])
                 .getBlogpostsInTasklist()
                 .then(function (tasklist) {
                     $scope.tasklist = tasklist;
+                    
+                    $rootScope.$broadcast("tasklist-count-update", {
+                        module:    "com.IcedReaper.blog",
+                        taskcount: $scope.tasklist.sumOfSubArrayLength('blogposts')
+                    });
                 })
         };
         
@@ -62,6 +67,9 @@ angular.module("com.IcedReaper.blog.tasklist", ["com.nephthys.global.userInfo"])
         if($scope.combineNextStatusButton === undefined) {
             $scope.combineNextStatusButton = true;
         }
+        if($scope.showNoWorkMessage === undefined) {
+            $scope.showNoWorkMessage = true;
+        }
         
         $scope.tasklist = {};
         $scope.load();
@@ -70,13 +78,14 @@ angular.module("com.IcedReaper.blog.tasklist", ["com.nephthys.global.userInfo"])
         return {
             replace: true,
             restrict: "E",
-            controller: "tasklistController",
+            controller: "comIcedReaperBlogTasklistController",
             scope: {
                 tableClass: "@",
                 class: "@",
                 showActions: "=?",
                 showPageButton: "=?",
-                combineNextStatusButton: "=?"
+                combineNextStatusButton: "=?",
+                showNoWorkMessage: "=?"
             },
             templateUrl : "/themes/default/modules/com/IcedReaper/blog/directives/tasklist/tasklist.html"
         };

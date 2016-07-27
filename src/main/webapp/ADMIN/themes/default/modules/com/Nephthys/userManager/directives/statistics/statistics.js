@@ -1,6 +1,6 @@
-angular.module("com.nephthys.userManager.statistics", ["chart.js",
+angular.module("com.Nephthys.userManager.statistics", ["chart.js",
                                                 "ui.bootstrap",
-                                                "com.nephthys.global.datePicker"])
+                                                "com.Nephthys.global.datePicker"])
     .service("comNephthysUserStatisticsService", function($http) {
         return {
             getLoginStatistics: function(sortOrder, fromDate, toDate, userId) {

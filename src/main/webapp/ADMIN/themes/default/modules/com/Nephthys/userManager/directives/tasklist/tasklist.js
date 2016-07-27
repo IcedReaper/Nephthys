@@ -1,5 +1,5 @@
-angular.module("com.Nephthys.userManager.tasklist", ["com.nephthys.global.userInfo"])
-    .service("tasklistService", function($http) {
+angular.module("com.Nephthys.userManager.tasklist", ["com.Nephthys.global.userInfo"])
+    .service("comNephthysUserManagertasklistService", function($http) {
         return {
             getUserInTasklist: function () {
                 return $http.get("/ajax/com/Nephthys/userManager/getUserInTasklist");
@@ -13,7 +13,7 @@ angular.module("com.Nephthys.userManager.tasklist", ["com.nephthys.global.userIn
             }
         };
     })
-    .controller("tasklistController", ["$scope", "tasklistService", function ($scope, tasklistService) {
+    .controller("comNephthysUserManagerTasklistController", ["$rootScope", "$scope", "comNephthysUserManagertasklistService", function ($rootScope, $scope, tasklistService) {
         $scope.load = function () {
             $scope.tasklist = {};
             
@@ -21,6 +21,11 @@ angular.module("com.Nephthys.userManager.tasklist", ["com.nephthys.global.userIn
                 .getUserInTasklist()
                 .then(function (tasklist) {
                     $scope.tasklist = tasklist;
+                    
+                    $rootScope.$broadcast("tasklist-count-update", {
+                        module:    "com.Nephthys.userManager",
+                        taskcount: $scope.tasklist.sumOfSubArrayLength('user')
+                    });
                 })
         };
         
@@ -61,6 +66,9 @@ angular.module("com.Nephthys.userManager.tasklist", ["com.nephthys.global.userIn
         if($scope.combineNextStatusButton === undefined) {
             $scope.combineNextStatusButton = true;
         }
+        if($scope.showNoWorkMessage === undefined) {
+            $scope.showNoWorkMessage = true;
+        }
         
         $scope.tasklist = {};
         $scope.load();
@@ -69,13 +77,14 @@ angular.module("com.Nephthys.userManager.tasklist", ["com.nephthys.global.userIn
         return {
             replace: true,
             restrict: "E",
-            controller: "tasklistController",
+            controller: "comNephthysUserManagerTasklistController",
             scope: {
                 tableClass: "@",
                 class: "@",
                 showActions: "=?",
                 showPageButton: "=?",
-                combineNextStatusButton: "=?"
+                combineNextStatusButton: "=?",
+                showNoWorkMessage: "=?"
             },
             templateUrl : "/themes/default/modules/com/Nephthys/userManager/directives/tasklist/tasklist.html"
         };

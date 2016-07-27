@@ -1,5 +1,5 @@
-angular.module("com.nephthys.search.overview", ["ui.bootstrap",
-                                                "com.nephthys.global.datePicker"])
+angular.module("com.Nephthys.search.overview", ["ui.bootstrap",
+                                                "com.Nephthys.global.datePicker"])
     .service("comNephthysSearchOverviewService", function($http) {
         return {
             getSearchOverview: function(fromDate, toDate) {

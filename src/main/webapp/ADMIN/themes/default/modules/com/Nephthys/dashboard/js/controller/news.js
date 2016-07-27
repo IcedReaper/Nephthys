@@ -67,6 +67,8 @@ nephthysAdminApp
             }
         };
         
+        $scope.showNoWorkMessages = false;
+        
         $scope.refresh = function () {
             $rootScope.$broadcast("nephthys-statistics-refresh");
         };

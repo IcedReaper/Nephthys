@@ -7,8 +7,7 @@
 - pushToStatus(status, user) anstatt pushToStatus(newStatusId, user)
 - pageVersion: setStatusId(numeric) => setStatus(status)
 - letzter Approver bei den tasklisten hinzufügen
-- pageManager tasklist => add no work message
-- tasklist => add option to hide no work message
+- Globale Tasklist (dashboard | com.IcedReaper.tileDashboard) variables gestalten
 
 ## Allgemein
     1. Validierungen

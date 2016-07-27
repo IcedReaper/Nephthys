@@ -6,7 +6,7 @@ nephthysAdminApp
                 .then(function (status) {
                     $scope.status = status;
                 })
-                .then($scope.load;
+                .then($scope.load);
         };
         
         $scope.pushToStatus = function (pageId, pageVersionId, newstatusId) {
@@ -15,7 +15,7 @@ nephthysAdminApp
                     .pushToStatus(pageId,
                                   pageVersionId,
                                   newstatusId)
-                    .then($scope.load;
+                    .then($scope.load);
             }
         };
         

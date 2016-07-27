@@ -5,10 +5,10 @@ var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
                                                            "textAngular",
                                                            "ui.bootstrap",
                                                            "ui.tree",
-                                                           "com.nephthys.global.loadingBar",
+                                                           "com.Nephthys.global.loadingBar",
                                                            "com.IcedReaper.blog.statistics",
                                                            "com.IcedReaper.blog.tasklist",
-                                                           "com.nephthys.system.moduleSettings"]);
+                                                           "com.Nephthys.system.moduleSettings"]);
     
 nephthysAdminApp
     .config(["$routeProvider", function ($routeProvider) {

@@ -125,4 +125,11 @@
             </table>
         </div>
     </div>
+    <div ng-if="showNoWorkMessage && ((showPages && tasklist.pages.sumOfSubArrayLength('pages') === 0 && showSitemaps && tasklist.sitemap.sumOfSubArrayLength('sitemaps') === 0) || 
+                                      (showPages && tasklist.pages.sumOfSubArrayLength('pages') === 0 && ! showSitemaps) || 
+                                      (showSitemaps && tasklist.sitemap.sumOfSubArrayLength('sitemaps') === 0 && ! showPages))">
+        <div class="alert alert-success m-t-1" role="alert">
+            <h2><i class="fa fa-check"></i> Aktuell sind keine Aufgaben offen</h2>
+        </div>
+    </div>
 </div>

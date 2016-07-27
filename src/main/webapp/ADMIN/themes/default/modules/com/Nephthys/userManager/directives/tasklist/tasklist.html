@@ -46,7 +46,8 @@
             </table>
         </div>
     </div>
-    <div ng-if="tasklist.sumOfSubArrayLength('user') === 0">
+    
+    <div ng-if="showNoWorkMessage && tasklist.sumOfSubArrayLength('user') === 0">
         <div class="alert alert-success m-t-1" role="alert">
             <h2><i class="fa fa-check"></i> Aktuell sind keine Aufgaben offen</h2>
         </div>
