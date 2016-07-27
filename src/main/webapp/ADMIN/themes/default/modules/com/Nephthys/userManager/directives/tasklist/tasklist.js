@@ -1,14 +1,14 @@
-angular.module("com.IcedReaper.blog.tasklist", ["com.nephthys.global.userInfo"])
+angular.module("com.Nephthys.userManager.tasklist", ["com.nephthys.global.userInfo"])
     .service("tasklistService", function($http) {
         return {
-            getBlogpostsInTasklist: function () {
-                return $http.get("/ajax/com/IcedReaper/blog/getBlogpostsInTasklist");
+            getUserInTasklist: function () {
+                return $http.get("/ajax/com/Nephthys/userManager/getUserInTasklist");
             },
             
-            pushToStatus: function (blogpostId, statusId) {
-                return $http.post('/ajax/com/IcedReaper/blog/pushToStatus', {
-                    blogpostId: blogpostId,
-                    statusId:  statusId
+            pushToStatus: function (userId, statusId) {
+                return $http.post('/ajax/com/Nephthys/userManager/pushToStatus', {
+                    userId:   userId,
+                    statusId: statusId
                 });
             }
         };
@@ -18,17 +18,16 @@ angular.module("com.IcedReaper.blog.tasklist", ["com.nephthys.global.userInfo"])
             $scope.tasklist = {};
             
             tasklistService
-                .getBlogpostsInTasklist()
+                .getUserInTasklist()
                 .then(function (tasklist) {
                     $scope.tasklist = tasklist;
                 })
         };
         
-        $scope.pushToStatus = function (blogId, newStatusId) {
-            if(blogId && newStatusId) {
+        $scope.pushToStatus = function (userId, newStatusId) {
+            if(userId && newStatusId) {
                 tasklistService
-                    .pushToStatus(blogId,
-                                  newStatusId)
+                    .pushToStatus(userId, newStatusId)
                     .then($scope.load);
             }
         };
@@ -66,7 +65,7 @@ angular.module("com.IcedReaper.blog.tasklist", ["com.nephthys.global.userInfo"])
         $scope.tasklist = {};
         $scope.load();
     }])
-    .directive("icedreaperBlogTasklist", function() {
+    .directive("nephthysUsermanagerTasklist", function() {
         return {
             replace: true,
             restrict: "E",
@@ -78,6 +77,6 @@ angular.module("com.IcedReaper.blog.tasklist", ["com.nephthys.global.userInfo"])
                 showPageButton: "=?",
                 combineNextStatusButton: "=?"
             },
-            templateUrl : "/themes/default/modules/com/IcedReaper/blog/directives/tasklist/tasklist.html"
+            templateUrl : "/themes/default/modules/com/Nephthys/userManager/directives/tasklist/tasklist.html"
         };
     });

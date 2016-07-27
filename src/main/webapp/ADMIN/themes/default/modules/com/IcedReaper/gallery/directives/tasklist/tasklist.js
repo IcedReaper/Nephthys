@@ -74,8 +74,6 @@ angular.module("com.IcedReaper.gallery.tasklist", ["com.nephthys.global.userInfo
             scope: {
                 tableClass: "@",
                 class: "@",
-                showPages: "=?",
-                showSitemaps: "=?",
                 showActions: "=?",
                 showPageButton: "=?",
                 combineNextStatusButton: "=?"

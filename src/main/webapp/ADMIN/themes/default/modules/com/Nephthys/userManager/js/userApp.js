@@ -4,15 +4,24 @@ var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
                                                            "ui.tree",
                                                            "com.nephthys.global.loadingBar",
                                                            "com.nephthys.global.userInfo",
-                                                           "com.nephthys.userManager.statistics"]);
+                                                           "com.nephthys.userManager.statistics",
+                                                           "com.Nephthys.userManager.tasklist"]);
 
 nephthysAdminApp
     .config(["$routeProvider",
         function ($routeProvider) {
             $routeProvider
                 .when("/", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/userManager/partials/tasklist.html"
+                })
+                
+                .when("/user/list", {
                     templateUrl: "/themes/default/modules/com/Nephthys/userManager/partials/userList.html",
                     controller:  "userListCtrl"
+                })
+                .when("/user/:userId", {
+                    templateUrl: "/themes/default/modules/com/Nephthys/userManager/partials/userDetail.html",
+                    controller:  "userDetailCtrl"
                 })
                 
                 .when("/blacklist/list", {
@@ -37,10 +46,6 @@ nephthysAdminApp
                     controller:  "statusDetailCtrl"
                 })
                 
-                .when("/user/:userId", {
-                    templateUrl: "/themes/default/modules/com/Nephthys/userManager/partials/userDetail.html",
-                    controller:  "userDetailCtrl"
-                })
                 .otherwise({
                     redirectTo: "/"
                 });

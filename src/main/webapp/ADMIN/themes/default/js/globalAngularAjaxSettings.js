@@ -31,7 +31,7 @@ var globalAngularAjaxSettings = function($httpProvider) {
                         $rootScope.$broadcast("nephthys-loading-bar-hide", {});
                     }
                     
-                    $rootScope.message = {};
+                    $rootScope.message = null;
                     
                     $rootScope.$emit('session-refreshed', {});
                     

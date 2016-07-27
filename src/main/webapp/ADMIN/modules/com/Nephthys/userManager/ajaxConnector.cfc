@@ -473,6 +473,35 @@ component {
     }
     
     
+    remote array function getUserInTasklist() {
+        var statusFilter = new filter().for("status")
+                                       .setShowInTasklist(true)
+                                       .execute();
+        
+        var userFilter = new filter().for("user");
+        
+        var statusData = [];
+        var index = 0;
+        for(var status in statusFilter.execute().getResult()) {
+            index++;
+            statusData[index] = prepareStatusAsArray(status);
+            statusData[index]["user"] = [];
+            
+            for(var user in userFilter.setStatusId(status.getStatusId()).execute().getResult()) {
+                statusData[index]["user"].append({
+                    "userId"   = user.getUserId(),
+                    "username" = user.getUserName(),
+                    "email"    = user.getEmail(),
+                    "statusId" = user.getStatus().getStatusId(),
+                    "avatar"   = user.getAvatarPath()
+                });
+            }
+        }
+        
+        return statusData;
+    }
+    
+    
     // P R I V A T E   M E T H O D S
     private struct function prepareDetailStruct(required user userObject) {
         return {
