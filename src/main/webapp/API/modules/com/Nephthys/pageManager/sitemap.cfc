@@ -135,7 +135,7 @@ component {
     public sitemap function save() {
         var qSave = new Query().addParam(name = "statusId",       value = variables.status.getStatusId(),   cfsqltype = "cf_sql_numeric")
                                .addParam(name = "version",        value = variables.version,                cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "lastEditUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "lastEditorUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
                                .addParam(name = "lastEditDate",   value = variables.lastEditDate,           cfsqltype = "cf_sql_timestamp");
         
         if(variables.sitemapId == null) {
@@ -143,21 +143,21 @@ component {
                                                               (
                                                                   statusId,
                                                                   version,
-                                                                  creationUserId,
+                                                                  creatorUserId,
                                                                   creationDate,
-                                                                  lastEditUserId,
+                                                                  lastEditorUserId,
                                                                   lastEditDate
                                                               )
                                                        VALUES (
                                                                   :statusId,
                                                                   :version,
-                                                                  :creationUserId,
+                                                                  :creatorUserId,
                                                                   :creationDate,
-                                                                  :lastEditUserId,
+                                                                  :lastEditorUserId,
                                                                   :lastEditDate
                                                               );
                                                   SELECT currval('nephthys_page_sitemap_sitemapId_seq') newSitemapId;")
-                                         .addParam(name = "creationUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
+                                         .addParam(name = "creatorUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
                                          .addParam(name = "creationDate",   value = variables.creationDate,        cfsqltype = "cf_sql_timestamp")
                                          .execute()
                                          .getResult()
@@ -166,7 +166,7 @@ component {
         else {
             qSave.setSQL("UPDATE nephthys_page_sitemap
                              SET statusId       = :statusId,
-                                 lastEditUserId = :lastEditUserId,
+                                 lastEditorUserId = :lastEditorUserId,
                                  lastEditDate   = :lastEditDate
                            WHERE sitemapId = :sitemapId")
                  .addParam(name = "sitemapId", value = variables.sitemapId, cfsqltype = "cf_sql_numeric")
@@ -200,9 +200,9 @@ component {
             if(qSitemap.getRecordCount() == 1) {
                 variables.version      = qSitemap.version[1];
                 variables.status       = new status(qSitemap.statusId[1]);
-                variables.creator      = new user(qSitemap.creationUserId[1]);
+                variables.creator      = new user(qSitemap.creatorUserId[1]);
                 variables.creationDate = qSitemap.creationDate[1];
-                variables.lastEditor   = new user(qSitemap.lastEditUserId[1]);
+                variables.lastEditor   = new user(qSitemap.lastEditorUserId[1]);
                 variables.lastEditDate = qSitemap.lastEditDate[1];
             }
             else {

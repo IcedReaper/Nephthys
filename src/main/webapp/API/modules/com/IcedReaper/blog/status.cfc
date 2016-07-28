@@ -200,8 +200,8 @@ component {
                                      .addParam(name = "editable",           value = variables.editable,               cfsqltype = "cf_sql_bit")
                                      .addParam(name = "deleteable",         value = variables.deleteable,             cfsqltype = "cf_sql_bit")
                                      .addParam(name = "showInTasklist",     value = variables.showInTasklist,         cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "creationUserId",     value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
-                                     .addParam(name = "lastEditUserId",     value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
+                                     .addParam(name = "creatorUserId",     value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
+                                     .addParam(name = "lastEditorUserId",     value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
             
             if(variables.statusId == 0 || variables.statusId == null) {
                 variables.statusId = qUpdate.setSQL("INSERT INTO IcedReaper_blog_status
@@ -212,8 +212,8 @@ component {
                                                                          editable,
                                                                          deleteable,
                                                                          showInTasklist,
-                                                                         creationUserId,
-                                                                         lastEditUserId
+                                                                         creatorUserId,
+                                                                         lastEditorUserId
                                                                      )
                                                               VALUES (
                                                                          :name,
@@ -222,8 +222,8 @@ component {
                                                                          :editable,
                                                                          :deleteable,
                                                                          :showInTasklist,
-                                                                         :creationUserId,
-                                                                         :lastEditUserId
+                                                                         :creatorUserId,
+                                                                         :lastEditorUserId
                                                                      );
                                                          SELECT currval('IcedReaper_blog_status_statusId_seq') newStatusId;")
                                                 .execute()
@@ -239,7 +239,7 @@ component {
                                            editable   = :editable,
                                            deleteable         = :deleteable,
                                            showInTasklist     = :showInTasklist,
-                                           lastEditUserId     = :lastEditUserId,
+                                           lastEditorUserId     = :lastEditorUserId,
                                            lastEditDate       = now()
                                      WHERE statusId = :statusId")
                            .addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric")
@@ -304,9 +304,9 @@ component {
                 variables.editable       = qStatus.editable[1];
                 variables.deleteable     = qStatus.deleteable[1];
                 variables.showInTasklist = qStatus.showInTasklist[1];
-                variables.creator        = new user(qStatus.creationUserId[1]);
+                variables.creator        = new user(qStatus.creatorUserId[1]);
                 variables.creationDate   = qStatus.creationDate[1];
-                variables.lastEditor     = new user(qStatus.lastEditUserId[1]);
+                variables.lastEditor     = new user(qStatus.lastEditorUserId[1]);
                 variables.lastEditDate   = qStatus.lastEditDate[1];
             }
             else {

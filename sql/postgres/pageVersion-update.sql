@@ -1169,3 +1169,21 @@ alter table IcedReaper_gallery_approval rename column nextStatusId to newStatusI
 alter table IcedReaper_blog_approval rename column nextStatusId to newStatusId;
 alter table Nephthys_page_approval rename column nextStatusId to newStatusId;
 alter table Nephthys_user_approval rename column nextStatusId to newStatusId;
+
+
+
+alter table IcedReaper_blog_status rename column creationUserId to creatorUserId;
+alter table IcedReaper_gallery_status rename column creationUserId to creatorUserId;
+alter table nephthys_page_pageVersion rename column creationUserId to creatorUserId;
+alter table nephthys_page_sitemap rename column creationUserId to creatorUserId;
+alter table nephthys_page_status rename column creationUserId to creatorUserId;
+alter table nephthys_user_blacklist rename column creationUserId to creatorUserId;
+alter table nephthys_user_status rename column creationUserId to creatorUserId;
+
+
+alter table IcedReaper_blog_status rename column lastEditUserId to lastEditorUserId;
+alter table IcedReaper_gallery_status rename column lastEditUserId to lastEditorUserId;
+alter table nephthys_page_pageVersion rename column lastEditUserId to lastEditorUserId;
+alter table nephthys_page_sitemap rename column lastEditUserId to lastEditorUserId;
+alter table nephthys_page_status rename column lastEditUserId to lastEditorUserId;
+alter table nephthys_user_status rename column lastEditUserId to lastEditorUserId;

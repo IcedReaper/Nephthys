@@ -45,19 +45,19 @@ component {
     
     public blacklist function save() {
         var qSave = new Query().addParam(name = "namepart",       value = variables.namepart,            cfsqltype = "cf_sql_varchar")
-                               .addParam(name = "creationUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "creatorUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
                                .addParam(name = "creationDate",   value = variables.creationDate,        cfsqltype = "cf_sql_timestamp");
                                                
         if(variables.blacklistId == null || variables.blacklistId == 0) {
             variables.blacklistId = qSave.setSQL("INSERT INTO nephthys_user_blacklist
                                                               (
                                                                   namepart,
-                                                                  creationUserId,
+                                                                  creatorUserId,
                                                                   creationDate
                                                               )
                                                        VALUES (
                                                                   :namepart,
-                                                                  :creationUserId,
+                                                                  :creatorUserId,
                                                                   :creationDate
                                                               );
                                                   SELECT currval('nephthys_user_blacklist_blacklistid_seq') newBlacklistId;")
@@ -94,7 +94,7 @@ component {
             
             if(qBlacklist.getRecordCount() == 1) {
                 variables.namepart     = qBlacklist.namepart[1];
-                variables.creator      = new user(qBlacklist.creationUserId[1]);
+                variables.creator      = new user(qBlacklist.creatorUserId[1]);
                 variables.creationDate = qBlacklist.creationDate[1];
             }
             else {

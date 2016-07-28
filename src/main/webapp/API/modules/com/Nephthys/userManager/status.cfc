@@ -178,8 +178,8 @@ component {
                                      .addParam(name = "active",         value = variables.active,                 cfsqltype = "cf_sql_bit")
                                      .addParam(name = "canLogin",       value = variables.canLogin,               cfsqltype = "cf_sql_bit")
                                      .addParam(name = "showInTasklist", value = variables.showInTasklist,         cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "creationUserId", value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
-                                     .addParam(name = "lastEditUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
+                                     .addParam(name = "creatorUserId", value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
+                                     .addParam(name = "lastEditorUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
             
             if(variables.statusId == 0 || variables.statusId == null) {
                 variables.statusId = qUpdate.setSQL("INSERT INTO nephthys_user_status
@@ -188,16 +188,16 @@ component {
                                                                          active,
                                                                          canLogin,
                                                                          showInTasklist,
-                                                                         creationUserId,
-                                                                         lastEditUserId
+                                                                         creatorUserId,
+                                                                         lastEditorUserId
                                                                      )
                                                               VALUES (
                                                                          :name,
                                                                          :active,
                                                                          :canLogin,
                                                                          :showInTasklist,
-                                                                         :creationUserId,
-                                                                         :lastEditUserId
+                                                                         :creatorUserId,
+                                                                         :lastEditorUserId
                                                                      );
                                                          SELECT currval('nephthys_user_status_statusId_seq') newStatusId;")
                                                 .execute()
@@ -211,7 +211,7 @@ component {
                                            active         = :active,
                                            canLogin       = :canLogin,
                                            showInTasklist = :showInTasklist,
-                                           lastEditUserId = :lastEditUserId,
+                                           lastEditorUserId = :lastEditorUserId,
                                            lastEditDate   = now()
                                      WHERE statusId = :statusId")
                            .addParam(name = "statusId", value = variables.statusId,   cfsqltype = "cf_sql_numeric")
@@ -274,9 +274,9 @@ component {
                 variables.active         = qStatus.active[1];
                 variables.canLogin       = qStatus.canLogin[1];
                 variables.showInTasklist = qStatus.showInTasklist[1];
-                variables.creator        = new user(qStatus.creationUserId[1]);
+                variables.creator        = new user(qStatus.creatorUserId[1]);
                 variables.creationDate   = qStatus.creationDate[1];
-                variables.lastEditor     = new user(qStatus.lastEditUserId[1]);
+                variables.lastEditor     = new user(qStatus.lastEditorUserId[1]);
                 variables.lastEditDate   = qStatus.lastEditDate[1];
             }
             else {

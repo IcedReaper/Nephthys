@@ -231,9 +231,9 @@ component {
                                                                         content,
                                                                         useDynamicUrlSuffix,
                                                                         statusId,
-                                                                        creationUserId,
+                                                                        creatorUserId,
                                                                         creationDate,
-                                                                        lastEditUserId,
+                                                                        lastEditorUserId,
                                                                         lastEditDate
                                                                     )
                                                              VALUES (
@@ -281,7 +281,7 @@ component {
                                      content             = :content,
                                      useDynamicUrlSuffix = :useDynamicUrlSuffix,
                                      statusId            = :statusId,
-                                     lastEditUserId      = :userId,
+                                     lastEditorUserId      = :userId,
                                      lastEditDate        = :lastEditDate
                                WHERE pageVersionId = :pageVersionId")
                      .addParam(name = "pageVersionId", value = variables.pageVersionId,          cfsqltype = "cf_sql_numeric")
@@ -381,9 +381,9 @@ component {
                 variables.content             = deserializeJSON(qPageVersion.content[1]);
                 variables.useDynamicUrlSuffix = qPageVersion.useDynamicUrlSuffix[1];
                 variables.status              = new status(qPageVersion.statusId[1]);
-                variables.creator             = new user(qPageVersion.creationUserId[1]);
+                variables.creator             = new user(qPageVersion.creatorUserId[1]);
                 variables.creationDate        = qPageVersion.creationDate[1];
-                variables.lastEditor          = new user(qPageVersion.lastEditUserId[1]);
+                variables.lastEditor          = new user(qPageVersion.lastEditorUserId[1]);
                 variables.lastEditDate        = qPageVersion.lastEditDate[1];
             }
             else {
