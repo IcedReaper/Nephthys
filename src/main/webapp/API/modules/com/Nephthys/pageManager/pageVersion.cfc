@@ -1,4 +1,6 @@
 component {
+    import "API.modules.com.Nephthys.userManager.user";
+    
     public pageVersion function init(required numeric pageVersionId = null) {
         variables.pageVersionId = arguments.pageVersionId;
         
@@ -63,7 +65,7 @@ component {
         return this;
     }
     public pageVersion function setCreatorById(required numeric userId) {
-        variables.creator = createObject("component", "API.modules.com.Nephthys.userManager.user").init(arguments.userId);
+        variables.creator = new user(arguments.userId);
         return this;
     }
     public pageVersion function setCreationDate(required date creationDate) {
@@ -75,7 +77,7 @@ component {
         return this;
     }
     public pageVersion function setLastEditorById(required numeric userId) {
-        variables.lastEditor = createObject("component", "API.modules.com.Nephthys.userManager.user").init(arguments.userId);
+        variables.lastEditor = new user(arguments.userId);
         return this;
     }
     public pageVersion function setLastEditDate(required date lastEditDate) {
@@ -379,9 +381,9 @@ component {
                 variables.content             = deserializeJSON(qPageVersion.content[1]);
                 variables.useDynamicUrlSuffix = qPageVersion.useDynamicUrlSuffix[1];
                 variables.status              = new status(qPageVersion.statusId[1]);
-                variables.creator             = createObject("component", "API.modules.com.Nephthys.userManager.user").init(qPageVersion.creationUserId[1]);
+                variables.creator             = new user(qPageVersion.creationUserId[1]);
                 variables.creationDate        = qPageVersion.creationDate[1];
-                variables.lastEditor          = createObject("component", "API.modules.com.Nephthys.userManager.user").init(qPageVersion.lastEditUserId[1]);
+                variables.lastEditor          = new user(qPageVersion.lastEditUserId[1]);
                 variables.lastEditDate        = qPageVersion.lastEditDate[1];
             }
             else {
@@ -404,9 +406,9 @@ component {
             variables.content             = [];
             variables.useDynamicUrlSuffix = false;
             variables.status              = new status(application.system.settings.getValueOfKey("startStatus"));
-            variables.creator             = createObject("component", "API.modules.com.Nephthys.userManager.user").init(request.user.getUserId());
+            variables.creator             = new user(request.user.getUserId());
             variables.creationDate        = now();
-            variables.lastEditor          = createObject("component", "API.modules.com.Nephthys.userManager.user").init(request.user.getUserId());
+            variables.lastEditor          = new user(request.user.getUserId());
             variables.lastEditDate        = now();
             variables.majorVersion        = 0;
             variables.minorVersion        = 0;

@@ -27,8 +27,8 @@ component {
         
         if(arguments.themeId != 0) {
             if(arguments.active == 1 || 
-               (arguments.active == 0 && themeList[i].getThemeId() != createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("WWW").getValue() &&
-                                         themeList[i].getThemeId() != createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("ADMIN").getValue())) {
+               (arguments.active == 0 && themeList[i].getThemeId() != getDefaultWwwThemeId() &&
+                                         themeList[i].getThemeId() != getDefaulAdminThemeId())) {
                 theme.setActiveStatus(arguments.active);
             }
         }
@@ -53,8 +53,8 @@ component {
     remote boolean function deactivate(required numeric themeId) {
         var theme = new theme(arguments.themeId);
         
-        if(themeList[i].getThemeId() != createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("WWW").getValue() &&
-           themeList[i].getThemeId() != createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("ADMIN").getValue()) {
+        if(themeList[i].getThemeId() != getDefaultWwwThemeId() &&
+           themeList[i].getThemeId() != getDefaulAdminThemeId()) {
             theme.setActiveStatus(0)
                  .save();
         }
@@ -79,11 +79,25 @@ component {
             "themeId"        = arguments.theme.getThemeId(),
             "name"           = arguments.theme.getName(),
             "foldername"     = arguments.theme.getFoldername(),
-            "defaultWww"     = arguments.theme.getThemeId() == createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("WWW").getValue(),
-            "defaultAdmin"   = arguments.theme.getThemeId() == createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("ADMIN").getValue(),
+            "defaultWww"     = arguments.theme.getThemeId() == getDefaultWwwThemeId(),
+            "defaultAdmin"   = arguments.theme.getThemeId() == getDefaulAdminThemeId(),
             "active"         = arguments.theme.getActiveStatus(),
             "availableWww"   = arguments.theme.getAvailableWww(),
             "availableAdmin" = arguments.theme.getAvailableAdmin()
         };
+    }
+    
+    private numeric function getDefaultWwwThemeId() {
+        return createObject("component", "API.modules.com.Nephthys.system.filter").init()
+                                                                                  .setKey("defaultThemeId")
+                                                                                  .setApplication("WWW")
+                                                                                  .getValue();
+    }
+    
+    private numeric function getDefaulAdminThemeId() {
+        return createObject("component", "API.modules.com.Nephthys.system.filter").init()
+                                                                                  .setKey("defaultThemeId")
+                                                                                  .setApplication("ADMIN")
+                                                                                  .getValue();
     }
 }

@@ -1,4 +1,8 @@
 component {
+    import "API.modules.com.Nephthys.userManager.user";
+    import "API.modules.com.Nephthys.moduleManager.module";
+    import "API.modules.com.Nephthys.userManager.permissionRole";
+    
     public request function init(required numeric requestId = 0) {
         variables.requestId = arguments.requestId;
         
@@ -58,16 +62,16 @@ component {
     }
     
     public user function getUser() {
-        return createObject("component", "API.modules.com.Nephthys.userManager.user").init(variables.userId);
+        return new user(variables.userId);
     }
     public user function getAdminUser() {
-        return createObject("component", "API.modules.com.Nephthys.userManager.user").init(variables.adminUserId);
+        return new user(variables.adminUserId);
     }
     public module function getModule() {
-        return createObject("component", "API.modules.com.Nephthys.moduleManager.module").init(variables.moduleId);
+        return new module(variables.moduleId);
     }
     public permissionRole function getPermissionRole() {
-        return createObject("component", "API.modules.com.Nephthys.userManager.permissionRole").init(variables.roleId);
+        return new permissionRole(variables.roleId);
     }
     
     public boolean function isApproved() {

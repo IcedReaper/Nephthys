@@ -1,4 +1,6 @@
 component {
+    import "API.modules.com.Nephthys.moduleManager.module";
+    
     public permission function init(required numeric permissionId) {
         variables.permissionId = arguments.permissionId;
         
@@ -122,7 +124,7 @@ component {
             if(qGetPermission.getRecordCount() == 1) {
                 variables.user = new user(qGetPermission.userId[1]);
                 variables.permissionRole = new permissionRole(qGetPermission.permissionRoleId[1]);
-                variables.module = createObject("API.modules.com.Nephthys.moduleManager.module").init(qGetPermission.moduleId[1]);
+                variables.module = new module(qGetPermission.moduleId[1]);
                 if(qGetPermission.permissionSubGroupId[1] == null) {
                     variables.permissionSubGroup = null;
                 }

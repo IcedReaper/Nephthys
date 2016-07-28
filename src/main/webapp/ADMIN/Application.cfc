@@ -1,4 +1,8 @@
 component {
+    import "API.modules.com.Nephthys.userManager.user";
+    import "API.modules.com.Nephthys.system.settings";
+    import "API.modules.com.Nephthys.themeManager.theme";
+    
     this.name = "Nephthys_Admin";
     
     this.sessionmanagement = true;
@@ -15,7 +19,7 @@ component {
             server.startupTime = now();
         }
         
-        application.system.settings = createObject("component", "API.modules.com.Nephthys.system.settings").init("ADMIN,NULL");
+        application.system.settings = new settings("ADMIN,NULL");
         application.system.settings.load();
         
         return true;
@@ -114,7 +118,7 @@ component {
                     }
                     else {
                         if(application.keyExists("system") && application.system.keyExists("settings")) {
-                            themeFoldername = createObject("component", "API.modules.com.Nephthys.themeManager.theme").init(application.system.settings.getValueOfKey("defaultThemeId")).getFolderName();
+                            themeFoldername = new theme(application.system.settings.getValueOfKey("defaultThemeId")).getFolderName();
                         }
                         else {
                             throw(type = "nephthys.critical.installation", message = "Neither the user nor the system settings are defined!");
@@ -133,7 +137,7 @@ component {
     }
     
     private boolean function checkIfLoggedIn() {
-        request.user = createObject("component", "API.modules.com.Nephthys.userManager.user").init(session.userId);
+        request.user = new user(session.userId);
         
         if(session.userId == 0) {
             if(! structIsEmpty(form) && checkReferer("com.Nephthys.login")) {

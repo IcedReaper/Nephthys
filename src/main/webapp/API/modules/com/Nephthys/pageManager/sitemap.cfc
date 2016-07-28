@@ -1,4 +1,6 @@
 component {
+    import "API.modules.com.Nephthys.userManager.user";
+    
     public sitemap function init(required numeric sitemapId) {
         variables.sitemapId = arguments.sitemapId;
         
@@ -198,9 +200,9 @@ component {
             if(qSitemap.getRecordCount() == 1) {
                 variables.version      = qSitemap.version[1];
                 variables.status       = new status(qSitemap.statusId[1]);
-                variables.creator      = createObject("component", "API.modules.com.Nephthys.userManager.user").init(qSitemap.creationUserId[1]);
+                variables.creator      = new user(qSitemap.creationUserId[1]);
                 variables.creationDate = qSitemap.creationDate[1];
-                variables.lastEditor   = createObject("component", "API.modules.com.Nephthys.userManager.user").init(qSitemap.lastEditUserId[1]);
+                variables.lastEditor   = new user(qSitemap.lastEditUserId[1]);
                 variables.lastEditDate = qSitemap.lastEditDate[1];
             }
             else {

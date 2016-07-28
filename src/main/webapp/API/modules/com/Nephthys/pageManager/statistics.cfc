@@ -9,17 +9,17 @@ component {
     }
     
     public numeric function getTotalPageRequestCount(required date fromDate, required date toDate) {
-        return createObject("component", "requestCount.total").setFromDate(arguments.fromDate)
-                                                              .setToDate(arguments.toDate)
-                                                              .execute()
-                                                              .getResult();
+        return new requestCount.total.setFromDate(arguments.fromDate)
+                                     .setToDate(arguments.toDate)
+                                     .execute()
+                                     .getResult();
     }
     
     public struct function getTopPageRequestCount(required date fromDate, required date toDate) {
-        return createObject("component", "requestCount.top").setFromDate(arguments.fromDate)
-                                                            .setToDate(arguments.toDate)
-                                                            .execute()
-                                                            .getResult();
+        return new requestCount.top.setFromDate(arguments.fromDate)
+                                   .setToDate(arguments.toDate)
+                                   .execute()
+                                   .getResult();
     }
     
     public struct function getLast24HoursTotal() {
@@ -28,9 +28,9 @@ component {
             "data"   = []
         };
         
-        var requestData = createObject("component", "total.last24Hours").init()
-                                                                        .execute()
-                                                                        .getResult();
+        var requestData = new total.last24Hours()
+                                   .execute()
+                                   .getResult();
         
         returnData.data[1] = [];
         for(var i = 1; i <= requestData.len(); ++i) {
@@ -48,18 +48,18 @@ component {
         };
         
         if(year(arguments.fromDate) != year(arguments.toDate)) {
-            var statisticsService = createObject("component", "total.perYear").init();
+            var statisticsService = new total.perYear();
             returnData.actualView = "perYear";
         }
         else {
             if(month(arguments.fromDate) != month(arguments.toDate) && 
                datediff("d", arguments.fromDate, arguments.toDate) > daysInMonth(arguments.fromDate)) {
-                var statisticsService = createObject("component", "total.perMonth").init();
+                var statisticsService = new total.perMonth();
                 returnData.actualView = "perMonth";
             }
             else {
                 if(arguments.fromDate == arguments.toDate) {
-                    var statisticsService = createObject("component", "total.perHour").init();
+                    var statisticsService = new total.perHour();
                     returnData.actualView = "perHour";
                 }
                 else {
@@ -68,7 +68,7 @@ component {
                         arguments.toDate = createDate(year(n), month(n), day(n));
                     }
                     
-                    var statisticsService = createObject("component", "total.perDay").init();
+                    var statisticsService = new total.perDay();
                     returnData.actualView = "perDay";
                 }
             }
@@ -112,18 +112,18 @@ component {
         };
         
         if(year(arguments.fromDate) != year(arguments.toDate)) {
-            var statisticsService = createObject("component", "perPage.perYear").init();
+            var statisticsService = new perPage.perYear();
             returnData.actualView = "perYear";
         }
         else {
             if(month(arguments.fromDate) != month(arguments.toDate) && 
                datediff("d", arguments.fromDate, arguments.toDate) > daysInMonth(arguments.fromDate)) {
-                var statisticsService = createObject("component", "perPage.perMonth").init();
+                var statisticsService = new perPage.perMonth();
                 returnData.actualView = "perMonth";
             }
             else {
                 if(arguments.fromDate == arguments.toDate) {
-                    var statisticsService = createObject("component", "perPage.perHour").init();
+                    var statisticsService = new perPage.perHour();
                     returnData.actualView = "perHour";
                 }
                 else {
@@ -132,7 +132,7 @@ component {
                         arguments.toDate = createDate(year(n), month(n), day(n));
                     }
                     
-                    var statisticsService = createObject("component", "perPage.perDay").init();
+                    var statisticsService = new perPage.perDay();
                     returnData.actualView = "perDay";
                 }
             }
@@ -197,18 +197,18 @@ component {
         };
         
         if(year(arguments.fromDate) != year(arguments.toDate)) {
-            var statisticsService = createObject("component", "splitForPage.perYear").init();
+            var statisticsService = new splitForPage.perYear();
             returnData.actualView = "perYear";
         }
         else {
             if(month(arguments.fromDate) != month(arguments.toDate) && 
                datediff("d", arguments.fromDate, arguments.toDate) > daysInMonth(arguments.fromDate)) {
-                var statisticsService = createObject("component", "splitForPage.perMonth").init();
+                var statisticsService = new splitForPage.perMonth();
                 returnData.actualView = "perMonth";
             }
             else {
                 if(arguments.fromDate == arguments.toDate) {
-                    var statisticsService = createObject("component", "splitForPage.perHour").init();
+                    var statisticsService = new splitForPage.perHour();
                     returnData.actualView = "perHour";
                 }
                 else {
@@ -217,7 +217,7 @@ component {
                         arguments.toDate = createDate(year(n), month(n), day(n));
                     }
                     
-                    var statisticsService = createObject("component", "splitForPage.perDay").init();
+                    var statisticsService = new splitForPage.perDay();
                     returnData.actualView = "perDay";
                 }
             }

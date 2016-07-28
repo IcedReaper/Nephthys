@@ -1,6 +1,8 @@
 component {
     import "API.modules.com.Nephthys.userManager.*";
     import "API.modules.com.Nephthys.userManager.statistics.*";
+    import "API.modules.com.Nephthys.moduleManager.module";
+    import "API.tools.com.Nephthys.security.encryptionMethodLoader";
     
     formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
     
@@ -35,7 +37,7 @@ component {
                                 required numeric wwwThemeId,
                                 required numeric adminThemeId) {
         var user = new user(arguments.userId);
-        var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.security.encryptionMethodLoader").init();
+        var encryptionMethodLoader = new encryptionMethodLoader();
         
         if(arguments.userId == 0) {
             user.setUsername(arguments.userName);
@@ -129,7 +131,7 @@ component {
     }
     
     remote array function getRoles() {
-        var roleFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").for("permissionRole");
+        var roleFilter = new filter().for("permissionRole");
         
         var roles = [];
         for(var role in roleFilter.execute().getResult()) {
@@ -155,7 +157,7 @@ component {
                         if(arguments.permissions[i].permissionId == null) {
                             var permission = new permission(null);
                             permission.setUser(user)
-                                      .setModule(createObject("component", "API.modules.com.Nephthys.moduleManager.module").init(arguments.permissions[i].moduleId))
+                                      .setModule(new module(arguments.permissions[i].moduleId))
                                       .setPermissionRole(permissionRole)
                                       .save();
                         }

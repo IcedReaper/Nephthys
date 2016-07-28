@@ -1,5 +1,7 @@
 component implements="WWW.interfaces.connector" {
     import "API.modules.com.IcedReaper.permissionRequest.*";
+    import "API.modules.com.Nephthys.userManager.permissionRole";
+    import "API.modules.com.Nephthys.moduleManager.module";
     
     public connector function init() {
         return this;
@@ -31,7 +33,7 @@ component implements="WWW.interfaces.connector" {
                         };
                         
                         if(! form.isEmpty() && form.keyExists("name") && form.name == "com.IcedReaper.permissionRequest") {
-                            var module = createObject("component", "API.modules.com.Nephthys.moduleManager.module").init(form.moduleId);
+                            var module = new module(form.moduleId);
                             
                             if(! module.getActiveStatus() || ! module.getAvailableWWW()) {
                                 result.error = true;
@@ -39,7 +41,7 @@ component implements="WWW.interfaces.connector" {
                             }
                             
                             try {
-                                var role = createObject("component", "API.modules.com.Nephthys.userManager.permissionRole").init(form.roleId);
+                                var role = new permissionRole(form.roleId);
                             }
                             catch(nephthys.notFound.role e) {
                                 result.error = true;

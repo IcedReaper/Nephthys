@@ -1,4 +1,6 @@
 component {
+    import "API.modules.com.Nephthys.userManager.user";
+    
     public approval function init(required numeric approvalId) {
         variables.approvalId = arguments.approvalId;
         
@@ -104,7 +106,7 @@ component {
                 variables.gallery      = new gallery(qGetApproval.galleryId[1]);
                 variables.prevStatus   = new status(qGetApproval.prevStatusId[1]);
                 variables.newStatus   = new status(qGetApproval.newStatusId[1]);
-                variables.approver     = createObject("component", "API.modules.com.Nephthys.userManager.user").init(qGetApproval.approvalUserId[1]);
+                variables.approver     = new user(qGetApproval.approvalUserId[1]);
                 variables.approvalDate = qGetApproval.approvalDate[1];
             }
             else {

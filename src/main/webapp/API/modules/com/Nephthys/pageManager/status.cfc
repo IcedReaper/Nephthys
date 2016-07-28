@@ -1,4 +1,6 @@
 component {
+    import "API.modules.com.Nephthys.userManager.user";
+    
     public status function init(required numeric statusId) {
         variables.statusId = arguments.statusId;
         
@@ -302,9 +304,9 @@ component {
                 variables.editable       = qStatus.editable[1];
                 variables.deleteable     = qStatus.deleteable[1];
                 variables.showInTasklist = qStatus.showInTasklist[1];
-                variables.creator        = createObject("component", "API.modules.com.Nephthys.userManager.user").init(qStatus.creationUserId[1]);
+                variables.creator        = new user(qStatus.creationUserId[1]);
                 variables.creationDate   = qStatus.creationDate[1];
-                variables.lastEditor     = createObject("component", "API.modules.com.Nephthys.userManager.user").init(qStatus.lastEditUserId[1]);
+                variables.lastEditor     = new user(qStatus.lastEditUserId[1]);
                 variables.lastEditDate   = qStatus.lastEditDate[1];
             }
             else {
@@ -318,9 +320,9 @@ component {
             variables.editable       = true;
             variables.deleteable     = false;
             variables.showInTasklist = false;
-            variables.creator        = createObject("component", "API.modules.com.Nephthys.userManager.user").init(request.user.getUserId());
+            variables.creator        = new user(request.user.getUserId());
             variables.creationDate   = now();
-            variables.lastEditor     = createObject("component", "API.modules.com.Nephthys.userManager.user").init(request.user.getUserId());
+            variables.lastEditor     = new user(request.user.getUserId());
             variables.lastEditDate   = now();
         }
     }

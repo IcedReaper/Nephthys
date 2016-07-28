@@ -14,7 +14,7 @@ component implements="WWW.interfaces.connector" {
     
     public string function render(required struct options, required string childContent) {
         // prepare the options required for the theme
-        var themeIndividualizer = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.IcedReaper.gallery.cfc.prepareData");
+        var themeIndividualizer = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.IcedReaper.blog.cfc.prepareData");
         var preparedOptions = themeIndividualizer.prepareOptions(arguments.options);
         
         themeIndividualizer.invokeResources();
@@ -31,10 +31,10 @@ component implements="WWW.interfaces.connector" {
                               .setCount(1)
                               .execute();
             
-            var renderer = createObject("component", "API.tools.com.Nephthys.renderer.renderer").init();
-            return renderer.setTemplate("/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/lastEntry.cfm")
-                           .render(options   = arguments.options,
-                                   blogposts = blogpostFilterCtrl.getResult());
+            return application.system.settings.getValueOfKey("templateRenderer")
+                .setTemplate("/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/lastEntry.cfm")
+                .render(options   = arguments.options,
+                        blogposts = blogpostFilterCtrl.getResult());
         }
         
         if(splitParameter.len() == 0) {

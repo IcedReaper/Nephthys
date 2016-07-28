@@ -1,5 +1,6 @@
 component {
     import "API.modules.com.IcedReaper.permissionRequest.*";
+    import "API.modules.com.Nephthys.userManager.permission";
     
     formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
     
@@ -48,7 +49,7 @@ component {
                                                .save();
             }
             else {
-                var permission = createObject("component", "API.modules.com.Nephthys.userManager.permission").init(null);
+                var permission = new permission(null);
                 permission.setUser(_request.getUser())
                           .setModule(_request.getModule())
                           .setPermissionRole(_request.getPermissionRole())

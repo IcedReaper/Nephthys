@@ -15,18 +15,18 @@ component {
         };
         
         if(year(arguments.fromDate) != year(arguments.toDate)) {
-            var statisticsService = createObject("component", "total.perYear").init();
+            var statisticsService = new total.perYear();
             returnData.actualView = "perYear";
         }
         else {
             if(month(arguments.fromDate) != month(arguments.toDate) && 
                datediff("d", arguments.fromDate, arguments.toDate) > daysInMonth(arguments.fromDate)) {
-                var statisticsService = createObject("component", "total.perMonth").init();
+                var statisticsService = new total.perMonth();
                 returnData.actualView = "perMonth";
             }
             else {
                 if(arguments.fromDate == arguments.toDate) {
-                    var statisticsService = createObject("component", "total.perHour").init();
+                    var statisticsService = new total.perHour();
                     returnData.actualView = "perHour";
                 }
                 else {
@@ -35,7 +35,7 @@ component {
                         arguments.toDate = createDate(year(n), month(n), day(n));
                     }
                     
-                    var statisticsService = createObject("component", "total.perDay").init();
+                    var statisticsService = new total.perDay();
                     returnData.actualView = "perDay";
                 }
             }
@@ -78,18 +78,18 @@ component {
         };
         
         if(year(arguments.fromDate) != year(arguments.toDate)) {
-            var statisticsService = createObject("component", "splitPerType.perYear").init();
+            var statisticsService = new splitPerType.perYear();
             returnData.actualView = "perYear";
         }
         else {
             if(month(arguments.fromDate) != month(arguments.toDate) && 
                datediff("d", arguments.fromDate, arguments.toDate) > daysInMonth(arguments.fromDate)) {
-                var statisticsService = createObject("component", "splitPerType.perMonth").init();
+                var statisticsService = new splitPerType.perMonth();
                 returnData.actualView = "perMonth";
             }
             else {
                 if(arguments.fromDate == arguments.toDate) {
-                    var statisticsService = createObject("component", "splitPerType.perHour").init();
+                    var statisticsService = new splitPerType.perHour();
                     returnData.actualView = "perHour";
                 }
                 else {
@@ -98,7 +98,7 @@ component {
                         arguments.toDate = createDate(year(n), month(n), day(n));
                     }
                     
-                    var statisticsService = createObject("component", "splitPerType.perDay").init();
+                    var statisticsService = new splitPerType.perDay();
                     returnData.actualView = "perDay";
                 }
             }
@@ -156,10 +156,10 @@ component {
     }
     
     public array function getTotalSplitPerType(required date fromDate, required date toDate) {
-        return createObject("component", "totalSplitPerType.total").init()
-                                                                   .setFromDate(arguments.fromDate)
-                                                                   .setToDate(arguments.toDate)
-                                                                   .execute()
-                                                                   .getResult();
+        return new totalSplitPerType.total()
+                                    .setFromDate(arguments.fromDate)
+                                    .setToDate(arguments.toDate)
+                                    .execute()
+                                    .getResult();
     }
 }

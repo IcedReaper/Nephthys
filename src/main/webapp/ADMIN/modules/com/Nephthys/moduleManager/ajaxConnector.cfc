@@ -1,5 +1,8 @@
 component {
     import "API.modules.com.Nephthys.moduleManager.*";
+    import "API.modules.com.Nephthys.userManager.user";
+    import "API.modules.com.Nephthys.userManager.permissionRole";
+    import "API.modules.com.Nephthys.userManager.permission";
     
     remote array function getList() {
         var filterCtrl = new filter().for("module");
@@ -73,8 +76,8 @@ component {
     
     remote array function getUser(required numeric moduleId) {
         var permissionFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").for("permission")
-                                                                                                .setModuleId(arguments.moduleId)
-                                                                                                .execute();
+                                                                                                       .setModuleId(arguments.moduleId)
+                                                                                                       .execute();
         
         var permissions = [];
         for(var permission in permissionFilter.getResult()) {
@@ -87,8 +90,8 @@ component {
         }
         
         var userFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").for("user")
-                                                                                          .setActive(true)
-                                                                                          .execute();
+                                                                                                 .setActive(true)
+                                                                                                 .execute();
         
         for(var user in userFilter.getResult()) {
             var found = false;
@@ -118,25 +121,22 @@ component {
         transaction {
             for(var i = 1; i <= arguments.permissions.len(); i++) {
                 if(arguments.permissions[i].roleId != null) {
-                    var permissionRole = createObject("component", "API.modules.com.Nephthys.userManager.permissionRole").init(arguments.permissions[i].roleId);
+                    var permissionRole = new permissionRole(arguments.permissions[i].roleId);
                     
                     if(arguments.permissions[i].permissionId == null) {
-                        var permission = createObject("component", "API.modules.com.Nephthys.userManager.permission").init(null);
-                        permission.setUser(createObject("component", "API.modules.com.Nephthys.userManager.user").init(arguments.permissions[i].userId))
-                                  .setModule(module)
-                                  .setPermissionRole(permissionRole)
-                                  .save();
+                        new permission(null).setUser(new user(arguments.permissions[i].userId))
+                                            .setModule(module)
+                                            .setPermissionRole(permissionRole)
+                                            .save();
                     }
                     else {
-                        var permission = createObject("component", "API.modules.com.Nephthys.userManager.permission").init(arguments.permissions[i].permissionId);
-                        permission.setPermissionRole(permissionRole)
-                                  .save();
+                        new permission(arguments.permissions[i].permissionId).setPermissionRole(permissionRole)
+                                                                             .save();
                     }
                 }
                 else {
                     if(arguments.permissions[i].permissionId != 0 && arguments.permissions[i].permissionId != null) {
-                        createObject("component", "API.modules.com.Nephthys.userManager.permission").init(arguments.permissions[i].permissionId)
-                                                                                             .delete();
+                        new permission(arguments.permissions[i].permissionId).delete();
                     }
                     else {
                         continue;

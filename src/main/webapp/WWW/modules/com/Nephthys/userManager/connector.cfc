@@ -1,5 +1,7 @@
 component implements="WWW.interfaces.connector" {
     import "API.modules.com.Nephthys.userManager.*";
+    import "API.tools.com.Nephthys.security.encryptionMethodLoader";
+    import "API.modules.com.Nephthys.themeManager.theme";
     
     public connector function init() {
         return this;
@@ -57,7 +59,7 @@ component implements="WWW.interfaces.connector" {
                 };
                 
                 if(url.keyExists("register") && ! form.isEmpty() && form.keyExists("username") && form.keyExists("email") && form.keyExists("password")) {
-                    var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.security.encryptionMethodLoader").init();
+                    var encryptionMethodLoader = new encryptionMethodLoader();
                     var validator = application.system.settings.getValueOfKey("validator");
                     
                     if(! validator.validate(form.email, "Email")) {
@@ -161,7 +163,7 @@ component implements="WWW.interfaces.connector" {
                             
                             if(! form.isEmpty() && form.keyExists("name") && form.name == "com.Nephthys.userManager.edit") {
                                 try {
-                                    createObject("component", "API.modules.com.Nephthys.themeManager.theme").init(form.themeId);
+                                    new theme(form.themeId);
                                 }
                                 catch(themeNotFound tnf) {
                                     result.errors.theme = true;
@@ -170,7 +172,7 @@ component implements="WWW.interfaces.connector" {
                                 
                                 if(! result.error) {
                                     if(form.password.trim() != "") {
-                                        var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.security.encryptionMethodLoader").init();
+                                        var encryptionMethodLoader = new encryptionMethodLoader();
                                         
                                         request.user.setPassword(encrypt(form.password,
                                                                          application.system.settings.getValueOfKey("encryptionKey"),

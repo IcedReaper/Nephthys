@@ -1,5 +1,6 @@
 component {
     import "API.modules.com.Nephthys.system.*";
+    import "API.tools.com.Nephthys.security.encryptionMethodLoader";
     
     remote array function getSettings() {
         var serverSettings = new settings("WWW,ADMIN,NULL");
@@ -54,7 +55,7 @@ component {
                     }
                     else {
                         if(setting.key == "encryptionMethodId" && setting.value != serverSettings.getValueOfKey("encryptionMethodId")) {
-                            var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.security.encryptionMethodLoader").init();
+                            var encryptionMethodLoader = new encryptionMethodLoader();
             
                             var newAlgorithm = encryptionMethodLoader.getAlgorithm(setting.value);
                             var newSecretKey = generateSecretKey(newAlgorithm);
@@ -138,7 +139,7 @@ component {
     
     private void function resetPasswordOfAllUsers(required string newSecretKey, required string newAlgorithm,
                                                   required string oldSecretKey, required string oldAlgorithm) {
-        var userListCtrl = createObject("component", "API.modules.com.Nephthys.userManager.filter").init();
+        var userListCtrl = createObject("component", "API.modules.com.Nephthys.userManager.filter").init().for("user");
         
         for(var user in userListCtrl.execute().getResult()) {
             var rawPassword = decrypt(user.getPassword(), arguments.oldSecretKey, arguments.oldAlgorithm);

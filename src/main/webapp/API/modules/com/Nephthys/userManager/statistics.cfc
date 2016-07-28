@@ -16,18 +16,18 @@ component {
         };
         
         if(year(arguments.fromDate) != year(arguments.toDate)) {
-            var statisticsService = createObject("component", "totalLogin.perYear").init();
+            var statisticsService = new totalLogin.perYear();
             returnData.actualView = "perYear";
         }
         else {
             if(month(arguments.fromDate) != month(arguments.toDate) && 
                datediff("d", arguments.fromDate, arguments.toDate) > daysInMonth(arguments.fromDate)) {
-                var statisticsService = createObject("component", "totalLogin.perMonth").init();
+                var statisticsService = new totalLogin.perMonth();
                 returnData.actualView = "perMonth";
             }
             else {
                 if(arguments.fromDate == arguments.toDate) {
-                    var statisticsService = createObject("component", "totalLogin.perHour").init();
+                    var statisticsService = new totalLogin.perHour();
                     returnData.actualView = "perHour";
                 }
                 else {
@@ -36,7 +36,7 @@ component {
                         arguments.toDate = createDate(year(n), month(n), day(n));
                     }
                     
-                    var statisticsService = createObject("component", "totalLogin.perDay").init();
+                    var statisticsService = new totalLogin.perDay();
                     returnData.actualView = "perDay";
                 }
             }
