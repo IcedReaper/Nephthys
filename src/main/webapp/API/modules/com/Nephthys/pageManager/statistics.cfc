@@ -9,17 +9,17 @@ component {
     }
     
     public numeric function getTotalPageRequestCount(required date fromDate, required date toDate) {
-        return new requestCount.total.setFromDate(arguments.fromDate)
-                                     .setToDate(arguments.toDate)
-                                     .execute()
-                                     .getResult();
+        return new requestCount.total().setFromDate(arguments.fromDate)
+                                       .setToDate(arguments.toDate)
+                                       .execute()
+                                       .getResult();
     }
     
     public struct function getTopPageRequestCount(required date fromDate, required date toDate) {
-        return new requestCount.top.setFromDate(arguments.fromDate)
-                                   .setToDate(arguments.toDate)
-                                   .execute()
-                                   .getResult();
+        return new requestCount.top().setFromDate(arguments.fromDate)
+                                     .setToDate(arguments.toDate)
+                                     .execute()
+                                     .getResult();
     }
     
     public struct function getLast24HoursTotal() {

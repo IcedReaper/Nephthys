@@ -42,7 +42,6 @@ component {
                 error.setErrorCode(variables.exception.type)
                      .setMessage(variables.exception.message)
                      .setStacktrace(trim(variables.exception.stacktrace))
-                     .setUserId(request.user.getUserId())
                      .setLink(link)
                      .setReferrer(cgi.HTTP_REFERER)
                      .setUserAgent(cgi.HTTP_USER_AGENT);

@@ -51,10 +51,12 @@ component {
                                                                    :creationDate
                                                                );
                                                    SELECT currval('nephthys_page_page_pageId_seq') newPageId;")
-                                          .addParam(name = "creationDate",       value = variables.creationDate, cfsqltype = "cf_sql_timestamp")
+                                          .addParam(name = "creationDate", value = variables.creationDate, cfsqltype = "cf_sql_timestamp")
                                           .execute()
                                           .getResult()
                                           .newPageId[1];
+            
+            variables.creationDate  = now();
         }
         else {
             new Query().setSQL("UPDATE nephthys_page_page
@@ -75,6 +77,8 @@ component {
                              WHERE pageId = :pageId")
                    .addParam(name = "pageId", value = variables.pageId, cfsqltype = "cf_sql_numeric")
                    .execute();
+        
+        variables.pageId = null;
     }
     
     

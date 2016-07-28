@@ -59,16 +59,6 @@ component {
     
     public approval function save(required user user) {
         if(variables.approvalId == null) {
-            var pageVersionId = null;
-            var sitemapId = null;
-            
-            if(! isNull(variables.pageVersion)) {
-                pageVersionId = variables.pageVersion.getPageVersionId();
-            }
-            if(! isNull(variables.sitemap)) {
-                sitemapId = variables.sitemap.getSitemapId();
-            }
-            
             variables.approvalId = new Query().setSQL("INSERT INTO nephthys_page_approval
                                                                    (
                                                                        pageVersionId,
@@ -83,20 +73,21 @@ component {
                                                                        :sitemapId,
                                                                        :prevStatusId,
                                                                        :newStatusId,
-                                                                       :approvalUserId,
-                                                                       :approvalDate
+                                                                       :approvalUserId
                                                                    );
                                                        SELECT currval('nephthys_page_approval_approvalid_seq') newApprovalId;
                                                        ")
-                   .addParam(name = "pageVersionId",  value = pageVersionId,                      cfsqltype = "cf_sql_numeric", null = pageVersionId == null)
-                   .addParam(name = "sitemapId",      value = sitemapId,                          cfsqltype = "cf_sql_numeric", null = sitemapId == null)
-                   .addParam(name = "prevStatusId",   value = variables.prevStatus.getStatusId(), cfsqltype = "cf_sql_numeric")
-                   .addParam(name = "newStatusId",    value = variables.newStatus.getStatusId(),  cfsqltype = "cf_sql_numeric")
-                   .addParam(name = "approvalUserId", value = variables.approver.getUserId(),     cfsqltype = "cf_sql_numeric")
-                   .addParam(name = "approvalDate",   value = variables.approvalDate,             cfsqltype = "cf_sql_timestamp")
+                   .addParam(name = "pageVersionId",  value = variables.pageVersion.getPageVersionId(), cfsqltype = "cf_sql_numeric", null = variables.pageVersion.getPageVersionId() == null)
+                   .addParam(name = "sitemapId",      value = variables.sitemap.getSitemapId(),         cfsqltype = "cf_sql_numeric", null = variables.sitemap.getSitemapId() == null)
+                   .addParam(name = "prevStatusId",   value = variables.prevStatus.getStatusId(),       cfsqltype = "cf_sql_numeric")
+                   .addParam(name = "newStatusId",    value = variables.newStatus.getStatusId(),        cfsqltype = "cf_sql_numeric")
+                   .addParam(name = "approvalUserId", value = arguments.user.getUserId(),               cfsqltype = "cf_sql_numeric")
                    .execute()
                    .getResult()
                    .newApprovalId[1];
+            
+            variables.approver = arguments.user;
+            variables.approvalDate = now();
         }
         
         return this;
@@ -113,20 +104,10 @@ component {
                                           .getResult();
             
             if(qGetApproval.getRecordCount() == 1) {
-                if(qGetApproval.pageVersionId != null) {
-                    variables.pageVersion  = new pageVersion(qGetApproval.pageVersionId[1]);
-                }
-                else {
-                    variables.pageVersion = null;
-                }
-                if(qGetApproval.sitemapId != null) {
-                    variables.sitemap      = new sitemap(qGetApproval.sitemapId[1]);
-                }
-                else {
-                    variables.sitemap = null;
-                }
+                variables.pageVersion  = new pageVersion(qGetApproval.pageVersionId[1]);
+                variables.sitemap      = new sitemap(qGetApproval.sitemapId[1]);
                 variables.prevStatus   = new status(qGetApproval.prevStatusId[1]);
-                variables.newStatus   = new status(qGetApproval.newStatusId[1]);
+                variables.newStatus    = new status(qGetApproval.newStatusId[1]);
                 variables.approver     = new user(qGetApproval.approvalUserId[1]);
                 variables.approvalDate = qGetApproval.approvalDate[1];
             }
@@ -135,11 +116,11 @@ component {
             }
         }
         else {
-            variables.pageVersion  = null;
-            variables.sitemap      = null;
-            variables.prevStatus   = null;
-            variables.newStatus   = null;
-            variables.approver     = null;
+            variables.pageVersion  = new pageVersion(null);
+            variables.sitemap      = new sitemap(null);
+            variables.prevStatus   = new status(null);
+            variables.newStatus    = new status(null);
+            variables.approver     = new user(null);
             variables.approvalDate = now();
         }
     }

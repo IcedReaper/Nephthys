@@ -47,6 +47,6 @@
                 <a class="tag tag-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
             </cfloop>
         </footer>
-        <cfinclude template="../general/blueimpGallery.cfm" />
+        <cfinclude template="../generic/blueimpGallery.cfm" />
     </article>
 </cfoutput>

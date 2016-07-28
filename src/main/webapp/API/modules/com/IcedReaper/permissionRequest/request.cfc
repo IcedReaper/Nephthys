@@ -12,10 +12,6 @@ component {
     }
     
     
-    public request function setUser(required user user) {
-        variables.user = arguments.user;
-        return this;
-    }
     public request function setModule(required module module) {
         variables.module = arguments.module;
         return this;
@@ -50,7 +46,7 @@ component {
     }
     
     public user function getUser() {
-        return nvariables.user;
+        return variables.user;
     }
     public user function getAdminUser() {
         return variables.adminUser;
@@ -86,42 +82,53 @@ component {
                                                                       :reason
                                                                   );
                                                       SELECT currval('icedreaper_permissionrequest_request_requestid_seq') newRequestId;")
-                                             .addParam(name = "userId",           value = variables.user.getUserId(),                     cfsqltype = "cf_sql_numeric")
+                                             .addParam(name = "userId",           value = arguments.user.getUserId(),                     cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "moduleId",         value = variables.module.getModuleId(),                 cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "permissionRoleId", value = variables.permissionRole.getpermissionRoleId(), cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "reason",           value = variables.reason,                               cfsqltype = "cf_sql_varchar")
                                              .execute()
                                              .getResult()
                                              .newRequestId[1];
+            
+            variables.user = arguments.user;
+            variables.creationDate = now();
         }
         
         return this;
     }
     
-    public request function approve(required string comment = "") {
+    public request function approve(required user user, required string comment = "") {
         new query().setSQL("UPDATE IcedReaper_permissionRequest_request
-                               SET status      = 1,
-                                   adminUserId = :adminUserId,
-                                   comment     = :comment
+                               SET status       = 1,
+                                   adminUserId  = :adminUserId,
+                                   responseDate = now(),
+                                   comment      = :comment
                              WHERE requestId = :requestId")
                    .addParam(name = "requestId",   value = variables.requestId,      cfsqltype = "cf_sql_numeric")
-                   .addParam(name = "adminUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                   .addParam(name = "adminUserId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
                    .addParam(name = "comment",     value = arguments.comment,        cfsqltype = "cf_sql_varchar")
                    .execute();
+        
+        variables.admin = arguments.user;
+        variables.responseDate = now();
         
         return this;
     }
     
-    public request function decline(required string comment = "") {
+    public request function decline(required user user, required string comment = "") {
         new query().setSQL("UPDATE IcedReaper_permissionRequest_request
-                               SET status      = -1,
-                                   adminUserId = :adminUserId,
-                                   comment     = :comment
+                               SET status       = -1,
+                                   adminUserId  = :adminUserId,
+                                   responseDate = now(),
+                                   comment      = :comment
                              WHERE requestId = :requestId")
                    .addParam(name = "requestId",   value = variables.requestId,      cfsqltype = "cf_sql_numeric")
-                   .addParam(name = "adminUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                   .addParam(name = "adminUserId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
                    .addParam(name = "comment",     value = arguments.comment,        cfsqltype = "cf_sql_varchar")
                    .execute();
+        
+        variables.admin = arguments.user;
+        variables.responseDate = now();
         
         return this;
     }

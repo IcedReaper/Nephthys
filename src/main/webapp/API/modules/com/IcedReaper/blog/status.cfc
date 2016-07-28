@@ -181,14 +181,13 @@ component {
     
     public status function save(required user user) {
         transaction {
-            var qUpdate = new Query().addParam(name = "name",               value = variables.name,                   cfsqltype = "cf_sql_varchar")
-                                     .addParam(name = "active",             value = variables.active,                 cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "online",             value = variables.online,                 cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "editable",           value = variables.editable,               cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "deleteable",         value = variables.deleteable,             cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "showInTasklist",     value = variables.showInTasklist,         cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "creatorUserId",     value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
-                                     .addParam(name = "lastEditorUserId",     value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
+            var qUpdate = new Query().addParam(name = "name",           value = variables.name,             cfsqltype = "cf_sql_varchar")
+                                     .addParam(name = "active",         value = variables.active,           cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "online",         value = variables.online,           cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "editable",       value = variables.editable,         cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "deleteable",     value = variables.deleteable,       cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "showInTasklist", value = variables.showInTasklist,   cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "userId",         value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric");
             
             if(variables.statusId == 0 || variables.statusId == null) {
                 variables.statusId = qUpdate.setSQL("INSERT INTO IcedReaper_blog_status
@@ -209,28 +208,36 @@ component {
                                                                          :editable,
                                                                          :deleteable,
                                                                          :showInTasklist,
-                                                                         :creatorUserId,
-                                                                         :lastEditorUserId
+                                                                         :userId,
+                                                                         :userId
                                                                      );
                                                          SELECT currval('IcedReaper_blog_status_statusId_seq') newStatusId;")
                                                 .execute()
                                                 .getResult()
                                                 .newStatusId[1];
+                
+                variables.creator = arguments.user;
+                variables.creationDate = now();
+                variables.lastEditor = arguments.user;
+                variables.lastEditDate = now();
             }
             else {
                 if(variables.attributesChanged) {
                     qUpdate.setSQL("UPDATE IcedReaper_blog_status
-                                       SET name               = :name,
-                                           active             = :active,
-                                           online             = :online,
-                                           editable   = :editable,
-                                           deleteable         = :deleteable,
-                                           showInTasklist     = :showInTasklist,
-                                           lastEditorUserId     = :lastEditorUserId,
-                                           lastEditDate       = now()
+                                       SET name             = :name,
+                                           active           = :active,
+                                           online           = :online,
+                                           editable         = :editable,
+                                           deleteable       = :deleteable,
+                                           showInTasklist   = :showInTasklist,
+                                           lastEditorUserId = :userId,
+                                           lastEditDate     = now()
                                      WHERE statusId = :statusId")
                            .addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric")
                            .execute();
+                    
+                    variables.lastEditor = arguments.user;
+                    variables.lastEditDate = now();
                 }
             }
             

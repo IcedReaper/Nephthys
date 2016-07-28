@@ -181,14 +181,13 @@ component {
     
     public status function save(required user user) {
         transaction {
-            var qUpdate = new Query().addParam(name = "name",           value = variables.name,                   cfsqltype = "cf_sql_varchar")
-                                     .addParam(name = "active",         value = variables.active,                 cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "online",         value = variables.online,                 cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "editable",       value = variables.editable,               cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "deleteable",     value = variables.deleteable,             cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "showInTasklist", value = variables.showInTasklist,         cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "creatorUserId", value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
-                                     .addParam(name = "lastEditorUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
+            var qUpdate = new Query().addParam(name = "name",           value = variables.name,             cfsqltype = "cf_sql_varchar")
+                                     .addParam(name = "active",         value = variables.active,           cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "online",         value = variables.online,           cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "editable",       value = variables.editable,         cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "deleteable",     value = variables.deleteable,       cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "showInTasklist", value = variables.showInTasklist,   cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "userId",         value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric");
             
             if(variables.statusId == 0 || variables.statusId == null) {
                 variables.statusId = qUpdate.setSQL("INSERT INTO nephthys_page_status
@@ -209,28 +208,36 @@ component {
                                                                          :editable,
                                                                          :deleteable,
                                                                          :showInTasklist,
-                                                                         :creatorUserId,
-                                                                         :lastEditorUserId
+                                                                         :userId,
+                                                                         :userId
                                                                      );
                                                          SELECT currval('nephthys_page_status_statusId_seq') newStatusId;")
                                                 .execute()
                                                 .getResult()
                                                 .newStatusId[1];
+                
+                variables.creator = arguments.user;
+                variables.creationDate = now();
+                variables.lastEditor = arguments.user;
+                variables.lastEditDate = now();
             }
             else {
                 if(variables.attributesChanged) {
                     qUpdate.setSQL("UPDATE nephthys_page_status
-                                       SET name           = :name,
-                                           active         = :active,
-                                           online         = :online,
-                                           editable       = :editable,
-                                           deleteable     = :deleteable,
-                                           showInTasklist = :showInTasklist,
-                                           lastEditorUserId = :lastEditorUserId,
-                                           lastEditDate   = now()
+                                       SET name             = :name,
+                                           active           = :active,
+                                           online           = :online,
+                                           editable         = :editable,
+                                           deleteable       = :deleteable,
+                                           showInTasklist   = :showInTasklist,
+                                           lastEditorUserId = :userId,
+                                           lastEditDate     = now()
                                      WHERE statusId = :statusId")
                            .addParam(name = "statusId", value = variables.statusId,   cfsqltype = "cf_sql_numeric")
                            .execute();
+                    
+                    variables.lastEditor = arguments.user;
+                    variables.lastEditDate = now();
                 }
             }
             
@@ -246,7 +253,7 @@ component {
                                                     :nextStatusId
                                                 )")
                            .addParam(name = "statusId",     value = variables.statusId, cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "nextStatusId", value = nextStatusId,           cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "nextStatusId", value = nextStatusId,       cfsqltype = "cf_sql_numeric")
                            .execute();
             }
             for(var removedStatusId in variables.nextStatusRemoved) {
@@ -254,7 +261,7 @@ component {
                                           WHERE statusId     = :statusId
                                             AND nextStatusId = :nextStatusId")
                            .addParam(name = "statusId",     value = variables.statusId, cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "nextStatusId", value = removedStatusId,        cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "nextStatusId", value = removedStatusId,    cfsqltype = "cf_sql_numeric")
                            .execute();
             }
             
@@ -307,9 +314,9 @@ component {
             variables.editable       = true;
             variables.deleteable     = false;
             variables.showInTasklist = false;
-            variables.creator        = new user(request.user.getUserId());
+            variables.creator        = new user(null);
             variables.creationDate   = now();
-            variables.lastEditor     = new user(request.user.getUserId());
+            variables.lastEditor     = new user(null);
             variables.lastEditDate   = now();
         }
     }

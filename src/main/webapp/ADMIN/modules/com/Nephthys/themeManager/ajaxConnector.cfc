@@ -65,7 +65,7 @@ component {
         return true;
     }
     
-    remote boolean function delete(request.user) {
+    remote boolean function delete(required numeric themeId) {
         new theme(arguments.themeId).delete(request.user);
         
         return true;

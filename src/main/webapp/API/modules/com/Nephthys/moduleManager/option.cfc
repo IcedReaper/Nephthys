@@ -104,6 +104,13 @@ component {
             throw(type = "nephthys.application.notAllowed", message = "It is not valid to add an option without a module");
         }
         
+        var qSave = new Query().addParam(name = "optionName",    value = variables.optionName,  cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "description",   value = variables.description, cfsqltype = "cf_sql_varchar")
+                               .addparam(name = "type",          value = variables.type,        cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "selectOptions", value = jsonSelectOptions,     cfsqltype = "cf_sql_varchar", null = jsonSelectOptions == "")
+                               .addParam(name = "sortOrder",     value = variables.sortOrder,   cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "multiple",      value = variables.multiple,    cfsqltype = "cf_sql_bit");
+        
         if(variables.optionId != 0 && variables.optionId != null) {
             if(variables.sortOrder == 0) {
                 variables.sortOrder = new Query().setSQL("SELECT MAX(sortOrder) + 1 sortOrder
@@ -119,56 +126,42 @@ component {
                 }
             }
             
-            variables.optionId = new Query().setSQL("INSERT INTO nephthys_module_option
-                                                                 (
-                                                                     moduleId,
-                                                                     optionName,
-                                                                     description,
-                                                                     type,
-                                                                     selectOptions,
-                                                                     sortOrder,
-                                                                     multiple
-                                                                 )
-                                                          VALUES (
-                                                                     :moduleId,
-                                                                     :optionName,
-                                                                     :description,
-                                                                     :type,
-                                                                     :selectOptions,
-                                                                     :sortOrder,
-                                                                     :multiple
-                                                                 );
-                                                    SELECT currval('seq_nephthys_module_option_id') newOptionId;")
-                                            .addParam(name = "moduleId",      value = variables.moduleId,    cfsqltype = "cf_sql_numeric")
-                                            .addParam(name = "optionName",    value = variables.optionName,  cfsqltype = "cf_sql_varchar")
-                                            .addParam(name = "description",   value = variables.description, cfsqltype = "cf_sql_varchar")
-                                            .addparam(name = "type",          value = variables.type,        cfsqltype = "cf_sql_varchar")
-                                            .addParam(name = "selectOptions", value = jsonSelectOptions,     cfsqltype = "cf_sql_varchar", null = jsonSelectOptions == "")
-                                            .addParam(name = "sortOrder",     value = variables.sortOrder,   cfsqltype = "cf_sql_numeric")
-                                            .addParam(name = "multiple",      value = variables.multiple,    cfsqltype = "cf_sql_bit")
-                                            .execute()
-                                            .getResult()
-                                            .newOptionId[1];
+            variables.optionId = qSave.setSQL("INSERT INTO nephthys_module_option
+                                                           (
+                                                               moduleId,
+                                                               optionName,
+                                                               description,
+                                                               type,
+                                                               selectOptions,
+                                                               sortOrder,
+                                                               multiple
+                                                           )
+                                                    VALUES (
+                                                               :moduleId,
+                                                               :optionName,
+                                                               :description,
+                                                               :type,
+                                                               :selectOptions,
+                                                               :sortOrder,
+                                                               :multiple
+                                                           );
+                                              SELECT currval('seq_nephthys_module_option_id') newOptionId;")
+                                      .addParam(name = "moduleId", value = variables.moduleId, cfsqltype = "cf_sql_numeric")
+                                      .execute()
+                                      .getResult()
+                                      .newOptionId[1];
         }
         else {
-            new Query().setSQL("UPDATE nephthys_module_option
-                                   SET (
-                                           optionName    = :optionName,
-                                           description   = :description,
-                                           type          = :type,
-                                           selectOptions = :selectOptions,
-                                           sortOrder     = :sortOrder,
-                                           multiple      = :multiple
-                                       )
-                                 WHERE optionId = :optionId")
-                       .addParam(name = "optionId",      value = variables.optionId,    cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "optionName",    value = variables.optionName,  cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "description",   value = variables.description, cfsqltype = "cf_sql_varchar")
-                       .addparam(name = "type",          value = variables.type,        cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "selectOptions", value = jsonSelectOptions,     cfsqltype = "cf_sql_varchar", null = jsonSelectOptions == "")
-                       .addParam(name = "sortOrder",     value = variables.sortOrder,   cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "multiple",      value = variables.multiple,    cfsqltype = "cf_sql_bit")
-                       .execute();
+            qSave.setSQL("UPDATE nephthys_module_option
+                             SET optionName    = :optionName,
+                                 description   = :description,
+                                 type          = :type,
+                                 selectOptions = :selectOptions,
+                                 sortOrder     = :sortOrder,
+                                 multiple      = :multiple
+                           WHERE optionId = :optionId")
+                 .addParam(name = "optionId", value = variables.optionId, cfsqltype = "cf_sql_numeric")
+                 .execute();
         }
         
         return this;

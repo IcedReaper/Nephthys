@@ -1105,7 +1105,23 @@ alter table nephthys_user add column statusId integer references nephthys_user_s
 INSERT INTO nephthys_user_status VALUES
 (
     1,
-    'Registriert',
+    'Gast',
+    true,
+    
+    false,
+    false,
+    
+    1,
+    now(),
+    
+    1,
+    now()
+);
+
+INSERT INTO nephthys_user_status VALUES
+(
+    2,
+    'Registriert (noch nicht freigeschalten)',
     true,
     
     false,
@@ -1120,7 +1136,7 @@ INSERT INTO nephthys_user_status VALUES
 
 INSERT INTO nephthys_user_status VALUES
 (
-    2,
+    3,
     'Freigeschaltet',
     true,
     
@@ -1136,7 +1152,7 @@ INSERT INTO nephthys_user_status VALUES
 
 INSERT INTO nephthys_user_status VALUES
 (
-    3,
+    4,
     'Abgelehnt',
     true,
     
@@ -1150,7 +1166,7 @@ INSERT INTO nephthys_user_status VALUES
     now()
 );
 
-update nephthys_user SET statusId = 2;
+update nephthys_user SET statusId = 3;
 
 alter table nephthys_user alter column statusId SET NOT NULL;
 alter table nephthys_user drop column active;
@@ -1190,3 +1206,11 @@ alter table nephthys_user_status rename column lastEditUserId to lastEditorUserI
 
 
 alter table IcedReaper_blog_comment rename column publishedUserId to publisherUserId;
+
+alter table IcedReaper_permissionRequest_request rename column roleId to permissionRoleId;
+
+
+alter table Nephthys_user_approval drop constraint nephthys_user_approval_userid_fkey;
+alter table Nephthys_user_approval add CONSTRAINT nephthys_user_approval_userid_fkey FOREIGN KEY (userid)
+      REFERENCES nephthys_user (userid)
+      ON UPDATE NO ACTION ON DELETE cascade;

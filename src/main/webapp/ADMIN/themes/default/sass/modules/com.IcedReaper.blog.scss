@@ -1,45 +1,47 @@
 .com-icedreaper-blog {
-    .angular-ui-tree {
-        .angular-ui-tree-node,
-        .angular-ui-tree-placeholder {
-            float: left;
-            width: (100% / 3);
-            padding-left: ($grid-gutter-width / 2);
-            padding-right: ($grid-gutter-width / 2);
-        }
-    
-        .com-icedreaper-blogpost-picture-wrapper {
-            position: relative;
-            min-height: 500px;
-            max-height: 500px;
-            height: 500px;
-            overflow-y: hidden;
-            
-            > img {
-                width: 100%;
+    #pictureTab {
+        .angular-ui-tree {
+            .angular-ui-tree-node,
+            .angular-ui-tree-placeholder {
+                float: left;
+                width: (100% / 3);
+                padding-left: ($grid-gutter-width / 2);
+                padding-right: ($grid-gutter-width / 2);
             }
+        
+            .com-icedreaper-blogpost-picture-wrapper {
+                position: relative;
+                min-height: 500px;
+                max-height: 500px;
+                height: 500px;
+                overflow-y: hidden;
                 
-            .btn.angular-ui-tree-handle {
-                position: absolute;
-                top: 2px;
-                left: 2px;
-                z-index: 1000;
-            }
-            
-            .com-icedreaper-blogpost-picture-details {
-                position: absolute;
-                top: 50px;
-                background-color: rgba(255, 255, 255, 0.4);
-                width: 100%;
-                display: none;
-                
-                label {
-                    font-weight: bold;
+                > img {
+                    width: 100%;
                 }
-            }
-            
-            &:hover .com-icedreaper-blogpost-picture-details {
-                display: block;
+                    
+                .btn.angular-ui-tree-handle {
+                    position: absolute;
+                    top: 2px;
+                    left: 2px;
+                    z-index: 1000;
+                }
+                
+                .com-icedreaper-blogpost-picture-details {
+                    position: absolute;
+                    top: 50px;
+                    background-color: rgba(255, 255, 255, 0.4);
+                    width: 100%;
+                    display: none;
+                    
+                    label {
+                        font-weight: bold;
+                    }
+                }
+                
+                &:hover .com-icedreaper-blogpost-picture-details {
+                    display: block;
+                }
             }
         }
     }

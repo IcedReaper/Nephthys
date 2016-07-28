@@ -63,18 +63,20 @@ component {
                                                                        :prevStatusId,
                                                                        :newStatusId,
                                                                        :approvalUserId,
-                                                                       :approvalDate
+                                                                       now()
                                                                    );
                                                        SELECT currval('icedreaper_blog_approval_approvalid_seq') newApprovalId;
                                                        ")
                    .addParam(name = "blogpostId",     value = variables.blogpost.getBlogpostId(), cfsqltype = "cf_sql_numeric")
                    .addParam(name = "prevStatusId",   value = variables.prevStatus.getStatusId(), cfsqltype = "cf_sql_numeric")
                    .addParam(name = "newStatusId",    value = variables.newStatus.getStatusId(),  cfsqltype = "cf_sql_numeric")
-                   .addParam(name = "approvalUserId", value = variables.approver.getUserId(),     cfsqltype = "cf_sql_numeric")
-                   .addParam(name = "approvalDate",   value = variables.approvalDate,             cfsqltype = "cf_sql_timestamp")
+                   .addParam(name = "approvalUserId", value = arguments.user.getUserId(),         cfsqltype = "cf_sql_numeric")
                    .execute()
                    .getResult()
                    .newApprovalId[1];
+            
+            variables.approver = arguments.user;
+            variables.approvalDate = now();
         }
         
         return this;

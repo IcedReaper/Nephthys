@@ -57,7 +57,7 @@
                                 required string  fileNames) {
         var blogpost = new blogpost(arguments.blogpostId);
         
-        if(blogpost.isEditable(request.user.getUserId())) {
+        if(blogpost.isEditable(request.user)) {
             if(arguments.releaseDate != "") {
                 blogpost.setReleaseDate(dateFormat(arguments.releaseDate, "YYYY/MM/DD"));
             }
@@ -86,7 +86,7 @@
                                         required string imageSizes) { // jsonString
         var blogpost = new blogpost(arguments.blogpostId);
         
-        if(blogpost.isEditable(request.user.getUserId())) {
+        if(blogpost.isEditable(request.user)) {
             var _is = deserializeJSON(arguments.imageSizes);
             var imageEditor = application.system.settings.getValueOfKey("imageEditLibrary");
             
@@ -113,7 +113,7 @@
     remote boolean function delete(required numeric blogpostId) {
         var blogpost = new blogpost(arguments.blogpostId);
         
-        if(blogpost.isEditable(request.user.getUserId())) {
+        if(blogpost.isEditable(request.user)) {
             blogpost.delete(request.user);
             
             return true;
@@ -148,7 +148,7 @@
                                           required numeric categoryId) {
         var blogpost = new blogpost(arguments.blogpostId);
         
-        if(blogpost.isEditable(request.user.getUserId())) {
+        if(blogpost.isEditable(request.user)) {
             blogpost.removeCategory(arguments.categoryId);
             
             return true;
@@ -267,7 +267,7 @@
     remote boolean function pushToStatus(required numeric blogpostId, required numeric statusId) {
         return new blogpost(arguments.blogpostId)
             .pushToStatus(new status(arguments.statusId), request.user)
-            .isEditable(request.user.getUserId());
+            .isEditable(request.user);
     }
     
     remote struct function getStatusList() {
@@ -391,7 +391,7 @@
             transactionCommit();
         }
         
-        return false;
+        return true;
     }
     
     remote array function getBlogpostsInTasklist() {
@@ -441,7 +441,7 @@
     remote boolean function uploadPictures(required numeric blogpostId) {
         var blogpost = new blogpost(arguments.blogpostId);
         
-        if(blogpost.isEditable(request.user.getUserId())) {
+        if(blogpost.isEditable(request.user)) {
             var newPicture = new picture(0);
             newPicture.setBlogpostId(arguments.blogpostId)
                       .upload(request.user);
@@ -462,7 +462,7 @@
         var picture = new picture(arguments.pictureId);
         var blogpost = new blogpost(picture.getBlogpostId());
         
-        if(blogpost.isEditable(request.user.getUserId())) {
+        if(blogpost.isEditable(request.user)) {
             picture.setCaption(arguments.caption)
                    .setAlt(arguments.alt)
                    .setTitle(arguments.title)
@@ -479,7 +479,7 @@
         var picture = new picture(arguments.pictureId);
         var blogpost = new blogpost(picture.getBlogpostId());
         
-        if(blogpost.isEditable(request.user.getUserId())) {
+        if(blogpost.isEditable(request.user)) {
             blogpost.removePicture(arguments.pictureId);
             
             return preparePictureStruct(blogpost.getPictures(), blogpost.getRelativePath() & "/");

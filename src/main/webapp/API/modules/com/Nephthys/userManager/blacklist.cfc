@@ -30,26 +30,26 @@ component {
     
     
     public blacklist function save(required user user) {
-        var qSave = new Query().addParam(name = "namepart",       value = variables.namepart,            cfsqltype = "cf_sql_varchar")
-                               .addParam(name = "creatorUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "creationDate",   value = variables.creationDate,        cfsqltype = "cf_sql_timestamp");
+        var qSave = new Query().addParam(name = "namepart", value = variables.namepart,         cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "userId",   value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric");
                                                
         if(variables.blacklistId == null || variables.blacklistId == 0) {
             variables.blacklistId = qSave.setSQL("INSERT INTO nephthys_user_blacklist
                                                               (
                                                                   namepart,
-                                                                  creatorUserId,
-                                                                  creationDate
+                                                                  creatorUserId
                                                               )
                                                        VALUES (
                                                                   :namepart,
-                                                                  :creatorUserId,
-                                                                  :creationDate
+                                                                  :userId
                                                               );
                                                   SELECT currval('nephthys_user_blacklist_blacklistid_seq') newBlacklistId;")
                                          .execute()
                                          .getResult()
                                          .newBlacklistId[1];
+            
+            variables.creator = arguments.user;
+            variables.creationDate = now();
         }
         else {
             qSave.setSQL("UPDATE nephthys_user_blacklist
@@ -89,7 +89,7 @@ component {
         }
         else {
             variables.namepart     = "";
-            variables.creator      = request.user;
+            variables.creator      = new user(null);
             variables.creationDate = now();
         }
     }

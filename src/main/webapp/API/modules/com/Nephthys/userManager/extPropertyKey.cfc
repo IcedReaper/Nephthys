@@ -61,30 +61,36 @@ component {
     
     // CRUD
     public extPropertyKey function save(required user user) {
+        var qSave = new Query().addParam(name = "userId",      value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "description", value = variables.description,      cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "type",        value = variables.type,             cfsqltype = "cf_sql_varchar");
+        
         if((variables.extPropertyKeyId == 0 || variables.extPropertyKeyId == null) && (variables.keyName == "" || variables.keyName == null)) {
-            variables.extPropertyKeyId = new Query().setSQL("INSERT INTO Nephthys_user_extPropertyKey
-                                                                         (
-                                                                             keyName,
-                                                                             description,
-                                                                             creatorUserId,
-                                                                             lastEditorUserId,
-                                                                             type
-                                                                         )
-                                                                  VALUES (
-                                                                             :keyName,
-                                                                             :description,
-                                                                             :userId,
-                                                                             :userId,
-                                                                             :type
-                                                                         )
-                                                             SELECT currval('seq_nephthys_user_extPropertyKey_id') newId;")
-                                                    .addParam(name = "keyName",     value = variables.keyName,          cfsqltype = "cf_sql_varchar")
-                                                    .addParam(name = "description", value = variables.description,      cfsqltype = "cf_sql_varchar")
-                                                    .addParam(name = "userId",      value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                                                    .addParam(name = "type",        value = variables.type,             cfsqltype = "cf_sql_varchar")
-                                                    .execute()
-                                                    .getResult()
-                                                    .newId[1];
+            variables.extPropertyKeyId = qSave.setSQL("INSERT INTO Nephthys_user_extPropertyKey
+                                                                   (
+                                                                       keyName,
+                                                                       description,
+                                                                       creatorUserId,
+                                                                       lastEditorUserId,
+                                                                       type
+                                                                   )
+                                                            VALUES (
+                                                                       :keyName,
+                                                                       :description,
+                                                                       :userId,
+                                                                       :userId,
+                                                                       :type
+                                                                   )
+                                                       SELECT currval('seq_nephthys_user_extPropertyKey_id') newId;")
+                                              .addParam(name = "keyName", value = variables.keyName, cfsqltype = "cf_sql_varchar")
+                                              .execute()
+                                              .getResult()
+                                              .newId[1];
+            
+            variables.creator = arguments.user;
+            variables.creationDate = now();
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         else {
             new Query().setSQL("UPDATE Nephthys_user_extPropertyKey
@@ -93,11 +99,11 @@ component {
                                        lastEditorUserId = :userId,
                                        lastEditDate     = now()
                                  WHERE extPropertyKeyId = :extPropertyKeyId ")
-                      .addParam(name = "description",      value = variables.description,      cfsqltype = "cf_sql_varchar")
-                      .addParam(name = "userId",           value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
                       .addParam(name = "extPropertyKeyId", value = variables.extPropertyKeyId, cfsqltype = "cf_sql_numeric")
-                      .addParam(name = "type",             value = variables.type,             cfsqltype = "cf_sql_varchar")
                       .execute();
+            
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         
         return this;

@@ -34,9 +34,9 @@
     <thead>
         <th><i class="fa fa-eye"></i></th>
         <th><i class="fa fa-envelope"></i></th>
-        <th>Datum</th>
-        <th>Betreff</th>
         <th>User</th>
+        <th>Betreff</th>
+        <th>Datum</th>
         <th>Antworten</th>
     </thead>
     <tbody>
@@ -49,17 +49,17 @@
                 <i ng-if="request.replied" class="fa fa-circle text-success" title="Beantwortet"></i>
                 <i ng-if="! request.replied" class="fa fa-circle text-danger" title="Unbeantwortet"></i>
             </td>
-            <td>
-                <a href="#/{{request.requestId}}">{{request.requestDate}}</a>
+            <td ng-if="request.requestorUserId != 0 && request.requestorUserId != null">
+                <a href="/com.Nephthys.userManager#/user/{{request.requestorUserId}}">{{request.userName}}</a>
+            </td>
+            <td ng-if="request.requestorUserId == 0 || request.requestorUserId == null">
+                {{request.userName}}
             </td>
             <td>
                 <a href="#/{{request.requestId}}">{{request.subject}}</a>
             </td>
-            <td ng-if="request.requestorUserId != 0 && request.requestorUserId != null">
-                <a href="/com.Nephthys.userManager#/{{request.requestorUserId}}">{{request.userName}}</a>
-            </td>
-            <td ng-if="request.requestorUserId == 0 || request.requestorUserId == null">
-                {{request.userName}}
+            <td>
+                <a href="#/{{request.requestId}}">{{request.requestDate}}</a>
             </td>
             <td>{{request.replyCount}}</td>
         </tr>

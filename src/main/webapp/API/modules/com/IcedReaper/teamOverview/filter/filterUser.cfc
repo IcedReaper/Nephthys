@@ -9,13 +9,14 @@ component implements="API.interfaces.filter" {
     }
     
     public filter function execute() {
-       variables.qRes = new Query().setSQL("  SELECT userId
-                                                FROM nephthys_user
-                                               WHERE userId NOT IN (SELECT userId
-                                                                      FROM icedReaper_teamOverview_member)
-                                                 AND active = :active
+       variables.qRes = new Query().setSQL("    SELECT u.userId
+                                                  FROM nephthys_user u
+                                            INNER JOIN nephthys_user_status s ON u.statusId = s.statusId
+                                                 WHERE u.userId NOT IN (SELECT userId
+                                                                        FROM icedReaper_teamOverview_member)
+                                                   AND s.canLogin = :canLogin
                                             ORDER BY userName ASC")
-                                   .addParam(name = "active", value = true, cfsqltype = "cf_sql_bit")
+                                   .addParam(name = "canLogin", value = true, cfsqltype = "cf_sql_bit")
                                    .execute()
                                    .getResult();
         

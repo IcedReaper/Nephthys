@@ -14,7 +14,7 @@ component {
         return this;
     }
     
-    // S E T T E R
+    
     public category function setName(required string name) {
         variables.name = arguments.name;
         variables.attributesChanged = true;
@@ -22,7 +22,7 @@ component {
         return this;
     }
     
-    // G E T T E R
+    
     public numeric function getCategoryId() {
         return variables.categoryId;
     }
@@ -42,38 +42,46 @@ component {
         return variables.lastEditDate != null ? variables.lastEditDate : 0;
     }
     
-    // C R U D
+    
     public category function save(required user user) {
-        var qSave = new Query().addParam(name = "lastEditorUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
+        var qSave = new Query().addParam(name = "userId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric");
+        
         if(variables.categoryId == null) {
-            variables.categoryId = new Query().setSQL("INSERT INTO IcedReaper_gallery_category
-                                                                   (
-                                                                       name,
-                                                                       creatorUserId,
-                                                                       lastEditorUserId
-                                                                   )
-                                                            VALUES (
-                                                                       :name,
-                                                                       :creatorUserId,
-                                                                       :lastEditorUserId
-                                                                   );
-                                                      SELECT currval('seq_icedreaper_gallery_category_id') newCategoryId;")
-                                              .addParam(name = "name",          value = variables.name,           cfsqltype = "cf_sql_varchar")
-                                              .addParam(name = "creatorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                                              
-                                              .execute()
-                                              .getResult()
-                                              .newCategoryId[1];
+            variables.categoryId = qSave.setSQL("INSERT INTO IcedReaper_gallery_category
+                                                             (
+                                                                 name,
+                                                                 creatorUserId,
+                                                                 lastEditorUserId
+                                                             )
+                                                      VALUES (
+                                                                 :name,
+                                                                 :userId,
+                                                                 :userId
+                                                             );
+                                                SELECT currval('seq_icedreaper_gallery_category_id') newCategoryId;")
+                                        .addParam(name = "name", value = variables.name, cfsqltype = "cf_sql_varchar")
+                                        .execute()
+                                        .getResult()
+                                        .newCategoryId[1];
+            
+            variables.creator = arguments.user;
+            variables.creationDate = now();
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         else {
             if(variables.attributesChanged) {
-                new Query().setSQL("UPDATE IcedReaper_gallery_category
-                                       SET name             = :name,
-                                           lastEditorUserId = :lastEditorUserId
-                                     WHERE categoryId = :categoryId")
-                           .addParam(name = "categoryId", value = variables.categoryId, cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "name",       value = variables.name,       cfsqltype = "cf_sql_varchar")
-                           .execute();
+                qSave.setSQL("UPDATE IcedReaper_gallery_category
+                                 SET name             = :name,
+                                     lastEditorUserId = :userId,
+                                     lastEditDate     = now()
+                               WHERE categoryId = :categoryId")
+                     .addParam(name = "categoryId", value = variables.categoryId, cfsqltype = "cf_sql_numeric")
+                     .addParam(name = "name",       value = variables.name,       cfsqltype = "cf_sql_varchar")
+                     .execute();
+                
+                variables.lastEditor = arguments.user;
+                variables.lastEditDate = now();
             }
         }
         
@@ -115,9 +123,9 @@ component {
         else {
             variables.name         = "";
             variables.creator      = new user(null);
-            variables.creationDate = null;
+            variables.creationDate = now();
             variables.lastEditor   = new user(null);
-            variables.lastEditDate = null;
+            variables.lastEditDate = now();
         }
     }
 }

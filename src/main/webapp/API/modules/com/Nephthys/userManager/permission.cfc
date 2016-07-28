@@ -10,13 +10,9 @@ component {
     }
     
     public permission function setUser(required user user) {
-        if(variables.permissionId == null) {
-            variables.user = arguments.user;
-        }
-        
+        variables.user = arguments.user;
         return this;
     }
-    
     public permission function setPermissionRole(required permissionRole permissionRole) {
         variables.permissionRole = arguments.permissionRole;
         return this;
@@ -61,7 +57,7 @@ component {
         qSave.addParam(name = "userId",           value = variables.user.getUserId(),                     cfsqltype = "cf_sql_numeric")
              .addParam(name = "permissionRoleId", value = variables.permissionRole.getPermissionRoleId(), cfsqltype = "cf_sql_numeric")
              .addParam(name = "moduleId",         value = variables.module.getModuleId(),                 cfsqltype = "cf_sql_numeric")
-             .addParam(name = "userId",           value = variables.creator.getUserId(),                  cfsqltype = "cf_sql_numeric");
+             .addParam(name = "userId",           value = arguments.user.getUserId(),                     cfsqltype = "cf_sql_numeric");
         
         if(variables.permissionSubGroup != null) {
             qSave.addParam(name = "permissionSubGroupId", value = variables.permissionSubGroup.getPermissionSubGroupId(), cfsqltype = "cf_sql_numeric");
@@ -92,13 +88,23 @@ component {
                                           .execute()
                                           .getResult()
                                           .newPermissionId[1];
+            
+            variables.creator = arguments.user;
+            variables.creationDate = now();
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         else {
             qSave.setSQL("UPDATE nephthys_user_permission
-                             SET permissionRoleId = :permissionRoleId
+                             SET permissionRoleId = :permissionRoleId,
+                                 lastEditorUserId = :userId,
+                                 lastEditDate     = now()
                            WHERE permissionId = :permissionId")
                  .addParam(name = "permissionId", value = variables.permissionId, cfsqltype = "cf_sql_numeric")
                  .execute();
+            
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         
         return this;
@@ -143,15 +149,15 @@ component {
             }
         }
         else {
-            variables.user = null;
-            variables.permissionRole = null;
-            variables.module = null;
+            variables.user           = new user(null);
+            variables.permissionRole = new permissionRole(null);
+            variables.module         = new module(null);
             variables.permissionSubGroup = null;
             
-            variables.creator = request.user;
+            variables.creator = new user(null);
             variables.creationDate = now();
             
-            variables.lastEditor = request.user;
+            variables.lastEditor = new user(null);
             variables.lastEditDate = now();
         }
     }

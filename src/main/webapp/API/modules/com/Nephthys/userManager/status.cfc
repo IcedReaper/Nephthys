@@ -119,10 +119,10 @@ component {
         return variables.lastEditDate;
     }
     public user function getCreator() {
-        return variables.creator;
+        return new user(variables.creatorId);
     }
     public user function getLastEditor() {
-        return variables.lastEditor;
+        return new user(variables.lastEditorId);
     }
     
     public array function getNextStatus() {
@@ -167,12 +167,11 @@ component {
     
     public status function save(required user user) {
         transaction {
-            var qUpdate = new Query().addParam(name = "name",           value = variables.name,                   cfsqltype = "cf_sql_varchar")
-                                     .addParam(name = "active",         value = variables.active,                 cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "canLogin",       value = variables.canLogin,               cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "showInTasklist", value = variables.showInTasklist,         cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "creatorUserId", value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
-                                     .addParam(name = "lastEditorUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
+            var qUpdate = new Query().addParam(name = "name",           value = variables.name,             cfsqltype = "cf_sql_varchar")
+                                     .addParam(name = "active",         value = variables.active,           cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "canLogin",       value = variables.canLogin,         cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "showInTasklist", value = variables.showInTasklist,   cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "userId",         value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric");
             
             if(variables.statusId == 0 || variables.statusId == null) {
                 variables.statusId = qUpdate.setSQL("INSERT INTO nephthys_user_status
@@ -189,26 +188,34 @@ component {
                                                                          :active,
                                                                          :canLogin,
                                                                          :showInTasklist,
-                                                                         :creatorUserId,
-                                                                         :lastEditorUserId
+                                                                         :userId,
+                                                                         :userId
                                                                      );
                                                          SELECT currval('nephthys_user_status_statusId_seq') newStatusId;")
                                                 .execute()
                                                 .getResult()
                                                 .newStatusId[1];
+                
+                variables.creatorId = arguments.user.getUserId();
+                variables.creationDate = now();
+                variables.lastEditorId = arguments.user.getUserId();
+                variables.lastEditDate = now();
             }
             else {
                 if(variables.attributesChanged) {
                     qUpdate.setSQL("UPDATE nephthys_user_status
-                                       SET name           = :name,
-                                           active         = :active,
-                                           canLogin       = :canLogin,
-                                           showInTasklist = :showInTasklist,
-                                           lastEditorUserId = :lastEditorUserId,
-                                           lastEditDate   = now()
+                                       SET name             = :name,
+                                           active           = :active,
+                                           canLogin         = :canLogin,
+                                           showInTasklist   = :showInTasklist,
+                                           lastEditorUserId = :userId,
+                                           lastEditDate     = now()
                                      WHERE statusId = :statusId")
-                           .addParam(name = "statusId", value = variables.statusId,   cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric")
                            .execute();
+                    
+                    variables.lastEditorId = arguments.user.getUserId();
+                    variables.lastEditDate = now();
                 }
             }
             
@@ -256,20 +263,20 @@ component {
     private void function loadDetails() {
         if(variables.statusId != 0 && variables.statusId != null) {
             var qStatus = new Query().setSQL("SELECT *
-                                                    FROM nephthys_user_status
-                                                   WHERE statusId = :statusId")
-                                         .addParam(name="statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric")
-                                         .execute()
-                                         .getResult();
+                                                FROM nephthys_user_status
+                                               WHERE statusId = :statusId")
+                                     .addParam(name="statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric")
+                                     .execute()
+                                     .getResult();
             
             if(qStatus.getRecordCount() == 1) {
                 variables.name           = qStatus.name[1];
                 variables.active         = qStatus.active[1];
                 variables.canLogin       = qStatus.canLogin[1];
                 variables.showInTasklist = qStatus.showInTasklist[1];
-                variables.creator        = new user(qStatus.creatorUserId[1]);
+                variables.creatorId      = qStatus.creatorUserId[1];
                 variables.creationDate   = qStatus.creationDate[1];
-                variables.lastEditor     = new user(qStatus.lastEditorUserId[1]);
+                variables.lastEditorId   = qStatus.lastEditorUserId[1];
                 variables.lastEditDate   = qStatus.lastEditDate[1];
             }
             else {
@@ -281,9 +288,9 @@ component {
             variables.active         = false;
             variables.canLogin       = false;
             variables.showInTasklist = false;
-            variables.creator        = request.user;
+            variables.creator        = null;
             variables.creationDate   = now();
-            variables.lastEditor     = request.user;
+            variables.lastEditor     = null;
             variables.lastEditDate   = now();
         }
     }

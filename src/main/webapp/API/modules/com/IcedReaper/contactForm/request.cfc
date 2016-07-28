@@ -9,6 +9,7 @@ component {
         return this;
     }
     
+    
     public request function setUserName(required string userName) {
         variables.userName = arguments.userName;
         return this;
@@ -46,7 +47,7 @@ component {
     public string function getUserName() {
         return variables.userName;
     }
-    public numeric function getRequestor() {
+    public user function getRequestor() {
         return variables.requestor;
     }
     public string function getEmail() {
@@ -58,7 +59,7 @@ component {
     public string function getMessage() {
         return variables.message;
     }
-    public string function getRequestDate() {
+    public date function getRequestDate() {
         return variables.requestDate;
     }
     public boolean function getRead() {
@@ -95,14 +96,17 @@ component {
                                                                       :requestorUserId
                                                                   );
                                                       SELECT currval('seq_icedreaper_contactForm_requestId') requestId;")
-                                             .addParam(name = "subject",         value = variables.subject,               cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "email",           value = variables.email,                 cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "message",         value = variables.message,               cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "userName",        value = variables.userName,              cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "requestorUserId", value = variables.requestor.getUserId(), cfsqltype = "cf_sql_numeric", null = variables.requestor.getUserId() == null)
+                                             .addParam(name = "subject",         value = variables.subject,          cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "email",           value = variables.email,            cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "message",         value = variables.message,          cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "userName",        value = variables.userName,         cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "requestorUserId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric", null = arguments.user.getUserId() == null)
                                              .execute()
                                              .getResult()
                                              .requestId[1];
+            
+            variables.requestor = arguments.user;
+            variables.requestDate = now();
         }
         else {
             new Query().setSQL("UPDATE IcedReaper_contactForm_request
@@ -110,16 +114,19 @@ component {
                                        readDate   = now(),
                                        readUserId = :readUserId
                                  WHERE requestId  = :requestId")
-                       .addParam(name = "requestId",  value = variables.requestId,          cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "read",       value = variables.read,               cfsqltype = "cf_sql_bit")
-                       .addParam(name = "readUserId", value = variables.reader.getUserId(), cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "requestId",  value = variables.requestId,        cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "read",       value = variables.read,             cfsqltype = "cf_sql_bit")
+                       .addParam(name = "readUserId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
                        .execute();
+            
+            variables.reader = arguments.user;
+            variables.readDate = now();
         }
         
         return this;
     }
     
-    // PRIVATE
+    
     private void function loadDetails() {
         if(variables.requestId != 0) {
             var qContactForm = new Query().setSQL("SELECT *

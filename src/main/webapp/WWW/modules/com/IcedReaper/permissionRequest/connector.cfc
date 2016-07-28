@@ -50,12 +50,10 @@ component implements="WWW.interfaces.connector" {
                             
                             if(! result.error) {
                                 transaction {
-                                    new request()
-                                        .setUserId(request.user.getUserId())
-                                        .setModuleId(form.moduleId)
-                                        .setRoleId(form.roleId)
-                                        .setReason(form.reason)
-                                        .save(request.user);
+                                    new request().setModule(new module(form.moduleId))
+                                                 .setPermissionRole(new permissionRole(form.roleId))
+                                                 .setReason(form.reason)
+                                                 .save(request.user);
                                     
                                     result.successful = true;
                                     
@@ -111,7 +109,7 @@ component implements="WWW.interfaces.connector" {
                                 try {
                                     var _request = new Request(arguments.options.otherParameter[2]);
                                     
-                                    if(_request.getUserId() == request.user.getUserId()) {
+                                    if(_request.getUser().getUserId() == request.user.getUserId()) {
                                         return application.system.settings.getValueOfKey("templateRenderer")
                                             .setModulePath(getModulePath())
                                             .setTemplate("request.cfm")

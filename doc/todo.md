@@ -9,9 +9,9 @@
     - contactForm.request.loadReplies()
     - privateMessage.message.read() per filter regeln
     - review.review.loadGenre() per filter regeln
-- " [sg]et\w+Id\("
-- save => update creator | lastEditor | creationDate | lastEditDate
-- setLastEditDate | setCreationDate => now | function remove | db param set now
+    - status - getNextStatus
+- lastEditDate per trigger setzen
+- gallery.picture und blog.picture mit creator / lastEditor ausstatten
 
 ## Allgemein
     1. Validierungen

@@ -1,5 +1,6 @@
 component {
     import "API.modules.com.IcedReaper.teamOverview.*";
+    import "API.modules.com.Nephthys.userManager.user";
     
     remote array function getMember() {
         var filterCtrl = new filter().for("member");
@@ -31,8 +32,8 @@ component {
     }
     
     remote numeric function addUser(required numeric userId) {
-        new member(0)
-            .setUserId(arguments.userId)
+        new member(null)
+            .setUser(new user(arguments.userId))
             .save(request.user);
         
         return true;

@@ -187,7 +187,7 @@ component {
                                .addParam(name = "content",             value = serializeJSON(variables.content),  cfsqltype = "cf_sql_varchar")
                                .addParam(name = "useDynamicUrlSuffix", value = variables.useDynamicUrlSuffix,     cfsqltype = "cf_sql_bit")
                                .addParam(name = "statusId",            value = variables.status.getStatusId(),    cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "lastEditDate",        value = variables.lastEditDate,            cfsqltype = "cf_sql_timestamp");
+                               .addParam(name = "userId",              value = arguments.user.getUserId(),        cfsqltype = "cf_sql_numeric");
         
         if(isNewEntry()) {
             if(variables.pageId != null && variables.pageId != 0 && variables.majorVersion != null && variables.majorVersion != 0 && variables.minorVersion != null) {
@@ -219,17 +219,18 @@ component {
                                                                         :content,
                                                                         :useDynamicUrlSuffix,
                                                                         :statusId,
-                                                                        :userId,
-                                                                        :creationDate,
-                                                                        :userId,
-                                                                        :lastEditDate
+                                                                        :userId
+                                                                        :userId
                                                                     );
                                                         SELECT currval('nephthys_page_pageVersion_pageVersionId_seq') newPageVersionId;")
-                                               .addParam(name = "userId",       value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
-                                               .addParam(name = "creationDate", value = variables.creationDate,        cfsqltype = "cf_sql_timestamp")
                                                .execute()
                                                .getResult()
                                                .newPageVersionId[1];
+                
+                variables.creator = arguments.user;
+                variables.creationDate = now();
+                variables.lastEditor = arguments.user;
+                variables.lastEditDate = now();
             }
             else {
                 throw(type = "nephthys.application.notAllowed",
@@ -253,12 +254,14 @@ component {
                                      content             = :content,
                                      useDynamicUrlSuffix = :useDynamicUrlSuffix,
                                      statusId            = :statusId,
-                                     lastEditorUserId      = :userId,
-                                     lastEditDate        = :lastEditDate
+                                     lastEditorUserId    = :userId,
+                                     lastEditDate        = now()
                                WHERE pageVersionId = :pageVersionId")
-                     .addParam(name = "pageVersionId", value = variables.pageVersionId,          cfsqltype = "cf_sql_numeric")
-                     .addParam(name = "userId",        value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
+                     .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
                      .execute();
+                
+                variables.lastEditor = arguments.user;
+                variables.lastEditDate = now();
             }
             else {
                 if(variables.statusChanged) {

@@ -36,7 +36,7 @@ component {
     
     remote boolean function approve(required numeric requestId, required string comment = "") {
         transaction {
-            var _request = new request(arguments.requestId).approve(arguments.comment);
+            var _request = new request(arguments.requestId).approve(request.user, arguments.comment);
             
             var permissionFilter = createObject("API.modules.com.Nephthys.userManager.filter").for("permission");
             
@@ -63,7 +63,7 @@ component {
     }
     
     remote boolean function decline(required numeric requestId, required string comment = "") {
-        new request(arguments.requestId).decline(arguments.comment);
+        new request(arguments.requestId).decline(request.user, arguments.comment);
         
         return true;
     }

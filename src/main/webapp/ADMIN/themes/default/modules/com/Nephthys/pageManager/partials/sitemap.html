@@ -82,7 +82,7 @@
         </div>
     </uib-tab>
     
-    <uib-tab heading="Genehmigungen" disable="sitemap[selectedIndex].sitemapId != null">
+    <uib-tab heading="Genehmigungen" disable="! sitemap[selectedIndex].sitemapId">
         <div class="row m-t-1">
             <div class="col-sm-12">
                 <div class="card card-block">
@@ -95,7 +95,7 @@
                             <th>Datum</th>
                         </thead>
                         <tbody ng-repeat="approval in sitemap[selectedIndex].approvalList">
-                            <td><nephthys-user-info user="approval.user"></nephthys-user-info></td>
+                            <td><nephthys-user-info user="approval.approver"></nephthys-user-info></td>
                             <td>{{approval.previousStatusName}}</td>
                             <td>{{approval.newStatusName}}</td>
                             <td>{{approval.approvalDate}}</td>

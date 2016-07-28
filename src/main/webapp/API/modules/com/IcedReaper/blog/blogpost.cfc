@@ -13,7 +13,7 @@ component {
         return this;
     }
     
-    // S E T T E R
+    
     public blogpost function setHeadline(required string headline) {
         variables.headline = arguments.headline;
         variables.attributesChanged = true;
@@ -165,7 +165,7 @@ component {
         return this;
     }
     
-    // G E T T E R
+    
     public numeric function getBlogpostId() {
         return variables.blogpostId;
     }
@@ -290,7 +290,6 @@ component {
         }
     }
     
-    // C R U D
     public blogpost function save(required user user) {
         if(variables.folderName == "") {
             variables.folderName = createUUID();
@@ -305,7 +304,7 @@ component {
                                .addParam(name = "anonymousCommentAllowed",    value = variables.anonymousCommentAllowed,    cfsqltype = "cf_sql_bit")
                                .addParam(name = "commentsNeedToGetPublished", value = variables.commentsNeedToGetPublished, cfsqltype = "cf_sql_bit")
                                .addParam(name = "private",                    value = variables.private,                    cfsqltype = "cf_sql_bit")
-                               .addParam(name = "lastEditorUserId",           value = variables.lastEditor.getUserId(),     cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "userId",                     value = arguments.user.getUserId(),           cfsqltype = "cf_sql_numeric")
                                .addParam(name = "statusId",                   value = variables.status.getStatusId(),       cfsqltype = "cf_sql_numeric");
         
         if(variables.blogpostId == 0) {
@@ -322,8 +321,7 @@ component {
                                                                  private,
                                                                  statusId,
                                                                  creatorUserId,
-                                                                 lastEditorUserId,
-                                                                 lastEditDate
+                                                                 lastEditorUserId
                                                              )
                                                       VALUES (
                                                                  :headline,
@@ -336,17 +334,20 @@ component {
                                                                  :commentsNeedToGetPublished,
                                                                  :private,
                                                                  :statusId,
-                                                                 :creatorUserId,
-                                                                 :lastEditorUserId,
-                                                                 now()
+                                                                 :userId,
+                                                                 :userId
                                                              );
                                                  SELECT currval('seq_icedreaper_blog_blogpost_id') newBlogpostId;")
-                                        .addParam(name = "creatorUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
                                         .execute()
                                         .getResult()
                                         .newBlogpostId[1];
             
             directoryCreate(getAbsolutePath(), true, true);
+            
+            variables.creator = arguments.user;
+            variables.creationDate = now();
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         else {
             if(variables.attributesChanged) {
@@ -362,7 +363,7 @@ component {
                                          commentsNeedToGetPublished = :commentsNeedToGetPublished,
                                          private                    = :private,
                                          statusId                   = :statusId,
-                                         lastEditorUserId           = :lastEditorUserId,
+                                         lastEditorUserId           = :userId,
                                          lastEditDate               = now()
                                    WHERE blogpostId = :blogpostId")
                          .addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric")
@@ -371,6 +372,9 @@ component {
                     if(variables.keyExists("oldFolderName") && variables.oldFolderName != variables.folderName) {
                         directoryRename(expandPath("/upload/com.IcedReaper.blog/" & variables.oldFolderName), getAbsolutePath());
                     }
+                    
+                    variables.lastEditor = arguments.user;
+                    variables.lastEditDate = now();
                     
                     variables.attributesChanged = false;
                     
@@ -409,7 +413,7 @@ component {
                                                         )")
                                    .addParam(name = "blogpostId",    value = variables.blogpostId,                    cfsqltype = "cf_sql_numeric")
                                    .addParam(name = "categoryId",    value = variables.categories[c].getCategoryId(), cfsqltype = "cf_sql_numeric")
-                                   .addParam(name = "creatorUserId", value = variables.lastEditor.getUserId(),        cfsqltype = "cf_sql_numeric")
+                                   .addParam(name = "creatorUserId", value = arguments.user.getUserId(),              cfsqltype = "cf_sql_numeric")
                                    .execute();
                     }
                     catch(any e) {
@@ -458,7 +462,7 @@ component {
         }
     }
     
-    // I N T E R N A L
+    
     private void function loadDetails() {
         if(variables.blogpostId != 0 && variables.blogpostId != null) {
             var qBlogpost = new Query().setSQL("SELECT * 

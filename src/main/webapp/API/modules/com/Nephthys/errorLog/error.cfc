@@ -9,7 +9,7 @@ component {
         return this;
     }
     
-    // S E T T E R
+    
     public error function setErrorCode(required string errorCode) {
         variables.errorCode = arguments.errorCode;
         return this;
@@ -30,10 +30,6 @@ component {
         variables.stacktrace = arguments.stacktrace;
         return this;
     }
-    public error function setUser(required numeric user) {
-        variables.user = arguments.user;
-        return this;
-    }
     public error function setReferrer(required string referrer) {
         variables.referrer = arguments.referrer;
         return this;
@@ -43,7 +39,7 @@ component {
         return this;
     }
     
-    // G E T T E R
+    
     public numeric function getErrorId() {
         return variables.errorId;
     }
@@ -75,7 +71,7 @@ component {
         return variables.userAgent;
     }
     
-    // C R U D
+    
     public error function save(required user user) {
         if(variables.errorId == 0) {
             variables.errorId = new Query().setSQL("INSERT INTO nephthys_error
@@ -105,12 +101,15 @@ component {
                                            .addParam(name = "message",    value = left(variables.message, 300),     cfsqltype = "cf_sql_varchar")
                                            .addParam(name = "details",    value = left(variables.details, 200),     cfsqltype = "cf_sql_varchar", null = (variables.details        == "" || variables.details        == null))
                                            .addParam(name = "stacktrace", value = left(variables.stacktrace, 4000), cfsqltype = "cf_sql_varchar")
-                                           .addParam(name = "userId",     value = variables.user.getUserId(),       cfsqltype = "cf_sql_numeric", null = (variables.user.getUserId() == null))
+                                           .addParam(name = "userId",     value = arguments.user.getUserId(),       cfsqltype = "cf_sql_numeric", null = (arguments.user.getUserId() == null))
                                            .addParam(name = "referrer",   value = left(variables.referrer, 255),    cfsqltype = "cf_sql_varchar", null = (variables.referrer       == "" || variables.referrer       == null))
                                            .addParam(name = "userAgent",  value = left(variables.userAgent, 75),    cfsqltype = "cf_sql_varchar", null = (variables.userAgent      == "" || variables.userAgent      == null))
                                            .execute()
                                            .getResult()
                                            .newErrorId[1];
+            
+            variables.user = arguments.user;
+            variables.errorDate = now();
         }
         
         return this;
@@ -125,7 +124,7 @@ component {
         variables.errorId = null;
     }
     
-    // I N T E R N A L
+    
     private void function loadDetails() {
         if(variables.errorId != 0 && variables.errorId != null) {
             var qGetError = new Query().setSQL("SELECT *

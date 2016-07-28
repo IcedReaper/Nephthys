@@ -62,11 +62,11 @@ component {
     
     
     public sitemapPage function save(required user user) {
-        var qSave = new Query().addParam(name = "sitemapId",  value = variables.sitemap.getSitemapId(), cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "regionId",     value = variables.region.getRegionId(),       cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "pageId",       value = variables.page.getPageId(),           cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "parentPageId", value = variables.parentPageId.getPageId(),   cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "sortOrder",    value = variables.sortOrder,                  cfsqltype = "cf_sql_numeric");
+        var qSave = new Query().addParam(name = "sitemapId",    value = variables.sitemap.getSitemapId(), cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "regionId",     value = variables.region.getRegionId(),   cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "pageId",       value = variables.page.getPageId(),       cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "parentPageId", value = variables.parentPage.getPageId(), cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "sortOrder",    value = variables.sortOrder,              cfsqltype = "cf_sql_numeric");
         
         if(variables.sitemapPageId == null) {
             variables.sitemapPageId = qSave.setSQL("INSERT INTO nephthys_page_sitemapPage

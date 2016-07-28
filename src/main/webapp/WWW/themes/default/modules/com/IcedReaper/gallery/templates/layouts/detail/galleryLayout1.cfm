@@ -134,6 +134,6 @@
                 </div>
             </cfif>
         </footer>
-        <cfinclude template="../general/blueimpGallery.cfm" />
+        <cfinclude template="../generic/blueimpGallery.cfm" />
     </article>
 </cfoutput>

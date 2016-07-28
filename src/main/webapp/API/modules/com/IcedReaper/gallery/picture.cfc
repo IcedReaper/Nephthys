@@ -9,7 +9,7 @@ component {
         return this;
     }
     
-    // S E T T E R
+    
     public picture function setGalleryId(required numeric galleryId) {
         if(variables.pictureId == 0 || variables.galleryId == arguments.galleryId) {
             variables.galleryId = arguments.galleryId;
@@ -118,7 +118,7 @@ component {
         return this;
     }
     
-    // G E T T E R
+    
     public numeric function getPictureId() {
         return variables.pictureId;
     }
@@ -144,7 +144,7 @@ component {
         return variables.sortId;
     }
     
-    // C R U D
+    
     public picture function save(required user user) {
         if(variables.pictureId == 0) {
             variables.pictureId = new Query().setSQL("INSERT INTO IcedReaper_gallery_picture
@@ -221,7 +221,7 @@ component {
         variables.pictureId = 0;
     }
     
-    // I N T E R N A L
+    
     private void function loadDetails() {
         if(variables.pictureId != 0 && variables.pictureId != null) {
             var qPicture = new Query().setSQL("SELECT *

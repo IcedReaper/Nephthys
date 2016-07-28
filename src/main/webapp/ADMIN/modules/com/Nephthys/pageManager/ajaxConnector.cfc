@@ -253,7 +253,6 @@ component {
                   .setOnlineStatus(arguments.status.online)
                   .setDeleteable(arguments.status.deleteable)
                   .setShowInTasklist(arguments.status.showInTasklist)
-                  .setLastEditor(request.user)
                   .save(request.user);
             
             transactionCommit();
@@ -348,7 +347,7 @@ component {
             transactionCommit();
         }
         
-        return false;
+        return true;
     }
     
     remote struct function getModule() {

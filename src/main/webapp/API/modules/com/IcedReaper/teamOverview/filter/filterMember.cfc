@@ -33,9 +33,15 @@ component implements="API.interfaces.filter" {
     public filter function execute() {
         var qryMember = new Query();
         
-        var sql = "SELECT memberId
-                     FROM icedReaper_teamOverview_member";
-        var where = "";
+        var sql = "SELECT m.memberId
+                     FROM icedReaper_teamOverview_member m
+                   INNER JOIN nephthys_user u ON m.userId = u.userId 
+                   INNER JOIN nephthys_user_status s ON u.statusId = s.statusId";
+        
+        var where = " WHERE s.canLogin = :canLogin";
+        qryMember.addParam(name = "canLogin", value = true, cfsqltype = "cf_sql_bit");
+        
+        
         if(variables.userId != 0 && variables.userId != null) {
             where &= (where == "" ? " WHERE " : " AND ") & " userId = :userId";
             qryMember.addParam(name = "userId", value = variables.userId, cfsqltype = "cf_sql_numeric");

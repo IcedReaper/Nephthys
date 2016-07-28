@@ -359,7 +359,7 @@ component {
             transactionCommit();
         }
         
-        return false;
+        return true;
     }
     
     remote array function getGalleriesInTasklist() {

@@ -107,10 +107,9 @@ component {
     
     
     public sitemap function save(required user user) {
-        var qSave = new Query().addParam(name = "statusId",       value = variables.status.getStatusId(),   cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "version",        value = variables.version,                cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "lastEditorUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "lastEditDate",   value = variables.lastEditDate,           cfsqltype = "cf_sql_timestamp");
+        var qSave = new Query().addParam(name = "statusId", value = variables.status.getStatusId(), cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "version",  value = variables.version,              cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "userId",   value = arguments.user.getUserId(),     cfsqltype = "cf_sql_numeric");
         
         if(variables.sitemapId == null) {
             variables.sitemapId = qSave.setSQL("INSERT INTO nephthys_page_sitemap
@@ -118,33 +117,35 @@ component {
                                                                   statusId,
                                                                   version,
                                                                   creatorUserId,
-                                                                  creationDate,
-                                                                  lastEditorUserId,
-                                                                  lastEditDate
+                                                                  lastEditorUserId
                                                               )
                                                        VALUES (
                                                                   :statusId,
                                                                   :version,
-                                                                  :creatorUserId,
-                                                                  :creationDate,
-                                                                  :lastEditorUserId,
-                                                                  :lastEditDate
+                                                                  :userId,
+                                                                  :userId
                                                               );
                                                   SELECT currval('nephthys_page_sitemap_sitemapId_seq') newSitemapId;")
-                                         .addParam(name = "creatorUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
-                                         .addParam(name = "creationDate",   value = variables.creationDate,        cfsqltype = "cf_sql_timestamp")
                                          .execute()
                                          .getResult()
                                          .newSitemapId[1];
+            
+            variables.creator = arguments.user;
+            variables.creationDate = now();
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         else {
             qSave.setSQL("UPDATE nephthys_page_sitemap
-                             SET statusId       = :statusId,
-                                 lastEditorUserId = :lastEditorUserId,
-                                 lastEditDate   = :lastEditDate
+                             SET statusId         = :statusId,
+                                 lastEditorUserId = :userId,
+                                 lastEditDate     = now()
                            WHERE sitemapId = :sitemapId")
                  .addParam(name = "sitemapId", value = variables.sitemapId, cfsqltype = "cf_sql_numeric")
                  .execute();
+            
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         
         return this;
@@ -165,11 +166,11 @@ component {
     private void function load() {
         if(variables.sitemapId != null) {
             var qSitemap = new Query().setSQL("SELECT *
-                                                   FROM nephthys_page_sitemap
-                                                  WHERE sitemapId = :sitemapId")
-                                        .addParam(name = "sitemapId", value = variables.sitemapId, cfsqltype = "cf_sql_numeric")
-                                        .execute()
-                                        .getResult();
+                                                 FROM nephthys_page_sitemap
+                                                WHERE sitemapId = :sitemapId")
+                                      .addParam(name = "sitemapId", value = variables.sitemapId, cfsqltype = "cf_sql_numeric")
+                                      .execute()
+                                      .getResult();
             
             if(qSitemap.getRecordCount() == 1) {
                 variables.version      = qSitemap.version[1];

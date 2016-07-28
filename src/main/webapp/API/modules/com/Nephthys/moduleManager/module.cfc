@@ -13,11 +13,6 @@ component {
     }
     
     
-    public module function setModuleId(required numeric moduleId) {
-        variables.moduleId = arguments.moduleId;
-        
-        return this;
-    }
     public module function setModuleName(required string moduleName) {
         variables.moduleName = arguments.moduleName;
         
@@ -179,6 +174,15 @@ component {
     
     
     public module function save(required user user) {
+        var qSave = new Query().addParam(name = "moduleName",          value = variables.moduleName,          cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "description",         value = variables.description,         cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "active",              value = variables.active,              cfsqltype = "cf_sql_bit")
+                               .addParam(name = "systemModule",        value = variables.systemModule,        cfsqltype = "cf_sql_bit")
+                               .addparam(name = "sortOrder",           value = variables.sortOrder,           cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "availableWWW",        value = variables.availableWWW,        cfsqltype = "cf_sql_bit")
+                               .addParam(name = "availableADMIN",      value = variables.availableADMIN,      cfsqltype = "cf_sql_bit")
+                               .addParam(name = "useDynamicUrlSuffix", value = variables.useDynamicUrlSuffix, cfsqltype = "cf_sql_bit");
+        
         transaction {
             if(variables.moduleId == 0) {
                 variables.moduleId = new Query().setSQL("INSERT INTO nephthys_module
@@ -203,14 +207,6 @@ component {
                                                                          :useDynamicUrlSuffix
                                                                      );
                                                         SELECT currval('seq_nephthys_module_id') newModuleId;")
-                                                .addParam(name = "moduleName",          value = variables.moduleName,          cfsqltype = "cf_sql_varchar")
-                                                .addParam(name = "description",         value = variables.description,         cfsqltype = "cf_sql_varchar")
-                                                .addParam(name = "active",              value = variables.active,              cfsqltype = "cf_sql_bit")
-                                                .addParam(name = "systemModule",        value = variables.systemModule,        cfsqltype = "cf_sql_bit")
-                                                .addparam(name = "sortOrder",           value = variables.sortOrder,           cfsqltype = "cf_sql_numeric")
-                                                .addParam(name = "availableWWW",        value = variables.availableWWW,        cfsqltype = "cf_sql_bit")
-                                                .addParam(name = "availableADMIN",      value = variables.availableADMIN,      cfsqltype = "cf_sql_bit")
-                                                .addParam(name = "useDynamicUrlSuffix", value = variables.useDynamicUrlSuffix, cfsqltype = "cf_sql_bit")
                                                 .execute()
                                                 .getResult()
                                                 .newModuleId[1];
@@ -227,14 +223,6 @@ component {
                                            useDynamicUrlSuffix = :useDynamicUrlSuffix
                                      WHERE moduleId    = :moduleId")
                            .addParam(name = "moduleId",       value = variables.moduleId,       cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "moduleName",     value = variables.moduleName,     cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "description",    value = variables.description,    cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "active",         value = variables.active,         cfsqltype = "cf_sql_bit")
-                           .addParam(name = "systemModule",   value = variables.systemModule,   cfsqltype = "cf_sql_bit")
-                           .addparam(name = "sortOrder",      value = variables.sortOrder,      cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "availableWWW",   value = variables.availableWWW,   cfsqltype = "cf_sql_bit")
-                           .addParam(name = "availableADMIN", value = variables.availableADMIN, cfsqltype = "cf_sql_bit")
-                           .addParam(name = "useDynamicUrlSuffix", value = variables.useDynamicUrlSuffix, cfsqltype = "cf_sql_bit")
                            .execute();
             }
             

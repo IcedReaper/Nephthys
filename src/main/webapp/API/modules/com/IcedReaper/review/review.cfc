@@ -184,17 +184,17 @@ component {
     
     
     public review function save(required user user) {
-        var qSave = new Query().addParam(name = "typeId",           value = variables.type.getTypeId(),       cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "rating",           value = variables.rating,                 cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "description",      value = variables.description,            cfsqltype = "cf_sql_varchar")
-                               .addParam(name = "headline",         value = variables.headline,               cfsqltype = "cf_sql_varchar")
-                               .addParam(name = "introduction",     value = variables.introduction,           cfsqltype = "cf_sql_varchar")
-                               .addParam(name = "reviewText",       value = variables.reviewText,             cfsqltype = "cf_sql_varchar")
-                               .addParam(name = "imagePath",        value = variables.imagePath,              cfsqltype = "cf_sql_varchar")
-                               .addParam(name = "viewCounter",      value = variables.viewCounter,            cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "link",             value = variables.link,                   cfsqltype = "cf_sql_varchar")
-                               .addParam(name = "private",          value = variables.private,                cfsqltype = "cf_sql_bit")
-                               .addParam(name = "lastEditorUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
+        var qSave = new Query().addParam(name = "typeId",       value = variables.type.getTypeId(), cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "rating",       value = variables.rating,           cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "description",  value = variables.description,      cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "headline",     value = variables.headline,         cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "introduction", value = variables.introduction,     cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "reviewText",   value = variables.reviewText,       cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "imagePath",    value = variables.imagePath,        cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "viewCounter",  value = variables.viewCounter,      cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "link",         value = variables.link,             cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "private",      value = variables.private,          cfsqltype = "cf_sql_bit")
+                               .addParam(name = "userId",       value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric");
         
         if(variables.reviewId == null || variables.reviewId == 0) {
             variables.reviewId = new Query().setSQL("INSERT INTO IcedReaper_review_review
@@ -223,19 +223,18 @@ component {
                                                                      :viewCounter,
                                                                      :link,
                                                                      :private,
-                                                                     :creatorUserId,
-                                                                     :lastEditorUserId
+                                                                     :userId,
+                                                                     :userId
                                                                  );
                                                      SELECT currval('seq_icedreaper_review_reviewId') newReviewId;")
-                                            .addParam(name = "creatorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                             .execute()
                                             .getResult()
                                             .newReviewId[1];
             
-            variables.creatorUserId    = request.user.getUserId();
-            variables.lastEditorUserId = request.user.getUserId();
-            variables.creationDate     = now();
-            variables.lastEditDate     = now();
+            variables.creator = arguments.user;
+            variables.creationDate = now();
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         else {
             new Query().setSQL("UPDATE IcedReaper_review_review
@@ -249,13 +248,14 @@ component {
                                        viewCounter      = :viewCounter,
                                        link             = :link,
                                        private          = :private,
-                                       lastEditorUserId = :lastEditorUserId,
+                                       lastEditorUserId = :userId,
                                        lastEditDate     = now()
                                  WHERE reviewId = :reviewId ")
                        .addParam(name = "reviewId", value = variables.reviewId, cfsqltype = "cf_sql_numeric")
                        .execute();
-            variables.lastEditorUserId = request.user.getUserId();
-            variables.lastEditDate     = now();
+            
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         
         if(variables.genreAdded.len() > 0) {
@@ -271,9 +271,9 @@ component {
                                                     :genreId,
                                                     :userId
                                                 )")
-                          .addParam(name = "reviewId", value = variables.reviewId,               cfsqltype = "cf_sql_numeric")
-                          .addParam(name = "genreId",  value = genreId,                          cfsqltype = "cf_sql_numeric")
-                          .addParam(name = "userId",   value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
+                          .addParam(name = "reviewId", value = variables.reviewId,         cfsqltype = "cf_sql_numeric")
+                          .addParam(name = "genreId",  value = genreId,                    cfsqltype = "cf_sql_numeric")
+                          .addParam(name = "userId",   value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
                           .execute();
             }
         }

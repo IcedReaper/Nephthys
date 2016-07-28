@@ -46,10 +46,12 @@ component extends="API.abstractClasses.settings" {
                                                    lastEditorUserId = :userId,
                                                    lastEditDate = now()
                                              WHERE key = :key")
-                                   .addParam(name = "value",  value = convertToSaveFormat(key), cfsqltype = "cf_sql_varchar")
-                                   .addParam(name = "key",    value = key,                      cfsqltype = "cf_sql_varchar")
-                                   .addparam(name = "userId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                                   .addParam(name = "value",  value = convertToSaveFormat(key),   cfsqltype = "cf_sql_varchar")
+                                   .addParam(name = "key",    value = key,                        cfsqltype = "cf_sql_varchar")
+                                   .addparam(name = "userId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                    .execute();
+                        
+                        
                     }
                 }
                 

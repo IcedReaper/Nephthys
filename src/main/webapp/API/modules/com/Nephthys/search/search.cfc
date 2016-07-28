@@ -46,7 +46,7 @@ component extends="API.abstractClasses.search" {
                                         )")
                    .addParam(name = "searchString", value = arguments.searchPhrase,   cfsqltype = "cf_sql_varchar")
                    .addParam(name = "referer",      value = cgi.HTTP_REFERER,         cfsqltype = "cf_sql_varchar")
-                   .addParam(name = "userId",       value = request.user.getUserId(), cfsqltype = "cf_sql_integer", null = ! request.user.isActive())
+                   .addParam(name = "userId",       value = request.user.getUserId(), cfsqltype = "cf_sql_integer", null = ! request.user.getStatus().getCanLogin())
                    .addParam(name = "resultCount",  value = arguments.resultCount,    cfsqltype = "cf_sql_integer")
                    .execute();
     }

@@ -19,7 +19,7 @@ component {
     }
     
     public conversation function addParticipant(required user user) {
-        if(arguments.user.isActive()) {
+        if(arguments.user.getStatus().getCanLogin()) {
             if(isNull(variables.participants)) {
                 loadParticipants();
             }
@@ -51,7 +51,7 @@ component {
     }
     
     public function removeParticipant(required user user) {
-        if(arguments.user.arguments.user.isActive()) {
+        if(arguments.user.arguments.user.getStatus().getCanLogin()) {
             if(isNull(variables.participants)) {
                 loadParticipants();
             }
@@ -153,34 +153,36 @@ component {
                                                                            :initiatorUserId
                                                                        );
                                                            SELECT currval('seq_icedreaper_privateMessage_conversationId') newConversationId;")
-                                                  .addParam(name = "initiatorUserId", value = variables.initiator.getUserId(), cfsqltype = "cf_sql_numeric")
+                                                  .addParam(name = "initiatorUserId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                                   .execute()
                                                   .getResult()
                                                   .newConversationId[1];
             
-            for(var userId in variables.participantsAdded) {
-                new Query().setSQL("INSERT INTO IcedReaper_privateMessage_participant
-                                                (
-                                                    conversationId,
-                                                    userId
-                                                )
-                                         VALUES (
-                                                    :conversationId,
-                                                    :userId
-                                                )")
-                           .addParam(name = "conversationId", value = variables.conversationId, cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "userId",         value = userId,                   cfsqltype = "cf_sql_numeric")
-                           .execute();
-            }
-            
-            for(var userId in variables.participantsRemoved) {
-                new Query().setSQL("DELETE FROM IcedReaper_privateMessage_participant
-                                          WHERE conversationId = :conversationId,
-                                            AND userId         = :userId")
-                           .addParam(name = "conversationId", value = variables.conversationId, cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "userId",         value = userId,                   cfsqltype = "cf_sql_numeric")
-                           .execute();
-            }
+            variables.initiator = arguments.user;
+        }
+        
+        for(var userId in variables.participantsAdded) {
+            new Query().setSQL("INSERT INTO IcedReaper_privateMessage_participant
+                                            (
+                                                conversationId,
+                                                userId
+                                            )
+                                     VALUES (
+                                                :conversationId,
+                                                :userId
+                                            )")
+                       .addParam(name = "conversationId", value = variables.conversationId, cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "userId",         value = userId,                   cfsqltype = "cf_sql_numeric")
+                       .execute();
+        }
+        
+        for(var userId in variables.participantsRemoved) {
+            new Query().setSQL("DELETE FROM IcedReaper_privateMessage_participant
+                                      WHERE conversationId = :conversationId,
+                                        AND userId         = :userId")
+                       .addParam(name = "conversationId", value = variables.conversationId, cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "userId",         value = userId,                   cfsqltype = "cf_sql_numeric")
+                       .execute();
         }
         
         return this;

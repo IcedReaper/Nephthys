@@ -399,11 +399,11 @@ component {
         }
         else {
             if(arguments.options.keyExists("onlyVisibleToLoggedInUser")) {
-                return arguments.options.onlyVisibleToLoggedInUser ? request.user.isActive() : true;
+                return arguments.options.onlyVisibleToLoggedInUser ? request.user.getStatus().getCanLogin() : true;
             }
             else {
                 if(arguments.options.keyExists("onlyVisibleToLoggedOutUser")) {
-                    return arguments.options.onlyVisibleToLoggedOutUser ? (! request.user.isActive()) : true;
+                    return arguments.options.onlyVisibleToLoggedOutUser ? (! request.user.getStatus().getCanLogin()) : true;
                 }
                 else {
                     return true;

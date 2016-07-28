@@ -391,8 +391,11 @@ component {
     }
     
     remote boolean function deleteStatus(required numeric statusId) {
+        if(arguments.statusId == application.system.settings.getValueOfKey("com.Nephthys.userManager.guestStatus")) {
+            throw(type = "nephthys.application.notAllowed", message = "You cannot delete the guest status. Please reset the guest status in the system settings");
+        }
         if(arguments.statusId == application.system.settings.getValueOfKey("com.Nephthys.userManager.defaultStatus")) {
-            throw(type = "nephthys.application.notAllowed", message = "You cannot delete the start status. Please reset the start status in the system settings");
+            throw(type = "nephthys.application.notAllowed", message = "You cannot delete the default status. Please reset the start status in the system settings");
         }
         
         var userStillWithThisStatus = new filter().for("user")
@@ -469,7 +472,7 @@ component {
             transactionCommit();
         }
         
-        return false;
+        return true;
     }
     
     

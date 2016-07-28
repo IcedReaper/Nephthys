@@ -7,7 +7,7 @@ component {
         return this;
     }
     
-    // S E T T E R
+    
     public theme function setName(required string name) {
         variables.name = arguments.name;
         
@@ -97,7 +97,7 @@ component {
         return this;
     }
     
-    // G E T T E R
+    
     public numeric function getThemeId() {
         return variables.themeId;
     }
@@ -120,7 +120,7 @@ component {
         return variables.availableAdmin == 1;
     }
     
-    // C R U D
+    
     public theme function save(required user user) {
         if(variables.themeId == 0) {
             variables.themeId = new Query().setSQL("INSERT INTO nephthys_theme
@@ -177,7 +177,6 @@ component {
         directoryDelete("/WWW/themes/" & variables.folderName, true);
     }
     
-    // I N T E R N A L
     
     private void function loadDetails() {
         if(variables.themeId != 0 && variables.themeId != null) {

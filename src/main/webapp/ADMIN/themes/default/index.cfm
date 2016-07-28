@@ -26,12 +26,12 @@
     <script type="text/javascript" src="/themes/default/js/globalFunctions.js"></script>
     <script type="text/javascript" src="/themes/default/js/globalAngularAjaxSettings.js"></script>
 </head>
-<body<cfif request.user.getUserId() NEQ 0> ng-app="nephthysAdminApp"</cfif>>
+<body<cfif request.user.getUserId() NEQ null> ng-app="nephthysAdminApp"</cfif>>
     <nav class="navbar navbar-dark navbar-fixed-top bg-inverse">
         <div class="container-fluid">
             <a class="navbar-brand" href="/com.Nephthys.dashboard/">Adminpanel - Nephthys</a>
             
-            <cfif request.user.getUserId() NEQ 0>
+            <cfif request.user.getUserId() NEQ null>
                 <div class="btn-group pull-right">
                     <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         #request.user.getUsername()#
@@ -50,7 +50,7 @@
         </div>
     </nav>
     <main>
-        <cfif request.user.getUserId() NEQ 0>
+        <cfif request.user.getUserId() NEQ null>
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-sm-3 col-md-2 sidebar">
@@ -79,7 +79,7 @@
         &copy; IcedReaper und das Nephthys Team 2015 - #year(now())#
     </footer>
     
-    <cfif request.user.getUserId() NEQ 0>
+    <cfif request.user.getUserId() NEQ null>
         <script type="text/javascript" src="/themes/default/js/sessionTimeout.js"></script>
     </cfif>
 </body>

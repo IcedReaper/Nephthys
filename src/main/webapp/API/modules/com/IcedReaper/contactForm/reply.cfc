@@ -1,5 +1,5 @@
 component {
-    import "API.modules.com.Nephthys.userManager.*";
+    import "API.modules.com.Nephthys.userManager.user";
     
     public reply function init(required numeric replyId) {
         variables.replyId   = arguments.replyId;
@@ -9,7 +9,7 @@ component {
         return this;
     }
     
-    // SETTER
+    
     public reply function setRequestId(required numeric requestId) {
         variables.requestId = arguments.requestId;
         return this;
@@ -19,31 +19,24 @@ component {
         return this;
     }
     
-    // GETTER
+    
     public numeric function getReplyId() {
         return variables.replyId;
     }
     public numeric function getRequestId() {
         return variables.requestId;
     }
-
     public string function getMessage() {
         return variables.message;
     }
-
-    public numeric function getReplyUserId() {
-        return variables.replyUserId;
-    }
-
     public any function getReplyDate() {
         return variables.replyDate;
     }
-    
     public user function getReplyUser() {
-        return new user(variables.replyUserId);
+        return variables.replyUser;
     }
     
-    // CRUD
+    
     public reply function save(required user user) {
         if(variables.replyId == 0 || variables.replyId == null) {
             if(variables.requestId != 0 && variables.requestId != null) {
@@ -60,10 +53,13 @@ component {
                                                             :message,
                                                             :replyUserId
                                                         )")
-                                   .addParam(name = "requestId",   value = variables.requestId,      cfsqltype = "cf_sql_numeric")
-                                   .addParam(name = "message",     value = variables.message,        cfsqltype = "cf_sql_varchar")
-                                   .addParam(name = "replyUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                                   .addParam(name = "requestId",   value = variables.requestId,        cfsqltype = "cf_sql_numeric")
+                                   .addParam(name = "message",     value = variables.message,          cfsqltype = "cf_sql_varchar")
+                                   .addParam(name = "replyUserId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                    .execute();
+                        
+                        variables.replyUser = arguments.user;
+                        variables.replyDate = now();
                         
                         /* todo: setup smtp server to check this feature...
                         var cf_request = new request(variables.requestId);
@@ -92,7 +88,7 @@ component {
         return this;
     }
     
-    // PRIVATE
+    
     private void function loadDetails() {
         if(variables.replyId != null && variables.replyId != 0) {
             var qReply = new Query().setSQL("SELECT *
@@ -103,10 +99,10 @@ component {
                                     .getResult();
             
             if(qReply.getRecordCount() == 1) {
-                variables.requestId   = qReply.requestId[1];
-                variables.message     = qReply.message[1];
-                variables.replyUserId = qReply.replyUserId[1];
-                variables.replyDate   = qReply.replyDate[1];
+                variables.requestId = qReply.requestId[1];
+                variables.message   = qReply.message[1];
+                variables.replyUser = new user(qReply.replyUserId[1]);
+                variables.replyDate = qReply.replyDate[1];
             }
             else {
                 throw(type = "icedreaper.contactForm.notFound", message = "Could not find a reply with this Id");
@@ -115,7 +111,7 @@ component {
         else {
             variables.requestId   = 0;
             variables.message     = "";
-            variables.replyUserId = null;
+            variables.replyUserId = new user(null);
             variables.replyDate   = null;
         }
     }

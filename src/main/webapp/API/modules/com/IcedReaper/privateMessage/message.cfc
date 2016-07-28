@@ -175,9 +175,9 @@ component {
                                                                       :message
                                                                   );
                                                            SELECT currval('seq_icedreaper_privateMessage_messageId') newMessageId;")
-                                             .addParam(name = "conversationId", value = variables.conversationId, cfsqltype = "cf_sql_numeric")
-                                             .addParam(name = "userId",         value = variables.user.getUserId, cfsqltype = "cf_sql_numeric")
-                                             .addParam(name = "message",        value = variables.message,        cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "conversationId", value = variables.conversationId,   cfsqltype = "cf_sql_numeric")
+                                             .addParam(name = "userId",         value = variables.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                                             .addParam(name = "message",        value = variables.message,          cfsqltype = "cf_sql_varchar")
                                              .execute()
                                              .getResult()
                                              .newMessageId[1];

@@ -9,6 +9,7 @@ component {
         return this;
     }
     
+    
     public member function setUser(required user user) {
         variables.user = arguments.user;
         
@@ -19,6 +20,7 @@ component {
         
         return this;
     }
+    
     
     public numeric function getMemberId() {
         return variables.memberId;
@@ -42,10 +44,10 @@ component {
         return variables.lastEditDate;
     }
     
-    // CRUD
+    
     public member function save(required user user) {
-        if(variables.userId != null && variables.userId != 0) {
-            if(variables.memberId == 0) {
+        if(variables.user.getUserId() != null && variables.user.getUserId() != 0) {
+            if(variables.memberId == 0 || variables.memberId == null) {
                 var qInsMember = new Query();
                 var sql = "INSERT INTO icedReaper_teamOverview_member
                                        (
@@ -69,29 +71,36 @@ component {
                                                    END + 1
                                               FROM icedReaper_teamOverview_member), ";
                 }
-                sql &= "                   :creatorUserId,
-                                           :lastEditorUserId
+                sql &= "                   :actualUserId,
+                                           :actualUserId
                                        );
                            SELECT currval('seq_icedreaper_teamOverview_memberId') newMemberId;";
                 
                 variables.memberId = qInsMember.setSQL(sql)
-                                               .addParam(name = "userId",           value = variables.user.getUserId,         cfsqltype = "cf_sql_numeric")
-                                               .addParam(name = "creatorUserId",    value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
-                                               .addParam(name = "lastEditorUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
+                                               .addParam(name = "userId",       value = variables.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                                               .addParam(name = "actualUserId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                                .execute()
                                                .getResult()
                                                .newMemberId[1];
+                
+                variables.creator = arguments.user;
+                variables.creationDate = now();
+                variables.lastEditor = arguments.user;
+                variables.lastEditDate = now();
             }
             else {
                 new Query().setSQL("UPDATE icedReaper_teamOverview_member
                                        SET sortId           = :sortId,
-                                           lastEditorUserId = :lastEditorUserId,
+                                           lastEditorUserId = :actualUserId,
                                            lastEditDate     = now()
                                      WHERE memberId = :memberId")
-                           .addParam(name = "memberId",         value = variables.memberId,               cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "sortId",           value = variables.sortId,                 cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "lastEditorUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "memberId",     value = variables.memberId,         cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "sortId",       value = variables.sortId,           cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "actualUserId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
                            .execute();
+                
+                variables.lastEditor = arguments.user;
+                variables.lastEditDate = now();
             }
         }
         else {
@@ -119,11 +128,11 @@ component {
                                      .getResult();
             
             if(qMember.getRecordCount() == 1) {
-                variables.user         = new user(qMember).userId[1];
+                variables.user         = new user(qMember.userId[1]);
                 variables.sortId       = qMember.sortId[1];
-                variables.creator      = new user(qMember).creatorUserId[1];
+                variables.creator      = new user(qMember.creatorUserId[1]);
                 variables.creationDate = qMember.creationDate[1];
-                variables.lastEditor   = new user(qMember).lastEditorUserId[1];
+                variables.lastEditor   = new user(qMember.lastEditorUserId[1]);
                 variables.lastEditDate = qMember.lastEditDate[1];
             }
             else {

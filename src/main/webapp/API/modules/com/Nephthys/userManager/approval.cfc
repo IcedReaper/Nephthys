@@ -53,26 +53,26 @@ component {
                                                                        userId,
                                                                        prevStatusId,
                                                                        newStatusId,
-                                                                       approvalUserId,
-                                                                       approvalDate
+                                                                       approvalUserId
                                                                    )
                                                             VALUES (
                                                                        :userId,
                                                                        :prevStatusId,
                                                                        :newStatusId,
-                                                                       :approvalUserId,
-                                                                       :approvalDate
+                                                                       :approvalUserId
                                                                    );
                                                        SELECT currval('nephthys_user_approval_approvalid_seq') newApprovalId;
                                                        ")
                    .addParam(name = "userId",         value = variables.user.getUserId(),         cfsqltype = "cf_sql_numeric")
                    .addParam(name = "prevStatusId",   value = variables.prevStatus.getStatusId(), cfsqltype = "cf_sql_numeric")
                    .addParam(name = "newStatusId",    value = variables.newStatus.getStatusId(),  cfsqltype = "cf_sql_numeric")
-                   .addParam(name = "approvalUserId", value = variables.approver.getUserId(),     cfsqltype = "cf_sql_numeric")
-                   .addParam(name = "approvalDate",   value = variables.approvalDate,             cfsqltype = "cf_sql_timestamp")
+                   .addParam(name = "approvalUserId", value = arguments.user.getUserId(),         cfsqltype = "cf_sql_numeric")
                    .execute()
                    .getResult()
                    .newApprovalId[1];
+            
+            variables.approver = arguments.user;
+            variables.approvalDate = now();
         }
         
         return this;
@@ -91,7 +91,7 @@ component {
             if(qGetApproval.getRecordCount() == 1) {
                 variables.user         = new user(qGetApproval.userId[1]);
                 variables.prevStatus   = new status(qGetApproval.prevStatusId[1]);
-                variables.newStatus   = new status(qGetApproval.newStatusId[1]);
+                variables.newStatus    = new status(qGetApproval.newStatusId[1]);
                 variables.approver     = new user(qGetApproval.approvalUserId[1]);
                 variables.approvalDate = qGetApproval.approvalDate[1];
             }
@@ -100,10 +100,10 @@ component {
             }
         }
         else {
-            variables.user         = null;
-            variables.prevStatus   = null;
-            variables.newStatus   = null;
-            variables.approver     = null;
+            variables.user         = new user(null);
+            variables.prevStatus   = new status(null);
+            variables.newStatus    = new status(null);
+            variables.approver     = new user(null);
             variables.approvalDate = now();
         }
     }

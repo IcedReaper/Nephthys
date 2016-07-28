@@ -39,8 +39,8 @@ component {
     }
     
     public genre function save(required user user) {
-        var qSave = new Query().addParam(name = "name",             value = variables.name,                  cfsqltype = "cf_sql_varchar")
-                               .addParam(name = "lastEditorUserId", value = variables.lastEdior.getUserId(), cfsqltype = "cf_sql_numeric");
+        var qSave = new Query().addParam(name = "name",   value = variables.name,             cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "userId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric");
         
         if(variables.genreId == null || variables.genreId == 0) {
             variables.genreId = qSave.setSQL("INSERT INTO IcedReaper_review_genre
@@ -51,29 +51,29 @@ component {
                                                           )
                                                    VALUES (
                                                               :name,
-                                                              :creatorUserId,
-                                                              :lastEditorUserId
+                                                              :userId,
+                                                              :userId
                                                           );
                                                 SELECT currval('seq_icedreaper_review_genre_id') newGenreId;")
-                                     .addParam(name = "creatorUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
                                      .execute()
                                      .getResult()
                                      .newGenreId[1];
             
+            variables.creator = arguments.user;
             variables.creationDate = now();
+            variables.lastEditor = arguments.user;
             variables.lastEditDate = now();
         }
         else {
             qSave.setSQL("UPDATE IcedReaper_review_genre
                              SET name             = :name,
-                                 lastEditorUserId = :lastEditorUserId,
+                                 lastEditorUserId = :userId,
                                  lastEditDate     = now()
                            WHERE genreId = :genreId")
-                 .addParam(name = "genreId",          value = variables.genreId,        cfsqltype = "cf_sql_numeric")
-                 .addParam(name = "name",             value = variables.name,           cfsqltype = "cf_sql_varchar")
-                 .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                 .addParam(name = "genreId", value = variables.genreId, cfsqltype = "cf_sql_numeric")
                  .execute();
             
+            variables.lastEditor = arguments.user;
             variables.lastEditDate = now();
         }
         

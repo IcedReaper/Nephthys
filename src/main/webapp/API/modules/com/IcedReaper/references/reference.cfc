@@ -12,6 +12,7 @@ component {
         return this;
     }
     
+    
     public reference function setName(required string name) {
         variables.name = arguments.name;
         return this;
@@ -110,16 +111,14 @@ component {
     
     
     public reference function save(required user user) {
-        var qSave = new Query().addParam(name = "name",             value = variables.name,                   cfsqltype = "cf_sql_varchar")
-                               .addParam(name = "since",            value = variables.since,                  cfsqltype = "cf_sql_timestamp")
-                               .addParam(name = "quote",            value = variables.quote,                  cfsqltype = "cf_sql_varchar")
-                               .addParam(name = "homepage",         value = variables.homepage,               cfsqltype = "cf_sql_varchar")
-                               .addParam(name = "imageName",        value = variables.imageName,              cfsqltype = "cf_sql_varchar")
-                               .addParam(name = "position",         value = variables.position,               cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "creatorUserId",    value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "creationDate",     value = variables.creationDate,           cfsqltype = "cf_sql_timestamp")
-                               .addParam(name = "lastEditorUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "lastEditDate",     value = variables.lastEditDate,           cfsqltype = "cf_sql_timestamp");
+        var qSave = new Query().addParam(name = "name",          value = variables.name,                cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "since",         value = variables.since,               cfsqltype = "cf_sql_timestamp")
+                               .addParam(name = "quote",         value = variables.quote,               cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "homepage",      value = variables.homepage,            cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "imageName",     value = variables.imageName,           cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "position",      value = variables.position,            cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "creatorUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "userId",        value = arguments.user.getUserId(),    cfsqltype = "cf_sql_numeric");
         
         if(variables.referenceId == null || variables.referenceId == 0) {
             variables.referenceId = qSave.setSQL("INSERT INTO IcedReaper_references_reference
@@ -131,9 +130,7 @@ component {
                                                                   imageName,
                                                                   position,
                                                                   creatorUserId,
-                                                                  creationDate,
-                                                                  lastEditorUserId,
-                                                                  lastEditDate
+                                                                  lastEditorUserId
                                                               )
                                                        VALUES (
                                                                   :name,
@@ -142,15 +139,18 @@ component {
                                                                   :homepage,
                                                                   :imageName,
                                                                   :position,
-                                                                  :creatorUserId,
-                                                                  :creationDate,
-                                                                  :lastEditorUserId,
-                                                                  :lastEditDate
+                                                                  :userId,
+                                                                  :userId
                                                               );
                                                   SELECT currval('icedreaper_references_reference_referenceid_seq') newReferenceId;")
                                          .execute()
                                          .getResult()
                                          .newReferenceId[1];
+            
+            variables.creator = arguments.user;
+            variables.creationDate = now();
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         else {
             qSave.setSQL("UPDATE IcedReaper_references_reference
@@ -160,11 +160,14 @@ component {
                                  homepage         = :homepage,
                                  imageName        = :imageName,
                                  position         = :position,
-                                 lastEditorUserId = :lastEditorUserId,
+                                 lastEditorUserId = :userId,
                                  lastEditDate     = now()
                            WHERE referenceId = :referenceId ")
                  .addParam(name = "referenceId", value = variables.referenceId, cfsqltype = "cf_sql_numeric")
                  .execute();
+            
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         
         if(variables.oldImageName != "") {
@@ -181,6 +184,8 @@ component {
                                   WHERE referenceId = :referenceId")
                    .addParam(name = "referenceId", value = variables.referenceId, cfsqltype = "cf_sql_numeric")
                    .execute();
+        
+        variables.referenceId = null;
     }
     
     

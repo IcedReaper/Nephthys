@@ -5,14 +5,14 @@ component {
         variables.commentId = arguments.commentId;
         
         variables.attributesChanged = false;
-        variables.publisherChanged = false;
+        variables.publishedChanged = false;
         
         loadDetails();
         
         return this;
     }
     
-    // S E T T E R
+    
     public comment function setBlogpostId(required numeric blogpostId) {
         if(variables.commentId == 0 || variables.commentId == null) {
             variables.blogpostId = arguments.blogpostId;
@@ -21,7 +21,7 @@ component {
         return this;
     }
     public comment function setComment(required string comment) {
-        if(variables.commentId == 0 || variables.commentId == null || (variables.creator.isActive() && variables.creator.getUserId() == request.user.getUserId())) {
+        if(variables.commentId == 0 || variables.commentId == null || (variables.creator.getStatus().getCanLogin() && variables.creator.getUserId() == request.user.getUserId())) {
             variables.comment = arguments.comment;
             variables.attributesChanged = true;
         }
@@ -47,18 +47,12 @@ component {
     
     public comment function setPublished(required boolean published) {
         variables.published = arguments.published;
-        variables.publisherChanged = true;
-        
-        return this;
-    }
-    public comment function setPublishedDate(required date publishedDate) {
-        variables.publishedDate = arguments.publishedDate;
-        variables.publisherChanged = true;
+        variables.publishedChanged = true;
         
         return this;
     }
     
-    // G E T T E R
+    
     public numeric function getCommentId() {
         return variables.commentId;
     }
@@ -84,15 +78,15 @@ component {
         return variables.publishedDate;
     }
     public string function getUsername() {
-        if(variables.creator != null) {
-            return getCreator().getUsername();
+        if(variables.creator.getUserId() != null) {
+            return variables.creator.getUsername();
         }
         else {
             return variables.anonymousUsername;
         }
     }
     public boolean function fromRegistrated() {
-        return variables.creatorUserId != 0 && variables.creatorUserId != null;
+        return variables.creator.getUserId() != 0 && variables.creator.getUserId() != null;
     }
     public string function getAnonymousUsername() {
         return variables.anonymousUsername;
@@ -109,17 +103,10 @@ component {
     }
     
     
-    // C R U D
     public comment function save(required user user) {
         var qSave = new Query();
                                              
-        if(variables.commentId == 0) {
-            var creatorUserId = null;
-            
-            if(variables.creator.isActive()) {
-                creatorUserId = variables.creator.getUserId();
-            }
-            
+        if(variables.commentId == 0 || variables.commentId == null) {
             variables.commentId = qSave.setSQL("INSERT INTO IcedReaper_blog_comment
                                                             (
                                                                 blogpostId,
@@ -136,41 +123,43 @@ component {
                                                                 :anonymousEmail
                                                             );
                                                 SELECT currval('seq_icedreaper_blog_comment_id') newPictureId;")
-                                       .addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric")
+                                       .addParam(name = "blogpostId",        value = variables.blogpostId,        cfsqltype = "cf_sql_numeric")
                                        .addParam(name = "comment",           value = variables.comment,           cfsqltype = "cf_sql_varchar")
                                        .addParam(name = "anonymousUsername", value = variables.anonymousUsername, cfsqltype = "cf_sql_varchar", null = variables.anonymousUsername == null)
                                        .addParam(name = "anonymousEmail",    value = variables.anonymousEmail,    cfsqltype = "cf_sql_varchar", null = variables.anonymousEmail == null)
-                                       .addParam(name = "creatorUserId",     value = creatorUserId,               cfsqltype = "cf_sql_numeric", null = creatorUserId == null)
+                                       .addParam(name = "creatorUserId",     value = arguments.user.getUserId(),  cfsqltype = "cf_sql_numeric", null = arguments.user.getUserId() == null)
                                        .execute()
                                        .getResult()
                                        .newPictureId[1];
+            
+            variables.creator = arguments.user;
+            variables.creationDate = now();
         }
         else {
             if(variables.attributesChanged) {
                 qSave.setSQL("UPDATE IcedReaper_blog_comment
                                  SET comment   = :comment
                                WHERE commentId = :commentId")
+                     .addParam(name = "comment",   value = variables.comment,   cfsqltype = "cf_sql_varchar")
                      .addParam(name = "commentId", value = variables.commentId, cfsqltype = "cf_sql_numeric")
                      .execute();
             }
             
-            if(variables.publisherChanged) {
-                var publisherUserId = null;
-                
-                if(variables.publisher.getStatus().canLogin()) {
-                    publisherUserId = variables.publisher.getUserId();
-                }
-                
+            if(variables.publisheDChanged) {
                 qSave.setSQL("UPDATE IcedReaper_blog_comment
                                  SET published       = :published,
                                      publisherUserId = :publisherUserId,
-                                     publishedDate   = :publishedDate
+                                     publishedDate   = now()
                                WHERE commentId       = :commentId")
-                     .addParam(name = "commentId",       value = variables.commentId,     cfsqltype = "cf_sql_numeric")
-                     .addParam(name = "published",       value = variables.published,     cfsqltype = "cf_sql_bit")
-                     .addParam(name = "publisherUserId", value = publisherUserId,         cfsqltype = "cf_sql_numeric", null = publisherUserId == null)
-                     .addParam(name = "publishedDate",   value = variables.publishedDate, cfsqltype = "cf_sql_date",    null = variables.publishedDate == null)
+                     .addParam(name = "commentId",       value = variables.commentId,        cfsqltype = "cf_sql_numeric")
+                     .addParam(name = "published",       value = variables.published,        cfsqltype = "cf_sql_bit")
+                     .addParam(name = "publisherUserId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric", null = arguments.user.getUserId() == null)
                      .execute();
+                
+                variables.publisher = arguments.user;
+                variables.publishedDate = now();
+                
+                variables.publisheDChanged = false;
             }
         }
         
@@ -188,7 +177,7 @@ component {
         variables.commentId = 0;
     }
     
-    // I N T E R N A L
+    
     private void function loadDetails() {
         if(variables.commentId != 0 && variables.commentId != null) {
             var qComment = new Query().setSQL("SELECT *
@@ -216,7 +205,7 @@ component {
         else {
             variables.blogpostId        = 0;
             variables.comment           = "";
-            variables.creatorUserId     = request.user;
+            variables.creatorUserId     = new user(null);
             variables.creationDate      = now();
             variables.anonymousUsername = "";
             variables.anonymousEmail    = "";

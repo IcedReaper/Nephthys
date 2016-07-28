@@ -1,5 +1,5 @@
 <cfoutput>
-<cfif request.user.getUserId() EQ 0>
+<cfif request.user.getUserId() EQ null>
     <div class="btn-group pull-right m-l-1">
         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Login

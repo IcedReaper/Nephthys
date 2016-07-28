@@ -172,7 +172,7 @@ component {
     }
     
     public user function pushToStatus(required status newStatus, required user user) {
-        var actualStatus = new status(variables.statusId);
+        var actualStatus = duplicate(variables.status);
         
         var newStatusOK = false;
         
@@ -292,7 +292,7 @@ component {
                 variables.wwwThemeId       = qUser.wwwThemeId[1];
                 variables.adminThemeId     = qUser.adminThemeId[1];
                 variables.avatarFilename   = qUser.avatarFilename[1];
-                variables.status           = new user(qUser.statusId[1]);
+                variables.status           = new status(qUser.statusId[1]);
             }
             else {
                 throw(type = "nephthys.notFound.user", message = "Could not find user by ID ", detail = variables.userId);

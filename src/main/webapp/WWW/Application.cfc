@@ -100,8 +100,6 @@ component {
     }
     
     public void function onError(required any exception) {
-        writeDump(var=arguments.exception);
-        abort;
         try {
             var errorLogger = application.system.settings.getValueOfKey("errorLogger");
             errorLogger.setException(arguments.exception)

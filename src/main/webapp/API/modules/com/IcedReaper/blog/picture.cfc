@@ -9,7 +9,7 @@ component {
         return this;
     }
     
-    // S E T T E R
+    
     public picture function setBlogpostId(required numeric blogpostId) {
         if(variables.pictureId == 0 || variables.blogpostId == arguments.blogpostId) {
             variables.blogpostId = arguments.blogpostId;
@@ -118,7 +118,7 @@ component {
         return this;
     }
     
-    // G E T T E R
+    
     public numeric function getPictureId() {
         return variables.pictureId;
     }
@@ -144,7 +144,7 @@ component {
         return variables.sortId;
     }
     
-    // C R U D
+    
     public picture function save(required user user) {
         if(variables.pictureId == 0) {
             variables.pictureId = new Query().setSQL("INSERT INTO IcedReaper_blog_picture
@@ -174,7 +174,7 @@ component {
                                                                         WHERE blogpostId = :blogpostId)
                                                                   );
                                                       SELECT currval('icedreaper_blog_picture_pictureid_seq') newPictureId;")
-                                             .addParam(name = "blogpostId",         value = variables.blogpostId,          cfsqltype = "cf_sql_numeric")
+                                             .addParam(name = "blogpostId",        value = variables.blogpostId,         cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "pictureFileName",   value = variables.pictureFileName,    cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "thumbnailFileName", value = variables.thumbnailFileName,  cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "title",             value = left(variables.title, 250),   cfsqltype = "cf_sql_varchar", null = variables.title == "")
@@ -221,7 +221,7 @@ component {
         variables.pictureId = 0;
     }
     
-    // I N T E R N A L
+    
     private void function loadDetails() {
         if(variables.pictureId != 0 && variables.pictureId != null) {
             var qPicture = new Query().setSQL("SELECT *
