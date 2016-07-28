@@ -201,28 +201,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="row" ng-if="page.pageId && page.versions[selectedVersion.major][selectedVersion.minor].pageVersionId">
-            <div class="col-sm-12">
-                <div class="card card-block">
-                    <h3>Statusänderungshistorie</h3>
-                    <table class="table table-striped">
-                        <thead>
-                            <th>User</th>
-                            <th>Alter Status</th>
-                            <th>Neuer Status</th>
-                            <th>Datum</th>
-                        </thead>
-                        <tbody ng-repeat="approval in page.versions[selectedVersion.major][selectedVersion.minor].approvalList">
-                            <td><nephthys-user-info user="approval.user"></nephthys-user-info></td>
-                            <td>{{approval.previousStatusName}}</td>
-                            <td>{{approval.newStatusName}}</td>
-                            <td>{{approval.approvalDate}}</td>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
     </uib-tab>
     
     <uib-tab heading="Statistiken" disable="pageId == 0">
@@ -234,6 +212,30 @@
                                               chart-type="getStatisticsChartType()"
                                               sort-order="ASC"
                                               headline="Verlauf von Seitenaufrufen"></nephthys-page-statistics>
+                </div>
+            </div>
+        </div>
+    </uib-tab>
+    
+    <uib-tab heading="Genehmigungen" disable="pageId == 0 || ! page.versions[selectedVersion.major][selectedVersion.minor].pageVersionId">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-block">
+                    <h3>Statusänderungshistorie</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <th>User</th>
+                            <th>Alter Status</th>
+                            <th>Neuer Status</th>
+                            <th>Datum</th>
+                        </thead>
+                        <tbody ng-repeat="approval in page.versions[selectedVersion.major][selectedVersion.minor].approvalList">
+                            <td><nephthys-user-info user="approval.approver"></nephthys-user-info></td>
+                            <td>{{approval.previousStatusName}}</td>
+                            <td>{{approval.newStatusName}}</td>
+                            <td>{{approval.approvalDate}}</td>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

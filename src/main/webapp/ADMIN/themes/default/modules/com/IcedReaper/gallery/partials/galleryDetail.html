@@ -126,6 +126,7 @@
             </div>
         </div>
     </uib-tab>
+    
     <uib-tab heading="Bilder" disable="gallery.galleryId == 0">
         <div ng-controller="galleryPictureCtrl">
             <div class="row" ng-if="gallery.isEditable">
@@ -191,6 +192,7 @@
             </div>
         </div>
     </uib-tab>
+    
     <uib-tab heading="Statistiken" disable="gallery.galleryId == 0">
         <div class="row">
             <div class="col-md-12">
@@ -199,6 +201,30 @@
                                                    chart-type="'line'"
                                                    request-type="'total'"
                                                    headline="Statistiken zu dieser Gallerie"></icedreaper-gallery-statistics>
+                </div>
+            </div>
+        </div>
+    </uib-tab>
+    
+    <uib-tab heading="Genehmigungen" disable="gallery.galleryId == 0">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-block">
+                    <h3>Statusänderungshistorie</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <th>User</th>
+                            <th>Alter Status</th>
+                            <th>Neuer Status</th>
+                            <th>Datum</th>
+                        </thead>
+                        <tbody ng-repeat="approval in gallery.approvalList">
+                            <td><nephthys-user-info user="approval.approver"></nephthys-user-info></td>
+                            <td>{{approval.previousStatusName}}</td>
+                            <td>{{approval.newStatusName}}</td>
+                            <td>{{approval.approvalDate}}</td>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

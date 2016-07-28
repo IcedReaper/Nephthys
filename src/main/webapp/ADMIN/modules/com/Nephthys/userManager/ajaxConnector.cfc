@@ -518,17 +518,25 @@ component {
     
     
     // P R I V A T E   M E T H O D S
-    private struct function prepareDetailStruct(required user userObject) {
+    private struct function prepareDetailStruct(required user user) {
+        var preparedApprovalList = prepareApprovalList(new filter().for("approval")
+                                                                   .setUserId(arguments.user.getUserId())
+                                                                   .setSortDirection("DESC")
+                                                                   .execute()
+                                                                   .getResult());
+        
         return {
-            "userId"       = arguments.userObject.getUserId(),
-            "username"     = arguments.userObject.getUserName(),
-            "email"        = arguments.userObject.getEmail(),
-            "statusId"     = arguments.userObject.getStatus().getStatusId(),
-            "password"     = "      ",
-            "avatar"       = arguments.userObject.getAvatarPath(false),
-            "actualUser"   = arguments.userObject.getUserId() == request.user.getUserId(),
-            "wwwThemeId"   = arguments.userObject.getThemeId(),
-            "adminThemeId" = arguments.userObject.getThemeId()
+            "userId"           = arguments.user.getUserId(),
+            "username"         = arguments.user.getUserName(),
+            "email"            = arguments.user.getEmail(),
+            "statusId"         = arguments.user.getStatus().getStatusId(),
+            "password"         = "      ",
+            "avatar"           = arguments.user.getAvatarPath(false),
+            "actualUser"       = arguments.user.getUserId() == request.user.getUserId(),
+            "registrationDate" = formatCtrl.formatDate(arguments.user.getRegistrationDate()),
+            "wwwThemeId"       = arguments.user.getThemeId(),
+            "adminThemeId"     = arguments.user.getThemeId(),
+            "approvalList"     = preparedApprovalList
         };
     }
     
@@ -601,5 +609,19 @@ component {
             "showInTasklist" = arguments.status.getShowInTasklist(),
             "nextStatus"     = nextStatusList
         };
+    }
+    
+    private array function prepareApprovalList(required array approvalList) {
+        var preparedApprovalList = [];
+        for(var approval in arguments.approvalList) {
+            preparedApprovalList.append({
+                "approver"           = prepareReducedDetailStruct(approval.getApprover()),
+                "approvalDate"       = formatCtrl.formatDate(approval.getApprovalDate()),
+                "previousStatusName" = approval.getPrevStatus().getName(),
+                "newStatusName"      = approval.getNewStatus().getName()
+            });
+        }
+        
+        return preparedApprovalList;
     }
 }

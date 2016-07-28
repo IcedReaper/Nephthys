@@ -10,7 +10,7 @@ component {
         var data = [];
         
         for(var i = 1; i <= galleries.len(); i++) {
-            data.append(prepareDetailStruct(galleries[i]));
+            data.append(prepareDetailStruct(galleries[i], false));
         }
         
         return data;
@@ -19,7 +19,7 @@ component {
     remote struct function getDetails(required numeric galleryId) {
         var gallery = new gallery(arguments.galleryId);
         
-        return prepareDetailStruct(gallery);
+        return prepareDetailStruct(gallery, true);
     }
     
     remote array function loadPictures(required numeric galleryId) {
@@ -75,7 +75,7 @@ component {
                    .setPrivate(arguments.private)
                    .save();
             
-            return prepareDetailStruct(gallery);
+            return prepareDetailStruct(gallery, true);
         }
         else {
             throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
@@ -391,7 +391,7 @@ component {
                     lastApprovalDate = formatCtrl.formatDate(approval.getApprovalDate());
                 }
                 
-                statusData[index]["galleries"].append(prepareDetailStruct(gallery));
+                statusData[index]["galleries"].append(prepareDetailStruct(gallery, false));
                 statusData[index]["galleries"].last()["lastApprover"] = lastApprover;
                 statusData[index]["galleries"].last()["lastApprovalDate"] = lastApprovalDate;
             }
@@ -425,14 +425,14 @@ component {
     }
     
     // private
-    private struct function prepareDetailStruct(required gallery gallery) {
+    private struct function prepareDetailStruct(required gallery gallery, required boolean addApprovalList) {
         var categories = [];
         var gCategories = arguments.gallery.getCategories();
         for(var c = 1; c <= gCategories.len(); c++) {
             categories.append(gCategories[c].getName());
         }
         
-        return {
+        var galleryDetails = {
             "galleryId"    = arguments.gallery.getGalleryId(),
             "headline"     = arguments.gallery.getHeadline(),
             "description"  = arguments.gallery.getDescription(),
@@ -450,7 +450,20 @@ component {
             "creationDate" = formatCtrl.formatDate(arguments.gallery.getCreationDate()),
             "lastEditor"   = getUserInformation(arguments.gallery.getLastEditor()),
             "lastEditDate" = formatCtrl.formatDate(arguments.gallery.getLastEditDate()),
-        };
+        }
+        
+        
+        if(arguments.addApprovalList) {
+            var preparedApprovalList = prepareApprovalList(new filter().for("approval")
+                                                                       .setGalleryId(arguments.gallery.getGalleryId())
+                                                                       .setSortDirection("DESC")
+                                                                       .execute()
+                                                                       .getResult());
+            
+            galleryDetails["approvalList"] = preparedApprovalList;
+        }
+        
+        return galleryDetails;
     }
     
     private array function preparePictureStruct(required array pictures, required string relativePath) {
@@ -569,18 +582,18 @@ component {
             "nextStatus"     = nextStatusList
         };
     }
-    /*
+    
     private array function prepareApprovalList(required array approvalList) {
         var preparedApprovalList = [];
         for(var approval in arguments.approvalList) {
             preparedApprovalList.append({
-                "user"               = getUserInformation(approval.user),
-                "approvalDate"       = formatCtrl.formatDate(approval.approvalDate),
-                "previousStatusName" = approval.previousStatus.getName(),
-                "newStatusName"      = approval.newStatus.getName()
+                "approver"           = getUserInformation(approval.getApprover()),
+                "approvalDate"       = formatCtrl.formatDate(approval.getApprovalDate()),
+                "previousStatusName" = approval.getPrevStatus().getName(),
+                "newStatusName"      = approval.getNewStatus().getName()
             });
         }
         
         return preparedApprovalList;
-    }*/
+    }
 }

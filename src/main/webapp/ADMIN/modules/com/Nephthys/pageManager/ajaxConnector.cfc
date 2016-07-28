@@ -400,6 +400,7 @@ component {
         for(var sitemap in sitemaps) {
             var preparedApprovalList = prepareApprovalList(new filter().for("approval")
                                                                        .setSitemapId(sitemap.getSitemapId())
+                                                                       .setSortDirection("DESC")
                                                                        .execute()
                                                                        .getResult());
             
@@ -470,7 +471,9 @@ component {
                     "creationDate"     = formatCtrl.formatDate(sitemap.getCreationDate()),
                     "lastEditor"       = getUserInformation(sitemap.getLastEditor()),
                     "lastEditDate"     = formatCtrl.formatDate(sitemap.getLastEditDate()),
-                    "pageCount"        = sitemapPageFilterCtrl.setSitemapId(sitemap.getSitemapId()).execute().getResultCount()
+                    "pageCount"        = sitemapPageFilterCtrl.setSitemapId(sitemap.getSitemapId()).execute().getResultCount(),
+                    "lastApprover"     = lastApprover,
+                    "lastApprovalDate" = lastApprovalDate
                 });
             }
         }
@@ -699,6 +702,7 @@ component {
     private struct function preparePageVersion(required pageVersion pageVersion) {
         var preparedApprovalList = prepareApprovalList(new filter().for("approval")
                                                                    .setPageVersionId(arguments.pageVersion.getPageVersionId())
+                                                                   .setSortDirection("DESC")
                                                                    .execute()
                                                                    .getResult());
         
@@ -777,7 +781,7 @@ component {
         var preparedApprovalList = [];
         for(var approval in arguments.approvalList) {
             preparedApprovalList.append({
-                "user"               = getUserInformation(approval.getApprover()),
+                "approver"           = getUserInformation(approval.getApprover()),
                 "approvalDate"       = formatCtrl.formatDate(approval.getApprovalDate()),
                 "previousStatusName" = approval.getPrevStatus().getName(),
                 "newStatusName"      = approval.getNewStatus().getName()

@@ -29,6 +29,10 @@
                             <label for="username">Benutzername</label>
                             <input type="text" class="form-control" id="username" ng-disabled="user.userId != 0" placeholder="Username" ng-model="user.username">
                         </div>
+                        <div class="form-group" ng-show="user.userId != 0">
+                            <label for="username">Registriert am</label>
+                            <p class="form-control-static">{{user.registrationDate}}</p>
+                        </div>
                         <div class="form-group">
                             <label for="email">Email Adresse</label>
                             <input type="email" class="form-control" id="email" placeholder="Email" ng-model="user.email">
@@ -95,6 +99,7 @@
             </div>
         </div>
     </uib-tab>
+    
     <uib-tab heading="Erweiterte Angaben" disabled="userId == 0">
         <div class="row">
             <div class="col-md-12" ng-controller="userExtPropertiesCtrl">
@@ -139,6 +144,7 @@
             </div>
         </div>
     </uib-tab>
+    
     <uib-tab heading="Berechtigungen" ng-if="actualPermissions.admin" disabled="userId == 0">
         <div class="row">
             <div class="col-md-12" ng-controller="userPermissionCtrl">
@@ -162,6 +168,7 @@
             </div>
         </div>
     </uib-tab>
+    
     <uib-tab heading="Statistiken" disabled="userId == 0">
         <div class="row">
             <div class="col-md-12">
@@ -169,6 +176,30 @@
                     <nephthys-user-statistics user-id    = "user.userId"
                                               chart-type = "'line'"
                                               headline   = "Übersicht über erfolgreiche und gescheiterte Loginversuche"></nephthys-user-statistics>
+                </div>
+            </div>
+        </div>
+    </uib-tab>
+    
+    <uib-tab heading="Genehmigungen" disable="userId == 0">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-block">
+                    <h3>Statusänderungshistorie</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <th>User</th>
+                            <th>Alter Status</th>
+                            <th>Neuer Status</th>
+                            <th>Datum</th>
+                        </thead>
+                        <tbody ng-repeat="approval in user.approvalList">
+                            <td><nephthys-user-info user="approval.approver"></nephthys-user-info></td>
+                            <td>{{approval.previousStatusName}}</td>
+                            <td>{{approval.newStatusName}}</td>
+                            <td>{{approval.approvalDate}}</td>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

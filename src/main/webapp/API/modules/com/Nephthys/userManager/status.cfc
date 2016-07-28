@@ -280,7 +280,7 @@ component {
                 variables.lastEditDate   = qStatus.lastEditDate[1];
             }
             else {
-                throw(type = "nephthys.notFound.general", message = "The page status could not be found", details = variables.statusId);
+                throw(type = "nephthys.notFound.general", message = "The user status could not be found", details = variables.statusId);
             }
         }
         else {

@@ -10,7 +10,7 @@
         var data = [];
         
         for(var i = 1; i <= blogposts.len(); i++) {
-            data.append(prepareDetailStruct(blogposts[i]));
+            data.append(prepareDetailStruct(blogposts[i], false));
         }
         
         return data;
@@ -19,7 +19,7 @@
     remote struct function getDetails(required numeric blogpostId) {
         var blogpost = new blogpost(arguments.blogpostId);
         
-        return prepareDetailStruct(blogpost);
+        return prepareDetailStruct(blogpost, true);
     }
     
     remote array function loadCategories(required numeric blogpostId) {
@@ -422,7 +422,7 @@
                     lastApprovalDate = formatCtrl.formatDate(approval.getApprovalDate());
                 }
                 
-                statusData[index]["blogposts"].append(prepareDetailStruct(blogpost));
+                statusData[index]["blogposts"].append(prepareDetailStruct(blogpost, false));
                 statusData[index]["blogposts"].last()["lastApprover"] = lastApprover;
                 statusData[index]["blogposts"].last()["lastApprovalDate"] = lastApprovalDate;
             }
@@ -490,14 +490,13 @@
     }
     
     // private
-    private struct function prepareDetailStruct(required blogpost blogpost) {
+    private struct function prepareDetailStruct(required blogpost blogpost, required boolean addApprovalList) {
         var categories = [];
         var gCategories = arguments.blogpost.getCategories();
         for(var c = 1; c <= gCategories.len(); c++) {
             categories.append(gCategories[c].getName());
         }
-        
-        return {
+        var blogDetails = {
             "blogpostId"                 = arguments.blogpost.getBlogpostId(),
             "headline"                   = arguments.blogpost.getHeadline(),
             "link"                       = arguments.blogpost.getLink(),
@@ -518,6 +517,18 @@
             "statusId"                   = arguments.blogpost.getStatus().getStatusId(),
             "pictureCount"               = arguments.blogpost.getPictureCount()
         };
+        
+        if(arguments.addApprovalList) {
+            var preparedApprovalList = prepareApprovalList(new filter().for("approval")
+                                                                       .setBlogpostId(arguments.blogpost.getBlogpostId())
+                                                                       .setSortDirection("DESC")
+                                                                       .execute()
+                                                                       .getResult());
+            
+            blogDetails["approvalList"] = preparedApprovalList;
+        }
+        
+        return blogDetails;
     }
     
     remote array function updatePictureSorting(required array pictures) {
@@ -642,20 +653,20 @@
             "nextStatus"     = nextStatusList
         };
     }
-    /*
+    
     private array function prepareApprovalList(required array approvalList) {
         var preparedApprovalList = [];
         for(var approval in arguments.approvalList) {
             preparedApprovalList.append({
-                "user"               = getUserInformation(approval.user),
-                "approvalDate"       = formatCtrl.formatDate(approval.approvalDate),
-                "previousStatusName" = approval.previousStatus.getName(),
-                "newStatusName"      = approval.newStatus.getName()
+                "approver"           = getUserInformation(approval.getApprover()),
+                "approvalDate"       = formatCtrl.formatDate(approval.getApprovalDate()),
+                "previousStatusName" = approval.getPrevStatus().getName(),
+                "newStatusName"      = approval.getNewStatus().getName()
             });
         }
         
         return preparedApprovalList;
-    }*/
+    }
     
     private array function preparePictureStruct(required array pictures, required string relativePath) {
         var gPictures = [];

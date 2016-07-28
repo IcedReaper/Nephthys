@@ -14,92 +14,98 @@
     <p>{{message.errorMessage}}</p>
 </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <h1>Seitenhierarchie</h1>
-        
+<uib-tabset active="active">
+    <uib-tab heading="Details">
         <div class="row">
-            <div class="col-xl-12">
-                <div class="card card-block">
-                    <form>
-                        <div class="form-group row">
-                            <label for="version" class="col-md-2 col-sm-4 form-control-label">Version</label>
-                            <div class="col-md-8 col-sm-5">
-                                <select class="form-control"
-                                        name="version"
-                                        ng-model="selectedIndex"
-                                        ng-options="idx as 'Version ' + version.version for (idx, version) in sitemap">
-                                </select>
-                            </div>
-                            <div class="col-md-2 col-sm-3">
-                                <button class="btn btn-primary" ng-click="addVersion()" title="Neue Version hinzufügen"><i class="fa fa-plus"></i></button>
+            <div class="col-md-12">
+                <h1>Seitenhierarchie</h1>
+                
+                <div class="row">
+                    <div class="col-xl-12">
+                        <div class="card card-block">
+                            <form>
+                                <div class="form-group row">
+                                    <label for="version" class="col-md-2 col-sm-4 form-control-label">Version</label>
+                                    <div class="col-md-8 col-sm-5">
+                                        <select class="form-control"
+                                                name="version"
+                                                ng-model="selectedIndex"
+                                                ng-options="idx as 'Version ' + version.version for (idx, version) in sitemap">
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 col-sm-3">
+                                        <button class="btn btn-primary" ng-click="addVersion()" title="Neue Version hinzufügen"><i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <h4>Aktueller Status: <small>{{status[ sitemap[selectedIndex].statusId ].name}}</small></h4>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div ng-if="status[ sitemap[selectedIndex].statusId ].nextStatus && sitemap[selectedIndex].sitemapId != null">
+                                            <h4>Status ändern in</h4>
+                                            <button type="submit"
+                                                    class="btn m-r-1"
+                                                    ng-repeat="ps in status[ sitemap[selectedIndex].statusId ].nextStatus"
+                                                    ng-class="statusButtonClass(status[ sitemap[selectedIndex].statusId ].online, ps.online)"
+                                                    ng-click="pushToStatus(ps.statusId);">{{ps.name}}</button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2" ng-if="status[ sitemap[selectedIndex].statusId ].editable">
+                                        <div class="pull-right">
+                                            <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row m-t-1">
+                    <div class="col-sm-8">
+                        <div class="card card-block">
+                            <div class="row">
+                                <div class="col-md-4" ng-repeat="region in sitemap[selectedIndex].regions" ng-include="'tree_renderer.html'"></div>
                             </div>
                         </div>
-                        <div class="form-group row">
-                            <div class="col-md-4">
-                                <h4>Aktueller Status: <small>{{status[ sitemap[selectedIndex].statusId ].name}}</small></h4>
-                            </div>
-                            <div class="col-md-6">
-                                <div ng-if="status[ sitemap[selectedIndex].statusId ].nextStatus && sitemap[selectedIndex].sitemapId != null">
-                                    <h4>Status ändern in</h4>
-                                    <button type="submit"
-                                            class="btn m-r-1"
-                                            ng-repeat="ps in status[ sitemap[selectedIndex].statusId ].nextStatus"
-                                            ng-class="statusButtonClass(status[ sitemap[selectedIndex].statusId ].online, ps.online)"
-                                            ng-click="pushToStatus(ps.statusId);">{{ps.name}}</button>
-                                </div>
-                            </div>
-                            <div class="col-md-2" ng-if="status[ sitemap[selectedIndex].statusId ].editable">
-                                <div class="pull-right">
-                                    <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
-                                </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="card card-block">
+                            <div class="row">
+                                <div class="col-md-12" ng-repeat="region in sitemap[selectedIndex].offline" ng-include="'tree_renderer.html'"></div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
-        
+    </uib-tab>
+    
+    <uib-tab heading="Genehmigungen" disable="sitemap[selectedIndex].sitemapId != null">
         <div class="row m-t-1">
-            <div class="col-sm-8">
+            <div class="col-sm-12">
                 <div class="card card-block">
-                    <div class="row">
-                        <div class="col-md-4" ng-repeat="region in sitemap[selectedIndex].regions" ng-include="'tree_renderer.html'"></div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="card card-block">
-                    <div class="row">
-                        <div class="col-md-12" ng-repeat="region in sitemap[selectedIndex].offline" ng-include="'tree_renderer.html'"></div>
-                    </div>
+                    <h3>Statusänderungshistorie</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <th>User</th>
+                            <th>Alter Status</th>
+                            <th>Neuer Status</th>
+                            <th>Datum</th>
+                        </thead>
+                        <tbody ng-repeat="approval in sitemap[selectedIndex].approvalList">
+                            <td><nephthys-user-info user="approval.user"></nephthys-user-info></td>
+                            <td>{{approval.previousStatusName}}</td>
+                            <td>{{approval.newStatusName}}</td>
+                            <td>{{approval.approvalDate}}</td>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-    </div>
-</div>
-
-<div class="row m-t-1" ng-if="sitemap[selectedIndex].sitemapId != null">
-    <div class="col-sm-12">
-        <div class="card card-block">
-            <h3>Statusänderungshistorie</h3>
-            <table class="table table-striped">
-                <thead>
-                    <th>User</th>
-                    <th>Alter Status</th>
-                    <th>Neuer Status</th>
-                    <th>Datum</th>
-                </thead>
-                <tbody ng-repeat="approval in sitemap[selectedIndex].approvalList">
-                    <td><nephthys-user-info user="approval.user"></nephthys-user-info></td>
-                    <td>{{approval.previousStatusName}}</td>
-                    <td>{{approval.newStatusName}}</td>
-                    <td>{{approval.approvalDate}}</td>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</div>
+    </uib-tab>
+</uib-tabset>
 
 <script type="text/ng-template" id="tree_renderer.html">
     <h4>{{region.description}}</h4>
