@@ -31,30 +31,6 @@ component {
         return this;
     }
     
-    public sitemap function setCreator(required user creator) {
-        if(variables.sitemapId == null) {
-            variables.creator = arguments.creator;
-        }
-        return this;
-    }
-    
-    public sitemap function setCreationDate(required date creationDate) {
-        if(variables.sitemapId == null) {
-            variables.creationDate = arguments.creationDate;
-        }
-        return this;
-    }
-    
-    public sitemap function setLastEditor(required user lastEditor) {
-        variables.lastEditor = arguments.lastEditor;
-        return this;
-    }
-    
-    public sitemap function setLastEditDate(required date lastEditDate) {
-        variables.lastEditDate = arguments.lastEditDate;
-        return this;
-    }
-    
     
     public numeric function getSitemapId() {
         return variables.sitemapId;
@@ -97,7 +73,7 @@ component {
         return this;
     }
     
-    public sitemap function pushToStatus(required status newStatus) {
+    public sitemap function pushToStatus(required status newStatus, required user user) {
         transaction {
             var actualStatus = duplicate(variables.status);
             
@@ -112,18 +88,16 @@ component {
                
                if(actualOnlineCtrl.getResultCount() == 1) {
                    actualOnlineCtrl.getResult()[1].setStatus(offlineStatus)
-                                                  .save();
+                                                  .save(arguments.user);
                 }
             }
             
-            save();
+            save(arguments.user);
             
             new approval(null).setSitemap(this)
                               .setPrevStatus(actualStatus)
                               .setNewStatus(newStatus)
-                              .setApprover(request.user)
-                              .setApprovalDate(now())
-                              .save();
+                              .save(arguments.user);
             
             transactionCommit();
         }
@@ -132,7 +106,7 @@ component {
     }
     
     
-    public sitemap function save() {
+    public sitemap function save(required user user) {
         var qSave = new Query().addParam(name = "statusId",       value = variables.status.getStatusId(),   cfsqltype = "cf_sql_numeric")
                                .addParam(name = "version",        value = variables.version,                cfsqltype = "cf_sql_numeric")
                                .addParam(name = "lastEditorUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
@@ -176,7 +150,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         if(variables.status.getDeleteable()) {
             new Query().setSQL("DELETE FROM nephthys_page_sitemap
                                       WHERE sitemapId = :sitemapId")

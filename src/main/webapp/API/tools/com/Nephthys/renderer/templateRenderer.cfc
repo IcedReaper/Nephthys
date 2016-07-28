@@ -39,7 +39,7 @@ component implements="API.interfaces.templateRenderer" {
                     message    = "Cannot find the template '" & tmpTemplate & "'",
                     stacktrace = callStackGet("string")
                 })
-                .save();
+                .save(request.user);
         }
         
         return this;

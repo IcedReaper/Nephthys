@@ -42,14 +42,8 @@ component {
     public string function getDescription() {
         return variables.description;
     }
-    public numeric function getCreatorUserId() {
-        return variables.creatorUserId;
-    }
     public date function getCreationDate() {
         return variables.creationDate;
-    }
-    public numeric function getLastEditorUserId() {
-        return variables.lastEditorUserId;
     }
     public date function getLastEditDate() {
         return variables.lastEditDate;
@@ -58,21 +52,15 @@ component {
         return variables.type;
     }
     
-    public user function getCreatorUser() {
-        if(! variables.keyExists("creator")) {
-            variables.creator = new user(variables.creatorUserId);
-        }
+    public user function getCreator() {
         return creator;
     }
-    public user function getLastEditorUser() {
-        if(! variables.keyExists("lastEditor")) {
-            variables.lastEditor = new user(variables.lastEditorUserId);
-        }
+    public user function getLastEditor() {
         return lastEditor;
     }
     
     // CRUD
-    public extPropertyKey function save() {
+    public extPropertyKey function save(required user user) {
         if((variables.extPropertyKeyId == 0 || variables.extPropertyKeyId == null) && (variables.keyName == "" || variables.keyName == null)) {
             variables.extPropertyKeyId = new Query().setSQL("INSERT INTO Nephthys_user_extPropertyKey
                                                                          (
@@ -90,10 +78,10 @@ component {
                                                                              :type
                                                                          )
                                                              SELECT currval('seq_nephthys_user_extPropertyKey_id') newId;")
-                                                    .addParam(name = "keyName",     value = variables.keyName,        cfsqltype = "cf_sql_varchar")
-                                                    .addParam(name = "description", value = variables.description,    cfsqltype = "cf_sql_varchar")
-                                                    .addParam(name = "userId",      value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                                                    .addParam(name = "type",        value = variables.type,           cfsqltype = "cf_sql_varchar")
+                                                    .addParam(name = "keyName",     value = variables.keyName,          cfsqltype = "cf_sql_varchar")
+                                                    .addParam(name = "description", value = variables.description,      cfsqltype = "cf_sql_varchar")
+                                                    .addParam(name = "userId",      value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                                                    .addParam(name = "type",        value = variables.type,             cfsqltype = "cf_sql_varchar")
                                                     .execute()
                                                     .getResult()
                                                     .newId[1];
@@ -106,7 +94,7 @@ component {
                                        lastEditDate     = now()
                                  WHERE extPropertyKeyId = :extPropertyKeyId ")
                       .addParam(name = "description",      value = variables.description,      cfsqltype = "cf_sql_varchar")
-                      .addParam(name = "userId",           value = request.user.getUserId(),   cfsqltype = "cf_sql_numeric")
+                      .addParam(name = "userId",           value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
                       .addParam(name = "extPropertyKeyId", value = variables.extPropertyKeyId, cfsqltype = "cf_sql_numeric")
                       .addParam(name = "type",             value = variables.type,             cfsqltype = "cf_sql_varchar")
                       .execute();
@@ -115,7 +103,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE FROM Nephthys_user_extPropertyKey
                                   WHERE extPropertyKeyId = :extPropertyKeyId")
                    .addParam(name = "extPropertyKeyId", value = variables.extPropertyKeyId, cfsqltype = "cf_sql_numeric")

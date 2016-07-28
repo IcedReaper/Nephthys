@@ -88,9 +88,10 @@ component implements="WWW.interfaces.connector" {
                                              .setEmail(form.email)
                                              .setPassword(encrypt(form.password,
                                                           application.system.settings.getValueOfKey("encryptionKey"),
-                                                          encryptionMethodLoader.getAlgorithm(application.system.settings.getValueOfKey("encryptionMethodId"))));
+                                                          encryptionMethodLoader.getAlgorithm(application.system.settings.getValueOfKey("encryptionMethodId"))))
+                                             .setStatus(new status(application.system.settings.getValueOfKey("com.Nephthys.userManager.defaultStatus")));
                         try {
-                            user.save();
+                            user.save(request.user);
                         }
                         catch(database dbe) {
                             if(dbe.sqlState == 23514) {
@@ -186,7 +187,7 @@ component implements="WWW.interfaces.connector" {
                                     }
                                     
                                     transaction {
-                                        request.user.save();
+                                        request.user.save(request.user);
                                         
                                         var lastExtPropertyKeyId = 0;
                                         for(var fieldName in listToArray(listSort(form.fieldNames, "text"), ",")) {
@@ -217,11 +218,11 @@ component implements="WWW.interfaces.connector" {
                                                                        .setUser(request.user);
                                                         }
                                                         
-                                                        extProperty.save();
+                                                        extProperty.save(request.user);
                                                     }
                                                     else {
                                                         if(extPropertyId != null) {
-                                                            new extProperty(extPropertyId).delete();
+                                                            new extProperty(extPropertyId).delete(request.user);
                                                         }
                                                     }
                                                 }

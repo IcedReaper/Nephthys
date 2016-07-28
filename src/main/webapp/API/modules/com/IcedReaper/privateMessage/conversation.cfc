@@ -143,7 +143,7 @@ component {
     }
     
     
-    public conversation function save() {
+    public conversation function save(required user user) {
         if(variables.conversationId == 0 || variables.conversationId == null) {
             variables.conversationId = new Query().setSQL("INSERT INTO IcedReaper_privateMessage_conversation
                                                                        (

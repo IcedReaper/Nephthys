@@ -35,7 +35,7 @@ component extends="API.abstractClasses.settings" {
         }
     }
     
-    public settings function save() {
+    public settings function save(required user user) {
         transaction {
             try {
                 for(var key in variables.settings) {

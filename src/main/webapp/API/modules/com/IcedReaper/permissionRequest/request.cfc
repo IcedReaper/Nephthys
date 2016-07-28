@@ -12,16 +12,16 @@ component {
     }
     
     
-    public request function setUserId(required numeric userId) {
-        variables.userId = arguments.userId;
+    public request function setUser(required user user) {
+        variables.user = arguments.user;
         return this;
     }
-    public request function setModuleId(required numeric moduleId) {
-        variables.moduleId = arguments.moduleId;
+    public request function setModule(required module module) {
+        variables.module = arguments.module;
         return this;
     }
-    public request function setRoleId(required numeric roleId) {
-        variables.roleId = arguments.roleId;
+    public request function setPermissionRole(required permissionRole permissionRole) {
+        variables.permissionRole = arguments.permissionRole;
         return this;
     }
     public request function setReason(required string reason) {
@@ -33,15 +33,6 @@ component {
     public numeric function getRequestId() {
         return variables.requestId;
     }
-    public numeric function getUserId() {
-        return variables.userId;
-    }
-    public numeric function getModuleId() {
-        return variables.moduleId;
-    }
-    public numeric function getRoleId() {
-        return variables.roleId;
-    }
     public numeric function getStatus() {
         return variables.status;
     }
@@ -51,9 +42,6 @@ component {
     public date function getCreationDate() {
         return variables.creationDate;
     }
-    public numeric function getAdminUserId() {
-        return variables.adminUserId;
-    }
     public date function getResponseDate() {
         return variables.responseDate;
     }
@@ -62,16 +50,16 @@ component {
     }
     
     public user function getUser() {
-        return new user(variables.userId);
+        return nvariables.user;
     }
     public user function getAdminUser() {
-        return new user(variables.adminUserId);
+        return variables.adminUser;
     }
     public module function getModule() {
-        return new module(variables.moduleId);
+        return variables.module;
     }
     public permissionRole function getPermissionRole() {
-        return new permissionRole(variables.roleId);
+        return variables.permissionRole;
     }
     
     public boolean function isApproved() {
@@ -82,26 +70,26 @@ component {
     }
     
     
-    public request function save() {
+    public request function save(required user user) {
         if(variables.requestId == 0 || variables.requestId == null) {
             variables.requestId = new Query().setSQL("INSERT INTO IcedReaper_permissionRequest_request
                                                                   (
                                                                       userId,
                                                                       moduleId,
-                                                                      roleId,
+                                                                      permissionRoleId,
                                                                       reason
                                                                   )
                                                            VALUES (
                                                                       :userId,
                                                                       :moduleId,
-                                                                      :roleId,
+                                                                      :permissionRoleId,
                                                                       :reason
                                                                   );
                                                       SELECT currval('icedreaper_permissionrequest_request_requestid_seq') newRequestId;")
-                                             .addParam(name = "userId",   value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                                             .addParam(name = "moduleId", value = variables.moduleId,       cfsqltype = "cf_sql_numeric")
-                                             .addParam(name = "roleId",   value = variables.roleId,         cfsqltype = "cf_sql_numeric")
-                                             .addParam(name = "reason",   value = variables.reason,         cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "userId",           value = variables.user.getUserId(),                     cfsqltype = "cf_sql_numeric")
+                                             .addParam(name = "moduleId",         value = variables.module.getModuleId(),                 cfsqltype = "cf_sql_numeric")
+                                             .addParam(name = "permissionRoleId", value = variables.permissionRole.getpermissionRoleId(), cfsqltype = "cf_sql_numeric")
+                                             .addParam(name = "reason",           value = variables.reason,                               cfsqltype = "cf_sql_varchar")
                                              .execute()
                                              .getResult()
                                              .newRequestId[1];
@@ -149,30 +137,30 @@ component {
                                       .getResult();
             
             if(qRequest.getRecordCount() == 1) {
-                variables.userId       = qRequest.userId[1];
-                variables.moduleId     = qRequest.moduleId[1];
-                variables.roleId       = qRequest.roleId[1];
-                variables.status       = qRequest.status[1];
-                variables.reason       = qRequest.reason[1];
-                variables.creationDate = qRequest.creationDate[1];
-                variables.adminUserId  = qRequest.adminUserId[1];
-                variables.responseDate = qRequest.responseDate[1];
-                variables.comment      = qRequest.comment[1];
+                variables.user           = new user(qRequest.userId[1]);
+                variables.module         = new module(qRequest.moduleId[1]);
+                variables.permissionRole = new permissionRole(qRequest.permissionRoleId[1]);
+                variables.status         = qRequest.status[1];
+                variables.reason         = qRequest.reason[1];
+                variables.creationDate   = qRequest.creationDate[1];
+                variables.admin          = new user(qRequest.adminUserId[1]);
+                variables.responseDate   = qRequest.responseDate[1];
+                variables.comment        = qRequest.comment[1];
             }
             else {
                 throw(type = "nephthys.notFound.general", message = "Conversation could not be found");
             }
         }
         else {
-            variables.userId       = request.user.getUserId();
-            variables.moduleId     = null;
-            variables.roleId       = null;
-            variables.status       = 0;
-            variables.reason       = "";
-            variables.creationDate = now();
-            variables.adminUserId  = null;
-            variables.responseDate = null;
-            variables.comment      = "";
+            variables.user           = request.user;
+            variables.module         = new module(null);
+            variables.permissionRole = new permissionRole(null);
+            variables.status         = 0;
+            variables.reason         = "";
+            variables.creationDate   = now();
+            variables.admin          = new user(null);
+            variables.responseDate   = null;
+            variables.comment        = "";
         }
     }
 }

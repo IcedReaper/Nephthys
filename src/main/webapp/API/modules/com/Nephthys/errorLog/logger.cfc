@@ -20,7 +20,7 @@ component {
         return this;
     }
     
-    public logger function save() {
+    public logger function save(required user user) {
         if(! structIsEmpty(variables.exception)) {
             var errorSettings = new setting(variables.exception.type);
             
@@ -59,7 +59,7 @@ component {
                     error.setMessage("MissingInclude: " & trim(variables.exception.missingFileName));
                 }
                 
-                error.save();
+                error.save(arguments.user);
             }
         }
         

@@ -74,7 +74,7 @@ component implements="WWW.interfaces.connector" {
                                       .setEmail(form.email);
                 }
                 
-                contactFormRequest.save();
+                contactFormRequest.save(request.user);
                 
                 errors.contactSuccessful = true;
                 

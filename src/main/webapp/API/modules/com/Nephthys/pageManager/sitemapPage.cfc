@@ -61,7 +61,7 @@ component {
     }
     
     
-    public sitemapPage function save() {
+    public sitemapPage function save(required user user) {
         var qSave = new Query().addParam(name = "sitemapId",  value = variables.sitemap.getSitemapId(), cfsqltype = "cf_sql_numeric")
                                .addParam(name = "regionId",     value = variables.region.getRegionId(),       cfsqltype = "cf_sql_numeric")
                                .addParam(name = "pageId",       value = variables.page.getPageId(),           cfsqltype = "cf_sql_numeric")
@@ -103,7 +103,7 @@ component {
     }
     
     
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE FROM nephthys_page_sitemapPage
                                   WHERE sitemapPageId = :sitemapPageId")
                    .addParam(name = "sitemapPageId", value = variables.sitemapPageId, cfsqltype = "cf_sql_numeric")

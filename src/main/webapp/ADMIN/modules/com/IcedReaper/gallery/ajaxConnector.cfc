@@ -42,7 +42,7 @@ component {
                                        .getResult();
         
         if(categories.len() != 1 || categories[1].getName() != arguments.queryString) {
-            var dummyCategory = new category(0).setName(arguments.queryString);
+            var dummyCategory = new category(null).setName(arguments.queryString);
             
             categories.append(dummyCategory);
         }
@@ -73,7 +73,7 @@ component {
                    .setIntroduction(arguments.introduction)
                    .setStory(arguments.story)
                    .setPrivate(arguments.private)
-                   .save();
+                   .save(request.user);
             
             return prepareDetailStruct(gallery, true);
         }
@@ -86,7 +86,7 @@ component {
         var gallery = new gallery(arguments.galleryId);
         
         if(gallery.isEditable(request.user.getUserID())) {
-            gallery.delete();
+            gallery.delete(request.user);
             
             return true;
         }
@@ -102,12 +102,12 @@ component {
         
         if(gallery.isEditable(request.user.getUserID())) {
             var newCategory = new category(arguments.categoryId);
-            if(arguments.categoryId == 0) {
+            if(arguments.categoryId == 0 || arguments.categoryId == null) {
                 newCategory.setName(arguments.categoryName)
-                           .save();
+                           .save(request.user);
             }
             gallery.addCategory(newCategory)
-                   .save();
+                   .save(request.user);
             
             return true;
         }
@@ -136,7 +136,7 @@ component {
         if(gallery.isEditable(request.user.getUserID())) {
             var newPicture = new picture(0);
             newPicture.setGalleryId(arguments.galleryId)
-                      .upload();
+                      .upload(request.user);
             
             gallery.addPicture(newPicture);
             
@@ -158,7 +158,7 @@ component {
             picture.setCaption(arguments.caption)
                    .setAlt(arguments.alt)
                    .setTitle(arguments.title)
-                   .save();
+                   .save(request.user);
             
             return true;
         }
@@ -172,7 +172,7 @@ component {
         var gallery = new gallery(picture.getGalleryId());
         
         if(gallery.isEditable(request.user.getUserID())) {
-            gallery.removePicture(arguments.pictureId);
+            gallery.removePicture(arguments.pictureId, request.user);
             
             return preparePictureStruct(gallery.getPictures(), gallery.getRelativePath() & "/");
         }
@@ -199,7 +199,7 @@ component {
         var category = new category(arguments.categoryId);
         
         category.setName(arguments.name)
-                .save();
+                .save(request.user);
         
         return category.getCategoryId();
     }
@@ -207,7 +207,7 @@ component {
     remote boolean function deleteCategory(required numeric categoryId) {
         var category = new category(arguments.categoryId);
         
-        category.delete();
+        category.delete(request.user);
         
         return true;
     }
@@ -275,8 +275,7 @@ component {
               .setOnlineStatus(arguments.status.online)
               .setDeleteable(arguments.status.deleteable)
               .setShowInTasklist(arguments.status.showInTasklist)
-              .setLastEditor(request.user)
-              .save();
+              .save(request.user);
         
         return status.getStatusId();
     }
@@ -292,7 +291,7 @@ component {
                                                        .getResultCount();
         
         if(galleriesStillWithThisStatus == 0) {
-            new status(arguments.statusId).delete();
+            new status(arguments.statusId).delete(request.user);
             
             return true;
         }
@@ -305,14 +304,14 @@ component {
         var status = new status(arguments.statusId);
         
         status.setActiveStatus(true)
-              .save();
+              .save(request.user);
         
         return true;
     }
     
     remote boolean function deactivateStatus(required numeric statusId) {
         new status(arguments.statusId).setActiveStatus(false)
-                                      .save();
+                                      .save(request.user);
         
         return true;
     }
@@ -354,7 +353,7 @@ component {
                     }
                 }
                 
-                status.save();
+                status.save(request.user);
             }
             
             transactionCommit();
@@ -414,7 +413,7 @@ component {
                     });
                     
                     pic.setSortId(i)
-                       .save();
+                       .save(request.user);
                 }
             }
             

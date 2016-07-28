@@ -224,14 +224,8 @@ component {
     public boolean function getuseDynamicUrlSuffix() {
         return variables.pageVersion.getuseDynamicUrlSuffix();
     }
-    public numeric function getCreatorUserId() {
-        return variables.pageVersion.getCreator().getUserId();
-    }
     public date function getCreationDate() {
         return variables.pageVersion.getCreationDate();
-    }
-    public numeric function getLastEditorUserId() {
-        return variables.pageVersion.getLastEditor().getUserId();
     }
     public date function getLastEditDate() {
         return variables.pageVersion.getLastEditDate();

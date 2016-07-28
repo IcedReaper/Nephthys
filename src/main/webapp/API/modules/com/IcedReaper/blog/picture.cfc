@@ -43,7 +43,7 @@ component {
         return this;
     }
     
-    public picture function upload() {
+    public picture function upload(required user user) {
         if(variables.pictureId != 0) {
             deleteFiles();
         }
@@ -113,7 +113,7 @@ component {
             }
         }
         
-        save();
+        save(arguments.user);
         
         return this;
     }
@@ -145,7 +145,7 @@ component {
     }
     
     // C R U D
-    public picture function save() {
+    public picture function save(required user user) {
         if(variables.pictureId == 0) {
             variables.pictureId = new Query().setSQL("INSERT INTO IcedReaper_blog_picture
                                                                   (
@@ -210,7 +210,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         deleteFiles();
         
         new Query().setSQL("DELETE FROM IcedReaper_blog_picture

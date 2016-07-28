@@ -88,16 +88,14 @@ component {
         return this;
     }
     
-    public blogpost function addCategory(required category _category) {
-        variables.categories.append(duplicate(arguments._category));
-        
+    public blogpost function addCategory(required category category) {
+        variables.categories.append(duplicate(arguments.category));
         variables.categoriesChanged = true;
         
         return this;
     }
     public blogpost function addCategoryById(required numeric categoryId) {
         variables.categories.append(new category(arguments.categoryId));
-        
         variables.categoriesChanged = true;
         
         return this;
@@ -152,7 +150,7 @@ component {
     public blogpost function removePicture(required numeric pictureId) {
         for(var p = 1; p <= variables.pictures.len(); p++) {
             if(variables.pictures[p].getPictureId() == arguments.pictureId) {
-                variables.pictures[p].delete();
+                variables.pictures[p].delete(request.user);
                 variables.pictures.deleteAt(p);
                 
                 break;
@@ -189,22 +187,13 @@ component {
     public boolean function getCommentsActivated() {
         return variables.commentsActivated == 1;
     }
-    public numeric function getCreatorUserId() {
-        return variables.creatorUserId;
-    }
     public user function getCreator() {
-        if(! variables.keyExists("creator")) {
-            variables.creator = new user(variables.creatorUserId);
-        }
         return variables.creator;
     }
     public date function getCreationDate() {
         return variables.creationDate;
     }
     public user function getLastEditor() {
-        if(! variables.keyExists("lastEditor")) {
-            variables.lastEditor = new user(variables.lastEditorUserId);
-        }
         return variables.lastEditor;
     }
     public date function getLastEditDate() {
@@ -239,9 +228,9 @@ component {
         return variables.private == 1;
     }
     
-    public boolean function isEditable(required numeric userId) {
+    public boolean function isEditable(required user user) {
         if(variables.private) {
-            if(! variables.creatorUserId == arguments.userId) {
+            if(! variables.creator.getUserId() == arguments.user.getUserId()) {
                 return false;
             }
         }
@@ -285,9 +274,7 @@ component {
                     new approval(null).setBlogpost(this)
                                       .setPrevStatus(actualStatus)
                                       .setNewStatus(arguments.newStatus)
-                                      .setApprover(arguments.user)
-                                      .setApprovalDate(now())
-                                      .save();
+                                      .save(arguments.user);
                     
                     transactionCommit();
                 }
@@ -304,7 +291,7 @@ component {
     }
     
     // C R U D
-    public blogpost function save() {
+    public blogpost function save(required user user) {
         if(variables.folderName == "") {
             variables.folderName = createUUID();
         }
@@ -318,7 +305,7 @@ component {
                                .addParam(name = "anonymousCommentAllowed",    value = variables.anonymousCommentAllowed,    cfsqltype = "cf_sql_bit")
                                .addParam(name = "commentsNeedToGetPublished", value = variables.commentsNeedToGetPublished, cfsqltype = "cf_sql_bit")
                                .addParam(name = "private",                    value = variables.private,                    cfsqltype = "cf_sql_bit")
-                               .addParam(name = "userId",                     value = request.user.getUserId(),             cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "lastEditorUserId",           value = variables.lastEditor.getUserId(),     cfsqltype = "cf_sql_numeric")
                                .addParam(name = "statusId",                   value = variables.status.getStatusId(),       cfsqltype = "cf_sql_numeric");
         
         if(variables.blogpostId == 0) {
@@ -349,11 +336,12 @@ component {
                                                                  :commentsNeedToGetPublished,
                                                                  :private,
                                                                  :statusId,
-                                                                 :userId,
-                                                                 :userId,
+                                                                 :creatorUserId,
+                                                                 :lastEditorUserId,
                                                                  now()
                                                              );
                                                  SELECT currval('seq_icedreaper_blog_blogpost_id') newBlogpostId;")
+                                        .addParam(name = "creatorUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
                                         .execute()
                                         .getResult()
                                         .newBlogpostId[1];
@@ -374,7 +362,7 @@ component {
                                          commentsNeedToGetPublished = :commentsNeedToGetPublished,
                                          private                    = :private,
                                          statusId                   = :statusId,
-                                         lastEditorUserId           = :userId,
+                                         lastEditorUserId           = :lastEditorUserId,
                                          lastEditDate               = now()
                                    WHERE blogpostId = :blogpostId")
                          .addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric")
@@ -388,7 +376,7 @@ component {
                     
                     if(variables.picturesChanged) {
                         for(var p = 1; p <= variables.pictures.len(); p++) {
-                            variables.pictures[p].save();
+                            variables.pictures[p].save(arguments.user);
                         }
                     }
                     variables.picturesChanged = false;
@@ -405,7 +393,7 @@ component {
                 for(var c = 1; c <= variables.categories.len(); c++) {
                     try {
                         if(variables.categories[c].getCategoryId() == 0) {
-                            variables.categories[c].save();
+                            variables.categories[c].save(arguments.user);
                         }
                         
                         new Query().setSQL("INSERT INTO IcedReaper_blog_blogpostCategory
@@ -421,7 +409,7 @@ component {
                                                         )")
                                    .addParam(name = "blogpostId",    value = variables.blogpostId,                    cfsqltype = "cf_sql_numeric")
                                    .addParam(name = "categoryId",    value = variables.categories[c].getCategoryId(), cfsqltype = "cf_sql_numeric")
-                                   .addParam(name = "creatorUserId", value = request.user.getUserId(),                cfsqltype = "cf_sql_numeric")
+                                   .addParam(name = "creatorUserId", value = variables.lastEditor.getUserId(),        cfsqltype = "cf_sql_numeric")
                                    .execute();
                     }
                     catch(any e) {
@@ -448,7 +436,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         directoryDelete(getAbsolutePath(), true);
         
         new Query().setSQL("DELETE
@@ -488,9 +476,9 @@ component {
                 variables.commentsActivated          = qBlogpost.commentsActivated[1];
                 variables.anonymousCommentAllowed    = qBlogpost.anonymousCommentAllowed[1];
                 variables.commentsNeedToGetPublished = qBlogpost.commentsNeedToGetPublished[1];
-                variables.creatorUserId              = qBlogpost.creatorUserId[1];
+                variables.creator                    = new user(qBlogpost.creatorUserId[1]);
                 variables.creationDate               = qBlogpost.creationDate[1];
-                variables.lastEditorUserId           = qBlogpost.lastEditorUserId[1];
+                variables.lastEditor                 = new user(qBlogpost.lastEditorUserId[1]);
                 variables.lastEditDate               = qBlogpost.lastEditDate[1];
                 variables.folderName                 = qBlogpost.folderName[1];
                 variables.comments                   = [];
@@ -517,9 +505,9 @@ component {
             variables.commentsActivated          = defaultSettings.getValueOfKey("commentsActivated");
             variables.anonymousCommentAllowed    = defaultSettings.getValueOfKey("anonymousCommentAllowed");
             variables.commentsNeedToGetPublished = defaultSettings.getValueOfKey("commentsNeedToGetPublished");
-            variables.creatorUserId              = null;
+            variables.creator                    = request.user;
             variables.creationDate               = null;
-            variables.lastEditorUserId           = null;
+            variables.lastEditor                 = request.user;
             variables.lastEditDate               = null;
             variables.categories                 = [];
             variables.comments                   = [];

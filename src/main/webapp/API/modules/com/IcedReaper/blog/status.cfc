@@ -58,13 +58,6 @@ component {
         return this;
     }
     
-    public status function setLastEditor(required user lastEditor) {
-        variables.lastEditor = arguments.lastEditor;
-        variables.attributesChanged = true;
-        
-        return this;
-    }
-    
     
     public status function addNextStatus(required numeric nextStatusId) {
         if(! variables.nextStatusLoaded) {
@@ -133,23 +126,17 @@ component {
     public numeric function getOnlineStatus() {
         return variables.online;
     }
-    public numeric function getCreatorUserId() {
-        return variables.creator.getUserId();
+    public user function getCreator() {
+        return variables.creator;
     }
     public date function getCreationDate() {
         return variables.creationDate;
     }
-    public numeric function getLastEditorUserId() {
-        return variables.lastEditor.getUserId();
+    public user function getLastEditor() {
+        return variables.lastEditor;
     }
     public date function getLastEditDate() {
         return variables.lastEditDate;
-    }
-    public user function getCreator() {
-        return variables.creator;
-    }
-    public user function getLastEditor() {
-        return variables.lastEditor;
     }
     
     public array function getNextStatus() {
@@ -192,7 +179,7 @@ component {
     }
     
     
-    public status function save() {
+    public status function save(required user user) {
         transaction {
             var qUpdate = new Query().addParam(name = "name",               value = variables.name,                   cfsqltype = "cf_sql_varchar")
                                      .addParam(name = "active",             value = variables.active,                 cfsqltype = "cf_sql_bit")
@@ -279,7 +266,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE FROM IcedReaper_blog_status WHERE statusId = :statusId")
                    .addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric")
                    .execute();

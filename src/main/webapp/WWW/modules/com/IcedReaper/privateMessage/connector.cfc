@@ -43,7 +43,7 @@ component implements="WWW.interfaces.connector" {
                                     }
                                 }
                                 
-                                conversation.save();
+                                conversation.save(request.user);
                                 
                                 var message = new message(0).setConversationId(conversation.getConversationId())
                                                             .setUser(request.user)
@@ -89,7 +89,7 @@ component implements="WWW.interfaces.connector" {
                             
                             if(message.getUser().getUserId() == request.user.getUserId()) {
                                 if(! message.isReadByOther(request.user)) {
-                                    message.delete();
+                                    message.delete(request.user);
                                     
                                     location(addtoken = false, statuscode = "302", url = userPage & "/" & request.user.getUserName() & "/privateMessages/conversation/" & message.getConversation().getConversationId());
                                 }

@@ -40,7 +40,8 @@ component {
         var encryptionMethodLoader = new encryptionMethodLoader();
         
         if(arguments.userId == 0) {
-            user.setUsername(arguments.userName);
+            user.setUsername(arguments.userName)
+                .setStatus(new status(application.system.settings.getValueOfKey("com.Nephthys.userManager.defaultStatus")));
         }
         
         user.setEmail(arguments.eMail)
@@ -54,14 +55,14 @@ component {
                                      encryptionMethodLoader.getAlgorithm(application.system.settings.getValueOfKey("encryptionMethodId"))));
         }
         
-        user.save();
+        user.save(request.user);
         
         return prepareDetailStruct(user);
     }
     
     remote boolean function delete(required numeric userId) {
         var user = new user(arguments.userId);
-        user.delete();
+        user.delete(request.user);
         
         return true;
     }
@@ -77,7 +78,7 @@ component {
         
         if(user.getUserId() == request.user.getUserId()) {
             user.uploadAvatar()
-                .save();
+                .save(request.user);
             
             return user.getAvatarPath();
         }
@@ -159,17 +160,17 @@ component {
                             permission.setUser(user)
                                       .setModule(new module(arguments.permissions[i].moduleId))
                                       .setPermissionRole(permissionRole)
-                                      .save();
+                                      .save(request.user);
                         }
                         else {
                             var permission = new permission(arguments.permissions[i].permissionId);
                             permission.setPermissionRole(permissionRole)
-                                      .save();
+                                      .save(request.user);
                         }
                     }
                     else {
                         if(arguments.permissions[i].permissionId != 0 && arguments.permissions[i].permissionId != null) {
-                            new permission(arguments.permissions[i].permissionId).delete();
+                            new permission(arguments.permissions[i].permissionId).delete(request.user);
                         }
                     }
                 }
@@ -273,11 +274,11 @@ component {
                                    .setUser(user);
                     }
                     
-                    extProperty.save();
+                    extProperty.save(request.user);
                 }
                 else {
                     if(arguments.extProperties[i].extPropertyId != null) {
-                        var extProperty = new extProperty(arguments.extProperties[i].extPropertyId).delete();
+                        var extProperty = new extProperty(arguments.extProperties[i].extPropertyId).delete(request.user);
                     }
                 }
             }
@@ -335,14 +336,12 @@ component {
     remote numeric function saveBlacklistEntry(required struct blacklist) {
         return new blacklist(arguments.blacklist.blacklistId)
                             .setNamepart(arguments.blacklist.namepart)
-                            .setCreator(request.user)
-                            .setCreationDate(now())
-                            .save()
+                            .save(request.user)
                             .getBlacklistId();
     }
     
     remote boolean function deleteBlacklistEntry(required numeric blacklistId) {
-        new blacklist(arguments.blacklistId).delete();
+        new blacklist(arguments.blacklistId).delete(request.user);
         return true;
     }
     
@@ -384,8 +383,7 @@ component {
                   .setCanLogin(arguments.status.canLogin)
                   .setName(arguments.status.name)
                   .setShowInTasklist(arguments.status.showInTasklist)
-                  .setLastEditor(request.user)
-                  .save();
+                  .save(request.user);
             
             transactionCommit();
             return true;
@@ -403,7 +401,7 @@ component {
                                                   .getResultCount();
         
         if(userStillWithThisStatus == 0) {
-            new status(arguments.statusId).delete();
+            new status(arguments.statusId).delete(request.user);
             
             return true;
         }
@@ -416,14 +414,14 @@ component {
         var status = new status(arguments.statusId);
         
         status.setActiveStatus(true)
-              .save();
+              .save(request.user);
         
         return true;
     }
     
     remote boolean function deactivateStatus(required numeric statusId) {
         new status(arguments.statusId).setActiveStatus(false)
-                                      .save();
+                                      .save(request.user);
         
         return true;
     }
@@ -465,7 +463,7 @@ component {
                     }
                 }
                 
-                status.save();
+                status.save(request.user);
             }
             
             transactionCommit();

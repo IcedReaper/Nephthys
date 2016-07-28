@@ -134,15 +134,12 @@ component implements="WWW.interfaces.connector" {
                 if(arguments.blogpost.getCommentsActivated()) {
                     if(len(form.comment) > 0 && len(form.comment) <= 500) {
                         if(request.user.getUserId() != 0 || (arguments.blogpost.getAnonymousCommentAllowed() && validateUsername(form.anonymousUsername) && validateEmail(form.anonymousEmail))) {
-                            var newComment = new comment(0);
+                            var newComment = new comment(null);
                             
                             newComment.setBlogpostId(arguments.blogpost.getBlogpostId())
                                       .setComment(form.comment);
                             
-                            if(request.user.getUserId() != 0) {
-                                newComment.setCreatorUserId(request.user.getUserId());
-                            }
-                            else {
+                            if(request.user.getStatus().getCanLogin() == 0) {
                                 newComment.setAnonymousUsername(form.anonymousUsername)
                                           .setAnonymousEmail(form.anonymousEmail);
                             }
@@ -151,7 +148,7 @@ component implements="WWW.interfaces.connector" {
                                 newComment.setPublished(true);
                             }
                             
-                            newComment.save();
+                            newComment.save(request.user);
                             
                             arguments.blogpost.addComment(newComment);
                             

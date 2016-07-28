@@ -22,75 +22,60 @@ component {
     public string function getName() {
         return variables.name;
     }
-    public numeric function getCreatorUserId() {
-        return variables.creatorUserId;
-    }
     public date function getCreationDate() {
         return variables.creationDate;
-    }
-    public numeric function getLastEditorUserId() {
-        return variables.lastEditorUserId;
     }
     public date function getlastEditDate() {
         return variables.lastEditDate;
     }
     public user function getCreator() {
-        if(! variables.keyExists("creator")) {
-            variables.creator = new user(variables.creatorUserId);
-        }
         return variables.creator;
     }
     public user function getLastEditor() {
-        if(! variables.keyExists("lastEditor")) {
-            variables.lastEditor = new user(variables.creatorUserId);
-        }
         return variables.lastEditor;
     }
     
-    public type function save() {
+    public type function save(required user user) {
+        var qSave = new Query().addParam(name = "name",             value = variables.name,           cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric");
+        
         if(variables.typeId == null || variables.typeId == 0) {
-            variables.typeId = new Query().setSQL("INSERT INTO IcedReaper_review_type
-                                                                (
-                                                                    name,
-                                                                    creatorUserId,
-                                                                    lastEditorUserId
-                                                                )
-                                                         VALUES (
-                                                                    :name,
-                                                                    :userId,
-                                                                    :userId
-                                                                );
-                                                      SELECT currval('seq_icedreaper_review_type_id') newTypeId;")
-                                           .addParam(name = "name",   value = variables.name,           cfsqltype = "cf_sql_varchar")
-                                           .addParam(name = "userId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                                           .execute()
-                                           .getResult()
-                                           .newTypeId[1];
+            variables.typeId = qSave.setSQL("INSERT INTO IcedReaper_review_type
+                                                         (
+                                                             name,
+                                                             creatorUserId,
+                                                             lastEditorUserId
+                                                         )
+                                                  VALUES (
+                                                             :name,
+                                                             :creatorUserId,
+                                                             :lastEditorUserId
+                                                         );
+                                               SELECT currval('seq_icedreaper_review_type_id') newTypeId;")
+                                    .addParam(name = "creatorUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
+                                    .execute()
+                                    .getResult()
+                                    .newTypeId[1];
             
-            variables.creatorUserId    = request.user.getUserId();
-            variables.lastEditorUserId = request.user.getUserId();
-            variables.creationDate     = now();
-            variables.lastEditDate     = now();
+            variables.creationDate = now();
+            variables.lastEditDate = now();
         }
         else {
-            new Query().setSQL("UPDATE IcedReaper_review_type
-                                   SET name = :name,
-                                       lastEditorUserId = :lastEditorUserId,
-                                       lastEditDate     = now()
-                                 WHERE typeId = :typeId")
-                       .addParam(name = "typeId",           value = variables.typeId,         cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "name",             value = variables.name,           cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                       .execute();
+            qSave.setSQL("UPDATE IcedReaper_review_type
+                             SET name             = :name,
+                                 lastEditorUserId = :lastEditorUserId,
+                                 lastEditDate     = now()
+                           WHERE typeId = :typeId")
+                 .addParam(name = "typeId", value = variables.typeId, cfsqltype = "cf_sql_numeric")
+                 .execute();
             
-            variables.lastEditorUserId = request.user.getUserId();
-            variables.lastEditDate     = now();
+            variables.lastEditDate = now();
         }
         
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE
                               FROM IcedReaper_review_type
                              WHERE typeId = :typeId")
@@ -108,22 +93,22 @@ component {
                                     .getResult();
             
             if(qType.getRecordCount() == 1) {
-                variables.name             = qType.name[1];
-                variables.creatorUserId    = qType.creatorUserId[1];
-                variables.creationDate     = qType.creationDate[1];
-                variables.lastEditorUserId = qType.lastEditorUserId[1];
-                variables.lastEditDate     = qType.lastEditDate[1];
+                variables.name         = qType.name[1];
+                variables.creator      = new user(qType.creatorUserId[1]);
+                variables.creationDate = qType.creationDate[1];
+                variables.lastEditor   = new user(qType.lastEditorUserId[1]);
+                variables.lastEditDate = qType.lastEditDate[1];
             }
             else {
                 throw(type = "icedreaper.review.notFound", message = "The type could not be found", detail = variables.typeId);
             }
         }
         else {
-            variables.name             = "";
-            variables.creatorUserId    = null;
-            variables.creationDate     = now();
-            variables.lastEditorUserId = null;
-            variables.lastEditDate     = now();
+            variables.name         = "";
+            variables.creator      = new user(null);
+            variables.creationDate = now();
+            variables.lastEditor   = new user(null);
+            variables.lastEditDate = now();
         }
     }
 }

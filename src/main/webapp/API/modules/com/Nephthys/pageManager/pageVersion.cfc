@@ -60,30 +60,6 @@ component {
         variables.statusChanged = true;
         return this;
     }
-    public pageVersion function setCreator(required user creator) {
-        variables.creator = duplicate(arguments.creator);
-        return this;
-    }
-    public pageVersion function setCreatorById(required numeric userId) {
-        variables.creator = new user(arguments.userId);
-        return this;
-    }
-    public pageVersion function setCreationDate(required date creationDate) {
-        variables.creationDate = arguments.creationDate;
-        return this;
-    }
-    public pageVersion function setLastEditor(required user lastEditor) {
-        variables.lastEditor = arguments.lastEditor;
-        return this;
-    }
-    public pageVersion function setLastEditorById(required numeric userId) {
-        variables.lastEditor = new user(arguments.userId);
-        return this;
-    }
-    public pageVersion function setLastEditDate(required date lastEditDate) {
-        variables.lastEditDate = arguments.lastEditDate;
-        return this;
-    }
     
     
     
@@ -158,7 +134,7 @@ component {
             if(arguments.newStatus.isApprovalValid(arguments.user.getUserId())) {
                 transaction {
                     setStatus(arguments.newStatus);
-                    save();
+                    save(arguments.user);
                     
                     if(arguments.newStatus.isOnline()) {
                         var page = new page(variables.pageId);
@@ -170,12 +146,10 @@ component {
                             new approval(null).setPageVersion(oldPageVersion)
                                               .setPrevStatus(oldPageVersion.getStatus())
                                               .setNewStatus(new status(offlineStatusId))
-                                              .setApprover(arguments.user)
-                                              .setApprovalDate(now())
-                                              .save();
+                                              .save(arguments.user);
                             
                             oldPageVersion.setStatusId(offlineStatusId)
-                                          .save();
+                                          .save(arguments.user);
                         }
                         
                         page.setPageVersionId(variables.pageVersionId)
@@ -185,9 +159,7 @@ component {
                     new approval(null).setPageVersion(this)
                                       .setPrevStatus(actualStatus)
                                       .setNewStatus(arguments.newStatus)
-                                      .setApprover(arguments.user)
-                                      .setApprovalDate(now())
-                                      .save();
+                                      .save(arguments.user);
                     
                     transactionCommit();
                 }
@@ -204,7 +176,7 @@ component {
     }
     
     
-    public pageVersion function save() {
+    public pageVersion function save(required user user) {
         var qSave = new Query().addParam(name = "pageId",              value = variables.pageId,                  cfsqltype = "cf_sql_numeric")
                                .addParam(name = "majorVersion",        value = variables.majorVersion,            cfsqltype = "cf_sql_numeric")
                                .addParam(name = "minorVersion",        value = variables.minorVersion,            cfsqltype = "cf_sql_numeric")
@@ -306,7 +278,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         var page = new page(variables.pageId);
         
         transaction {
@@ -333,7 +305,7 @@ component {
                 
                 if(qLastVersion.getRecordCount() == 1) {
                     new page(variables.pageId).setPageVersionId(qLastVersion.pageVersionId[1])
-                                              .save();
+                                              .save(arguments.user);
                     
                     new Query().setSQL("DELETE
                                           FROM nephthys_page_pageVersion
@@ -347,9 +319,10 @@ component {
                 }
             }
             
-            // if we don't have another version than this we can delete the complete page
-            new page(variables.pageId).delete();
         }
+        
+        // if we don't have another version than this we can delete the complete page
+        new page(variables.pageId).delete(arguments.user);
     }
     
     

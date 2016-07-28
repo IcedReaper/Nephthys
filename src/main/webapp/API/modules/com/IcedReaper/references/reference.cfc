@@ -32,14 +32,6 @@ component {
         variables.position = arguments.position;
         return this;
     }
-    public reference function setCreator(required user creator) {
-        variables.creator = arguments.creator;
-        return this;
-    }
-    public reference function setLastEditor(required user lastEditor) {
-        variables.lastEditor = arguments.lastEditor;
-        return this;
-    }
     
     public reference function uploadNewImage() {
         if(variables.referenceId != 0 && variables.referenceId != null) {
@@ -117,7 +109,7 @@ component {
     }
     
     
-    public reference function save() {
+    public reference function save(required user user) {
         var qSave = new Query().addParam(name = "name",             value = variables.name,                   cfsqltype = "cf_sql_varchar")
                                .addParam(name = "since",            value = variables.since,                  cfsqltype = "cf_sql_timestamp")
                                .addParam(name = "quote",            value = variables.quote,                  cfsqltype = "cf_sql_varchar")
@@ -182,7 +174,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         fileDelete(expandPath(variables.imageeFolder & variables.imageName));
         
         new Query().setSQL("DELETE FROM IcedReaper_references_reference

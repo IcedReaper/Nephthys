@@ -54,7 +54,7 @@ component {
     }
     
     
-    public extProperty function save() {
+    public extProperty function save(required user user) {
         var qSave = new Query().addParam(name = "userId",           value = variables.user.getUserId(),                     cfsqltype = "cf_sql_numeric")
                                .addParam(name = "extPropertyKeyId", value = variables.extPropertyKey.getExtPropertyKeyId(), cfsqltype = "cf_sql_numeric")
                                .addParam(name = "value",            value = variables.value,                                cfsqltype = "cf_sql_varchar")
@@ -95,7 +95,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE FROM nephthys_user_extProperty
                                   WHERE extPropertyId = :extPropertyId")
                    .addParam(name = "extPropertyId", value = variables.extPropertyId, cfsqltype = "cf_sql_numeric")

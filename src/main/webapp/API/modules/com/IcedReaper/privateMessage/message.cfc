@@ -28,16 +28,6 @@ component {
         
         return this;
     }
-    public message function setUserId(required numeric userId) {
-        if(variables.messageId != 0 && variables.messageId != null) {
-            throw(type = "nephthys.application.notAllowed", message = "The user cannot be changed for an existing message!");
-        }
-        
-        variables.userId = arguments.userId;
-        variables.user = new user(variables.userId);
-        
-        return this;
-    }
     public message function setUser(required user user) {
         if(variables.messageId != 0 && variables.messageId != null) {
             throw(type = "nephthys.application.notAllowed", message = "The user cannot be changed for an existing message!");
@@ -55,9 +45,6 @@ component {
     }
     public numeric function getConversationId() {
         return variables.conversationId;
-    }
-    public numeric function getUserId() {
-        return variables.userId;
     }
     public any function getSendDate() {
         return variables.sendDate;
@@ -189,7 +176,7 @@ component {
                                                                   );
                                                            SELECT currval('seq_icedreaper_privateMessage_messageId') newMessageId;")
                                              .addParam(name = "conversationId", value = variables.conversationId, cfsqltype = "cf_sql_numeric")
-                                             .addParam(name = "userId",         value = variables.userId,         cfsqltype = "cf_sql_numeric")
+                                             .addParam(name = "userId",         value = variables.user.getUserId, cfsqltype = "cf_sql_numeric")
                                              .addParam(name = "message",        value = variables.message,        cfsqltype = "cf_sql_varchar")
                                              .execute()
                                              .getResult()
@@ -198,7 +185,7 @@ component {
         
         return this;
     }
-    public message function delete() {
+    public message function delete(required user user) {
         if(variables.messageId != 0 && variables.messageId != null) {
             new Query().setSQL("UPDATE IcedReaper_privateMessage_message
                                    SET deleteDate = now()
@@ -245,7 +232,7 @@ component {
             
             if(qMessage.getRecordCount() == 1) {
                 variables.conversationId = qMessage.conversationId[1];
-                variables.userId         = qMessage.userId[1];
+                variables.user           = new user(qMessage.userId[1]);
                 variables.sendDate       = qMessage.sendDate[1];
                 variables.deleteDate     = qMessage.deleteDate[1];
                 variables.message        = qMessage.message[1];
@@ -256,13 +243,12 @@ component {
         }
         else {
             variables.conversationId = null;
-            variables.userId         = null;
+            variables.user           = new user(null);
             variables.sendDate       = null;
             variables.deleteDate     = null;
             variables.message        = "";
         }
         
-        variables.user = new user(variables.userId);
         variables.conversation = null;
         
         loadRead();

@@ -13,20 +13,6 @@ component {
         
         return this;
     }
-    public blacklist function setCreator(required user creator) {
-        if(variables.blacklistId == null) {
-            variables.creator = arguments.creator;
-        }
-        
-        return this;
-    }
-    public blacklist function setCreationDate(required date creationDate) {
-        if(variables.blacklistId == null) {
-            variables.creationDate = arguments.creationDate;
-        }
-        
-        return this;
-    }
     
     
     public numeric function getBlacklistId() {
@@ -43,7 +29,7 @@ component {
     }
     
     
-    public blacklist function save() {
+    public blacklist function save(required user user) {
         var qSave = new Query().addParam(name = "namepart",       value = variables.namepart,            cfsqltype = "cf_sql_varchar")
                                .addParam(name = "creatorUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
                                .addParam(name = "creationDate",   value = variables.creationDate,        cfsqltype = "cf_sql_timestamp");
@@ -76,7 +62,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE FROM nephthys_user_blacklist
                              WHERE blacklistId = :blacklistId")
                    .addParam(name = "blacklistId", value = variables.blacklistId, cfsqltype = "cf_sql_numeric")

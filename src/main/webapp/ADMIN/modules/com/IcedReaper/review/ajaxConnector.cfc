@@ -45,7 +45,7 @@ component {
                         .getResult();
         
         if(genreFilter.getResultCount() != 1 || genres[1].getName() != arguments.queryString) {
-            var dummyGenre = new genre(0).setName(arguments.queryString);
+            var dummyGenre = new genre(null).setName(arguments.queryString);
             
             genres.append(dummyGenre);
         }
@@ -82,7 +82,7 @@ component {
                   .setReviewText(arguments.reviewText)
                   .setLink(arguments.link)
                   .setPrivate(arguments.private)
-                  .save();
+                  .save(request.user);
             
             return review.getReviewId();
         }
@@ -96,7 +96,7 @@ component {
         
         if(review.isEditable(request.user.getUserID())) {
             review.uploadImage()
-                  .save();
+                  .save(request.user);
             
             return review.getImagePath();
         }
@@ -109,7 +109,7 @@ component {
         new review(arguments.reviewId);
         
         if(review.isEditable(request.user.getUserID())) {
-            review.delete();
+            review.delete(request.user);
         
             return true;
         }
@@ -138,17 +138,15 @@ component {
         
         if(review.isEditable(request.user.getUserID())) {
             if(arguments.genreId == null || arguments.genreId == 0) {
-                var genre = new genre(0)
-                                .setName(arguments.genreName)
-                                .save();
+                var genre = new genre(null).setName(arguments.genreName)
+                                           .save(request.user);
             }
             else {
                 var genre = new genre(arguments.genreId);
             }
             
-            review
-                .addGenre(genre)
-                .save();
+            review.addGenre(genre)
+                  .save(request.user);
             
             return genre.getGenreId();
         }
@@ -164,7 +162,7 @@ component {
         if(review.isEditable(request.user.getUserID())) {
             review
                 .removeGenreById(arguments.genreId)
-                .save();
+                .save(request.user);
             
             return true;
         }
@@ -206,14 +204,14 @@ component {
     
     remote numeric function saveGenre(required numeric genreId, required string name) {
         return new genre(arguments.genreId).setName(arguments.name)
-                                           .save()
+                                           .save(request.user)
                                            .getGenreId();
     }
     
     remote boolean function deleteGenre(required numeric genreId) {
         var genre = new genre(arguments.genreId);
         
-        genre.delete();
+        genre.delete(request.user);
         
         return true;
     }
@@ -252,12 +250,12 @@ component {
     remote numeric function saveType(required numeric typeId,
                                      required string name) {
         return new type(arguments.typeId).setName(arguments.name)
-                                         .save()
+                                         .save(request.user)
                                          .getTypeId();
     }
     
     remote boolean function deleteType(required numeric typeId) {
-        new type(arguments.typeId).delete();
+        new type(arguments.typeId).delete(request.user);
         
         return true;
     }

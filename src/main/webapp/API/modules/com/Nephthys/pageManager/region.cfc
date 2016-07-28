@@ -35,7 +35,7 @@ component {
     }
     
     
-    public region function save() {
+    public region function save(required user user) {
         var qSave = new Query().addParam(name = "name",        value = variables.name,        cfsqltype = "cf_sql_varchar")
                                .addParam(name = "description", value = variables.description, cfsqltype = "cf_sql_varchar");
         if(variables.regionId == null) {

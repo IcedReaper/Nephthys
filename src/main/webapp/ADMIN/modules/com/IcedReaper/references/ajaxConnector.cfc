@@ -67,11 +67,11 @@ component {
                  .setHomepage(arguments.link) // homepage
                  .setQuote(arguments.quote)
                  .setSince(arguments.since)
-                 .save();
+                 .save(request.user);
         
         if(arguments.newImage != "") {
             reference.uploadNewImage()
-                     .save();
+                     .save(request.user);
         }
         
         return getDetails(reference.getReferenceId());

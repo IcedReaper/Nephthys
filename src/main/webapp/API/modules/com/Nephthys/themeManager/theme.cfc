@@ -121,7 +121,7 @@ component {
     }
     
     // C R U D
-    public theme function save() {
+    public theme function save(required user user) {
         if(variables.themeId == 0) {
             variables.themeId = new Query().setSQL("INSERT INTO nephthys_theme
                                                                 (
@@ -167,7 +167,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE FROM nephthys_theme
                                    WHERE themeId = :themeId")
                    .addParam(name = "themeId", value = variables.themeId, cfsqltype = "cf_sql_numeric")

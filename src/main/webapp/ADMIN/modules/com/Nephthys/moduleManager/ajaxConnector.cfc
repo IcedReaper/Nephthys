@@ -31,14 +31,14 @@ component {
         
         module.setDescription(arguments.description)
               .setActiveStatus(arguments.active)
-              .save();
+              .save(request.user);
         
         return true;
     }
     
     remote boolean function delete(required numeric moduleId) {
         var module = new module(arguments.moduleId);
-        module.delete();
+        module.delete(request.user);
         
         return true;
     }
@@ -46,7 +46,7 @@ component {
     remote boolean function activate(required numeric moduleId) {
         var module = new module(arguments.moduleId);
         module.setActiveStatus(1)
-              .save();
+              .save(request.user);
         
         return true;
     }
@@ -54,7 +54,7 @@ component {
     remote boolean function deactivate(required numeric moduleId) {
         var module = new module(arguments.moduleId);
         module.setActiveStatus(0)
-              .save();
+              .save(request.user);
         
         return true;
     }
@@ -127,16 +127,16 @@ component {
                         new permission(null).setUser(new user(arguments.permissions[i].userId))
                                             .setModule(module)
                                             .setPermissionRole(permissionRole)
-                                            .save();
+                                            .save(request.user);
                     }
                     else {
                         new permission(arguments.permissions[i].permissionId).setPermissionRole(permissionRole)
-                                                                             .save();
+                                                                             .save(request.user);
                     }
                 }
                 else {
                     if(arguments.permissions[i].permissionId != 0 && arguments.permissions[i].permissionId != null) {
-                        new permission(arguments.permissions[i].permissionId).delete();
+                        new permission(arguments.permissions[i].permissionId).delete(request.user);
                     }
                     else {
                         continue;
@@ -202,7 +202,7 @@ component {
                                         .getResult()[1];
             module.addSubModule(subModule);
         }
-        module.save();
+        module.save(request.user);
         
         return true;
     }
@@ -214,7 +214,7 @@ component {
         for(var i = 1; i <= arguments.subModules.len(); ++i) {
             module.removeSubModule(arguments.subModules[i]);
         }
-        module.save();
+        module.save(request.user);
         
         return true;
     }

@@ -83,10 +83,10 @@ component {
         
         return this;
     }
-    public gallery function removePicture(required numeric pictureId) {
+    public gallery function removePicture(required numeric pictureId, required user user) {
         for(var p = 1; p <= variables.pictures.len(); p++) {
             if(variables.pictures[p].getPictureId() == arguments.pictureId) {
-                variables.pictures[p].delete();
+                variables.pictures[p].delete(arguments.user);
                 variables.pictures.deleteAt(p);
                 
                 break;
@@ -268,9 +268,7 @@ component {
                     new approval(null).setGallery(this)
                                       .setPrevStatus(actualStatus)
                                       .setNewStatus(arguments.newStatus)
-                                      .setApprover(arguments.user)
-                                      .setApprovalDate(now())
-                                      .save();
+                                      .save(arguments.user);
                     
                     transactionCommit();
                 }
@@ -288,7 +286,7 @@ component {
     }
     
     // C R U D
-    public gallery function save() {
+    public gallery function save(required user user) {
         if(variables.galleryId == 0) {
             variables.galleryId = new Query().setSQL("INSERT INTO IcedReaper_gallery_gallery
                                                                   (
@@ -365,7 +363,7 @@ component {
                 
                 if(variables.picturesChanged) {
                     for(var p = 1; p <= variables.pictures.len(); p++) {
-                        variables.pictures[p].save();
+                        variables.pictures[p].save(arguments.user);
                     }
                 }
             }
@@ -378,7 +376,7 @@ component {
             for(var c = 1; c <= variables.categories.len(); c++) {
                 try {
                     if(variables.categories[c].getCategoryId() == 0) {
-                        variables.categories[c].save();
+                        variables.categories[c].save(arguments.user);
                     }
                     
                     new Query().setSQL("INSERT INTO IcedReaper_gallery_galleryCategory
@@ -409,7 +407,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         directoryDelete(getAbsolutePath(), true);
         
         new Query().setSQL("DELETE

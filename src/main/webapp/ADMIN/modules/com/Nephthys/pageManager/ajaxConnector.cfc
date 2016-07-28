@@ -155,7 +155,7 @@ component {
             var page = new page(arguments.pageId);
             var newPage = false;
             if(arguments.pageId == null || arguments.pageId == 0) {
-                page.save();
+                page.save(request.user);
                 
                 newPage = true;
                 arguments.pageId = page.getPageId();
@@ -175,15 +175,12 @@ component {
                            .setDescription(arguments.pageVersion.description)
                            .setContent(arguments.pageVersion.content)
                            .setuseDynamicUrlSuffix(arguments.pageVersion.useDynamicUrlSuffix)
-                           .setLastEditorById(request.user.getUserId())
-                           .setLastEditDate(now())
-                           .setStatus(new status(arguments.pageVersion.statusId));
-                
-                pageVersion.save();
+                           .setStatus(new status(arguments.pageVersion.statusId))
+                           .save(request.user);
                 
                 if(newPage) {
                     page.setPageVersionId(pageVersion.getPageVersionId())
-                        .save();
+                        .save(request.user);
                 }
                 
                 transactionCommit();
@@ -208,7 +205,7 @@ component {
     
     remote boolean function delete(required numeric pageId) {
         if(request.user.hasPermission("com.Nephthys.userManager", "admin")) {
-            new page(arguments.pageId).delete();
+            new page(arguments.pageId).delete(request.user);
             return true;
         }
         else {
@@ -257,7 +254,7 @@ component {
                   .setDeleteable(arguments.status.deleteable)
                   .setShowInTasklist(arguments.status.showInTasklist)
                   .setLastEditor(request.user)
-                  .save();
+                  .save(request.user);
             
             transactionCommit();
         }
@@ -283,7 +280,7 @@ component {
                                                          .getResultCount();
         
         if(pagesStillWithThisStatus == 0 && sitemapsStillWithThisStatus == 0) {
-            new status(arguments.statusId).delete();
+            new status(arguments.statusId).delete(request.user);
             
             return true;
         }
@@ -296,14 +293,14 @@ component {
         var status = new status(arguments.statusId);
         
         status.setActiveStatus(true)
-              .save();
+              .save(request.user);
         
         return true;
     }
     
     remote boolean function deactivateStatus(required numeric statusId) {
         new status(arguments.statusId).setActiveStatus(false)
-                                      .save();
+                                      .save(request.user);
         
         return true;
     }
@@ -345,7 +342,7 @@ component {
                     }
                 }
                 
-                status.save();
+                status.save(request.user);
             }
             
             transactionCommit();
@@ -535,11 +532,7 @@ component {
             
             sitemap.setStatus(new status(arguments.sitemap.statusId))
                    .setVersion(arguments.sitemap.version)
-                   .setCreator(request.user)
-                   .setLastEditor(request.user)
-                   .setCreationDate(now())
-                   .setLastEditDate(now())
-                   .save();
+                   .save(request.user);
             
             sitemap.updatePagesByRegion(arguments.sitemap.regions);
             
@@ -550,7 +543,7 @@ component {
     }
     
     remote boolean function pushSitemapToStatus(required numeric sitemapId, required numeric statusId) {
-        new sitemap(arguments.sitemapId).pushToStatus(new status(arguments.statusId));
+        new sitemap(arguments.sitemapId).pushToStatus(new status(arguments.statusId), request.user);
         
         return true;
     }

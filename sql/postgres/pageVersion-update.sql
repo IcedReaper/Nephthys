@@ -1187,3 +1187,6 @@ alter table nephthys_page_pageVersion rename column lastEditUserId to lastEditor
 alter table nephthys_page_sitemap rename column lastEditUserId to lastEditorUserId;
 alter table nephthys_page_status rename column lastEditUserId to lastEditorUserId;
 alter table nephthys_user_status rename column lastEditUserId to lastEditorUserId;
+
+
+alter table IcedReaper_blog_comment rename column publishedUserId to publisherUserId;

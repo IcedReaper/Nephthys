@@ -70,7 +70,7 @@ component {
                         }
                     }
                 }
-                serverSettings.save();
+                serverSettings.save(request.user);
                 
                 transactionCommit();
             }
@@ -105,7 +105,7 @@ component {
             }
         }
         
-        application.system.settings.save();
+        application.system.settings.save(request.user);
         
         return true;
     }
@@ -144,7 +144,7 @@ component {
         for(var user in userListCtrl.execute().getResult()) {
             var rawPassword = decrypt(user.getPassword(), arguments.oldSecretKey, arguments.oldAlgorithm);
             user.setPassword(encrypt(rawPassword, arguments.newSecretKey, arguments.newAlgorithm))
-                .save();
+                .save(request.user);
         }
     }
 }

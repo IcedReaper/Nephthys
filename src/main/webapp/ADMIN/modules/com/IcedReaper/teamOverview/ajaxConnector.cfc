@@ -33,7 +33,7 @@ component {
     remote numeric function addUser(required numeric userId) {
         new member(0)
             .setUserId(arguments.userId)
-            .save();
+            .save(request.user);
         
         return true;
     }
@@ -53,7 +53,7 @@ component {
     
     remote boolean function removeMember(required numeric memberId) {
         new member(arguments.memberId)
-            .delete();
+            .delete(request.user);
         
         return true;
     }
@@ -70,15 +70,15 @@ component {
             // first we need to set the sortId to an unused space, as we would otherwise get an unique key error
             higherMember
                 .setSortId(-1)
-                .save();
+                .save(request.user);
             
             actualMember
                 .setSortId(actualSortId - 1)
-                .save();
+                .save(request.user);
             
             higherMember
                 .setSortId(actualSortId)
-                .save();
+                .save(request.user);
             
             transactionCommit();
         }
@@ -97,15 +97,15 @@ component {
         transaction {
             lowerMember
                 .setSortId(-2)
-                .save();
+                .save(request.user);
             
             actualMember
                 .setSortId(actualSortId + 1)
-                .save();
+                .save(request.user);
             
             lowerMember
                 .setSortId(actualSortId)
-                .save();
+                .save(request.user);
             
             transactionCommit();
         }

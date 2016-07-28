@@ -33,18 +33,6 @@ component {
         }
         return this;
     }
-    public approval function setApprover(required user approver) {
-        if(variables.approvalId == null) {
-            variables.approver = arguments.approver;
-        }
-        return this;
-    }
-    public approval function setApprovalDate(required date approvalDate) {
-        if(variables.approvalId == null) {
-            variables.approvalDate = arguments.approvalDate;
-        }
-        return this;
-    }
     
     public numeric function getApprovalId() {
         return variables.approvalId;
@@ -69,7 +57,7 @@ component {
     }
     
     
-    public approval function save() {
+    public approval function save(required user user) {
         if(variables.approvalId == null) {
             var pageVersionId = null;
             var sitemapId = null;

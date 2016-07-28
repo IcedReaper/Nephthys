@@ -1,7 +1,10 @@
 component {
     import "API.modules.com.Nephthys.themeManager.theme";
     
-    public user function init(numeric userId = 0) {
+    public user function init(required numeric userId = null) {
+        if(arguments.userId == 0) {
+            arguments.userId = null;
+        }
         variables.userId = arguments.userId;
         
         variables.avatarFolder = "/upload/com.Nephthys.userManager/avatar/";
@@ -41,7 +44,7 @@ component {
     }
     
     public user function uploadAvatar() {
-        if(variables.userId != 0) {
+        if(variables.userId != null) {
             variables.oldAvatarFilename = variables.avatarFilename;
             
             if(form.keyExists("avatar")) {
@@ -73,7 +76,7 @@ component {
         return this;
     }
     public user function setStatus(required status status) {
-        variables.statusId = arguments.status.getStatusId();
+        variables.status = arguments.status;
         return this;
     }
     
@@ -147,7 +150,7 @@ component {
         }
     }
     public status function getStatus() {
-        return new status(variables.statusId);
+        return variables.status;
     }
     
     public boolean function hasPermission(required string moduleName, string roleName = "") {
@@ -183,14 +186,12 @@ component {
             if(arguments.newStatus.isApprovalValid(arguments.user.getUserId())) {
                 transaction {
                     setStatus(arguments.newStatus);
-                    save();
+                    save(arguments.user);
                     
                     new approval(null).setUser(this)
                                       .setPrevStatus(actualStatus)
                                       .setNewStatus(arguments.newStatus)
-                                      .setApprover(arguments.user)
-                                      .setApprovalDate(now())
-                                      .save();
+                                      .save(arguments.user);
                     
                     transactionCommit();
                 }
@@ -206,13 +207,13 @@ component {
         }
     }
     
-    public user function save() {
-        var qSave = new Query().addParam(name = "eMail",          value = variables.eMail,          cfsqltype = "cf_sql_varchar")
-                               .addParam(name = "password",       value = variables.password,       cfsqltype = "cf_sql_varchar")
-                               .addParam(name = "wwwThemeId",     value = variables.wwwThemeId,     cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "adminThemeId",   value = variables.adminThemeId,   cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "avatarFilename", value = variables.avatarFilename, cfsqltype = "cf_sql_varchar", null = (variables.avatarFilename == "" || variables.avatarFileName == null))
-                               .addParam(name = "statusId",       value = variables.statusId,       cfsqltype = "cf_sql_numeric");
+    public user function save(required user user) {
+        var qSave = new Query().addParam(name = "eMail",          value = variables.eMail,                cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "password",       value = variables.password,             cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "wwwThemeId",     value = variables.wwwThemeId,           cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "adminThemeId",   value = variables.adminThemeId,         cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "avatarFilename", value = variables.avatarFilename,       cfsqltype = "cf_sql_varchar", null = (variables.avatarFilename == "" || variables.avatarFileName == null))
+                               .addParam(name = "statusId",       value = variables.status.getStatusId(), cfsqltype = "cf_sql_numeric");
         
         if(variables.userId == 0) { // create a new user
             variables.userId = qSave.setSQL("INSERT INTO nephthys_user
@@ -259,7 +260,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         if(fileExists(expandPath(variables.avatarFolder) & variables.avatarFilename)) {
             fileDelete(expandPath(variables.avatarFolder) & variables.avatarFilename);
         }
@@ -275,7 +276,7 @@ component {
     
     // I N T E R N A L
     private void function loadDetails() {
-        if(variables.userId != 0 && variables.userId != null) {
+        if(variables.userId != null) {
             var qUser = new Query().setSQL("SELECT *
                                               FROM nephthys_user
                                              WHERE userId = :userId")
@@ -291,7 +292,7 @@ component {
                 variables.wwwThemeId       = qUser.wwwThemeId[1];
                 variables.adminThemeId     = qUser.adminThemeId[1];
                 variables.avatarFilename   = qUser.avatarFilename[1];
-                variables.statusId         = qUser.statusId[1];
+                variables.status           = new user(qUser.statusId[1]);
             }
             else {
                 throw(type = "nephthys.notFound.user", message = "Could not find user by ID ", detail = variables.userId);
@@ -305,7 +306,7 @@ component {
             variables.wwwThemeId       = createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("WWW").getValue();
             variables.adminThemeId     = createObject("component", "API.modules.com.Nephthys.system.filter").init().setKey("defaultThemeId").setApplication("ADMIN").getValue();
             variables.avatarFilename   = null;
-            variables.statusId         = application.system.settings.getValueOfKey("com.Nephthys.userManager.defaultStatus");
+            variables.status           = new status(application.system.settings.getValueOfKey("com.Nephthys.userManager.guestStatus"));
         }
     }
 }

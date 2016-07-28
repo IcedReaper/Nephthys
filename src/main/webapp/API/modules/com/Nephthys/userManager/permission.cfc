@@ -56,7 +56,7 @@ component {
     }
     
     
-    public permission function save() {
+    public permission function save(required user user) {
         var qSave = new Query();
         qSave.addParam(name = "userId",           value = variables.user.getUserId(),                     cfsqltype = "cf_sql_numeric")
              .addParam(name = "permissionRoleId", value = variables.permissionRole.getPermissionRoleId(), cfsqltype = "cf_sql_numeric")
@@ -104,7 +104,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE FROM nephthys_user_permission WHERE permissionId = :permissionId")
                    .addParam(name = "permissionId", value = variables.permissionId, cfsqltype = "cf_sql_numeric")
                    .execute();

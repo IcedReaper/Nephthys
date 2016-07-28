@@ -11,13 +11,6 @@ component {
         return this;
     }
     
-    public page function setCreationDate(required date creationDate) {
-        if(variables.pageId == 0 || variables.pageId == null) {
-            variables.creationDate = arguments.creationDate;
-        }
-        return this;
-    }
-    
     public page function setPageVersionId(required string pageVersionId) {
         variables.pageVersionId = arguments.pageVersionId;
         return this;
@@ -48,7 +41,7 @@ component {
     
     
     
-    public page function save() {
+    public page function save(required user user) {
         if(variables.pageId == null || variables.pageId == 0) {
             variables.pageId = new Query().setSQL("INSERT INTO nephthys_page_page
                                                                (
@@ -76,7 +69,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE
                               FROM nephthys_page_page
                              WHERE pageId = :pageId")

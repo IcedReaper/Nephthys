@@ -55,7 +55,7 @@ component implements="WWW.interfaces.connector" {
                                         .setModuleId(form.moduleId)
                                         .setRoleId(form.roleId)
                                         .setReason(form.reason)
-                                        .save();
+                                        .save(request.user);
                                     
                                     result.successful = true;
                                     

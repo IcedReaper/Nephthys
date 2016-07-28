@@ -9,9 +9,8 @@ component {
         return this;
     }
     
-    // SETTER
-    public member function setUserId(required numeric userId) {
-        variables.userId = arguments.userId;
+    public member function setUser(required user user) {
+        variables.user = arguments.user;
         
         return this;
     }
@@ -21,41 +20,22 @@ component {
         return this;
     }
     
-    // GETTER
     public numeric function getMemberId() {
         return variables.memberId;
     }
-    public numeric function getUserId() {
-        return variables.userId;
+    public user function getUser() {
+        return variables.user;
     }
     public numeric function getSortId() {
         return variables.sortId;
     }
-    public user function getUser() {
-        if(! variables.keyExists("user")) {
-            variables.user = new user(variables.userId);
-        }
-        return user;
-    }
-    public numeric function getCreatorUserId () {
-        return variables.creatorUserId;
-    }
-    public user function getCreatorUser() {
-        if(! variables.keyExists("creator")) {
-            variables.creator = new user(variables.creatorUserId);
-        }
+    public user function getCreator() {
         return creator;
     }
     public date function getCreationDate() {
         return variables.creationDate;
     }
-    public numeric function getLastEditorUserId () {
-        return variables.lastEditorUserId;
-    }
-    public user function getLastEditorUser() {
-        if(! variables.keyExists("lastEditor")) {
-            variables.lastEditor = new user(variables.lastEditorUserId);
-        }
+    public user function getLastEditor() {
         return lastEditor;
     }
     public date function getLastEditDate() {
@@ -63,7 +43,7 @@ component {
     }
     
     // CRUD
-    public member function save() {
+    public member function save(required user user) {
         if(variables.userId != null && variables.userId != 0) {
             if(variables.memberId == 0) {
                 var qInsMember = new Query();
@@ -89,14 +69,15 @@ component {
                                                    END + 1
                                               FROM icedReaper_teamOverview_member), ";
                 }
-                sql &= "                   :actualUserId,
-                                           :actualUserId
+                sql &= "                   :creatorUserId,
+                                           :lastEditorUserId
                                        );
                            SELECT currval('seq_icedreaper_teamOverview_memberId') newMemberId;";
                 
                 variables.memberId = qInsMember.setSQL(sql)
-                                               .addParam(name = "userId",       value = variables.userId,         cfsqltype = "cf_sql_numeric")
-                                               .addParam(name = "actualUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                                               .addParam(name = "userId",           value = variables.user.getUserId,         cfsqltype = "cf_sql_numeric")
+                                               .addParam(name = "creatorUserId",    value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
+                                               .addParam(name = "lastEditorUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
                                                .execute()
                                                .getResult()
                                                .newMemberId[1];
@@ -107,9 +88,9 @@ component {
                                            lastEditorUserId = :lastEditorUserId,
                                            lastEditDate     = now()
                                      WHERE memberId = :memberId")
-                           .addParam(name = "memberId",         value = variables.memberId,       cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "sortId",           value = variables.sortId,         cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "memberId",         value = variables.memberId,               cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "sortId",           value = variables.sortId,                 cfsqltype = "cf_sql_numeric")
+                           .addParam(name = "lastEditorUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric")
                            .execute();
             }
         }
@@ -118,11 +99,13 @@ component {
         }
         return this;
     }
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE FROM icedReaper_teamOverview_member
                                   WHERE memberId = :memberId")
                    .addParam(name = "memberId", value = variables.memberId, cfsqltype = "cf_sql_numeric")
                    .execute();
+        
+        variables.memberId = null;
     }
     
     // PRIVATE
@@ -136,24 +119,24 @@ component {
                                      .getResult();
             
             if(qMember.getRecordCount() == 1) {
-                variables.userId           = qMember.userId[1];
-                variables.sortId           = qMember.sortId[1];
-                variables.creatorUserId    = qMember.creatorUserId[1];
-                variables.creationDate     = qMember.creationDate[1];
-                variables.lastEditorUserId = qMember.lastEditorUserId[1];
-                variables.lastEditDate     = qMember.lastEditDate[1];
+                variables.user         = new user(qMember).userId[1];
+                variables.sortId       = qMember.sortId[1];
+                variables.creator      = new user(qMember).creatorUserId[1];
+                variables.creationDate = qMember.creationDate[1];
+                variables.lastEditor   = new user(qMember).lastEditorUserId[1];
+                variables.lastEditDate = qMember.lastEditDate[1];
             }
             else {
                 throw(type = "icedreaper.teamOverview.notFound", message = "Couldn't find a team member with this id", detail = variables.memberId);
             }
         }
         else {
-            variables.userId           = null;
-            variables.sortId           = 0;
-            variables.creatorUserId    = null;
-            variables.creationDate     = now();
-            variables.lastEditorUserId = null;
-            variables.lastEditDate     = now();
+            variables.user         = new user(null);
+            variables.sortId       = 0;
+            variables.creator      = new user(null);
+            variables.creationDate = now();
+            variables.lastEditor   = new user(null);
+            variables.lastEditDate = now();
         }
     }
 }

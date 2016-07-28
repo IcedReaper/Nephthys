@@ -36,7 +36,7 @@
                                        .getResult();
         
         if(categories.len() != 1 || categories[1].getName() != arguments.queryString) {
-            var dummyCategory = new category(0).setName(arguments.queryString);
+            var dummyCategory = new category(null).setName(arguments.queryString);
             
             categories.append(dummyCategory);
         }
@@ -57,7 +57,7 @@
                                 required string  fileNames) {
         var blogpost = new blogpost(arguments.blogpostId);
         
-        if(blogpost.isEditable(request.user.getUserID())) {
+        if(blogpost.isEditable(request.user.getUserId())) {
             if(arguments.releaseDate != "") {
                 blogpost.setReleaseDate(dateFormat(arguments.releaseDate, "YYYY/MM/DD"));
             }
@@ -73,7 +73,7 @@
                     .setAnonymousCommentAllowed(arguments.anonymousCommentAllowed)
                     .setCommentsNeedToGetPublished(arguments.commentsNeedToGetPublished)
                     .setPrivate(arguments.private)
-                    .save();
+                    .save(request.user);
             
             return blogpost.getBlogpostId();
         }
@@ -86,7 +86,7 @@
                                         required string imageSizes) { // jsonString
         var blogpost = new blogpost(arguments.blogpostId);
         
-        if(blogpost.isEditable(request.user.getUserID())) {
+        if(blogpost.isEditable(request.user.getUserId())) {
             var _is = deserializeJSON(arguments.imageSizes);
             var imageEditor = application.system.settings.getValueOfKey("imageEditLibrary");
             
@@ -113,8 +113,8 @@
     remote boolean function delete(required numeric blogpostId) {
         var blogpost = new blogpost(arguments.blogpostId);
         
-        if(blogpost.isEditable(request.user.getUserID())) {
-            blogpost.delete();
+        if(blogpost.isEditable(request.user.getUserId())) {
+            blogpost.delete(request.user);
             
             return true;
         }
@@ -128,14 +128,14 @@
                                        required string  categoryName) {
         var blogpost = new blogpost(arguments.blogpostId);
         
-        if(blogpost.isEditable(request.user.getUserID())) {
+        if(blogpost.isEditable(request.user.getUserId())) {
             var newCategory = new category(arguments.categoryId);
-            if(arguments.categoryId == 0) {
+            if(arguments.categoryId == 0 || arguments.categoryId == null) {
                 newCategory.setName(arguments.categoryName)
-                           .save();
+                           .save(request.user);
             }
             blogpost.addCategory(newCategory)
-                    .save();
+                    .save(request.user);
             
             return true;
         }
@@ -148,7 +148,7 @@
                                           required numeric categoryId) {
         var blogpost = new blogpost(arguments.blogpostId);
         
-        if(blogpost.isEditable(request.user.getUserID())) {
+        if(blogpost.isEditable(request.user.getUserId())) {
             blogpost.removeCategory(arguments.categoryId);
             
             return true;
@@ -175,7 +175,7 @@
                                          required string  name) {
         var category = new category(arguments.categoryId);
         category.setName(arguments.name)
-                .save();
+                .save(request.user);
         
         return category.getCategoryId();
     }
@@ -183,7 +183,7 @@
     remote boolean function deleteCategory(required numeric categoryId) {
         var category = new category(arguments.categoryId);
         
-        category.delete();
+        category.delete(request.user);
         
         return true;
     }
@@ -213,15 +213,14 @@
     remote array function loadComments(required numeric blogpostId) {
         var blogpost = new blogpost(arguments.blogpostId);
         
-        var bp_comments = blogpost.getComments();
         var comments = [];
-        for(var i = 1; i <= bp_comments.len(); i++) {
+        for(var comment in blogpost.getComments()) {
             comments.append({
-                "commentId"    = bp_comments[i].getCommentId(),
-                "username"     = bp_comments[i].getUsername(),
-                "comment"      = bp_comments[i].getComment(),
-                "creationDate" = formatCtrl.formatDate(bp_comments[i].getCreationDate()),
-                "published"    = bp_comments[i].isPublished()
+                "commentId"    = comment.getCommentId(),
+                "username"     = comment.getUsername(),
+                "comment"      = comment.getComment(),
+                "creationDate" = formatCtrl.formatDate(comment.getCreationDate()),
+                "published"    = comment.isPublished()
             });
         }
         
@@ -231,8 +230,10 @@
     remote boolean function publishComment(required numeric commentId) {
         var comment = new comment(arguments.commentId);
         
-        comment.publish()
-               .save();
+        comment.setPublisher(request.user)
+               .setPublishedDate(now())
+               .setPublished(true)
+               .save(request.user);
         
         return true;
     }
@@ -240,7 +241,7 @@
     remote boolean function deleteComment(required numeric commentId) {
         var comment = new comment(arguments.commentId);
         
-        comment.delete();
+        comment.delete(request.user);
         
         return true;
     }
@@ -306,8 +307,7 @@
               .setOnlineStatus(arguments.status.online)
               .setDeleteable(arguments.status.deleteable)
               .setShowInTasklist(arguments.status.showInTasklist)
-              .setLastEditor(request.user)
-              .save();
+              .save(request.user);
         
         return status.getStatusId();
     }
@@ -323,7 +323,7 @@
                                                        .getResultCount();
         
         if(blogpostsStillWithThisStatus == 0) {
-            new status(arguments.statusId).delete();
+            new status(arguments.statusId).delete(request.user);
             
             return true;
         }
@@ -336,14 +336,14 @@
         var status = new status(arguments.statusId);
         
         status.setActiveStatus(true)
-              .save();
+              .save(request.user);
         
         return true;
     }
     
     remote boolean function deactivateStatus(required numeric statusId) {
         new status(arguments.statusId).setActiveStatus(false)
-                                      .save();
+                                      .save(request.user);
         
         return true;
     }
@@ -385,7 +385,7 @@
                     }
                 }
                 
-                status.save();
+                status.save(request.user);
             }
             
             transactionCommit();
@@ -441,10 +441,10 @@
     remote boolean function uploadPictures(required numeric blogpostId) {
         var blogpost = new blogpost(arguments.blogpostId);
         
-        if(blogpost.isEditable(request.user.getUserID())) {
+        if(blogpost.isEditable(request.user.getUserId())) {
             var newPicture = new picture(0);
             newPicture.setBlogpostId(arguments.blogpostId)
-                      .upload();
+                      .upload(request.user);
             
             blogpost.addPicture(newPicture);
             
@@ -462,11 +462,11 @@
         var picture = new picture(arguments.pictureId);
         var blogpost = new blogpost(picture.getBlogpostId());
         
-        if(blogpost.isEditable(request.user.getUserID())) {
+        if(blogpost.isEditable(request.user.getUserId())) {
             picture.setCaption(arguments.caption)
                    .setAlt(arguments.alt)
                    .setTitle(arguments.title)
-                   .save();
+                   .save(request.user);
             
             return true;
         }
@@ -479,7 +479,7 @@
         var picture = new picture(arguments.pictureId);
         var blogpost = new blogpost(picture.getBlogpostId());
         
-        if(blogpost.isEditable(request.user.getUserID())) {
+        if(blogpost.isEditable(request.user.getUserId())) {
             blogpost.removePicture(arguments.pictureId);
             
             return preparePictureStruct(blogpost.getPictures(), blogpost.getRelativePath() & "/");
@@ -506,10 +506,10 @@
             "commentsActivated"          = arguments.blogpost.getCommentsActivated(),
             "anonymousCommentAllowed"    = arguments.blogpost.getAnonymousCommentAllowed(),
             "commentsNeedToGetPublished" = arguments.blogpost.getCommentsNeedToGetPublished(),
-            "creatorUserId"              = arguments.blogpost.getCreatorUserId(),
+            "creatorUserId"              = arguments.blogpost.getCreator().getUserId(),
             "categories"                 = categories,
             "private"                    = arguments.blogpost.getPrivate(),
-            "isEditable"                 = arguments.blogpost.isEditable(request.user.getUserId()),
+            "isEditable"                 = arguments.blogpost.isEditable(request.user),
             "creator"                    = getUserInformation(arguments.blogpost.getCreator()),
             "creationDate"               = formatCtrl.formatDate(arguments.blogpost.getCreationDate()),
             "lastEditor"                 = getUserInformation(arguments.blogpost.getLastEditor()),
@@ -545,7 +545,7 @@
                     });
                     
                     pic.setSortId(i)
-                       .save();
+                       .save(request.user);
                 }
             }
             

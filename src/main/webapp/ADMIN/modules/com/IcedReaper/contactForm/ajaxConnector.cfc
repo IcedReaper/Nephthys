@@ -15,7 +15,7 @@ component {
                 "read"            = rawRequests[i].getRead(),
                 "requestDate"     = formatCtrl.formatDate(rawRequests[i].getRequestDate()),
                 "subject"         = rawRequests[i].getSubject(),
-                "requestorUserId" = rawRequests[i].getRequestorUserId(),
+                "requestorUserId" = rawRequests[i].getRequestor().getUserId(),
                 "userName"        = rawRequests[i].getUserName(),
                 "replied"         = rawRequests[i].getReplies().len() != 0,
                 "replyCount"      = rawRequests[i].getReplies().len()
@@ -26,28 +26,28 @@ component {
     }
     
     remote struct function getDetails(required numeric requestId) {
-        var cf_request = new request(arguments.requestId);
+        var contactRequest = new request(arguments.requestId);
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
-        if(! cf_request.getRead()) {
-            cf_request.setRead(true)
-                      .save();
+        if(! contactRequest.getRead()) {
+            contactRequest.setRead(true)
+                          .save(request.user);
         }
         
         return {
-            "requestId"       = cf_request.getRequestId(),
-            "requestDate"     = formatCtrl.formatDate(cf_request.getRequestDate()),
-            "subject"         = cf_request.getSubject(),
-            "requestorUserId" = cf_request.getRequestorUserId(),
-            "email"           = cf_request.getEmail(),
-            "userName"        = cf_request.getUserName(),
-            "message"         = cf_request.getMessage()
+            "requestId"       = contactRequest.getRequestId(),
+            "requestDate"     = formatCtrl.formatDate(contactRequest.getRequestDate()),
+            "subject"         = contactRequest.getSubject(),
+            "requestorUserId" = contactRequest.getRequestor().getUserId(),
+            "email"           = contactRequest.getEmail(),
+            "userName"        = contactRequest.getUserName(),
+            "message"         = contactRequest.getMessage()
         };
     }
     
     remote array function getReplies(required numeric requestId) {
-        var cf_request = new request(arguments.requestId);
-        var rawReplies = cf_request.getReplies();
+        var contactRequest = new request(arguments.requestId);
+        var rawReplies = contactRequest.getReplies();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var replies = [];
@@ -68,7 +68,7 @@ component {
         
         reply.setRequestId(arguments.requestId)
              .setMessage(arguments.message)
-             .save();
+             .save(request.user);
         
         return true;
     }

@@ -9,13 +9,12 @@ component {
         return this;
     }
     
-    // SETTER
     public request function setUserName(required string userName) {
         variables.userName = arguments.userName;
         return this;
     }
-    public request function setRequestorUserId(required numeric requestorUserId) {
-        variables.requestorUserId = arguments.requestorUserId;
+    public request function setRequestor(required user requestor) {
+        variables.requestor = arguments.requestor;
         return this;
     }
     public request function setEmail(required string email) {
@@ -40,15 +39,15 @@ component {
         return this;
     }
     
-    // GETTER
+    
     public numeric function getRequestId() {
         return variables.requestId;
     }
     public string function getUserName() {
         return variables.userName;
     }
-    public string function getRequestorUserId() {
-        return variables.requestorUserId;
+    public numeric function getRequestor() {
+        return variables.requestor;
     }
     public string function getEmail() {
         return variables.email;
@@ -68,8 +67,8 @@ component {
     public any function getReadDate() {
         return variables.readDate;
     }
-    public integer function getReadUserId() {
-        return variables.readUserId;
+    public integer function getReader() {
+        return variables.reader;
     }
     public array function getReplies() {
         loadReplies();
@@ -77,21 +76,8 @@ component {
         return variables.replies;
     }
     
-    public user function getRequestorUser() {
-        if(! variables.keyExists("requestorUser")) {
-            variables.requestorUser = new user(variables.requestorUserId);
-        }
-        return variables.requestorUser;
-    }
-    public user function getReadUser() {
-        if(! variables.keyExists("readUser")) {
-            variables.readUser = new user(variables.readUserId);
-        }
-        return variables.readUser;
-    }
     
-    // CRUD
-    public request function save() {
+    public request function save(required user user) {
         if(variables.requestId == 0) {
             variables.requestId = new Query().setSQL("INSERT INTO IcedReaper_contactForm_request
                                                                   (
@@ -109,24 +95,24 @@ component {
                                                                       :requestorUserId
                                                                   );
                                                       SELECT currval('seq_icedreaper_contactForm_requestId') requestId;")
-                                             .addParam(name = "subject",         value = variables.subject,         cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "email",           value = variables.email,           cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "message",         value = variables.message,         cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "userName",        value = variables.userName,        cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "requestorUserId", value = variables.requestorUserId, cfsqltype = "cf_sql_numeric", null = variables.requestorUserId == 0)
+                                             .addParam(name = "subject",         value = variables.subject,               cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "email",           value = variables.email,                 cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "message",         value = variables.message,               cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "userName",        value = variables.userName,              cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "requestorUserId", value = variables.requestor.getUserId(), cfsqltype = "cf_sql_numeric", null = variables.requestor.getUserId() == null)
                                              .execute()
                                              .getResult()
                                              .requestId[1];
         }
         else {
             new Query().setSQL("UPDATE IcedReaper_contactForm_request
-                                   SET read = :read,
+                                   SET read       = :read,
                                        readDate   = now(),
                                        readUserId = :readUserId
                                  WHERE requestId  = :requestId")
-                       .addParam(name = "requestId",  value = variables.requestId,      cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "read",       value = variables.read,           cfsqltype = "cf_sql_bit")
-                       .addParam(name = "readUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "requestId",  value = variables.requestId,          cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "read",       value = variables.read,               cfsqltype = "cf_sql_bit")
+                       .addParam(name = "readUserId", value = variables.reader.getUserId(), cfsqltype = "cf_sql_numeric")
                        .execute();
         }
         
@@ -144,30 +130,30 @@ component {
                                           .getResult();
             
             if(qContactForm.getRecordCount() == 1) {
-                variables.userName        = qContactForm.userName[1];
-                variables.requestorUserId = qContactForm.requestorUserId[1];
-                variables.subject         = qContactForm.subject[1];
-                variables.email           = qContactForm.email[1];
-                variables.message         = qContactForm.message[1];
-                variables.requestDate     = qContactForm.requestDate[1];
-                variables.read            = qContactForm.read[1];
-                variables.readDate        = qContactForm.readDate[1];
-                variables.readUserId      = qContactForm.readUserId[1];
+                variables.userName    = qContactForm.userName[1];
+                variables.requestor   = new user(qContactForm.requestorUserId[1]);
+                variables.subject     = qContactForm.subject[1];
+                variables.email       = qContactForm.email[1];
+                variables.message     = qContactForm.message[1];
+                variables.requestDate = qContactForm.requestDate[1];
+                variables.read        = qContactForm.read[1];
+                variables.readDate    = qContactForm.readDate[1];
+                variables.reader      = new user(qContactForm.readUserId[1]);
             }
             else {
                 throw(type = "icedreaper.contactForm.notFound", message = "Could not find a contact form with this Id");
             }
         }
         else {
-            variables.userName        = request.user.getUserName();
-            variables.requestorUserId = request.user.getUserId();
-            variables.subject         = "";
-            variables.email           = "";
-            variables.message         = "";
-            variables.requestDate     = now();
-            variables.read            = false;
-            variables.readDate        = null;
-            variables.readUserId      = null;
+            variables.userName    = request.user.getUserName();
+            variables.requestor   = request.user;
+            variables.subject     = "";
+            variables.email       = "";
+            variables.message     = "";
+            variables.requestDate = now();
+            variables.read        = false;
+            variables.readDate    = null;
+            variables.reader      = new user(null);
         }
     }
     

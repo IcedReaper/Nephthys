@@ -58,13 +58,6 @@ component {
         return this;
     }
     
-    public status function setLastEditor(required user lastEditor) {
-        variables.lastEditor = arguments.lastEditor;
-        variables.attributesChanged = true;
-        
-        return this;
-    }
-    
     
     public status function addNextStatus(required numeric nextStatusId) {
         if(! variables.nextStatusLoaded) {
@@ -133,14 +126,8 @@ component {
     public numeric function getOnlineStatus() {
         return variables.online;
     }
-    public numeric function getCreatorUserId() {
-        return variables.creator.getUserId();
-    }
     public date function getCreationDate() {
         return variables.creationDate;
-    }
-    public numeric function getLastEditorUserId() {
-        return variables.lastEditor.getUserId();
     }
     public date function getLastEditDate() {
         return variables.lastEditDate;
@@ -192,16 +179,16 @@ component {
     }
     
     
-    public status function save() {
+    public status function save(required user user) {
         transaction {
-            var qUpdate = new Query().addParam(name = "name",               value = variables.name,                   cfsqltype = "cf_sql_varchar")
-                                     .addParam(name = "active",             value = variables.active,                 cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "online",             value = variables.online,                 cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "editable",   value = variables.editable,       cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "deleteable",         value = variables.deleteable,             cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "showInTasklist",     value = variables.showInTasklist,         cfsqltype = "cf_sql_bit")
-                                     .addParam(name = "creatorUserId",     value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
-                                     .addParam(name = "lastEditorUserId",     value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
+            var qUpdate = new Query().addParam(name = "name",             value = variables.name,                   cfsqltype = "cf_sql_varchar")
+                                     .addParam(name = "active",           value = variables.active,                 cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "online",           value = variables.online,                 cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "editable",         value = variables.editable,               cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "deleteable",       value = variables.deleteable,             cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "showInTasklist",   value = variables.showInTasklist,         cfsqltype = "cf_sql_bit")
+                                     .addParam(name = "creatorUserId",    value = variables.creator.getUserId(),    cfsqltype = "cf_sql_numeric")
+                                     .addParam(name = "lastEditorUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
             
             if(variables.statusId == 0 || variables.statusId == null) {
                 variables.statusId = qUpdate.setSQL("INSERT INTO IcedReaper_gallery_status
@@ -279,7 +266,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE FROM IcedReaper_gallery_status WHERE statusId = :statusId")
                    .addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric")
                    .execute();

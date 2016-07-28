@@ -178,7 +178,7 @@ component {
     }
     
     
-    public module function save() {
+    public module function save(required user user) {
         transaction {
             if(variables.moduleId == 0) {
                 variables.moduleId = new Query().setSQL("INSERT INTO nephthys_module
@@ -271,7 +271,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE
                               FROM nephthys_module
                              WHERE moduleId = :moduleId")

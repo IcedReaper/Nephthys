@@ -105,7 +105,7 @@ component {
         try {
             var errorLogger = application.system.settings.getValueOfKey("errorLogger");
             errorLogger.setException(arguments.exception)
-                        .save();
+                        .save(request.user);
             
             switch(request.requestType) {
                 case "cfc": {

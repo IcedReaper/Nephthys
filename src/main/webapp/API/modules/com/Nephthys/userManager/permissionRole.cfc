@@ -32,7 +32,7 @@ component {
     }
     
     
-    public permissionRole function save() {
+    public permissionRole function save(required user user) {
         if(variables.permissionRoleId == null) {
             variables.permissionRoleId = new Query().setSQL("INSERT INTO nephthys_user_permissionRole
                                                                            (

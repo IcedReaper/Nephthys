@@ -36,7 +36,7 @@ component {
             theme.uploadAsZip(arguments.foldername);
         }
         
-        theme.save();
+        theme.save(request.user);
         
         return prepareTheme(theme);
     }
@@ -45,7 +45,7 @@ component {
         var theme = new theme(arguments.themeId);
         
         theme.setActiveStatus(1)
-             .save();
+             .save(request.user);
         
         return true;
     }
@@ -56,7 +56,7 @@ component {
         if(themeList[i].getThemeId() != getDefaultWwwThemeId() &&
            themeList[i].getThemeId() != getDefaulAdminThemeId()) {
             theme.setActiveStatus(0)
-                 .save();
+                 .save(request.user);
         }
         else {
             throw(type = "nephthys.application.deleteFailed", message = "Cannot delete the default theme. Please change the systems default theme first.");
@@ -65,10 +65,8 @@ component {
         return true;
     }
     
-    remote boolean function delete() {
-        var theme = new theme(arguments.themeId);
-        
-        theme.delete();
+    remote boolean function delete(request.user) {
+        new theme(arguments.themeId).delete(request.user);
         
         return true;
     }

@@ -44,7 +44,7 @@ component {
     }
     
     // CRUD
-    public reply function save() {
+    public reply function save(required user user) {
         if(variables.replyId == 0 || variables.replyId == null) {
             if(variables.requestId != 0 && variables.requestId != null) {
                 if(variables.message != "") {

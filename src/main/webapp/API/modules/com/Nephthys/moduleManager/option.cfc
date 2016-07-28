@@ -97,7 +97,7 @@ component {
     }
     
     
-    public option function save() {
+    public option function save(required user user) {
         var jsonSelectOptions = variables.selectOptions.len() > 0 ? serializeJSON(variables.selectOptions) : "";
         
         if(variables.moduleId == 0 || variables.moduleId == null) {
@@ -174,7 +174,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE FROM nephthys_module_option
                                   WHERE optionId = :optionId")
                    .addParam(name = "optionId", value = variables.optionId, cfsqltype = "cf_sql_numeric")

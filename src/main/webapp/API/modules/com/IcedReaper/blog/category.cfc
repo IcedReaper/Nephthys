@@ -26,22 +26,13 @@ component {
     public string function getName() {
         return variables.name;
     }
-    public numeric function getCreatorUserId() {
-        return variables.creatorUserId;
-    }
     public user function getCreator() {
-        if(! variables.keyExists("creator")) {
-            variables.creator = new user(variables.creatorUserId);
-        }
         return variables.creator;
     }
     public date function getCreationDate() {
         return variables.creationDate != null ? variables.creationDate : 0;
     }
     public user function getLastEditor() {
-        if(! variables.keyExists("lastEditor")) {
-            variables.lastEditor = new user(variables.lastEditorUserId);
-        }
         return variables.lastEditor;
     }
     public date function getLastEditDate() {
@@ -57,59 +48,56 @@ component {
     }
     
     // C R U D
-    public category function save() {
-        if(variables.categoryId == 0) {
-            variables.categoryId = new Query().setSQL("INSERT INTO IcedReaper_blog_category
-                                                                   (
-                                                                       name,
-                                                                       creatorUserId,
-                                                                       lastEditorUserId
-                                                                   )
-                                                            VALUES (
-                                                                       :name,
-                                                                       :creatorUserId,
-                                                                       :lastEditorUserId
-                                                                   );
-                                                      SELECT currval('seq_icedreaper_blog_category_id') newCategoryId;")
-                                              .addParam(name = "name",             value = variables.name,           cfsqltype = "cf_sql_varchar")
-                                              .addParam(name = "creatorUserId",    value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                                              .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                                              .execute()
-                                              .getResult()
-                                              .newCategoryId[1];
+    public category function save(required user user) {
+        var qSave = new Query().addParam(name = "name",             value = variables.name,                   cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "lastEditorUserId", value = variables.lastEditor.getUserId(), cfsqltype = "cf_sql_numeric");
+        
+        if(variables.categoryId == null || variables.categoryId == 0) {
+            variables.categoryId = qSave.setSQL("INSERT INTO IcedReaper_blog_category
+                                                             (
+                                                                 name,
+                                                                 creatorUserId,
+                                                                 lastEditorUserId
+                                                             )
+                                                      VALUES (
+                                                                 :name,
+                                                                 :creatorUserId,
+                                                                 :lastEditorUserId
+                                                             );
+                                                SELECT currval('seq_icedreaper_blog_category_id') newCategoryId;")
+                                        .addParam(name = "creatorUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
+                                        .execute()
+                                        .getResult()
+                                        .newCategoryId[1];
         }
         else {
             if(variables.attributesChanged) {
-                new Query().setSQL("UPDATE IcedReaper_blog_category
-                                       SET name             = :name,
-                                           creatorUserId    = :creatorUserId,
-                                           lastEditorUserId = :lastEditorUserId
-                                     WHERE categoryId = :categoryId")
-                           .addParam(name = "categoryId",       value = variables.categoryId,     cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "name",             value = variables.name,           cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "creatorUserId",    value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                           .execute();
+                qSave.setSQL("UPDATE IcedReaper_blog_category
+                                 SET name             = :name,
+                                     lastEditorUserId = :lastEditorUserId
+                               WHERE categoryId = :categoryId")
+                     .addParam(name = "categoryId", value = variables.categoryId, cfsqltype = "cf_sql_numeric")
+                     .execute();
             }
         }
         
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE FROM IcedReaper_blog_category
                                   WHERE categoryId = :categoryId")
-                   .addParam(name = "categoryId",       value = variables.categoryId,     cfsqltype = "cf_sql_numeric")
+                   .addParam(name = "categoryId", value = variables.categoryId, cfsqltype = "cf_sql_numeric")
                    .execute();
         
-        variables.categoryId = 0;
+        variables.categoryId = null;
         
         return;
     }
     
     // P R I V A T E
     private void function loadDetails() {
-        if(variables.categoryId != 0) {
+        if(variables.categoryId != null && variables.categoryId != 0) {
             var qCategory = new Query().setSQL("SELECT *
                                                   FROM IcedReaper_blog_category
                                                  WHERE categoryId = :categoryId")
@@ -119,9 +107,9 @@ component {
             
             if(qCategory.getRecordCount() == 1) {
                 variables.name             = qCategory.name[1];
-                variables.creatorUserId    = qCategory.creatorUserId[1];
+                variables.creator    = new user(qCategory.creatorUserId[1]);
                 variables.creationDate     = qCategory.creationDate[1];
-                variables.lastEditorUserId = qCategory.lastEditorUserId[1];
+                variables.lastEditor = new user(qCategory.lastEditorUserId[1]);
                 variables.lastEditDate     = qCategory.lastEditDate[1];
             }
             else {
@@ -129,11 +117,11 @@ component {
             }
         }
         else {
-            variables.name             = "";
-            variables.creatorUserId    = 0;
-            variables.creationDate     = null;
-            variables.lastEditorUserId = 0;
-            variables.lastEditDate     = null;
+            variables.name         = "";
+            variables.creator      = 0;
+            variables.creationDate = request.user;
+            variables.lastEditor   = 0;
+            variables.lastEditDate = request.user;
         }
     }
 }

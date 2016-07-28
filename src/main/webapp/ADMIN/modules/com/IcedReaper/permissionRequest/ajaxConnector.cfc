@@ -46,14 +46,14 @@ component {
             
             if(permissionFilter.getResultCount() == 1) {
                 permissionFilter.getResult()[1].setPermissionRole(_request.getPermissionRole())
-                                               .save();
+                                               .save(request.user);
             }
             else {
                 var permission = new permission(null);
                 permission.setUser(_request.getUser())
                           .setModule(_request.getModule())
                           .setPermissionRole(_request.getPermissionRole())
-                          .save();
+                          .save(request.user);
             }
             
             transactionCommit();

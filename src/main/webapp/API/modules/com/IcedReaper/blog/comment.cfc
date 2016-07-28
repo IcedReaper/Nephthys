@@ -5,6 +5,7 @@ component {
         variables.commentId = arguments.commentId;
         
         variables.attributesChanged = false;
+        variables.publisherChanged = false;
         
         loadDetails();
         
@@ -13,50 +14,46 @@ component {
     
     // S E T T E R
     public comment function setBlogpostId(required numeric blogpostId) {
-        if(variables.commentId == 0 || variables.blogpostId == arguments.blogpostId) {
+        if(variables.commentId == 0 || variables.commentId == null) {
             variables.blogpostId = arguments.blogpostId;
         }
         
         return this;
     }
     public comment function setComment(required string comment) {
-        variables.comment = arguments.comment;
-        variables.attributesChanged = true;
-        
-        return this;
-    }
-    public comment function setPublished(required boolean published) {
-        variables.published = arguments.published;
-        variables.attributesChanged = true;
+        if(variables.commentId == 0 || variables.commentId == null || (variables.creator.isActive() && variables.creator.getUserId() == request.user.getUserId())) {
+            variables.comment = arguments.comment;
+            variables.attributesChanged = true;
+        }
         
         return this;
     }
     public comment function setAnonymousUsername(required string username) {
-        variables.anonymousUsername = arguments.username;
-        variables.attributesChanged = true;
+        if(variables.commentId == 0 || variables.commentId == null) {
+            variables.anonymousUsername = arguments.username;
+            variables.attributesChanged = true;
+        }
         
         return this;
     }
     public comment function setAnonymousEmail(required string email) {
-        variables.anonymousEmail = arguments.email;
-        variables.attributesChanged = true;
-        
-        return this;
-    }
-    public comment function setCreatorUserId(required numeric userId) {
-        if(variables.commentId == 0) {
-            variables.creatorUserId = arguments.userId;
+        if(variables.commentId == 0 || variables.commentId == null) {
+            variables.anonymousEmail = arguments.email;
+            variables.attributesChanged = true;
         }
         
         return this;
     }
     
-    public comment function publish() {
-        variables.published       = true;
-        variables.publishedUserId = request.user.getUserId();
-        variables.publishedDate   = now();
+    public comment function setPublished(required boolean published) {
+        variables.published = arguments.published;
+        variables.publisherChanged = true;
         
-        variables.attributesChanged = true;
+        return this;
+    }
+    public comment function setPublishedDate(required date publishedDate) {
+        variables.publishedDate = arguments.publishedDate;
+        variables.publisherChanged = true;
         
         return this;
     }
@@ -74,32 +71,20 @@ component {
     public boolean function getPublished() {
         return variables.published;
     }
-    public user function getCreatorUserId() {
-        return variables.creatorUserId;
-    }
     public user function getCreator() {
-        if(! variables.keyExists("creator")) {
-            variables.creator = new user(variables.creatorUserId);
-        }
         return variables.creator;
     }
     public date function getCreationDate() {
         return variables.creationDate;
     }
     public user function getPublisher() {
-        if(! variables.keyExists("publishedUser")) {
-            variables.publishedUser = new user(variables.publishedUserId);
-        }
-        return variables.publishedUser;
-    }
-    public user function getPublishedUserId() {
-        return variables.publishedUserId;
+        return variables.publisher;
     }
     public date function getPublishedDate() {
         return variables.publishedDate;
     }
     public string function getUsername() {
-        if(variables.creatorUserId != 0 && variables.creatorUserId != null) {
+        if(variables.creator != null) {
             return getCreator().getUsername();
         }
         else {
@@ -120,69 +105,72 @@ component {
         return variables.published;
     }
     public boolean function isSaved() {
-        return variables.commentId != 0 && variables.attributesChanged == false;
+        return variables.commentId != 0 && variables.commentId != null && variables.attributesChanged == false;
     }
     
     
     // C R U D
-    public comment function save() {
+    public comment function save(required user user) {
+        var qSave = new Query();
+                                             
         if(variables.commentId == 0) {
-            variables.commentId = new Query().setSQL("INSERT INTO IcedReaper_blog_comment
-                                                                  (
-                                                                      blogpostId,
-                                                                      comment,
-                                                                      creatorUserId,
-                                                                      anonymousUsername,
-                                                                      anonymousEmail,
-                                                                      published,
-                                                                      publishedUserId,
-                                                                      publishedDate
-                                                                  )
-                                                           VALUES (
-                                                                      :blogpostId,
-                                                                      :comment,
-                                                                      :creatorUserId,
-                                                                      :anonymousUsername,
-                                                                      :anonymousEmail,
-                                                                      :published,
-                                                                      :publishedUserId,
-                                                                      :publishedDate
-                                                                  );
-                                                      SELECT currval('seq_icedreaper_blog_comment_id') newPictureId;")
-                                             .addParam(name = "blogpostId",        value = variables.blogpostId,        cfsqltype = "cf_sql_numeric")
-                                             .addParam(name = "comment",           value = variables.comment,           cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "creatorUserId",     value = variables.creatorUserId,     cfsqltype = "cf_sql_numeric", null = variables.creatorUserId == 0 || variables.creatorUserId == null)
-                                             .addParam(name = "anonymousUsername", value = variables.anonymousUsername, cfsqltype = "cf_sql_varchar", null = variables.anonymousUsername == null)
-                                             .addParam(name = "anonymousEmail",    value = variables.anonymousEmail,    cfsqltype = "cf_sql_varchar", null = variables.anonymousEmail == null)
-                                             .addParam(name = "published",         value = variables.published,         cfsqltype = "cf_sql_bit")
-                                             .addParam(name = "publishedUserId",   value = variables.publishedUserId,   cfsqltype = "cf_sql_numeric", null = variables.publishedUserId == 0 || variables.publishedUserId == null)
-                                             .addParam(name = "publishedDate",     value = variables.publishedDate,     cfsqltype = "cf_sql_date",    null = variables.publishedDate == null)
-                                             .execute()
-                                             .getResult()
-                                             .newPictureId[1];
+            var creatorUserId = null;
+            
+            if(variables.creator.isActive()) {
+                creatorUserId = variables.creator.getUserId();
+            }
+            
+            variables.commentId = qSave.setSQL("INSERT INTO IcedReaper_blog_comment
+                                                            (
+                                                                blogpostId,
+                                                                comment,
+                                                                creatorUserId,
+                                                                anonymousUsername,
+                                                                anonymousEmail
+                                                            )
+                                                     VALUES (
+                                                                :blogpostId,
+                                                                :comment,
+                                                                :creatorUserId,
+                                                                :anonymousUsername,
+                                                                :anonymousEmail
+                                                            );
+                                                SELECT currval('seq_icedreaper_blog_comment_id') newPictureId;")
+                                       .addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric")
+                                       .addParam(name = "comment",           value = variables.comment,           cfsqltype = "cf_sql_varchar")
+                                       .addParam(name = "anonymousUsername", value = variables.anonymousUsername, cfsqltype = "cf_sql_varchar", null = variables.anonymousUsername == null)
+                                       .addParam(name = "anonymousEmail",    value = variables.anonymousEmail,    cfsqltype = "cf_sql_varchar", null = variables.anonymousEmail == null)
+                                       .addParam(name = "creatorUserId",     value = creatorUserId,               cfsqltype = "cf_sql_numeric", null = creatorUserId == null)
+                                       .execute()
+                                       .getResult()
+                                       .newPictureId[1];
         }
         else {
             if(variables.attributesChanged) {
-                new Query().setSQL("UPDATE IcedReaper_blog_comment
-                                       SET blogpostId        = :blogpostId,
-                                           comment           = :comment,
-                                           creatorUserId     = :creatorUserId,
-                                           anonymousUsername = :anonymousUsername,
-                                           anonymousEmail    = :anonymousEmail,
-                                           published         = :published,
-                                           publishedUserId   = :publishedUserId,
-                                           publishedDate     = :publishedDate
-                                     WHERE commentId         = :commentId")
-                           .addParam(name = "commentId",         value = variables.commentId,         cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "blogpostId",        value = variables.blogpostId,        cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "comment",           value = variables.comment,           cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "creatorUserId",     value = variables.creatorUserId,     cfsqltype = "cf_sql_numeric", null = variables.creatorUserId == 0 || variables.creatorUserId == null)
-                           .addParam(name = "anonymousUsername", value = variables.anonymousUsername, cfsqltype = "cf_sql_varchar", null = variables.anonymousUsername == null)
-                           .addParam(name = "anonymousEmail",    value = variables.anonymousEmail,    cfsqltype = "cf_sql_varchar", null = variables.anonymousEmail == null)
-                           .addParam(name = "published",         value = variables.published,         cfsqltype = "cf_sql_bit")
-                           .addParam(name = "publishedUserId",   value = variables.publishedUserId,   cfsqltype = "cf_sql_numeric", null = variables.publishedUserId == 0 || variables.publishedUserId == null)
-                           .addParam(name = "publishedDate",     value = variables.publishedDate,     cfsqltype = "cf_sql_date",    null = variables.publishedDate == null)
-                           .execute();
+                qSave.setSQL("UPDATE IcedReaper_blog_comment
+                                 SET comment   = :comment
+                               WHERE commentId = :commentId")
+                     .addParam(name = "commentId", value = variables.commentId, cfsqltype = "cf_sql_numeric")
+                     .execute();
+            }
+            
+            if(variables.publisherChanged) {
+                var publisherUserId = null;
+                
+                if(variables.publisher.getStatus().canLogin()) {
+                    publisherUserId = variables.publisher.getUserId();
+                }
+                
+                qSave.setSQL("UPDATE IcedReaper_blog_comment
+                                 SET published       = :published,
+                                     publisherUserId = :publisherUserId,
+                                     publishedDate   = :publishedDate
+                               WHERE commentId       = :commentId")
+                     .addParam(name = "commentId",       value = variables.commentId,     cfsqltype = "cf_sql_numeric")
+                     .addParam(name = "published",       value = variables.published,     cfsqltype = "cf_sql_bit")
+                     .addParam(name = "publisherUserId", value = publisherUserId,         cfsqltype = "cf_sql_numeric", null = publisherUserId == null)
+                     .addParam(name = "publishedDate",   value = variables.publishedDate, cfsqltype = "cf_sql_date",    null = variables.publishedDate == null)
+                     .execute();
             }
         }
         
@@ -191,7 +179,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE FROM IcedReaper_blog_comment
                                   WHERE commentId = :commentId")
                    .addParam(name = "commentId", value = variables.commentId, cfsqltype = "cf_sql_numeric")
@@ -213,12 +201,12 @@ component {
             if(qComment.getRecordCount() == 1) {
                 variables.blogpostId        = qComment.blogpostId[1];
                 variables.comment           = qComment.comment[1];
-                variables.creatorUserId     = qComment.creatorUserId[1];
+                variables.creator           = new user(qComment.creatorUserId[1]);
                 variables.creationDate      = qComment.creationDate[1];
                 variables.anonymousUsername = qComment.anonymousUsername[1];
                 variables.anonymousEmail    = qComment.anonymousEmail[1];
                 variables.published         = qComment.published[1];
-                variables.publishedUserId   = qComment.publishedUserId[1];
+                variables.publisher         = new user(qComment.publisherUserId[1]);
                 variables.publishedDate     = qComment.publishedDate[1];
             }
             else {
@@ -228,12 +216,12 @@ component {
         else {
             variables.blogpostId        = 0;
             variables.comment           = "";
-            variables.creatorUserId     = 0;
+            variables.creatorUserId     = request.user;
             variables.creationDate      = now();
             variables.anonymousUsername = "";
             variables.anonymousEmail    = "";
             variables.published         = false;
-            variables.publishedUserId   = 0;
+            variables.publisherUserId   = new user(null);
             variables.publishedDate     = null;
         }
     }
