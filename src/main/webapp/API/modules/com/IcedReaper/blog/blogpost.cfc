@@ -541,7 +541,7 @@ component {
     
     private void function loadPictures() {
         variables.pictures = new filter().for("picture")
-                                         .setBlogpostId(variables.blogpostId)
+                                         .setBlogpost(this)
                                          .execute()
                                          .getResult();
         

@@ -141,8 +141,9 @@ nephthysAdminApp
                 });
             },
             
-            updatePictureSorting: function (pictures) {
+            updatePictureSorting: function (blogpostId, pictures) {
                 return $http.post("/ajax/com/IcedReaper/blog/updatePictureSorting", {
+                    blogpostId: blogpostId,
                     pictures: pictures
                 });
             }

@@ -442,9 +442,7 @@
         var blogpost = new blogpost(arguments.blogpostId);
         
         if(blogpost.isEditable(request.user)) {
-            var newPicture = new picture(0);
-            newPicture.setBlogpostId(arguments.blogpostId)
-                      .upload(request.user);
+            var newPicture = new picture(null, blogpost).upload(request.user);
             
             blogpost.addPicture(newPicture);
             
@@ -459,8 +457,8 @@
                                           required string  caption,
                                           required string  alt,
                                           required string  title) {
-        var picture = new picture(arguments.pictureId);
         var blogpost = new blogpost(picture.getBlogpostId());
+        var picture = new picture(arguments.pictureId, blogpost);
         
         if(blogpost.isEditable(request.user)) {
             picture.setCaption(arguments.caption)
@@ -475,9 +473,9 @@
         }
     }
     
-    remote array function deletePicture(required numeric pictureId) {
-        var picture = new picture(arguments.pictureId);
-        var blogpost = new blogpost(picture.getBlogpostId());
+    remote array function deletePicture(required numeric blogpostId, required numeric pictureId) {
+        var blogpost = new blogpost(arguments.blogpostId);
+        var picture = new picture(arguments.pictureId, blogpost);
         
         if(blogpost.isEditable(request.user)) {
             blogpost.removePicture(arguments.pictureId);
@@ -531,11 +529,11 @@
         return blogDetails;
     }
     
-    remote array function updatePictureSorting(required array pictures) {
+    remote array function updatePictureSorting(required numeric blogpostId, required array pictures) {
         var updated = [];
         transaction {
             for(var i = 1; i <= arguments.pictures.len(); ++i) {
-                var pic = new picture(arguments.pictures[i].pictureId);
+                var pic = new picture(arguments.pictures[i].pictureId, new blogpost(arguments.blogpostId));
                 
                 if(pic.getSortId() != i) {
                     updated.append({

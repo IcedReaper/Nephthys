@@ -1,6 +1,7 @@
 component {
-    public picture function init(required numeric pictureId) {
+    public picture function init(required numeric pictureId, required blogpost blogpost) {
         variables.pictureId = arguments.pictureId;
+        variables.blogpost = arguments.blogpost;
         
         variables.attributesChanged = false;
         
@@ -10,9 +11,9 @@ component {
     }
     
     
-    public picture function setBlogpostId(required numeric blogpostId) {
-        if(variables.pictureId == 0 || variables.blogpostId == arguments.blogpostId) {
-            variables.blogpostId = arguments.blogpostId;
+    public picture function setBlogpost(required numeric blogpost) {
+        if(variables.pictureId == 0 || variables.pictureId == null || variables.blogpost.getBlogpostId() == arguments.blogpost.getBlogpostId()) {
+            variables.blogpostId = arguments.blogpost;
         }
         
         return this;
@@ -44,13 +45,11 @@ component {
     }
     
     public picture function upload(required user user) {
-        if(variables.pictureId != 0) {
+        if(variables.pictureId != 0 && variables.pictureId != null) {
             deleteFiles();
         }
         
-        var blogpost = new blogpost(variables.blogpostId);
-        
-        var uploaded = fileUpload(blogpost.getAbsolutePath(), "picture", "image/*", "MakeUnique");
+        var uploaded = fileUpload(variables.blogpost.getAbsolutePath(), "picture", "image/*", "MakeUnique");
         var newFilename = uploaded.serverFile;
         
         if(uploaded.fileExisted) {
@@ -59,16 +58,16 @@ component {
         }
         
         var imageEditor = application.system.settings.getValueOfKey("imageEditLibrary");
-        imageEditor.resize(source        = blogpost.getAbsolutePath() & "/" & newFilename,
+        imageEditor.resize(source        = variables.blogpost.getAbsolutePath() & "/" & newFilename,
                            width         = 575,
-                           target        = blogpost.getAbsolutePath() & "/tn_" & newFilename,
+                           target        = variables.blogpost.getAbsolutePath() & "/tn_" & newFilename,
                            interpolation = "bilinear");
         
         variables.pictureFilename   = newFilename;
         variables.thumbnailFilename = "tn_" & newFilename;
         
         var exifReader = application.system.settings.getValueOfKey("exifReader");
-        exifReader.setImagePath(blogpost.getAbsolutePath() & "/" & variables.pictureFilename);
+        exifReader.setImagePath(variables.blogpost.getAbsolutePath() & "/" & variables.pictureFilename);
         var jpegComment      = exifReader.getExifKey("JPEG Comment");
         var imageDescription = exifReader.getExifKey("Image Description");
         var userComment      = exifReader.getExifKey("User Comment");
@@ -122,8 +121,8 @@ component {
     public numeric function getPictureId() {
         return variables.pictureId;
     }
-    public numeric function getBlogpostId() {
-        return variables.blogpostId;
+    public blogpost function getBlogpost() {
+        return variables.blogpost;
     }
     public string function getPictureFileName() {
         return variables.pictureFileName;
@@ -146,7 +145,7 @@ component {
     
     
     public picture function save(required user user) {
-        if(variables.pictureId == 0) {
+        if(variables.pictureId == 0 || variables.pictureId == null) {
             variables.pictureId = new Query().setSQL("INSERT INTO IcedReaper_blog_picture
                                                                   (
                                                                       blogpostId,
@@ -174,12 +173,12 @@ component {
                                                                         WHERE blogpostId = :blogpostId)
                                                                   );
                                                       SELECT currval('icedreaper_blog_picture_pictureid_seq') newPictureId;")
-                                             .addParam(name = "blogpostId",        value = variables.blogpostId,         cfsqltype = "cf_sql_numeric")
-                                             .addParam(name = "pictureFileName",   value = variables.pictureFileName,    cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "thumbnailFileName", value = variables.thumbnailFileName,  cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "title",             value = left(variables.title, 250),   cfsqltype = "cf_sql_varchar", null = variables.title == "")
-                                             .addParam(name = "alt",               value = left(variables.alt, 250),     cfsqltype = "cf_sql_varchar", null = variables.alt == "")
-                                             .addParam(name = "caption",           value = left(variables.caption, 300), cfsqltype = "cf_sql_varchar", null = variables.caption == "")
+                                             .addParam(name = "blogpostId",        value = variables.blogpost.getBlogpostId(), cfsqltype = "cf_sql_numeric")
+                                             .addParam(name = "pictureFileName",   value = variables.pictureFileName,          cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "thumbnailFileName", value = variables.thumbnailFileName,        cfsqltype = "cf_sql_varchar")
+                                             .addParam(name = "title",             value = left(variables.title, 250),         cfsqltype = "cf_sql_varchar", null = variables.title == "")
+                                             .addParam(name = "alt",               value = left(variables.alt, 250),           cfsqltype = "cf_sql_varchar", null = variables.alt == "")
+                                             .addParam(name = "caption",           value = left(variables.caption, 300),       cfsqltype = "cf_sql_varchar", null = variables.caption == "")
                                              .execute()
                                              .getResult()
                                              .newPictureId[1];
@@ -232,7 +231,6 @@ component {
                                       .getResult();
             
             if(qPicture.getRecordCount() == 1) {
-                variables.blogpostId         = qPicture.blogpostId[1];
                 variables.pictureFileName   = qPicture.pictureFileName[1];
                 variables.thumbnailFileName = qPicture.thumbnailFileName[1];
                 variables.title             = qPicture.title[1];
@@ -245,7 +243,6 @@ component {
             }
         }
         else {
-            variables.blogpostId         = 0;
             variables.pictureFileName   = "";
             variables.thumbnailFileName = "";
             variables.title             = "";
@@ -256,8 +253,7 @@ component {
     }
     
     private void function deleteFiles() {
-        var blogpost = new blogpost(variables.blogpostId);
-        fileDelete(blogpost.getAbsolutePath() & "/" & variables.pictureFilename);
-        fileDelete(blogpost.getAbsolutePath() & "/" & variables.thumbnailFilename);
+        fileDelete(variables.blogpost.getAbsolutePath() & "/" & variables.pictureFilename);
+        fileDelete(variables.blogpost.getAbsolutePath() & "/" & variables.thumbnailFilename);
     }
 }

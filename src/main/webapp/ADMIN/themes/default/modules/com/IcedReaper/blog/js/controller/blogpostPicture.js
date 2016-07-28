@@ -55,7 +55,7 @@ nephthysAdminApp
         
         $scope.saveSorting = function () {
             blogService
-                .updatePictureSorting($scope.pictures)
+                .updatePictureSorting($routeParams.blogpostId, $scope.pictures)
                 .then(function () {
                     for(var i = 0; i < $scope.pictures.length; ++i) {
                         $scope.pictures[i].sortId = i + 1;

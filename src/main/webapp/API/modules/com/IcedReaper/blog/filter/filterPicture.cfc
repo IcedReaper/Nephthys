@@ -2,7 +2,7 @@ component implements="API.interfaces.filter" {
     import "API.modules.com.IcedReaper.blog.*";
     
     public filter function init() {
-        variables.blogpostId = null;
+        variables.blogpost = null;
         
         variables.sortBy = "sortId";
         variables.sortDirection = "ASC";
@@ -13,8 +13,8 @@ component implements="API.interfaces.filter" {
         return this;
     }
     
-    public filter function setBlogpostId(required numeric blogpostId) {
-        variables.blogpostId = arguments.blogpostId;
+    public filter function setBlogpost(required blogpost blogpost) {
+        variables.blogpost = arguments.blogpost;
         
         return this;
     }
@@ -53,9 +53,9 @@ component implements="API.interfaces.filter" {
                      FROM IcedReaper_blog_picture ";
         
         var where = "";
-        if(variables.blogpostId != null) {
+        if(variables.blogpost.getBlogpostId() != null) {
             where &= ((where == "") ? " WHERE " : " AND ") & " blogpostId = :blogpostId ";
-            qryFilter.addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric");
+            qryFilter.addParam(name = "blogpostId", value = variables.blogpost.getBlogpostId(), cfsqltype = "cf_sql_numeric");
         }
         
         sql &= where & " ORDER BY " & variables.sortBy & " " & variables.sortDirection;
@@ -75,7 +75,7 @@ component implements="API.interfaces.filter" {
         variables.results = [];
         
         for(var i = 1; i <= variables.qRes.getRecordCount(); i++) {
-            variables.results.append(new picture(variables.qRes.pictureId[i]));
+            variables.results.append(new picture(variables.qRes.pictureId[i], variables.blogpost));
         }
         
         return variables.results;
