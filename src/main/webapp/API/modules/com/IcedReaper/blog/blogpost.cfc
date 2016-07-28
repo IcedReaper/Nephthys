@@ -258,21 +258,20 @@ component {
     }
     
     
-    public blogpost function pushToStatus(required numeric newStatusId, required user user) {
-        var newStatus    = new status(arguments.newStatusId);
+    public blogpost function pushToStatus(required status newStatus, required user user) {
         var actualStatus = duplicate(variables.status);
         
         var newStatusOK = false;
         for(var nextStatus in actualStatus.getNextStatus()) {
-            if(nextStatus.getStatusId() == newStatus.getStatusId()) {
+            if(nextStatus.getStatusId() == arguments.newStatus.getStatusId()) {
                 newStatusOk = true;
             }
         }
         
         if(newStatusOk) {
-            if(newStatus.isApprovalValid(arguments.user.getUserId())) {
+            if(arguments.newStatus.isApprovalValid(arguments.user.getUserId())) {
                 transaction {
-                    setStatus(newStatus);
+                    setStatus(arguments.newStatus);
                     
                     new Query().setSQL("UPDATE IcedReaper_blog_blogpost
                                            SET statusId = :statusId
@@ -283,7 +282,7 @@ component {
                     
                     new approval(null).setBlogpost(this)
                                       .setPrevStatus(actualStatus)
-                                      .setNewStatus(newStatus)
+                                      .setNewStatus(arguments.newStatus)
                                       .setApprover(arguments.user)
                                       .setApprovalDate(now())
                                       .save();

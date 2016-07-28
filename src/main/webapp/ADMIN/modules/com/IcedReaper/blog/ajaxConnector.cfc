@@ -265,7 +265,7 @@
     } 
     remote boolean function pushToStatus(required numeric blogpostId, required numeric statusId) {
         return new blogpost(arguments.blogpostId)
-            .pushToStatus(arguments.statusId, request.user)
+            .pushToStatus(new status(arguments.statusId), request.user)
             .isEditable(request.user.getUserId());
     }
     

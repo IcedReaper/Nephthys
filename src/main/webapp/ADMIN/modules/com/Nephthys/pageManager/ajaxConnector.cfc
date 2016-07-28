@@ -4,10 +4,10 @@ component {
     formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
     
     remote array function getList() {
-        var pageFilterCtrl = new filter().for("page").execute();
+        var pageFilter = new filter().for("page").execute();
         
         var pageData = [];
-        for(var page in pageFilterCtrl.getResult()) {
+        for(var page in pageFilter.getResult()) {
             var actualPageVersion = page.getActualPageVersion();
             
             pageData.append({
@@ -23,7 +23,7 @@ component {
                 "lastEditor"         = getUserInformation(actualPageVersion.getLastEditor()),
                 "lastEditDate"       = formatCtrl.formatDate(actualPageVersion.getLastEditDate()),
                 "isOnline"           = actualPageVersion.isOnline(),
-                "statusId"           = actualPageVersion.getStatusId(),
+                "statusId"           = actualPageVersion.getStatus().getStatusId(),
                 "statusName"         = actualPageVersion.getStatus().getName(),
                 "version"            = actualPageVersion.getVersion(),
                 "majorVersion"       = actualPageVersion.getMajorVersion(),
@@ -35,20 +35,20 @@ component {
     }
     
     remote array function getPageVersionInTasklist() {
-        var statusFilterCtrl = new filter().for("status")
+        var statusFilter = new filter().for("status")
                                            .setShowInTasklist(true)
                                            .execute();
         
-        var pageVersionFilterCtrl = new filter().for("pageVersion");
+        var pageVersionFilter = new filter().for("pageVersion");
         
         var statusData = [];
         var index = 0;
-        for(var status in statusFilterCtrl.execute().getResult()) {
+        for(var status in statusFilter.execute().getResult()) {
             index++;
             statusData[index] = prepareStatusAsArray(status);
             statusData[index]["pages"] = [];
             
-            for(var pageVersion in pageVersionFilterCtrl.setStatusId(status.getStatusId()).execute().getResult()) {
+            for(var pageVersion in pageVersionFilter.setStatusId(status.getStatusId()).execute().getResult()) {
                 var lastApproverFilter = new filter().for("approval")
                                                      .setPageVersionId(pageVersion.getPageVersionId())
                                                      .setLimit(1)
@@ -177,7 +177,7 @@ component {
                            .setuseDynamicUrlSuffix(arguments.pageVersion.useDynamicUrlSuffix)
                            .setLastEditorById(request.user.getUserId())
                            .setLastEditDate(now())
-                           .setStatusId(arguments.pageVersion.statusId);
+                           .setStatus(new status(arguments.pageVersion.statusId));
                 
                 pageVersion.save();
                 
@@ -201,7 +201,7 @@ component {
     }
     
     remote boolean function pushToStatus(required numeric pageVersionId, required numeric statusId) {
-        new pageVersion(arguments.pageVersionId).pushToStatus(arguments.statusId, request.user);
+        new pageVersion(arguments.pageVersionId).pushToStatus(new status(arguments.statusId), request.user);
         
         return true;
     }
@@ -246,7 +246,7 @@ component {
         return prepareStatus(new status(arguments.statusId));
     }
     
-    remote boolean function saveStatus(required struct status) {
+    remote numeric function saveStatus(required struct status) {
         transaction {
             var status = new status(arguments.status.statusId);
             
@@ -260,8 +260,9 @@ component {
                   .save();
             
             transactionCommit();
-            return true;
         }
+        
+        return status.getStatusId();
     }
     
     remote boolean function deleteStatus(required numeric statusId) {
@@ -354,15 +355,15 @@ component {
     }
     
     remote struct function getModule() {
-        var moduleFilterCtrl = createObject("component", "API.modules.com.Nephthys.moduleManager.filter").init()
+        var moduleFilter = createObject("component", "API.modules.com.Nephthys.moduleManager.filter").init()
                                                                                                   .for("module");
         
-        moduleFilterCtrl.setAvailableWWW(true)
+        moduleFilter.setAvailableWWW(true)
                         .execute();
         
         var modules = {};
         
-        for(var module in moduleFilterCtrl.getResult()) {
+        for(var module in moduleFilter.getResult()) {
             modules[module.getModuleName()] = {
                 "useDynamicUrlSuffix" = module.getUseDynamicUrlSuffix(),
                 "options"             = [],
@@ -434,21 +435,21 @@ component {
     }
     
     remote array function getSitemapInTasklist() {
-        var statusFilterCtrl = new filter().for("status")
+        var statusFilter = new filter().for("status")
                                            .setShowInTasklist(true)
                                            .execute();
         
-        var sitemapFilterCtrl = new filter().for("sitemap");
-        var sitemapPageFilterCtrl = new filter().for("sitemapPage");
+        var sitemapFilter = new filter().for("sitemap");
+        var sitemapPageFilter = new filter().for("sitemapPage");
         
         var statusData = [];
         var index = 0;
-        for(var status in statusFilterCtrl.execute().getResult()) {
+        for(var status in statusFilter.execute().getResult()) {
             index++;
             statusData[index] = prepareStatusAsArray(status);
             statusData[index]["sitemaps"] = [];
             
-            for(var sitemap in sitemapFilterCtrl.setStatusId(status.getStatusId()).execute().getResult()) {
+            for(var sitemap in sitemapFilter.setStatusId(status.getStatusId()).execute().getResult()) {
                 var lastApproverFilter = new filter().for("approval")
                                                      .setSitemapId(sitemap.getSitemapId())
                                                      .setLimit(1)
@@ -471,7 +472,7 @@ component {
                     "creationDate"     = formatCtrl.formatDate(sitemap.getCreationDate()),
                     "lastEditor"       = getUserInformation(sitemap.getLastEditor()),
                     "lastEditDate"     = formatCtrl.formatDate(sitemap.getLastEditDate()),
-                    "pageCount"        = sitemapPageFilterCtrl.setSitemapId(sitemap.getSitemapId()).execute().getResultCount(),
+                    "pageCount"        = sitemapPageFilter.setSitemapId(sitemap.getSitemapId()).execute().getResultCount(),
                     "lastApprover"     = lastApprover,
                     "lastApprovalDate" = lastApprovalDate
                 });
@@ -590,21 +591,21 @@ component {
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         if(arguments.regionId != null) {
-            var pageFilterCtrl = new filter().for("page")
+            var pageFilter = new filter().for("page")
                                              .setInSitemap(true)
                                              .setParentId(arguments.parentId)
                                              .setSitemapId(arguments.sitemapId)
                                              .setRegionId(arguments.regionId);
         }
         else {
-            var pageFilterCtrl = new filter().for("pagesNotInSitemap")
+            var pageFilter = new filter().for("pagesNotInSitemap")
                                              .setSitemapId(arguments.sitemapId);
         }
         
-        pageFilterCtrl.execute();
+        pageFilter.execute();
         
         var pageData = [];
-        for(var page in pageFilterCtrl.getResult()) {
+        for(var page in pageFilter.getResult()) {
             var pageVersion = page.getActualPageVersion();
             pageData.append({
                 "pageId" = page.getPageId(),
@@ -719,7 +720,7 @@ component {
             "creationDate"       = formatCtrl.formatDate(arguments.pageVersion.getCreationDate()),
             "lastEditor"         = getUserInformation(arguments.pageVersion.getLastEditor()),
             "lastEditDate"       = formatCtrl.formatDate(arguments.pageVersion.getLastEditDate()),
-            "statusId"           = arguments.pageVersion.getStatusId(),
+            "statusId"           = arguments.pageVersion.getStatus().getStatusId(),
             "approvalList"       = preparedApprovalList,
             "completeLink"       = application.system.settings.getValueOfKey("wwwDomain") & arguments.pageVersion.getLink()
         };

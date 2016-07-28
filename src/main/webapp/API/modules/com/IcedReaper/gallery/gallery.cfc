@@ -241,21 +241,20 @@ component {
         return variables.status;
     }
     
-    public gallery function pushToStatus(required numeric newStatusId, required user user) {
-        var newStatus    = new status(arguments.newStatusId);
+    public gallery function pushToStatus(required status newStatus, required user user) {
         var actualStatus = duplicate(variables.status);
         
         var newStatusOK = false;
         for(var nextStatus in actualStatus.getNextStatus()) {
-            if(nextStatus.getStatusId() == newStatus.getStatusId()) {
+            if(nextStatus.getStatusId() == arguments.newStatus.getStatusId()) {
                 newStatusOk = true;
             }
         }
         
         if(newStatusOk) {
-            if(newStatus.isApprovalValid(arguments.user.getUserId())) {
+            if(arguments.newStatus.isApprovalValid(arguments.user.getUserId())) {
                 transaction {
-                    setStatus(newStatus);
+                    setStatus(arguments.newStatus);
                     
                     new Query().setSQL("UPDATE IcedReaper_gallery_gallery
                                            SET statusId = :statusId
@@ -266,7 +265,7 @@ component {
                     
                     new approval(null).setGallery(this)
                                       .setPrevStatus(actualStatus)
-                                      .setNewStatus(newStatus)
+                                      .setNewStatus(arguments.newStatus)
                                       .setApprover(arguments.user)
                                       .setApprovalDate(now())
                                       .save();

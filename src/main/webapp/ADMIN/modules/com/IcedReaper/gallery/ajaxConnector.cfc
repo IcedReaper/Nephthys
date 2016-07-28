@@ -233,7 +233,7 @@ component {
     
     // STATUS 
     remote boolean function pushToStatus(required numeric galleryId, required numeric statusId) {
-        new gallery(arguments.galleryId).pushToStatus(arguments.statusId, request.user);
+        new gallery(arguments.galleryId).pushToStatus(new status(arguments.statusId), request.user);
         
         return true;
     }

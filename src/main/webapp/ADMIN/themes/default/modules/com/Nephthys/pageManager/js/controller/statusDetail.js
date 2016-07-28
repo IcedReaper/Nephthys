@@ -16,7 +16,7 @@ nephthysAdminApp
                         $scope.status.statusId = newStatusId;
                         
                         $route.updateParams({
-                            categoryId: newStatusId
+                            statusId: newStatusId
                         });
                     }
                 });
