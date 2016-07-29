@@ -1214,3 +1214,8 @@ alter table Nephthys_user_approval drop constraint nephthys_user_approval_userid
 alter table Nephthys_user_approval add CONSTRAINT nephthys_user_approval_userid_fkey FOREIGN KEY (userid)
       REFERENCES nephthys_user (userid)
       ON UPDATE NO ACTION ON DELETE cascade;
+
+
+alter table icedreaper_contactform_request to IcedReaper_contactForm_contactRequest;
+alter table IcedReaper_contactForm_contactRequest rename column requestId to contactRequestId;
+alter table IcedReaper_contactForm_reply rename column requestId to contactRequestId;

@@ -5,7 +5,15 @@
 - +Attribut zu Module => Uses permissions (if false hide in permission screens)
 - Globale Tasklist (dashboard | com.IcedReaper.tileDashboard) variabel gestalten
 - Check: Komponenten umbauen: Load nur noch ausführen, wenn nur ID angegeben ist | Init mit allen parametern ausstatten / alle außer ID auf default => in variables umbauen | Ermöglicht Parent in Child object ohne Endlosschleife
-    - 1. Versuch (Blog) ist fertig und funktioniert
+    - bisher umgesetzt
+        - IcedReaper.Blog
+            - comment
+            - picture
+        - Nephthys.moduleManager
+            - option
+        - IcedReaper.ContactForm
+            - reply
+    - 
 -  per filter regeln
     - contactForm.request.loadReplies()
     - privateMessage.message.read() per filter regeln

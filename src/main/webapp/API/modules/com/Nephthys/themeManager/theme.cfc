@@ -36,7 +36,7 @@ component {
     }
     
     public theme function uploadAsZip(required string folderName) {
-        if(variables.themeId == 0) {
+        if(variables.themeId == null) {
             // upload, unzip and install the theme
             var tmpDirectory = expandPath("/upload/theme/");
             var destFolder   = tmpDirectory & arguments.folderName;
@@ -122,7 +122,7 @@ component {
     
     
     public theme function save(required user user) {
-        if(variables.themeId == 0) {
+        if(variables.themeId == null) {
             variables.themeId = new Query().setSQL("INSERT INTO nephthys_theme
                                                                 (
                                                                     name,
@@ -179,7 +179,7 @@ component {
     
     
     private void function loadDetails() {
-        if(variables.themeId != 0 && variables.themeId != null) {
+        if(variables.themeId != null) {
             var qTheme = new Query().setSQL("SELECT *
                                                FROM nephthys_theme
                                               WHERE themeId = :themeId")

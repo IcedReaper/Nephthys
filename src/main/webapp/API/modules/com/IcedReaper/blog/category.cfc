@@ -52,7 +52,7 @@ component {
         var qSave = new Query().addParam(name = "name",   value = variables.name,             cfsqltype = "cf_sql_varchar")
                                .addParam(name = "userId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric");
         
-        if(variables.categoryId == null || variables.categoryId == 0) {
+        if(variables.categoryId == null) {
             variables.categoryId = qSave.setSQL("INSERT INTO IcedReaper_blog_category
                                                              (
                                                                  name,
@@ -105,7 +105,7 @@ component {
     
     
     private void function loadDetails() {
-        if(variables.categoryId != null && variables.categoryId != 0) {
+        if(variables.categoryId != null) {
             var qCategory = new Query().setSQL("SELECT *
                                                   FROM IcedReaper_blog_category
                                                  WHERE categoryId = :categoryId")

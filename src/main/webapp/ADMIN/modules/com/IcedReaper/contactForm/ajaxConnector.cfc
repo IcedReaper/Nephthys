@@ -2,31 +2,31 @@ component {
     import "API.modules.com.IcedReaper.contactForm.*";
     
     remote array function getList() {
-        var filterCtrl = new filter().for("request");
+        var filterCtrl = new filter().for("contactRequest");
         var rawRequests = filterCtrl.execute()
                                     .getResult();
         
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
-        var requests = [];
+        var contactRequests = [];
         for(var i = 1; i <= arrayLen(rawRequests); ++i) {
-            requests.append({
-                "requestId"       = rawRequests[i].getRequestId(),
-                "read"            = rawRequests[i].getRead(),
-                "requestDate"     = formatCtrl.formatDate(rawRequests[i].getRequestDate()),
-                "subject"         = rawRequests[i].getSubject(),
-                "requestorUserId" = rawRequests[i].getRequestor().getUserId(),
-                "userName"        = rawRequests[i].getUserName(),
-                "replied"         = rawRequests[i].getReplies().len() != 0,
-                "replyCount"      = rawRequests[i].getReplies().len()
+            contactRequests.append({
+                "contactRequestId" = rawRequests[i].getContactRequestId(),
+                "read"             = rawRequests[i].getRead(),
+                "requestDate"      = formatCtrl.formatDate(rawRequests[i].getRequestDate()),
+                "subject"          = rawRequests[i].getSubject(),
+                "requestorUserId"  = rawRequests[i].getRequestor().getUserId(),
+                "userName"         = rawRequests[i].getUserName(),
+                "replied"          = rawRequests[i].getReplies().len() != 0,
+                "replyCount"       = rawRequests[i].getReplies().len()
             });
         }
         
-        return requests;
+        return contactRequests;
     }
     
-    remote struct function getDetails(required numeric requestId) {
-        var contactRequest = new request(arguments.requestId);
+    remote struct function getDetails(required numeric contactRequestId = null) {
+        var contactRequest = new contactRequest(arguments.contactRequestId);
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         if(! contactRequest.getRead()) {
@@ -35,18 +35,18 @@ component {
         }
         
         return {
-            "requestId"       = contactRequest.getRequestId(),
-            "requestDate"     = formatCtrl.formatDate(contactRequest.getRequestDate()),
-            "subject"         = contactRequest.getSubject(),
-            "requestorUserId" = contactRequest.getRequestor().getUserId(),
-            "email"           = contactRequest.getEmail(),
-            "userName"        = contactRequest.getUserName(),
-            "message"         = contactRequest.getMessage()
+            "contactRequestId" = contactRequest.getContactRequestId(),
+            "requestDate"      = formatCtrl.formatDate(contactRequest.getRequestDate()),
+            "subject"          = contactRequest.getSubject(),
+            "requestorUserId"  = contactRequest.getRequestor().getUserId(),
+            "email"            = contactRequest.getEmail(),
+            "userName"         = contactRequest.getUserName(),
+            "message"          = contactRequest.getMessage()
         };
     }
     
-    remote array function getReplies(required numeric requestId) {
-        var contactRequest = new request(arguments.requestId);
+    remote array function getReplies(required numeric contactRequestId) {
+        var contactRequest = new contactRequest(arguments.contactRequestId);
         var rawReplies = contactRequest.getReplies();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
@@ -63,11 +63,10 @@ component {
         return replies;
     }
     
-    remote boolean function reply(required numeric requestId, required string message) {
-        var reply = new reply(0);
+    remote boolean function reply(required numeric contactRequestId, required string message) {
+        var reply = new reply(null, new contactRequest(arguments.contactRequestId));
         
-        reply.setRequestId(arguments.requestId)
-             .setMessage(arguments.message)
+        reply.setMessage(arguments.message)
              .save(request.user);
         
         return true;

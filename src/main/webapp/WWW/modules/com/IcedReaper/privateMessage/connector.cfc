@@ -29,7 +29,7 @@ component implements="WWW.interfaces.connector" {
                     case "new": {
                         if(! form.isEmpty()) {
                             transaction {
-                                var conversation = new conversation(0);
+                                var conversation = new conversation(null);
                                 conversation.setInitiator(request.user);
                                 
                                 conversation.addParticipant(request.user);
@@ -45,10 +45,10 @@ component implements="WWW.interfaces.connector" {
                                 
                                 conversation.save(request.user);
                                 
-                                var message = new message(0).setConversationId(conversation.getConversationId())
-                                                            .setUser(request.user)
-                                                            .setMessage(form.message)
-                                                            .send();
+                                var message = new message(null).setConversationId(conversation.getConversationId())
+                                                               .setUser(request.user)
+                                                               .setMessage(form.message)
+                                                               .send();
                                 
                                 conversation.addMessage(message);
                                 
@@ -70,10 +70,10 @@ component implements="WWW.interfaces.connector" {
                             var conversation = new conversation(arguments.options.otherParameter[2]);
                             
                             if(conversation.isParticipant(request.user)) {
-                                var message = new message(0).setConversationId(conversation.getConversationId())
-                                                            .setUser(request.user)
-                                                            .setMessage(form.message)
-                                                            .send();
+                                var message = new message(null).setConversationId(conversation.getConversationId())
+                                                               .setUser(request.user)
+                                                               .setMessage(form.message)
+                                                               .send();
                                 
                                 conversation.addMessage(message);
                                 

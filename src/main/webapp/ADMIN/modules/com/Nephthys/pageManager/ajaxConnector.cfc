@@ -92,7 +92,7 @@ component {
         };
     }
     
-    remote struct function getDetails(required numeric pageId) {
+    remote struct function getDetails(required numeric pageId = null) {
         var page = new page(arguments.pageId);
         
         var returnValue = {
@@ -106,7 +106,7 @@ component {
         };
         
         // if it's not a new page and we have at least a version
-        if((arguments.pageId != null && arguments.pageId != 0) || (page.getPageVersionId() != null && page.getPageVersionId() != 0)) {
+        if(arguments.pageId != null || page.getPageVersionId() != null) {
             var actualPageVersion = page.getActualPageVersion();
             
             returnValue["actualVersion"]["major"] = actualPageVersion.getMajorVersion();
@@ -147,14 +147,14 @@ component {
                                               .getResult()[1]);
     }
     
-    remote struct function save(required numeric pageId,
+    remote struct function save(required numeric pageId = null,
                                 required struct  pageVersion,
                                 required numeric majorVersion,
                                 required numeric minorVersion) {
         transaction {
             var page = new page(arguments.pageId);
             var newPage = false;
-            if(arguments.pageId == null || arguments.pageId == 0) {
+            if(arguments.pageId == null) {
                 page.save(request.user);
                 
                 newPage = true;
@@ -239,7 +239,7 @@ component {
         return prepStatus;
     }
     
-    remote struct function getStatusDetails(required numeric statusId) {
+    remote struct function getStatusDetails(required numeric statusId = null) {
         return prepareStatus(new status(arguments.statusId));
     }
     

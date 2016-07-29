@@ -1,20 +1,13 @@
 component {
-    public option function init(required numeric optionId, numeric moduleId = 0) {
+    public option function init(required numeric optionId, module module) {
         variables.optionId = arguments.optionId;
-        variables.moduleId = arguments.moduleId;
+        variables.module = arguments.module;
         
         loadDetails();
         
         return this;
     }
     
-    public option function setModuleId(required numeric moduleId) {
-        if(variables.optionId == 0 || variables.optionId == null) {
-            variables.moduleId = arguments.moduleId;
-        }
-        
-        return this;
-    }
     public option function setOptionName(required string optionName) {
         variables.optionName = arguments.optionName;
         
@@ -74,8 +67,8 @@ component {
     public numeric function getOptionId() {
         return variables.optionId;
     }
-    public numeric function getModuleId() {
-        return variables.moduleId;
+    public module function getModule() {
+        return variables.module;
     }
     public string function getOptionName() {
         return variables.optionName;
@@ -100,7 +93,7 @@ component {
     public option function save(required user user) {
         var jsonSelectOptions = variables.selectOptions.len() > 0 ? serializeJSON(variables.selectOptions) : "";
         
-        if(variables.moduleId == 0 || variables.moduleId == null) {
+        if(variables.moduleId == null) {
             throw(type = "nephthys.application.notAllowed", message = "It is not valid to add an option without a module");
         }
         
@@ -111,7 +104,7 @@ component {
                                .addParam(name = "sortOrder",     value = variables.sortOrder,   cfsqltype = "cf_sql_numeric")
                                .addParam(name = "multiple",      value = variables.multiple,    cfsqltype = "cf_sql_bit");
         
-        if(variables.optionId != 0 && variables.optionId != null) {
+        if(variables.optionId != null) {
             if(variables.sortOrder == 0) {
                 variables.sortOrder = new Query().setSQL("SELECT MAX(sortOrder) + 1 sortOrder
                                                             FROM nephthys_module_option
@@ -146,7 +139,7 @@ component {
                                                                :multiple
                                                            );
                                               SELECT currval('seq_nephthys_module_option_id') newOptionId;")
-                                      .addParam(name = "moduleId", value = variables.moduleId, cfsqltype = "cf_sql_numeric")
+                                      .addParam(name = "moduleId", value = variables.module.getModuleId(), cfsqltype = "cf_sql_numeric")
                                       .execute()
                                       .getResult()
                                       .newOptionId[1];
@@ -176,7 +169,7 @@ component {
     
     
     private void function loadDetails() {
-        if(variables.optionId != 0 && variables.optionId != null) {
+        if(variables.optionId != null) {
             var qGetOption = new Query().setSQL("SELECT *
                                                    FROM nephthys_module_option
                                                   WHERE optionId = :optionId")

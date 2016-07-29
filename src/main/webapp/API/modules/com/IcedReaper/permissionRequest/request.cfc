@@ -3,7 +3,7 @@ component {
     import "API.modules.com.Nephthys.moduleManager.module";
     import "API.modules.com.Nephthys.userManager.permissionRole";
     
-    public request function init(required numeric requestId = 0) {
+    public request function init(required numeric requestId = null) {
         variables.requestId = arguments.requestId;
         
         load();
@@ -67,7 +67,7 @@ component {
     
     
     public request function save(required user user) {
-        if(variables.requestId == 0 || variables.requestId == null) {
+        if(variables.requestId == null) {
             variables.requestId = new Query().setSQL("INSERT INTO IcedReaper_permissionRequest_request
                                                                   (
                                                                       userId,
@@ -135,7 +135,7 @@ component {
     
     
     private void function load() {
-        if(variables.requestId != 0 && variables.requestId != null) {
+        if(variables.requestId != null) {
             var qRequest = new Query().setSQL("SELECT *
                                                  FROM IcedReaper_permissionRequest_request
                                                 WHERE requestId = :requestId")

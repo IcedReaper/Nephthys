@@ -10,7 +10,7 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/Nephthys/themeManager/partials/themeList.html",
                     controller:  "themeListCtrl"
                 })
-                .when("/:themeId", {
+                .when("/:themeId?", {
                     templateUrl: "/themes/default/modules/com/Nephthys/themeManager/partials/themeDetail.html",
                     controller:  "themeDetailCtrl"
                 })

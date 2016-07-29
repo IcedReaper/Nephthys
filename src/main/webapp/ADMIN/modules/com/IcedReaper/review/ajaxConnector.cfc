@@ -15,7 +15,7 @@ component {
         return reviewList;
     }
     
-    remote struct function getDetails(required numeric reviewId) {
+    remote struct function getDetails(required numeric reviewId = null) {
         var review = new review(arguments.reviewId);
         
         return prepareReviewData(review);
@@ -62,7 +62,7 @@ component {
         return genreList;
     }
     
-    remote numeric function save(required numeric reviewId,
+    remote numeric function save(required numeric reviewId = null,
                                  required numeric typeId,
                                  required numeric rating,
                                  required string  description,
@@ -94,7 +94,7 @@ component {
     remote string function uploadImage(required numeric reviewId) {
         var review = new review(arguments.reviewId);
         
-        if(review.isEditable(request.user.getUserID())) {
+        if(review.isEditable(request.user.getUserId())) {
             review.uploadImage()
                   .save(request.user);
             
@@ -108,7 +108,7 @@ component {
     remote boolean function delete(required numeric reviewId) {
         new review(arguments.reviewId);
         
-        if(review.isEditable(request.user.getUserID())) {
+        if(review.isEditable(request.user.getUserId())) {
             review.delete(request.user);
         
             return true;
@@ -136,8 +136,8 @@ component {
                                      required string  genreName) {
         var review = new review(arguments.reviewId);
         
-        if(review.isEditable(request.user.getUserID())) {
-            if(arguments.genreId == null || arguments.genreId == 0) {
+        if(review.isEditable(request.user.getUserId())) {
+            if(arguments.genreId == null) {
                 var genre = new genre(null).setName(arguments.genreName)
                                            .save(request.user);
             }
@@ -159,7 +159,7 @@ component {
                                         required numeric genreId) {
         var review = new review(arguments.reviewId);
         
-        if(review.isEditable(request.user.getUserID())) {
+        if(review.isEditable(request.user.getUserId())) {
             review
                 .removeGenreById(arguments.genreId)
                 .save(request.user);
@@ -191,7 +191,7 @@ component {
         return genreList;
     }
     
-    remote struct function getGenreDetails(required numeric genreId) {
+    remote struct function getGenreDetails(required numeric genreId = null) {
         var genre = new genre(arguments.genreId);
         
         return {
@@ -202,7 +202,7 @@ component {
         };
     }
     
-    remote numeric function saveGenre(required numeric genreId, required string name) {
+    remote numeric function saveGenre(required numeric genreId = null, required string name) {
         return new genre(arguments.genreId).setName(arguments.name)
                                            .save(request.user)
                                            .getGenreId();
@@ -236,7 +236,7 @@ component {
         return typeList;
     }
     
-    remote struct function getTypeDetails(required numeric typeId) {
+    remote struct function getTypeDetails(required numeric typeId = null) {
         var type = new type(arguments.typeId);
         
         return {
@@ -247,7 +247,7 @@ component {
         };
     }
     
-    remote numeric function saveType(required numeric typeId,
+    remote numeric function saveType(required numeric typeId = null,
                                      required string name) {
         return new type(arguments.typeId).setName(arguments.name)
                                          .save(request.user)

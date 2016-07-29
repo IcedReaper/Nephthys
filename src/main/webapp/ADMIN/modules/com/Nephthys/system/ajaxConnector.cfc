@@ -3,8 +3,7 @@ component {
     import "API.tools.com.Nephthys.security.encryptionMethodLoader";
     
     remote array function getSettings() {
-        var serverSettings = new settings("WWW,ADMIN,NULL");
-        serverSettings.load();
+        var serverSettings = new settings("WWW,ADMIN,NULL").load();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var settings = duplicate(serverSettings.getAllSettings());
@@ -15,9 +14,6 @@ component {
             configurations[++index] = settings[key];
             configurations[index].key = key;
             
-            if(configurations[index].moduleId == null) {
-                configurations[index].moduleId = 0;
-            }
             if(configurations[index].moduleName == null) {
                 configurations[index].moduleName = "";
             }
@@ -40,21 +36,39 @@ component {
     }
     
     remote boolean function saveSettings(required array settings) {
-        var serverSettings = new settings().load();
+        var wwwSettings   = new settings("WWW").load();
+        var adminSettings = new settings("ADMIN").load();
+        var nullSettings  = new settings("NULL").load();
         var resetAllPasswords = false;
+        
+        var tmpSettings = null;
         
         transaction {
             try {
                 for(var setting in arguments.settings) {
+                    switch(setting.application) {
+                        case "WWW": {
+                            tmpSettings = wwwSettings;
+                            break;
+                        }
+                        case "ADMIN": {
+                            tmpSettings = adminSettings;
+                            break;
+                        }
+                        default: {
+                            tmpSettings = nullSettings;
+                        }
+                    }
+                    
                     if(setting.key != "encryptionMethodId" && setting.key != "encryptionKey") {
                         if(setting.keyExists("value")) {
-                            if(! serverSettings.isKeyReadonly(setting.key)) {
-                                serverSettings.setValueOfKey(setting.key, setting.rawValue);
+                            if(! tmpSettings.isKeyReadonly(setting.key)) {
+                                tmpSettings.setValueOfKey(setting.key, setting.rawValue);
                             }
                         }
                     }
                     else {
-                        if(setting.key == "encryptionMethodId" && setting.value != serverSettings.getValueOfKey("encryptionMethodId")) {
+                        if(setting.key == "encryptionMethodId" && setting.value != tmpSettings.getValueOfKey("encryptionMethodId")) {
                             var encryptionMethodLoader = new encryptionMethodLoader();
             
                             var newAlgorithm = encryptionMethodLoader.getAlgorithm(setting.value);
@@ -62,15 +76,17 @@ component {
                             
                             resetPasswordOfAllUsers(newSecretKey,
                                                     newAlgorithm,
-                                                    serverSettings.getValueOfKey("encryptionKey"),
-                                                    encryptionMethodLoader.getAlgorithm(serverSettings.getValueOfKey("encryptionMethodId")));
+                                                    tmpSettings.getValueOfKey("encryptionKey"),
+                                                    encryptionMethodLoader.getAlgorithm(tmpSettings.getValueOfKey("encryptionMethodId")));
                             
-                            serverSettings.setValueOfKey("encryptionMethodId", setting.value)
+                            tmpSettings.setValueOfKey("encryptionMethodId", setting.value)
                                           .setValueOfKey("encryptionKey", newSecretKey);
                         }
                     }
                 }
-                serverSettings.save(request.user);
+                wwwSettings.save(request.user);
+                adminSettings.save(request.user);
+                nullSettings.save(request.user);
                 
                 transactionCommit();
             }

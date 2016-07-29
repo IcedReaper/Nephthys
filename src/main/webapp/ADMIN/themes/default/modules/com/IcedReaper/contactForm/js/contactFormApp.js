@@ -9,7 +9,7 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/IcedReaper/contactForm/partials/contactFormList.html",
                     controller:  "contactFormListCtrl"
                 })
-                .when("/:requestId", {
+                .when("/:contactRequestId?", {
                     templateUrl: "/themes/default/modules/com/IcedReaper/contactForm/partials/contactFormDetail.html",
                     controller:  "contactFormDetailCtrl"
                 })

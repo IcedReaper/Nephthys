@@ -3,7 +3,7 @@
         <div class="pull-right">
             <a href="#/genres" class="btn btn-secondary"><i class="fa fa-tags"></i> Genreübersicht</a>
             <a href="#/types" class="btn btn-secondary"><i class="fa fa-tags"></i> Typenübersicht</a>
-            <a href="#/0" class="btn btn-primary">Neuen Review anlegen</a>
+            <a href="#/review/" class="btn btn-primary">Neuen Review anlegen</a>
         </div>
     </div>
 </div>
@@ -31,13 +31,13 @@
                     <td>
                         <i class="fa fa-star" ng-if="review.private"></i>
                         <i class="fa fa-lock" ng-if="! review.isEditable"></i>
-                        <a href="#/{{review.reviewId}}">{{review.description}}</a>
+                        <a href="#/review/{{review.reviewId}}">{{review.description}}</a>
                     </td>
                     <td>{{review.link}}</td>
                     <td>{{review.rating}}</td>
                     <td>{{review.genre.join(', ')}}</td>
                     <td>
-                        <a href="#/{{review.reviewId}}"
+                        <a href="#/review/{{review.reviewId}}"
                            class="btn btn-primary"
                            title="Reviewdetails">
                             <i class="fa fa-cog"></i>

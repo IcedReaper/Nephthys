@@ -81,7 +81,7 @@ component {
         return this;
     }
     public review function uploadImage() {
-        if(variables.reviewId != 0) {
+        if(variables.reviewId != null) {
             variables.oldImagePath = variables.imagePath;
             
             var uploaded = fileUpload(expandPath("/upload/com.IcedReaper.review/"), "image", "image/*", "MakeUnique");
@@ -196,7 +196,7 @@ component {
                                .addParam(name = "private",      value = variables.private,          cfsqltype = "cf_sql_bit")
                                .addParam(name = "userId",       value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric");
         
-        if(variables.reviewId == null || variables.reviewId == 0) {
+        if(variables.reviewId == null) {
             variables.reviewId = new Query().setSQL("INSERT INTO IcedReaper_review_review
                                                                  (
                                                                      typeId,
@@ -299,11 +299,13 @@ component {
                    .execute();
         
         fileDelete(expandPath("/upload/com.IcedReaper.review/" & variables.imagePath));
+        
+        variables.reviewId = null;
     }
     
     
     private void function loadDetails() {
-        if(variables.reviewId != null && variables.reviewId != 0) {
+        if(variables.reviewId != null) {
             var qReview = new Query().setSQL("SELECT *
                                                 FROM IcedReaper_review_review
                                                WHERE reviewId = :reviewId")

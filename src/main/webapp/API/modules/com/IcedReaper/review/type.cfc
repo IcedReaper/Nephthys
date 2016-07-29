@@ -39,7 +39,7 @@ component {
         var qSave = new Query().addParam(name = "name",             value = variables.name,           cfsqltype = "cf_sql_varchar")
                                .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric");
         
-        if(variables.typeId == null || variables.typeId == 0) {
+        if(variables.typeId == null) {
             variables.typeId = qSave.setSQL("INSERT INTO IcedReaper_review_type
                                                          (
                                                              name,
@@ -84,7 +84,7 @@ component {
     }
     
     private void function loadDetails() {
-        if(variables.typeId != null && variables.typeId != 0) {
+        if(variables.typeId != null) {
             var qType = new Query().setSQL("SELECT *
                                                FROM IcedReaper_review_type
                                               WHERE typeId = :typeId")

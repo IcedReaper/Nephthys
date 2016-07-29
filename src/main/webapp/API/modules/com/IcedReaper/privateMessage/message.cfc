@@ -1,7 +1,7 @@
 component {
     import "API.modules.com.Nephthys.userManager.user";
     
-    public message function init(required numeric messageId = 0) {
+    public message function init(required numeric messageId = null) {
         variables.messageId = arguments.messageId;
         
         load();
@@ -11,7 +11,7 @@ component {
     
     
     public message function setConversationId(required numeric conversationId) {
-        if(variables.messageId != 0 && variables.messageId != null) {
+        if(variables.messageId != null) {
             throw(type = "nephthys.application.notAllowed", message = "The conversation cannot be changed for an existing message!");
         }
         
@@ -20,7 +20,7 @@ component {
         return this;
     }
     public message function setMessage(required string message) {
-        if(variables.messageId != 0 && variables.messageId != null) {
+        if(variables.messageId != null) {
             throw(type = "nephthys.application.notAllowed", message = "The message cannot be changed for an existing message!");
         }
         
@@ -29,7 +29,7 @@ component {
         return this;
     }
     public message function setUser(required user user) {
-        if(variables.messageId != 0 && variables.messageId != null) {
+        if(variables.messageId != null) {
             throw(type = "nephthys.application.notAllowed", message = "The user cannot be changed for an existing message!");
         }
         
@@ -162,7 +162,7 @@ component {
     
     
     public message function send() {
-        if(variables.messageId == 0 || variables.messageId == null) {
+        if(variables.messageId == null) {
             variables.messageId = new Query().setSQL("INSERT INTO IcedReaper_privateMessage_message
                                                                   (
                                                                       conversationId,
@@ -186,7 +186,7 @@ component {
         return this;
     }
     public message function delete(required user user) {
-        if(variables.messageId != 0 && variables.messageId != null) {
+        if(variables.messageId != null) {
             new Query().setSQL("UPDATE IcedReaper_privateMessage_message
                                    SET deleteDate = now()
                                  WHERE messageId = :messageId")
@@ -200,7 +200,7 @@ component {
         return this;
     }
     public message function read(required user user) {
-        if(variables.messageId != 0 && variables.messageId != null) {
+        if(variables.messageId != null) {
             if(! isRead(arguments.user)) {
                 new Query().setSQL("INSERT INTO IcedReaper_privateMessage_read
                                                 (
@@ -222,7 +222,7 @@ component {
     
     
     private void function load() {
-        if(variables.messageId != 0 && variables.messageId != null) {
+        if(variables.messageId != null) {
             var qMessage = new Query().setSQL("SELECT *
                                                  FROM IcedReaper_privateMessage_message
                                                 WHERE messageId = :messageId")

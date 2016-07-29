@@ -2,12 +2,12 @@ component implements="API.interfaces.filter" {
     import "API.modules.com.IcedReaper.blog.*";
     
     public filter function init() {
-        variables.userId             = 0; // 0 => all | other => specific userId
+        variables.userId             = null;
         variables.released           = null; // -1 => all | 0 | 1
         variables.sortBy             = "creationDate";
         variables.sortDirection      = "DESC";
         variables.link               = "";
-        variables.blogpostId         = 0;
+        variables.blogpostId         = null;
         variables.totalBlogpostCount = 0;
         variables.categoryName       = "";
         variables.statusId           = null;
@@ -125,12 +125,12 @@ component implements="API.interfaces.filter" {
             qryFilter.addParam(name = "online", value = true, cfsqltype = "cf_sql_bit");
         }
         
-        if(variables.userId != 0 && variables.userId != null) {
+        if(variables.userId != null) {
             where &= ((where != "") ? " AND " : " WHERE ") & " userId = :userId";
             qryFilter.addParam(name = "userId", value = variables.userId, cfsqltype = "cf_sql_numeric");
         }
         
-        if(variables.blogpostId != 0 && variables.blogpostId != null) {
+        if(variables.blogpostId != null) {
             where &= ((where != "") ? " AND " : " WHERE ") & " blogpostId = :blogpostId";
             qryFilter.addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric");
         }

@@ -19,7 +19,7 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/Nephthys/userManager/partials/userList.html",
                     controller:  "userListCtrl"
                 })
-                .when("/user/:userId", {
+                .when("/user/:userId?", {
                     templateUrl: "/themes/default/modules/com/Nephthys/userManager/partials/userDetail.html",
                     controller:  "userDetailCtrl"
                 })
@@ -28,7 +28,7 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/Nephthys/userManager/partials/blacklistList.html",
                     controller:  "blacklistListCtrl"
                 })
-                .when("/blacklist/:blacklistId", {
+                .when("/blacklist/:blacklistId?", {
                     templateUrl: "/themes/default/modules/com/Nephthys/userManager/partials/blacklistEntry.html",
                     controller:  "blacklistEntryCtrl"
                 })
@@ -41,7 +41,7 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/Nephthys/userManager/partials/statusFlow.html",
                     controller:  "statusFlowCtrl"
                 })
-                .when("/status/:statusId", {
+                .when("/status/:statusId?", {
                     templateUrl: "/themes/default/modules/com/Nephthys/userManager/partials/statusDetail.html",
                     controller:  "statusDetailCtrl"
                 })

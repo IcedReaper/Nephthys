@@ -26,7 +26,7 @@ component {
     }
     
     public boolean function onSessionStart() {
-        session.userId = 0;
+        session.userId = null;
         
         return true;
     }
@@ -139,10 +139,10 @@ component {
     private boolean function checkIfLoggedIn() {
         request.user = new user(session.userId);
         
-        if(session.userId == 0) {
+        if(session.userId == null) {
             if(! structIsEmpty(form) && checkReferer("com.Nephthys.login")) {
                 var userId = application.system.settings.getValueOfKey("authenticator").login(form.username, form.password);
-                if(userId != 0 && userId != null) {
+                if(userId != null) {
                     session.userId = userId;
                     return true;
                 }
@@ -152,7 +152,7 @@ component {
         }
         else {
             if(url.keyExists("logout") || ! request.user.getStatus().getCanLogin()) {
-                session.userId = 0;
+                session.userId = null;
                 return false;
             }
             else {

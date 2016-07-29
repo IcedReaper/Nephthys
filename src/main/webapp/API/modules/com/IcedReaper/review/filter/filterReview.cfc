@@ -95,12 +95,12 @@ component implements="API.interfaces.filter" {
             qryFilter.addParam(name = "link", value = variables.link, cfsqltype = "cf_sql_varchar");
         }
         
-        if(variables.userId != 0 && variables.userId != null) {
+        if(variables.userId != null) {
             where &= ((where != "") ? " AND " : " WHERE ") & " creatorUserId = :userId";
             qryFilter.addParam(name = "userId", value = variables.userId, cfsqltype = "cf_sql_numeric");
         }
         
-        if(variables.reviewId != 0 && variables.reviewId != null) {
+        if(variables.reviewId != null) {
             where &= ((where != "") ? " AND " : " WHERE ") & " reviewId = :reviewId";
             qryFilter.addParam(name = "reviewId", value = variables.reviewId, cfsqltype = "cf_sql_numeric");
         }

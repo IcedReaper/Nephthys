@@ -12,7 +12,6 @@ component {
         return this;
     }
     
-    // S E T T E R
     
     public gallery function setHeadline(required string headline) {
         variables.headline = arguments.headline;
@@ -35,7 +34,7 @@ component {
         return this;
     }
     public gallery function setFolderName(required string folderName) {
-        if(variables.galleryId == 0) {
+        if(variables.galleryId == null) {
             variables.folderName = arguments.folderName;
             
             if(variables.folderName == "") {
@@ -133,7 +132,7 @@ component {
     }
     
     public gallery function reloadPictures() {
-        if(variables.galleryId != 0) {
+        if(variables.galleryId != null) {
             loadPictures();
             return this;
         }
@@ -162,7 +161,6 @@ component {
         return this;
     }
     
-    // G E T T E R
     
     public numeric function getGalleryId() {
         return variables.galleryId;
@@ -285,9 +283,9 @@ component {
         }
     }
     
-    // C R U D
+    
     public gallery function save(required user user) {
-        if(variables.galleryId == 0) {
+        if(variables.galleryId == null) {
             variables.galleryId = new Query().setSQL("INSERT INTO IcedReaper_gallery_gallery
                                                                   (
                                                                       headline,
@@ -375,7 +373,7 @@ component {
         if(variables.categoriesChanged) {
             for(var c = 1; c <= variables.categories.len(); c++) {
                 try {
-                    if(variables.categories[c].getCategoryId() == 0) {
+                    if(variables.categories[c].getCategoryId() == null) {
                         variables.categories[c].save(arguments.user);
                     }
                     
@@ -416,13 +414,12 @@ component {
                    .addParam(name = "galleryId", value = variables.galleryId, cfsqltype = "cf_sql_numeric")
                    .execute();
         
-        variables.galleryId = 0;
+        variables.galleryId = null;
     }
     
-    // I N T E R N A L
     
     private void function loadDetails() {
-        if(variables.galleryId != 0 && variables.galleryId != null) {
+        if(variables.galleryId != null) {
             var qGallery = new Query().setSQL("SELECT * 
                                                  FROM IcedReaper_gallery_gallery
                                                 WHERE galleryId = :galleryId")

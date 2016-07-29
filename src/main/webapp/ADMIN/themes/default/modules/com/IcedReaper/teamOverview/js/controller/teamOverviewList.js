@@ -31,11 +31,11 @@ nephthysAdminApp
         };
         
         $scope.addUser = function () {
-            if($scope.newUserId !== 0) {
+            if($scope.newUserId !== null) {
                 teamOverviewService
                     .addUser($scope.newUserId)
                     .then(function () {
-                        $scope.newUserId = 0;
+                        $scope.newUserId = null;
                     })
                     .then($scope.reloadAll);
             }
@@ -73,7 +73,7 @@ nephthysAdminApp
             }
         };
         
-        $scope.newUserId = 0;
+        $scope.newUserId = null;
         $scope.teamMember = [];
         $scope.remainingUser = [];
         

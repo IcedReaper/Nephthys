@@ -12,7 +12,7 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/IcedReaper/references/partials/list.html",
                     controller:  "referencesListCtrl"
                 })
-                .when("/:referenceId", {
+                .when("/reference/:referenceId?", {
                     templateUrl: "/themes/default/modules/com/IcedReaper/references/partials/detail.html",
                     controller:  "referencesDetailCtrl"
                 })

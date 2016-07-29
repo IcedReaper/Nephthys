@@ -1,5 +1,6 @@
 component implements="WWW.interfaces.connector" {
     import "API.modules.com.IcedReaper.contactForm.*";
+    import "API.modules.com.Nephthys.userManager.user";
     
     public connector function init() {
         return this;
@@ -59,17 +60,17 @@ component implements="WWW.interfaces.connector" {
             }
             
             if(! errors.error) {
-                var contactFormRequest = new request(0);
+                var contactFormRequest = new contactRequest(null);
                 contactFormRequest.setSubject(form.subject)
                                   .setMessage(form.message);
                 
                 if(request.user.getStatus().getCanLogin()) {
-                    contactFormRequest.setRequestorUserId(request.user.getUserId())
+                    contactFormRequest.setRequestor(request.user)
                                       .setUsername(request.user.getUsername())
                                       .setEmail(request.user.getEmail());
                 }
                 else {
-                    contactFormRequest.setRequestorUserId(0)
+                    contactFormRequest.setRequestor(new user(null))
                                       .setUsername(form.username)
                                       .setEmail(form.email);
                 }

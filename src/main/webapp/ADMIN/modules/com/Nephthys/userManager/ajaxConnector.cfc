@@ -23,13 +23,13 @@ component {
         return data;
     }
     
-    remote struct function getDetails(required numeric userId) {
+    remote struct function getDetails(required numeric userId = null) {
         var user = new user(arguments.userId);
         
         return prepareDetailStruct(user);
     }
     
-    remote struct function save(required numeric userId,
+    remote struct function save(required numeric userId = null,
                                 required string  userName,
                                 required string  eMail,
                                 required numeric statusId,
@@ -39,7 +39,7 @@ component {
         var user = new user(arguments.userId);
         var encryptionMethodLoader = new encryptionMethodLoader();
         
-        if(arguments.userId == 0) {
+        if(arguments.userId == null) {
             user.setUsername(arguments.userName)
                 .setStatus(new status(application.system.settings.getValueOfKey("com.Nephthys.userManager.defaultStatus")));
         }
@@ -87,7 +87,7 @@ component {
         }
     }
     
-    remote array function getPermissions(required numeric userId) {
+    remote array function getPermissions(required numeric userId = null) {
         var permissionFilter = new filter().for("permission").setUserId(arguments.userId)
                                                              .execute();
         
@@ -169,7 +169,7 @@ component {
                         }
                     }
                     else {
-                        if(arguments.permissions[i].permissionId != 0 && arguments.permissions[i].permissionId != null) {
+                        if(arguments.permissions[i].permissionId != null) {
                             new permission(arguments.permissions[i].permissionId).delete(request.user);
                         }
                     }
@@ -205,7 +205,7 @@ component {
         return themeData;
     }
     
-    remote array function getExtProperties(required numeric userId) {
+    remote array function getExtProperties(required numeric userId = null) {
         var extProperties = [];
         var user = new user(arguments.userId);
         
@@ -522,11 +522,14 @@ component {
     
     // P R I V A T E   M E T H O D S
     private struct function prepareDetailStruct(required user user) {
-        var preparedApprovalList = prepareApprovalList(new filter().for("approval")
+        var preparedApprovalList = [];
+        if(arguments.user.getUserId() != null) {
+            preparedApprovalList = prepareApprovalList(new filter().for("approval")
                                                                    .setUserId(arguments.user.getUserId())
                                                                    .setSortDirection("DESC")
                                                                    .execute()
                                                                    .getResult());
+        }
         
         return {
             "userId"           = arguments.user.getUserId(),

@@ -4,7 +4,7 @@ component implements="API.interfaces.filter" {
     public filter function init() {
         variables.read            = null;
         variables.answered        = null;
-        variables.requestorUserId = 0;
+        variables.requestorUserId = null;
         variables.readUserId      = null;
         
         variables.qRes = null;
@@ -37,8 +37,8 @@ component implements="API.interfaces.filter" {
     
     public filter function execute() {
         var qryFilter = new Query();
-        var sql = "SELECT r.requestId
-                     FROM icedreaper_contactForm_request r ";
+        var sql = "SELECT r.contactRequestId
+                     FROM icedreaper_contactForm_contactRequest r ";
         
         var where = "";
         
@@ -49,14 +49,14 @@ component implements="API.interfaces.filter" {
         
         if(variables.answered != null) {
             if(variables.answered) {
-                where &= (where != "" ? " AND " : " WHERE ") & "requestId IN (SELECT requestId FROM icedreaper_contactForm_reply)";
+                where &= (where != "" ? " AND " : " WHERE ") & "contactRequestId IN (SELECT contactRequestId FROM icedreaper_contactForm_reply)";
             }
             else if(! variables.answered) {
-                where &= (where != "" ? " AND " : " WHERE ") & "requestId NOT IN (SELECT requestId FROM icedreaper_contactForm_reply)";
+                where &= (where != "" ? " AND " : " WHERE ") & "contactRequestId NOT IN (SELECT contactRequestId FROM icedreaper_contactForm_reply)";
             }
         }
         
-        if(variables.requestorUserId != null && variables.requestorUserId != 0) {
+        if(variables.requestorUserId != null) {
             where &= (where != "" ? " AND " : " WHERE ") & "requestorUserId = :requestorUserId";
             qryFilter.addParam(name = "requestorUserId", value = arguments.requestorUserId, cfsqltype = "cf_sql_integer");
         }
@@ -86,7 +86,7 @@ component implements="API.interfaces.filter" {
         if(variables.results == null) {
             variables.results = [];
             for(var i = 1; i <= variables.qRes.getRecordCount(); i++) {
-                variables.results.append(new request(variables.qRes.requestId[i]));
+                variables.results.append(new contactRequest(variables.qRes.contactRequestId[i]));
             }
         }
         return variables.results;

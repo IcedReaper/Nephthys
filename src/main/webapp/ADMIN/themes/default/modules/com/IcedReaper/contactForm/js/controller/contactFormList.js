@@ -4,7 +4,7 @@ nephthysAdminApp
             contactFormService
                 .getList()
                 .then(function (contactFormList) {
-                    $scope.requests = contactFormList;
+                    $scope.contactRequests = contactFormList;
                 });
         }
         

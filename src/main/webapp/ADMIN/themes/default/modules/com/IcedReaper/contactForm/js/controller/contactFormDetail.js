@@ -2,20 +2,20 @@ nephthysAdminApp
     .controller('contactFormDetailCtrl', ["$scope", "$routeParams", "$q", "contactFormService", function ($scope, $routeParams, $q, contactFormService) {
         $scope.load = function () {
             $q.all([
-                contactFormService.getDetails($routeParams.requestId),
-                contactFormService.getReplies($routeParams.requestId)
+                contactFormService.getDetails($routeParams.contactRequestId),
+                contactFormService.getReplies($routeParams.contactRequestId)
             ])
-            .then($q.spread(function (requestDetails, replies) {
-                $scope.request = requestDetails;
-                $scope.replies = replies;
+            .then($q.spread(function (contactRequestDetails, replies) {
+                $scope.contactRequest = contactRequestDetails;
+                $scope.replies         = replies;
             }));
         };
         
         $scope.sendReply = function () {
             contactFormService
-                .reply($routeParams.requestId, $scope.reply.message)
+                .reply($routeParams.contactRequestId, $scope.reply.message)
                 .then(function() {
-                    return contactFormService.getReplies($routeParams.requestId);
+                    return contactFormService.getReplies($routeParams.contactRequestId);
                 })
                 .then(function(replies) {
                     $scope.replies = replies;

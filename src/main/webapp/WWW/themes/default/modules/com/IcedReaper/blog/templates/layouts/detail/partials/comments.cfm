@@ -18,7 +18,7 @@
                                         <cfif comments[commentIndex].fromRegistrated()>
                                             <cf_userLink userName="#comments[commentIndex].getUsername()#">#comments[commentIndex].getUsername()#</cf_userLink>
                                         <cfelse>
-                                            #comments[commentIndex].getUsername()#
+                                            #application.system.settings.getValueOfKey("xssProtector").encodeForHTML(comments[commentIndex].getUsername())#
                                         </cfif>
                                     </h5>
                                     <p>#application.system.settings.getValueOfKey("xssProtector").encodeForHTML(comments[commentIndex].getComment())#</p>
@@ -41,11 +41,11 @@
                         </div>
                     </cfif>
                 <cfelse>
-                    <cfif request.user.getUserId() != 0 || attributes.blogpost.getAnonymousCommentAllowed()>
+                    <cfif request.user.getUserId() != null || attributes.blogpost.getAnonymousCommentAllowed()>
                         <h5>Kommentieren</h5>
                         <form method="POST" action="?">
                             <div class="row m-t-1">
-                                <cfif request.user.getUserId() == 0>
+                                <cfif request.user.getUserId() == null>
                                     <div class="col-md-6">
                                         <fieldset class="form-group">
                                             <label for="anonymousUsername">Name</label>

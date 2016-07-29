@@ -2,9 +2,6 @@ component {
     import "API.modules.com.Nephthys.userManager.user";
     
     public category function init(required numeric categoryId) {
-        if(arguments.categoryId == 0) {
-            arguments.categoryId = null;
-        }
         variables.categoryId = arguments.categoryId;
         
         variables.attributesChanged = false;
@@ -33,13 +30,13 @@ component {
         return variables.creator;
     }
     public date function getCreationDate() {
-        return variables.creationDate != null ? variables.creationDate : 0;
+        return variables.creationDate;
     }
     public user function getLastEditor() {
         return variables.lastEditor;
     }
     public date function getLastEditDate() {
-        return variables.lastEditDate != null ? variables.lastEditDate : 0;
+        return variables.lastEditDate;
     }
     
     

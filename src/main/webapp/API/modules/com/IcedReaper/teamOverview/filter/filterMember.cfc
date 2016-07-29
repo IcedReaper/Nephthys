@@ -42,7 +42,7 @@ component implements="API.interfaces.filter" {
         qryMember.addParam(name = "canLogin", value = true, cfsqltype = "cf_sql_bit");
         
         
-        if(variables.userId != 0 && variables.userId != null) {
+        if(variables.userId != null) {
             where &= (where == "" ? " WHERE " : " AND ") & " userId = :userId";
             qryMember.addParam(name = "userId", value = variables.userId, cfsqltype = "cf_sql_numeric");
         }

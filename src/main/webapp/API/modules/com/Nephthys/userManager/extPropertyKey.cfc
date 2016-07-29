@@ -1,20 +1,19 @@
 component {
-    public extPropertyKey function init(required numeric extPropertyKeyId = 0, required string keyName = "") {
+    public extPropertyKey function init(required numeric extPropertyKeyId = null) {
         variables.extPropertyKeyId = arguments.extPropertyKeyId;
-        variables.keyName = arguments.keyName;
         
         loadDetails();
         
         return this;
     }
     
-    // SETTER
+    
     public extPropertyKey function setDescription(required string description) {
         variables.description = arguments.description;
         return this;
     }
     public extPropertyKey function setKeyName(required string keyName) {
-        if(variables.extPropertyKeyId == 0 || variables.extPropertyKeyId == null) {
+        if(variables.extPropertyKeyId == null) {
             variables.keyName = arguments.keyName;
         }
         else {
@@ -23,7 +22,7 @@ component {
         return this;
     }
     public extPropertyKey function setType(required string type) {
-        if(variables.extPropertyKeyId == 0 || variables.extPropertyKeyId == null) {
+        if(variables.extPropertyKeyId == null) {
             variables.type = arguments.type;
         }
         else {
@@ -32,7 +31,7 @@ component {
         return this;
     }
     
-    // GETTER
+    
     public numeric function getExtPropertyKeyId() {
         return variables.extPropertyKeyId;
     }
@@ -59,13 +58,13 @@ component {
         return lastEditor;
     }
     
-    // CRUD
+    
     public extPropertyKey function save(required user user) {
         var qSave = new Query().addParam(name = "userId",      value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
                                .addParam(name = "description", value = variables.description,      cfsqltype = "cf_sql_varchar")
                                .addParam(name = "type",        value = variables.type,             cfsqltype = "cf_sql_varchar");
         
-        if((variables.extPropertyKeyId == 0 || variables.extPropertyKeyId == null) && (variables.keyName == "" || variables.keyName == null)) {
+        if(variables.extPropertyKeyId == null) {
             variables.extPropertyKeyId = qSave.setSQL("INSERT INTO Nephthys_user_extPropertyKey
                                                                    (
                                                                        keyName,
@@ -114,11 +113,13 @@ component {
                                   WHERE extPropertyKeyId = :extPropertyKeyId")
                    .addParam(name = "extPropertyKeyId", value = variables.extPropertyKeyId, cfsqltype = "cf_sql_numeric")
                    .execute();
+        
+        variables.extPropertyKeyId = null;
     }
     
-    // PRIVATE
+    
     private void function loadDetails() {
-        if((variables.extPropertyKeyId == 0 || variables.extPropertyKeyId == null) && (variables.keyName == "" || variables.keyName == null)) {
+        if(variables.extPropertyKeyId == null) {
             variables.description      = "";
             variables.creatorUserId    = null;
             variables.creationDate     = now();
@@ -126,22 +127,12 @@ component {
             variables.lastEditDate     = now();
         }
         else {
-            var qryGetExtPropertyKey = new Query();
-            var sql = "SELECT *
-                         FROM Nephthys_user_extPropertyKey
-                        WHERE ";
-            if(variables.extPropertyKeyId != 0 && variables.extPropertyKeyId != null) {
-                sql&= "       extPropertyKeyId = :extPropertyKeyId ";
-                qryGetExtPropertyKey.addParam(name = "extPropertyKeyId", value = variables.extPropertyKeyId, cfsqltype = "cf_sql_numeric");
-            }
-            else {
-                sql&= "       keyName = :keyName ";
-                qryGetExtPropertyKey.addParam(name = "keyName", value = variables.keyName, cfsqltype = "cf_sql_varchar");
-            }
-            
-            var qExtPropertyKey = qryGetExtPropertyKey.setSQL(sql)
-                                                      .execute()
-                                                      .getResult();
+            var qExtPropertyKey = new Query().setSQL("SELECT *
+                                                        FROM Nephthys_user_extPropertyKey
+                                                       WHERE extPropertyKeyId = :extPropertyKeyId")
+                                             .addParam(name = "extPropertyKeyId", value = variables.extPropertyKeyId, cfsqltype = "cf_sql_numeric")
+                                             .execute()
+                                             .getResult();
             
             if(qExtPropertyKey.getRecordCount() == 1) {
                 variables.extPropertyKeyId = qExtPropertyKey.extPropertyKeyId[1];

@@ -46,8 +46,8 @@ component {
     
     
     public member function save(required user user) {
-        if(variables.user.getUserId() != null && variables.user.getUserId() != 0) {
-            if(variables.memberId == 0 || variables.memberId == null) {
+        if(variables.user.getUserId() != null) {
+            if(variables.memberId == null) {
                 var qInsMember = new Query();
                 var sql = "INSERT INTO icedReaper_teamOverview_member
                                        (
@@ -58,7 +58,7 @@ component {
                                        )
                                 VALUES (
                                            :userId, ";
-                if(variables.sortId != 0 && variables.sortId != null) {
+                if(variables.sortId != null) {
                     sql &= "               :sortId, ";
                     qInsMember.addParam(name = "sortId", value = arguments.sortId, cfsqltype = "cf_sql_numeric");
                 }
@@ -117,9 +117,9 @@ component {
         variables.memberId = null;
     }
     
-    // PRIVATE
+    
     private void function loadDetails() {
-        if(variables.memberId != 0 && variables.memberId != null) {
+        if(variables.memberId != null) {
             var qMember = new Query().setSQL("SELECT *
                                                 FROM icedReaper_teamOverview_member
                                                WHERE memberId = :memberId")
@@ -141,7 +141,7 @@ component {
         }
         else {
             variables.user         = new user(null);
-            variables.sortId       = 0;
+            variables.sortId       = null;
             variables.creator      = new user(null);
             variables.creationDate = now();
             variables.lastEditor   = new user(null);

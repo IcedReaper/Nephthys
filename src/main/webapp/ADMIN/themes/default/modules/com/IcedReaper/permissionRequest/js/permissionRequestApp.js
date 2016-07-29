@@ -10,7 +10,7 @@ nephthysAdminApp
                 templateUrl: "/themes/default/modules/com/IcedReaper/permissionRequest/partials/tasklist.html"
             })
             
-            .when("/request/:requestId", {
+            .when("/request/:requestId?", {
                 templateUrl: "/themes/default/modules/com/IcedReaper/permissionRequest/partials/requestDetail.html",
                 controller:  "requestDetailCtrl"
             })

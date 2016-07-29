@@ -24,7 +24,7 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/Nephthys/pageManager/partials/pagesDetail.html",
                     controller:  "pagesDetailCtrl"
                 })
-                .when("/pages/:pageId", {
+                .when("/pages/:pageId?", {
                     templateUrl: "/themes/default/modules/com/Nephthys/pageManager/partials/pagesDetail.html",
                     controller:  "pagesDetailCtrl"
                 })
@@ -37,12 +37,12 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/Nephthys/pageManager/partials/statusFlow.html",
                     controller:  "statusFlowCtrl"
                 })
-                .when("/status/:statusId", {
+                .when("/status/:statusId?", {
                     templateUrl: "/themes/default/modules/com/Nephthys/pageManager/partials/statusDetail.html",
                     controller:  "statusDetailCtrl"
                 })
                 
-                .when("/sitemap/:sitemapId", {
+                .when("/sitemap/:sitemapId?", {
                     templateUrl: "/themes/default/modules/com/Nephthys/pageManager/partials/sitemap.html",
                     controller: "sitemapCtrl"
                 })

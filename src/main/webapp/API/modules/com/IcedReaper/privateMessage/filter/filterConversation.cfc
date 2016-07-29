@@ -80,7 +80,7 @@ component implements="API.interfaces.filter" {
     
     
     public filter function execute() {
-        if(variables.participantId == null || variables.participantId == 0) {
+        if(variables.participantId == null) {
             throw(type = "nephthys.application.invalidResource", message = "The participantId is required and has to be set!");
         }
         
@@ -113,7 +113,7 @@ component implements="API.interfaces.filter" {
             
             qryFilter.addParam(name = "participantId", value = variables.participantId, cfsqltype = "cf_sql_numeric");
             
-            if(variables.conversationId != 0 && variables.conversationId != null) {
+            if(variables.conversationId != null) {
                 where &= (where != "" ? " WHERE " : " AND ") & " c.conversationId = :conversationId ";
                 qryFilter.addParam(name = "conversationId", value = variables.conversationId, cfsqltype = "cf_sql_numeric");
             }

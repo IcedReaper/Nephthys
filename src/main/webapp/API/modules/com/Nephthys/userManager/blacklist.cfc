@@ -33,7 +33,7 @@ component {
         var qSave = new Query().addParam(name = "namepart", value = variables.namepart,         cfsqltype = "cf_sql_varchar")
                                .addParam(name = "userId",   value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric");
                                                
-        if(variables.blacklistId == null || variables.blacklistId == 0) {
+        if(variables.blacklistId == null) {
             variables.blacklistId = qSave.setSQL("INSERT INTO nephthys_user_blacklist
                                                               (
                                                                   namepart,
@@ -70,7 +70,7 @@ component {
     }
     
     private void function load() {
-        if(variables.blacklistId != null && variables.blacklistId != 0) {
+        if(variables.blacklistId != null) {
             var qBlacklist = new Query().setSQL("SELECT *
                                                    FROM nephthys_user_blacklist
                                                   WHERE blacklistId = :blacklistId")

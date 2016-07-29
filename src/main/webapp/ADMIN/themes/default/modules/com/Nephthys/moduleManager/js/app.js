@@ -14,7 +14,7 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/Nephthys/moduleManager/partials/install.html",
                     controller:  "installCtrl"
                 })
-                .when("/:moduleId", {
+                .when("/:moduleId?", {
                     templateUrl: "/themes/default/modules/com/Nephthys/moduleManager/partials/detail.html",
                     controller:  "detailCtrl"
                 })

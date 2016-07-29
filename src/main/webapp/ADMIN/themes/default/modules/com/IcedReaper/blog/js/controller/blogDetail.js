@@ -18,12 +18,7 @@ nephthysAdminApp
                 var dateParts = $scope.blogpost.releaseDate.split("/");
                 $scope.blogpost.releaseDate = new Date(dateParts[0], parseInt(dateParts[1], 10) - 1, dateParts[2]);
 
-                if($scope.blogpost.blogpostId != 0) {
-                    $scope.linkSet = true;
-                }
-                else {
-                    $scope.linkSet = false;
-                }
+                $scope.linkSet = $scope.blogpost.blogpostId;
             }));
         };
         
@@ -69,7 +64,7 @@ nephthysAdminApp
                     blogService.uploadImages(blogpostId, images, imageSizes)
                         .then(function(uploadResult) {
                             var oldBlogpostId = $scope.blogpost.blogpostId;
-                            if(oldBlogpostId == 0) {
+                            if(! oldBlogpostId) {
                                 $route.updateParams({
                                     blogpostId: blogpostId
                                 });

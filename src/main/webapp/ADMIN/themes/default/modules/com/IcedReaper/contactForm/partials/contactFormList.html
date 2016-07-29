@@ -40,28 +40,28 @@
         <th>Antworten</th>
     </thead>
     <tbody>
-        <tr ng-repeat="request in requests | filter:search">
+        <tr ng-repeat="contactRequest in contactRequests | filter:search">
             <td>
-                <i ng-if="request.read" class="fa fa-circle text-success" title="Gelesen"></i>
-                <i ng-if="! request.read" class="fa fa-circle text-danger" title="Ungelesen"></i>
-            </td>
-            <td>
-                <i ng-if="request.replied" class="fa fa-circle text-success" title="Beantwortet"></i>
-                <i ng-if="! request.replied" class="fa fa-circle text-danger" title="Unbeantwortet"></i>
-            </td>
-            <td ng-if="request.requestorUserId != 0 && request.requestorUserId != null">
-                <a href="/com.Nephthys.userManager#/user/{{request.requestorUserId}}">{{request.userName}}</a>
-            </td>
-            <td ng-if="request.requestorUserId == 0 || request.requestorUserId == null">
-                {{request.userName}}
+                <i ng-if="contactRequest.read" class="fa fa-circle text-success" title="Gelesen"></i>
+                <i ng-if="! contactRequest.read" class="fa fa-circle text-danger" title="Ungelesen"></i>
             </td>
             <td>
-                <a href="#/{{request.requestId}}">{{request.subject}}</a>
+                <i ng-if="contactRequest.replied" class="fa fa-circle text-success" title="Beantwortet"></i>
+                <i ng-if="! contactRequest.replied" class="fa fa-circle text-danger" title="Unbeantwortet"></i>
+            </td>
+            <td ng-if="contactRequest.requestorUserId">
+                <a href="/com.Nephthys.userManager#/user/{{contactRequest.requestorUserId}}">{{contactRequest.userName}}</a>
+            </td>
+            <td ng-if="! contactRequest.requestorUserId">
+                {{contactRequest.userName}}
             </td>
             <td>
-                <a href="#/{{request.requestId}}">{{request.requestDate}}</a>
+                <a href="#/{{contactRequest.contactRequestId}}">{{contactRequest.subject}}</a>
             </td>
-            <td>{{request.replyCount}}</td>
+            <td>
+                <a href="#/{{contactRequest.contactRequestId}}">{{contactRequest.requestDate}}</a>
+            </td>
+            <td>{{contactRequest.replyCount}}</td>
         </tr>
     </tbody>
 </table>

@@ -111,7 +111,7 @@
             </div>
         </div>
 
-        <div ng-controller="reviewGenreCtrl" ng-show="reviewId != 0">
+        <div ng-controller="reviewGenreCtrl" ng-show="reviewId">
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-block">
@@ -125,8 +125,8 @@
             </div>
         </div>
     </uib-tab>
-    <uib-tab heading="Statistiken">
-        <!--<div ng-controller="reviewStatisticsCtrl" ng-show="reviewId != 0">
+    <uib-tab heading="Statistiken" disable="! reviewId">
+        <!--<div ng-controller="reviewStatisticsCtrl" ng-show="reviewId">
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-block">

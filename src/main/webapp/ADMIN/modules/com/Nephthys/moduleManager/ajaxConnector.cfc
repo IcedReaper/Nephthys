@@ -18,13 +18,13 @@ component {
         return preparedModules;
     }
     
-    remote struct function getDetails(required numeric moduleId) {
+    remote struct function getDetails(required numeric moduleId = null) {
         var module = new module(arguments.moduleId);
         
         return prepareModule(module);
     }
     
-    remote boolean function save(required numeric moduleId,
+    remote boolean function save(required numeric moduleId = null,
                                  required string  description,
                                  required numeric active) {
         var module = new module(arguments.moduleId);
@@ -74,7 +74,7 @@ component {
         return roles;
     }
     
-    remote array function getUser(required numeric moduleId) {
+    remote array function getUser(required numeric moduleId = null) {
         var permissionFilter = createObject("component", "API.modules.com.Nephthys.userManager.filter").for("permission")
                                                                                                        .setModuleId(arguments.moduleId)
                                                                                                        .execute();
@@ -135,7 +135,7 @@ component {
                     }
                 }
                 else {
-                    if(arguments.permissions[i].permissionId != 0 && arguments.permissions[i].permissionId != null) {
+                    if(arguments.permissions[i].permissionId != null) {
                         new permission(arguments.permissions[i].permissionId).delete(request.user);
                     }
                     else {
@@ -150,7 +150,7 @@ component {
         return true;
     }
     
-    remote array function getOptions(required numeric moduleId) {
+    remote array function getOptions(required numeric moduleId = null) {
         var module = new module(arguments.moduleId);
         var options = [];
         

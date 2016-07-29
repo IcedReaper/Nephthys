@@ -189,7 +189,7 @@ component {
                                      .addParam(name = "showInTasklist", value = variables.showInTasklist,   cfsqltype = "cf_sql_bit")
                                      .addParam(name = "userId",         value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric");
             
-            if(variables.statusId == 0 || variables.statusId == null) {
+            if(variables.statusId == null) {
                 variables.statusId = qUpdate.setSQL("INSERT INTO nephthys_page_status
                                                                      (
                                                                          name,
@@ -278,12 +278,12 @@ component {
                    .addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric")
                    .execute();
         
-        variables.statusId = 0;
+        variables.statusId = null;
     }
     
     
     private void function loadDetails() {
-        if(variables.statusId != 0 && variables.statusId != null) {
+        if(variables.statusId != null) {
             var qStatus = new Query().setSQL("SELECT *
                                                     FROM nephthys_page_status
                                                    WHERE statusId = :statusId")

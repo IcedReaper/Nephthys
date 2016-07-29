@@ -2,9 +2,6 @@ component {
     import "API.modules.com.Nephthys.themeManager.theme";
     
     public user function init(required numeric userId = null) {
-        if(arguments.userId == 0) {
-            arguments.userId = null;
-        }
         variables.userId = arguments.userId;
         
         variables.avatarFolder = "/upload/com.Nephthys.userManager/avatar/";
@@ -14,7 +11,7 @@ component {
         return this;
     }
     
-    // S E T T E R
+    
     public user function setUserName(required string userName) {
         variables.userName = arguments.userName;
         
@@ -80,7 +77,7 @@ component {
         return this;
     }
     
-    // G E T T E R
+    
     public numeric function getUserId() {
         return variables.userId;
     }
@@ -154,7 +151,7 @@ component {
     }
     
     public boolean function hasPermission(required string moduleName, string roleName = "") {
-        if(variables.userId == 0 || variables.userId == null)
+        if(variables.userId == null)
             return false;
         
         return new filter().for("permission").setUserId(variables.userId)
@@ -215,7 +212,7 @@ component {
                                .addParam(name = "avatarFilename", value = variables.avatarFilename,       cfsqltype = "cf_sql_varchar", null = (variables.avatarFilename == "" || variables.avatarFileName == null))
                                .addParam(name = "statusId",       value = variables.status.getStatusId(), cfsqltype = "cf_sql_numeric");
         
-        if(variables.userId == 0) { // create a new user
+        if(variables.userId == null) {
             variables.userId = qSave.setSQL("INSERT INTO nephthys_user
                                                          (
                                                              userName,
@@ -241,7 +238,7 @@ component {
                                     .getResult()
                                     .newUserId[1];
         }
-        else { // update an existing user
+        else {
             qSave.setSQL("UPDATE nephthys_user 
                              SET email          = :eMail,
                                  password       = :password,
@@ -274,7 +271,7 @@ component {
         variables.userId = null;
     }
     
-    // I N T E R N A L
+    
     private void function loadDetails() {
         if(variables.userId != null) {
             var qUser = new Query().setSQL("SELECT *
@@ -299,7 +296,7 @@ component {
             }
         }
         else {
-            variables.userName         = "Not registrated";
+            variables.userName         = "";
             variables.eMail            = "";
             variables.password         = "";
             variables.registrationDate = now();

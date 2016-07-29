@@ -1,8 +1,8 @@
 component {
     import "API.modules.com.Nephthys.userManager.*";
     
-    public request function init(required numeric requestId) {
-        variables.requestId = arguments.requestId;
+    public contactRequest function init(required numeric contactRequestId) {
+        variables.contactRequestId = arguments.contactRequestId;
         
         loadDetails();
         
@@ -10,39 +10,39 @@ component {
     }
     
     
-    public request function setUserName(required string userName) {
+    public contactRequest function setUserName(required string userName) {
         variables.userName = arguments.userName;
         return this;
     }
-    public request function setRequestor(required user requestor) {
+    public contactRequest function setRequestor(required user requestor) {
         variables.requestor = arguments.requestor;
         return this;
     }
-    public request function setEmail(required string email) {
+    public contactRequest function setEmail(required string email) {
         variables.email = arguments.email;
         return this;
     }
-    public request function setSubject(required string subject) {
+    public contactRequest function setSubject(required string subject) {
         variables.subject = arguments.subject;
         return this;
     }
-    public request function setMessage(required string message) {
+    public contactRequest function setMessage(required string message) {
         variables.message = arguments.message;
         return this;
     }
-    public request function setRead(required boolean read) {
+    public contactRequest function setRead(required boolean read) {
         variables.read = arguments.read;
         return this;
     }
-    public request function addRepy(required reply _reply) {
+    public contactRequest function addRepy(required reply _reply) {
         variables.replies.append(duplicate(arguments._reply));
         
         return this;
     }
     
     
-    public numeric function getRequestId() {
-        return variables.requestId;
+    public numeric function getContactRequestId() {
+        return variables.contactRequestId;
     }
     public string function getUserName() {
         return variables.userName;
@@ -78,9 +78,9 @@ component {
     }
     
     
-    public request function save(required user user) {
-        if(variables.requestId == 0) {
-            variables.requestId = new Query().setSQL("INSERT INTO IcedReaper_contactForm_request
+    public contactRequest function save(required user user) {
+        if(variables.contactRequestId == null) {
+            variables.contactRequestId = new Query().setSQL("INSERT INTO IcedReaper_contactForm_contactRequest
                                                                   (
                                                                       subject,
                                                                       email,
@@ -95,7 +95,7 @@ component {
                                                                       :userName,
                                                                       :requestorUserId
                                                                   );
-                                                      SELECT currval('seq_icedreaper_contactForm_requestId') requestId;")
+                                                      SELECT currval('seq_icedreaper_contactForm_requestId') contactRequestId;")
                                              .addParam(name = "subject",         value = variables.subject,          cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "email",           value = variables.email,            cfsqltype = "cf_sql_varchar")
                                              .addParam(name = "message",         value = variables.message,          cfsqltype = "cf_sql_varchar")
@@ -103,20 +103,20 @@ component {
                                              .addParam(name = "requestorUserId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric", null = arguments.user.getUserId() == null)
                                              .execute()
                                              .getResult()
-                                             .requestId[1];
+                                             .contactRequestId[1];
             
             variables.requestor = arguments.user;
             variables.requestDate = now();
         }
         else {
-            new Query().setSQL("UPDATE IcedReaper_contactForm_request
+            new Query().setSQL("UPDATE IcedReaper_contactForm_contactRequest
                                    SET read       = :read,
                                        readDate   = now(),
                                        readUserId = :readUserId
-                                 WHERE requestId  = :requestId")
-                       .addParam(name = "requestId",  value = variables.requestId,        cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "read",       value = variables.read,             cfsqltype = "cf_sql_bit")
-                       .addParam(name = "readUserId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                                 WHERE contactRequestId  = :contactRequestId")
+                       .addParam(name = "contactRequestId", value = variables.contactRequestId, cfsqltype = "cf_sql_numeric")
+                       .addParam(name = "read",             value = variables.read,             cfsqltype = "cf_sql_bit")
+                       .addParam(name = "readUserId",       value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
                        .execute();
             
             variables.reader = arguments.user;
@@ -128,11 +128,11 @@ component {
     
     
     private void function loadDetails() {
-        if(variables.requestId != 0) {
+        if(variables.contactRequestId != null) {
             var qContactForm = new Query().setSQL("SELECT *
-                                                     FROM IcedReaper_contactForm_request
-                                                    WHERE requestId = :requestId")
-                                          .addParam(name = "requestId", value = variables.requestId, cfsqltype = "cf_sql_numeric")
+                                                     FROM IcedReaper_contactForm_contactRequest
+                                                    WHERE contactRequestId = :contactRequestId")
+                                          .addParam(name = "contactRequestId", value = variables.contactRequestId, cfsqltype = "cf_sql_numeric")
                                           .execute()
                                           .getResult();
             
@@ -167,15 +167,15 @@ component {
     private void function loadReplies() {
         var qReplies = new Query().setSQL("  SELECT replyId
                                                FROM IcedReaper_contactForm_reply
-                                              WHERE requestId = :requestId
+                                              WHERE contactRequestId = :contactRequestId
                                            ORDER BY replyDate DESC")
-                                  .addParam(name = "requestId", value = variables.requestId, cfsqltype = "cf_sql_numeric")
+                                  .addParam(name = "contactRequestId", value = variables.contactRequestId, cfsqltype = "cf_sql_numeric")
                                   .execute()
                                   .getResult();
         
         variables.replies = [];
         for(var i = 1; i <= qReplies.getRecordCount(); ++i) {
-            variables.replies.append(new reply(qReplies.replyId[i]));
+            variables.replies.append(new reply(qReplies.replyId[i], this));
         }
     }
 }

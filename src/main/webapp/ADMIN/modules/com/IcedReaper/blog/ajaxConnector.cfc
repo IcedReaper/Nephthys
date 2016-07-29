@@ -16,7 +16,7 @@
         return data;
     }
     
-    remote struct function getDetails(required numeric blogpostId) {
+    remote struct function getDetails(required numeric blogpostId = null) {
         var blogpost = new blogpost(arguments.blogpostId);
         
         return prepareDetailStruct(blogpost, true);
@@ -44,17 +44,17 @@
         return prepareCategoryDetails(categories, false);
     }
     
-    remote numeric function save(required numeric blogpostId,
-                                required string  headline,
-                                required string  link,
-                                required string  releaseDate,
-                                required string  folderName,
-                                required string  story,
-                                required numeric commentsActivated,
-                                required numeric anonymousCommentAllowed,
-                                required numeric commentsNeedToGetPublished,
-                                required boolean private,
-                                required string  fileNames) {
+    remote numeric function save(required numeric blogpostId = null,
+                                 required string  headline,
+                                 required string  link,
+                                 required string  releaseDate,
+                                 required string  folderName,
+                                 required string  story,
+                                 required numeric commentsActivated,
+                                 required numeric anonymousCommentAllowed,
+                                 required numeric commentsNeedToGetPublished,
+                                 required boolean private,
+                                 required string  fileNames) {
         var blogpost = new blogpost(arguments.blogpostId);
         
         if(blogpost.isEditable(request.user)) {
@@ -124,13 +124,13 @@
     }
     
     remote boolean function addCategory(required numeric blogpostId,
-                                       required numeric categoryId,
-                                       required string  categoryName) {
+                                        required numeric categoryId = null,
+                                        required string  categoryName) {
         var blogpost = new blogpost(arguments.blogpostId);
         
         if(blogpost.isEditable(request.user.getUserId())) {
             var newCategory = new category(arguments.categoryId);
-            if(arguments.categoryId == 0 || arguments.categoryId == null) {
+            if(arguments.categoryId == null) {
                 newCategory.setName(arguments.categoryName)
                            .save(request.user);
             }
@@ -145,7 +145,7 @@
     }
     
     remote boolean function removeCategory(required numeric blogpostId,
-                                          required numeric categoryId) {
+                                           required numeric categoryId) {
         var blogpost = new blogpost(arguments.blogpostId);
         
         if(blogpost.isEditable(request.user)) {
@@ -227,19 +227,17 @@
         return comments;
     }
     
-    remote boolean function publishComment(required numeric commentId) {
-        var comment = new comment(arguments.commentId);
+    remote boolean function publishComment(required numeric blogpostId, required numeric commentId) {
+        var comment = new comment(arguments.commentId, new blogpost(arguments.blogpostId));
         
-        comment.setPublisher(request.user)
-               .setPublishedDate(now())
-               .setPublished(true)
+        comment.setPublished(true)
                .save(request.user);
         
         return true;
     }
     
-    remote boolean function deleteComment(required numeric commentId) {
-        var comment = new comment(arguments.commentId);
+    remote boolean function deleteComment(required numeric blogpostId, required numeric commentId) {
+        var comment = new comment(arguments.commentId, new blogpost(arguments.blogpostId));
         
         comment.delete(request.user);
         
@@ -432,7 +430,7 @@
     }
     
     
-    remote array function loadPictures(required numeric blogpostId) {
+    remote array function loadPictures(required numeric blogpostId = null) {
         var blogpost = new blogpost(arguments.blogpostId);
         
         return preparePictureStruct(blogpost.getPictures(), blogpost.getRelativePath() & "/");
@@ -516,7 +514,7 @@
             "pictureCount"               = arguments.blogpost.getPictureCount()
         };
         
-        if(arguments.addApprovalList) {
+        if(arguments.addApprovalList && arguments.blogpost.getBlogpostId() != null) {
             var preparedApprovalList = prepareApprovalList(new filter().for("approval")
                                                                        .setBlogpostId(arguments.blogpost.getBlogpostId())
                                                                        .setSortDirection("DESC")

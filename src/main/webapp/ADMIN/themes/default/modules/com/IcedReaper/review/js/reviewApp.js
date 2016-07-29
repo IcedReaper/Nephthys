@@ -17,7 +17,7 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/IcedReaper/review/partials/genreList.html",
                     controller:  "genreListCtrl"
                 })
-                .when("/genre/:genreId", {
+                .when("/genre/:genreId?", {
                     templateUrl: "/themes/default/modules/com/IcedReaper/review/partials/genreDetail.html",
                     controller:  "genreDetailCtrl"
                 })
@@ -25,11 +25,11 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/IcedReaper/review/partials/typeList.html",
                     controller:  "typeListCtrl"
                 })
-                .when("/type/:typeId", {
+                .when("/type/:typeId?", {
                     templateUrl: "/themes/default/modules/com/IcedReaper/review/partials/typeDetail.html",
                     controller:  "typeDetailCtrl"
                 })
-                .when("/:reviewId", {
+                .when("/review/:reviewId?", {
                     templateUrl: "/themes/default/modules/com/IcedReaper/review/partials/reviewDetail.html",
                     controller:  "reviewDetailCtrl"
                 })

@@ -22,7 +22,7 @@ nephthysAdminApp
                     var dateParts = $scope.reference.since.split("/");
                     $scope.reference.since = new Date(dateParts[0], parseInt(dateParts[1], 10) - 1, dateParts[2]);
                     
-                    if(oldReferenceId == 0) {
+                    if(! oldReferenceId) {
                         $route.updateParams({
                             referenceId: referenceId
                         });

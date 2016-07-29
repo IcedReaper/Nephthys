@@ -35,7 +35,7 @@ component {
     }
     
     public reference function uploadNewImage() {
-        if(variables.referenceId != 0 && variables.referenceId != null) {
+        if(variables.referenceId != null) {
             variables.oldimageName = variables.imageName;
             
             if(! directoryExists(variables.imageFolder)) {
@@ -120,7 +120,7 @@ component {
                                .addParam(name = "creatorUserId", value = variables.creator.getUserId(), cfsqltype = "cf_sql_numeric")
                                .addParam(name = "userId",        value = arguments.user.getUserId(),    cfsqltype = "cf_sql_numeric");
         
-        if(variables.referenceId == null || variables.referenceId == 0) {
+        if(variables.referenceId == null) {
             variables.referenceId = qSave.setSQL("INSERT INTO IcedReaper_references_reference
                                                               (
                                                                   name,
@@ -190,7 +190,7 @@ component {
     
     
     private void function load() {
-        if(variables.referenceId != null && variables.referenceId != 0) {
+        if(variables.referenceId != null) {
             var qGetReference = new Query().setSQL("SELECT *
                                                       FROM IcedReaper_references_reference
                                                      WHERE referenceId = :referenceId")

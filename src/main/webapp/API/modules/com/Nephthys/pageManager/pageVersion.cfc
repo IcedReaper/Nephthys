@@ -190,7 +190,7 @@ component {
                                .addParam(name = "userId",              value = arguments.user.getUserId(),        cfsqltype = "cf_sql_numeric");
         
         if(isNewEntry()) {
-            if(variables.pageId != null && variables.pageId != 0 && variables.majorVersion != null && variables.majorVersion != 0 && variables.minorVersion != null) {
+            if(variables.pageId != null && variables.majorVersion != 0) {
                 variables.pageVersionId = qSave.setSQL("INSERT INTO nephthys_page_pageVersion
                                                                     (
                                                                         pageId,
@@ -395,6 +395,6 @@ component {
     }
     
     public boolean function isNewEntry() {
-        return (variables.pageVersionId == 0 || variables.pageVersionId == null);
+        return variables.pageVersionId == null;
     }
 }

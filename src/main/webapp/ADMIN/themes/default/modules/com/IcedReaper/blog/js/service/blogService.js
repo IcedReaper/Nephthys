@@ -85,17 +85,19 @@ nephthysAdminApp
                 });
             },
             
-            deleteComment: function (commentId) {
+            deleteComment: function (blogpostId, commentId) {
                 return $http.delete('/ajax/com/IcedReaper/blog/deleteComment', {
                     params: {
+                        blogpostId: blogpostId,
                         commentId: commentId
                     }
                 });
             },
             
-            publishComment: function (commentId) {
+            publishComment: function (blogpostId, commentId) {
                 return $http.post('/ajax/com/IcedReaper/blog/publishComment', {
-                    commentId: commentId
+                    blogpostId: blogpostId,
+                    commentId:  commentId
                 });
             },
             

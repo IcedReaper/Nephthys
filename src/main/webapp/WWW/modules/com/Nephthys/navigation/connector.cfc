@@ -26,9 +26,10 @@ component implements="WWW.interfaces.connector" {
     
     private array function getSitemap(required numeric regionId) {
         var sitemap = new filter().for("sitemap")
-                                          .setOnline(true)
-                                          .execute()
-                                          .getResult();
+                                  .setOnline(true)
+                                  .execute()
+                                  .getResult();
+        
         if(sitemap.len() >= 1) {
             var sitemapId = sitemap[1].getSitemapId();
             

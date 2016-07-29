@@ -203,7 +203,7 @@
         </div>
     </uib-tab>
     
-    <uib-tab heading="Statistiken" disable="pageId == 0">
+    <uib-tab heading="Statistiken" disable="! pageId">
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-block">
@@ -217,7 +217,7 @@
         </div>
     </uib-tab>
     
-    <uib-tab heading="Genehmigungen" disable="pageId == 0 || ! page.versions[selectedVersion.major][selectedVersion.minor].pageVersionId">
+    <uib-tab heading="Genehmigungen" disable="! pageId || ! page.versions[selectedVersion.major][selectedVersion.minor].pageVersionId">
         <div class="row">
             <div class="col-sm-12">
                 <div class="card card-block">

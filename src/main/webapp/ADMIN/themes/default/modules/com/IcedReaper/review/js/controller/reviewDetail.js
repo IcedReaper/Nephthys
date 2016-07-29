@@ -18,7 +18,7 @@ nephthysAdminApp
                     var oldReviewId = $scope.review.reviewId;
                     $scope.review.reviewId = reviewId;
                     
-                    if(oldReviewId == 0) {
+                    if(! oldReviewId) {
                         $route.updateParams({
                             reviewId: reviewId
                         });

@@ -46,6 +46,10 @@ component implements="API.interfaces.filter" {
     }
     
     public filter function execute() {
+        if(isNull(variables.blogpost)) {
+            throw(type = "Nepthyhs.filter.conditionsNotMet", message = "Please specify the blogpost");
+        }
+        
         variables.results = null;
         var qryFilter = new Query();
         

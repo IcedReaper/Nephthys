@@ -18,7 +18,7 @@ nephthysAdminApp
                     var oldGalleryId = $scope.gallery.galleryId;
                     $scope.gallery = result;
                     
-                    if(oldGalleryId == 0) {
+                    if(! oldGalleryId) {
                         $route.updateParams({
                             galleryId: result.galleryId
                         });

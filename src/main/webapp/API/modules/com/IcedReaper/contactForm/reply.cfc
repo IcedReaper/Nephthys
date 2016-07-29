@@ -1,8 +1,9 @@
 component {
     import "API.modules.com.Nephthys.userManager.user";
     
-    public reply function init(required numeric replyId) {
-        variables.replyId   = arguments.replyId;
+    public reply function init(required numeric replyId, required contactRequest contactRequest) {
+        variables.replyId = arguments.replyId;
+        variables.contactRequest = arguments.contactRequest;
         
         loadDetails();
         
@@ -10,10 +11,6 @@ component {
     }
     
     
-    public reply function setRequestId(required numeric requestId) {
-        variables.requestId = arguments.requestId;
-        return this;
-    }
     public reply function setMessage(required string message) {
         variables.message = arguments.message;
         return this;
@@ -23,8 +20,8 @@ component {
     public numeric function getReplyId() {
         return variables.replyId;
     }
-    public numeric function getRequestId() {
-        return variables.requestId;
+    public contactRequest function getContactRequest() {
+        return variables.contactRequest;
     }
     public string function getMessage() {
         return variables.message;
@@ -38,37 +35,28 @@ component {
     
     
     public reply function save(required user user) {
-        if(variables.replyId == 0 || variables.replyId == null) {
-            if(variables.requestId != 0 && variables.requestId != null) {
+        if(variables.replyId == null) {
+            if(! isNull(variables.contactRequest) && variables.contactRequest.getContactRequestId() != null) {
                 if(variables.message != "") {
                     transaction {
                         new Query().setSQL("INSERT INTO IcedReaper_contactForm_reply
                                                         (
-                                                            requestId,
+                                                            contactRequestId,
                                                             message,
                                                             replyUserId
                                                         )
                                                  VALUES (
-                                                            :requestId,
+                                                            :contactRequestId,
                                                             :message,
                                                             :replyUserId
                                                         )")
-                                   .addParam(name = "requestId",   value = variables.requestId,        cfsqltype = "cf_sql_numeric")
-                                   .addParam(name = "message",     value = variables.message,          cfsqltype = "cf_sql_varchar")
-                                   .addParam(name = "replyUserId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                                   .addParam(name = "contactRequestId", value = variables.contactRequest.getContactRequestId(), cfsqltype = "cf_sql_numeric")
+                                   .addParam(name = "message",          value = variables.message,                              cfsqltype = "cf_sql_varchar")
+                                   .addParam(name = "replyUserId",      value = arguments.user.getUserId(),                     cfsqltype = "cf_sql_numeric")
                                    .execute();
                         
                         variables.replyUser = arguments.user;
                         variables.replyDate = now();
-                        
-                        /* todo: setup smtp server to check this feature...
-                        var cf_request = new request(variables.requestId);
-                        var eMail = new mail().setFrom(request.user.getUsername() & "<" & request.user.getEmail() & ">")
-                                              .setTo(cf_request.getEmail())
-                                              .setSubject("Antwort auf Ihre Anfrage: " & cf_request.getSubject())
-                                              .setType("html")
-                                              .setBody(variables.message)
-                                              .send();*/
                         
                         transactionCommit();
                     }
@@ -90,7 +78,7 @@ component {
     
     
     private void function loadDetails() {
-        if(variables.replyId != null && variables.replyId != 0) {
+        if(variables.replyId != null) {
             var qReply = new Query().setSQL("SELECT *
                                                FROM IcedReaper_contactForm_reply
                                               WHERE replyId = :replyId")
@@ -99,7 +87,6 @@ component {
                                     .getResult();
             
             if(qReply.getRecordCount() == 1) {
-                variables.requestId = qReply.requestId[1];
                 variables.message   = qReply.message[1];
                 variables.replyUser = new user(qReply.replyUserId[1]);
                 variables.replyDate = qReply.replyDate[1];
@@ -109,7 +96,6 @@ component {
             }
         }
         else {
-            variables.requestId   = 0;
             variables.message     = "";
             variables.replyUserId = new user(null);
             variables.replyDate   = null;

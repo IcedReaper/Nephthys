@@ -12,20 +12,20 @@ component {
         return themeData;
     }
     
-    remote struct function getDetails(required numeric themeId) {
+    remote struct function getDetails(required numeric themeId = null) {
         var theme = new theme(arguments.themeId);
         
         return prepareTheme(theme);
     }
     
-    remote struct function save(required numeric themeId,
+    remote struct function save(required numeric themeId = null,
                                 required string  name,
                                 required string  foldername,
                                 required boolean active) {
         var theme = new theme(arguments.themeId);
         theme.setName(arguments.name);
         
-        if(arguments.themeId != 0) {
+        if(arguments.themeId != null) {
             if(arguments.active == 1 || 
                (arguments.active == 0 && themeList[i].getThemeId() != getDefaultWwwThemeId() &&
                                          themeList[i].getThemeId() != getDefaulAdminThemeId())) {

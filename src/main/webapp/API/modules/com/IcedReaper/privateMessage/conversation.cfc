@@ -1,7 +1,7 @@
 component {
     import "API.modules.com.Nephthys.userManager.user";
     
-    public conversation function init(required numeric conversationId = 0) {
+    public conversation function init(required numeric conversationId = null) {
         variables.conversationId = arguments.conversationId;
         
         variables.participantsAdded = [];
@@ -144,7 +144,7 @@ component {
     
     
     public conversation function save(required user user) {
-        if(variables.conversationId == 0 || variables.conversationId == null) {
+        if(variables.conversationId == null) {
             variables.conversationId = new Query().setSQL("INSERT INTO IcedReaper_privateMessage_conversation
                                                                        (
                                                                            initiatorUserId
@@ -190,7 +190,7 @@ component {
     
     
     private void function load() {
-        if(variables.conversationId != 0 && variables.conversationId != null) {
+        if(variables.conversationId != null) {
             var qConversation = new Query().setSQL("SELECT *
                                                       FROM IcedReaper_privateMessage_conversation
                                                      WHERE conversationId = :conversationId")

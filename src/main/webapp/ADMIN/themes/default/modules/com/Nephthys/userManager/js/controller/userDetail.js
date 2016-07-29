@@ -22,7 +22,7 @@ nephthysAdminApp
                 .then(function (user) {
                     if($scope.user.userId != user.userId) {
                         $route.updateParams({
-                            userId: userId
+                            userId: user.userId
                         });
                     }
                     

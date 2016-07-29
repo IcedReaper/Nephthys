@@ -20,7 +20,7 @@ nephthysAdminApp
                 templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/galleryList.html",
                 controller:  "galleryListCtrl"
             })
-            .when("/gallery/:galleryId", {
+            .when("/gallery/:galleryId?", {
                 templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/galleryDetail.html",
                 controller:  "galleryDetailCtrl"
             })
@@ -33,7 +33,7 @@ nephthysAdminApp
                 templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/categoryList.html",
                 controller:  "categoryListCtrl"
             })
-            .when("/category/:categoryId", {
+            .when("/category/:categoryId?", {
                 templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/categoryDetail.html",
                 controller:  "categoryDetailCtrl"
             })
@@ -46,7 +46,7 @@ nephthysAdminApp
                 templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/statusFlow.html",
                 controller:  "statusFlowCtrl"
             })
-            .when("/status/:statusId", {
+            .when("/status/:statusId?", {
                 templateUrl: "/themes/default/modules/com/IcedReaper/gallery/partials/statusDetail.html",
                 controller:  "statusDetailCtrl"
             })

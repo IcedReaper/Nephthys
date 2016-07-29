@@ -16,19 +16,19 @@ component {
         return data;
     }
     
-    remote struct function getDetails(required numeric galleryId) {
+    remote struct function getDetails(required numeric galleryId = null) {
         var gallery = new gallery(arguments.galleryId);
         
         return prepareDetailStruct(gallery, true);
     }
     
-    remote array function loadPictures(required numeric galleryId) {
+    remote array function loadPictures(required numeric galleryId = null) {
         var gallery = new gallery(arguments.galleryId);
         
         return preparePictureStruct(gallery.getPictures(), gallery.getRelativePath() & "/");
     }
     
-    remote array function loadCategories(required numeric galleryId) {
+    remote array function loadCategories(required numeric galleryId = null) {
         var gallery = new gallery(arguments.galleryId);
         
         return prepareCategoryDetails(gallery.getCategories(), false);
@@ -50,7 +50,7 @@ component {
         return prepareCategoryDetails(categories, false);
     }
     
-    remote struct function save(required numeric galleryId,
+    remote struct function save(required numeric galleryId = null,
                                 required string  headline,
                                 required string  description,
                                 required string  title,
@@ -61,8 +61,8 @@ component {
                                 required boolean private) {
         var gallery = new gallery(arguments.galleryId);
         
-        if(gallery.isEditable(request.user.getUserID())) {
-            if(arguments.galleryId == 0) {
+        if(gallery.isEditable(request.user.getUserId())) {
+            if(arguments.galleryId == null) {
                 gallery.setFoldername(arguments.foldername);
             }
             
@@ -85,7 +85,7 @@ component {
     remote boolean function delete(required numeric galleryId) {
         var gallery = new gallery(arguments.galleryId);
         
-        if(gallery.isEditable(request.user.getUserID())) {
+        if(gallery.isEditable(request.user.getUserId())) {
             gallery.delete(request.user);
             
             return true;
@@ -96,13 +96,13 @@ component {
     }
     
     remote boolean function addCategory(required numeric galleryId,
-                                       required numeric categoryId,
-                                       required string  categoryName) {
+                                        required numeric categoryId,
+                                        required string  categoryName) {
         var gallery = new gallery(arguments.galleryId);
         
-        if(gallery.isEditable(request.user.getUserID())) {
+        if(gallery.isEditable(request.user.getUserId())) {
             var newCategory = new category(arguments.categoryId);
-            if(arguments.categoryId == 0 || arguments.categoryId == null) {
+            if(arguments.categoryId == null) {
                 newCategory.setName(arguments.categoryName)
                            .save(request.user);
             }
@@ -120,7 +120,7 @@ component {
                                           required numeric categoryId) {
         var gallery = new gallery(arguments.galleryId);
         
-        if(gallery.isEditable(request.user.getUserID())) {
+        if(gallery.isEditable(request.user.getUserId())) {
             gallery.removeCategory(arguments.categoryId);
             
             return true;
@@ -133,8 +133,8 @@ component {
     remote boolean function uploadPictures(required numeric galleryId) {
         var gallery = new gallery(arguments.galleryId);
         
-        if(gallery.isEditable(request.user.getUserID())) {
-            var newPicture = new picture(0);
+        if(gallery.isEditable(request.user.getUserId())) {
+            var newPicture = new picture(null);
             newPicture.setGalleryId(arguments.galleryId)
                       .upload(request.user);
             
@@ -154,7 +154,7 @@ component {
         var picture = new picture(arguments.pictureId);
         var gallery = new gallery(picture.getGalleryId());
         
-        if(gallery.isEditable(request.user.getUserID())) {
+        if(gallery.isEditable(request.user.getUserId())) {
             picture.setCaption(arguments.caption)
                    .setAlt(arguments.alt)
                    .setTitle(arguments.title)
@@ -171,7 +171,7 @@ component {
         var picture = new picture(arguments.pictureId);
         var gallery = new gallery(picture.getGalleryId());
         
-        if(gallery.isEditable(request.user.getUserID())) {
+        if(gallery.isEditable(request.user.getUserId())) {
             gallery.removePicture(arguments.pictureId, request.user);
             
             return preparePictureStruct(gallery.getPictures(), gallery.getRelativePath() & "/");
@@ -188,13 +188,13 @@ component {
         return prepareCategoryDetails(categoryFilter.execute().getResult(), true);
     }
     
-    remote struct function getCategoryDetails(required numeric categoryId) {
+    remote struct function getCategoryDetails(required numeric categoryId = null) {
         var category = new category(arguments.categoryId);
         
         return prepareCategoryStruct(category);
     }
     
-    remote numeric function saveCategory(required numeric categoryId,
+    remote numeric function saveCategory(required numeric categoryId = null,
                                          required string  name) {
         var category = new category(arguments.categoryId);
         
@@ -262,7 +262,7 @@ component {
         return prepStatus;
     }
     
-    remote struct function getStatusDetails(required numeric statusId) {
+    remote struct function getStatusDetails(required numeric statusId = null) {
         return prepareStatus(new status(arguments.statusId));
     }
     
@@ -452,7 +452,7 @@ component {
         }
         
         
-        if(arguments.addApprovalList) {
+        if(arguments.addApprovalList && arguments.gallery.getGalleryId() != null) {
             var preparedApprovalList = prepareApprovalList(new filter().for("approval")
                                                                        .setGalleryId(arguments.gallery.getGalleryId())
                                                                        .setSortDirection("DESC")

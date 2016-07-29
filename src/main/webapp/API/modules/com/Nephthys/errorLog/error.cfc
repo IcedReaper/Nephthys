@@ -1,7 +1,7 @@
 component {
     import "API.modules.com.Nephthys.userManager.*";
     
-    public error function init(required numeric errorId = 0) {
+    public error function init(required numeric errorId = null) {
         variables.errorId = arguments.errorId;
         
         loadDetails();
@@ -73,7 +73,7 @@ component {
     
     
     public error function save(required user user) {
-        if(variables.errorId == 0) {
+        if(variables.errorId == null) {
             variables.errorId = new Query().setSQL("INSERT INTO nephthys_error
                                                                 (
                                                                     errorCode,
@@ -126,7 +126,7 @@ component {
     
     
     private void function loadDetails() {
-        if(variables.errorId != 0 && variables.errorId != null) {
+        if(variables.errorId != null) {
             var qGetError = new Query().setSQL("SELECT *
                                                   FROM nephthys_error
                                                  WHERE errorId = :errorId")

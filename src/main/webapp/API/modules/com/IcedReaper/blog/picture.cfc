@@ -12,7 +12,7 @@ component {
     
     
     public picture function setBlogpost(required numeric blogpost) {
-        if(variables.pictureId == 0 || variables.pictureId == null || variables.blogpost.getBlogpostId() == arguments.blogpost.getBlogpostId()) {
+        if(variables.pictureId == null || variables.blogpost.getBlogpostId() == arguments.blogpost.getBlogpostId()) {
             variables.blogpostId = arguments.blogpost;
         }
         
@@ -45,7 +45,7 @@ component {
     }
     
     public picture function upload(required user user) {
-        if(variables.pictureId != 0 && variables.pictureId != null) {
+        if(variables.pictureId != null) {
             deleteFiles();
         }
         
@@ -145,7 +145,7 @@ component {
     
     
     public picture function save(required user user) {
-        if(variables.pictureId == 0 || variables.pictureId == null) {
+        if(variables.pictureId == null) {
             variables.pictureId = new Query().setSQL("INSERT INTO IcedReaper_blog_picture
                                                                   (
                                                                       blogpostId,
@@ -217,12 +217,12 @@ component {
                    .addParam(name = "pictureId", value = variables.pictureId, cfsqltype = "cf_sql_numeric")
                    .execute();
         
-        variables.pictureId = 0;
+        variables.pictureId = null;
     }
     
     
     private void function loadDetails() {
-        if(variables.pictureId != 0 && variables.pictureId != null) {
+        if(variables.pictureId != null) {
             var qPicture = new Query().setSQL("SELECT *
                                                  FROM IcedReaper_blog_picture
                                                 WHERE pictureId = :pictureId")

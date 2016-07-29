@@ -31,7 +31,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="foldername">Ordnername</label>
-                            <input type="text" class="form-control" id="foldername" ng-disabled="theme.themeId != 0" ng-model="theme.foldername">
+                            <input type="text" class="form-control" id="foldername" ng-disabled="! theme.themeId" ng-model="theme.foldername">
                         </div>
                         <div class="form-group">
                             <label>Verfügbar auf der Webseite</label>

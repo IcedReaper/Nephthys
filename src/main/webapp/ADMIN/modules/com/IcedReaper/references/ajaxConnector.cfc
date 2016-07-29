@@ -34,7 +34,7 @@ component {
         return references;
     }
     
-    remote struct function getDetails(required numeric referenceId) {
+    remote struct function getDetails(required numeric referenceId = null) {
         var reference = new reference(arguments.referenceId);
         
         return {

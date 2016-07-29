@@ -1,8 +1,9 @@
 component {
     import "API.modules.com.Nephthys.userManager.*";
     
-    public comment function init(required numeric commentId) {
+    public comment function init(required numeric commentId, required blogpost blogpost) {
         variables.commentId = arguments.commentId;
+        variables.blogpost  = arguments.blogpost;
         
         variables.attributesChanged = false;
         variables.publishedChanged = false;
@@ -13,15 +14,8 @@ component {
     }
     
     
-    public comment function setBlogpostId(required numeric blogpostId) {
-        if(variables.commentId == 0 || variables.commentId == null) {
-            variables.blogpostId = arguments.blogpostId;
-        }
-        
-        return this;
-    }
     public comment function setComment(required string comment) {
-        if(variables.commentId == 0 || variables.commentId == null || (variables.creator.getStatus().getCanLogin() && variables.creator.getUserId() == request.user.getUserId())) {
+        if(variables.commentId == null || (variables.creator.getStatus().getCanLogin() && variables.creator.getUserId() == request.user.getUserId())) {
             variables.comment = arguments.comment;
             variables.attributesChanged = true;
         }
@@ -29,7 +23,7 @@ component {
         return this;
     }
     public comment function setAnonymousUsername(required string username) {
-        if(variables.commentId == 0 || variables.commentId == null) {
+        if(variables.commentId == null) {
             variables.anonymousUsername = arguments.username;
             variables.attributesChanged = true;
         }
@@ -37,7 +31,7 @@ component {
         return this;
     }
     public comment function setAnonymousEmail(required string email) {
-        if(variables.commentId == 0 || variables.commentId == null) {
+        if(variables.commentId == null) {
             variables.anonymousEmail = arguments.email;
             variables.attributesChanged = true;
         }
@@ -86,7 +80,7 @@ component {
         }
     }
     public boolean function fromRegistrated() {
-        return variables.creator.getUserId() != 0 && variables.creator.getUserId() != null;
+        return variables.creator.getUserId() != null;
     }
     public string function getAnonymousUsername() {
         return variables.anonymousUsername;
@@ -99,14 +93,14 @@ component {
         return variables.published;
     }
     public boolean function isSaved() {
-        return variables.commentId != 0 && variables.commentId != null && variables.attributesChanged == false;
+        return variables.commentId != null && variables.attributesChanged == false;
     }
     
     
     public comment function save(required user user) {
         var qSave = new Query();
                                              
-        if(variables.commentId == 0 || variables.commentId == null) {
+        if(variables.commentId == null) {
             variables.commentId = qSave.setSQL("INSERT INTO IcedReaper_blog_comment
                                                             (
                                                                 blogpostId,
@@ -123,11 +117,11 @@ component {
                                                                 :anonymousEmail
                                                             );
                                                 SELECT currval('seq_icedreaper_blog_comment_id') newPictureId;")
-                                       .addParam(name = "blogpostId",        value = variables.blogpostId,        cfsqltype = "cf_sql_numeric")
-                                       .addParam(name = "comment",           value = variables.comment,           cfsqltype = "cf_sql_varchar")
-                                       .addParam(name = "anonymousUsername", value = variables.anonymousUsername, cfsqltype = "cf_sql_varchar", null = variables.anonymousUsername == null)
-                                       .addParam(name = "anonymousEmail",    value = variables.anonymousEmail,    cfsqltype = "cf_sql_varchar", null = variables.anonymousEmail == null)
-                                       .addParam(name = "creatorUserId",     value = arguments.user.getUserId(),  cfsqltype = "cf_sql_numeric", null = arguments.user.getUserId() == null)
+                                       .addParam(name = "blogpostId",        value = variables.blogpost.getBlogpostId(), cfsqltype = "cf_sql_numeric")
+                                       .addParam(name = "comment",           value = variables.comment,                  cfsqltype = "cf_sql_varchar")
+                                       .addParam(name = "anonymousUsername", value = variables.anonymousUsername,        cfsqltype = "cf_sql_varchar", null = variables.anonymousUsername == null)
+                                       .addParam(name = "anonymousEmail",    value = variables.anonymousEmail,           cfsqltype = "cf_sql_varchar", null = variables.anonymousEmail == null)
+                                       .addParam(name = "creatorUserId",     value = arguments.user.getUserId(),         cfsqltype = "cf_sql_numeric", null = arguments.user.getUserId() == null)
                                        .execute()
                                        .getResult()
                                        .newPictureId[1];
@@ -174,12 +168,12 @@ component {
                    .addParam(name = "commentId", value = variables.commentId, cfsqltype = "cf_sql_numeric")
                    .execute();
         
-        variables.commentId = 0;
+        variables.commentId = null;
     }
     
     
     private void function loadDetails() {
-        if(variables.commentId != 0 && variables.commentId != null) {
+        if(variables.commentId != null) {
             var qComment = new Query().setSQL("SELECT *
                                                  FROM IcedReaper_blog_comment
                                                 WHERE commentId = :commentId")
@@ -188,7 +182,6 @@ component {
                                       .getResult();
             
             if(qComment.getRecordCount() == 1) {
-                variables.blogpostId        = qComment.blogpostId[1];
                 variables.comment           = qComment.comment[1];
                 variables.creator           = new user(qComment.creatorUserId[1]);
                 variables.creationDate      = qComment.creationDate[1];
@@ -203,7 +196,6 @@ component {
             }
         }
         else {
-            variables.blogpostId        = 0;
             variables.comment           = "";
             variables.creatorUserId     = new user(null);
             variables.creationDate      = now();

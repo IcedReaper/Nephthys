@@ -21,7 +21,7 @@ nephthysAdminApp
                 templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/blogList.html",
                 controller:  "blogListCtrl"
             })
-            .when("/blogpost/:blogpostId", {
+            .when("/blogpost/:blogpostId?", {
                 templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/blogDetail.html",
                 controller:  "blogDetailCtrl"
             })
@@ -34,7 +34,7 @@ nephthysAdminApp
                 templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/categoryList.html",
                 controller:  "categoryListCtrl"
             })
-            .when("/category/:categoryId", {
+            .when("/category/:categoryId?", {
                 templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/categoryDetail.html",
                 controller:  "categoryDetailCtrl"
             })
@@ -51,7 +51,7 @@ nephthysAdminApp
                 templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/statusFlow.html",
                 controller:  "statusFlowCtrl"
             })
-            .when("/status/:statusId", {
+            .when("/status/:statusId?", {
                 templateUrl: "/themes/default/modules/com/IcedReaper/blog/partials/statusDetail.html",
                 controller:  "statusDetailCtrl"
             })

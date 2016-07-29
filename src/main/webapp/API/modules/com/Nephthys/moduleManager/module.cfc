@@ -184,7 +184,7 @@ component {
                                .addParam(name = "useDynamicUrlSuffix", value = variables.useDynamicUrlSuffix, cfsqltype = "cf_sql_bit");
         
         transaction {
-            if(variables.moduleId == 0) {
+            if(variables.moduleId == null) {
                 variables.moduleId = new Query().setSQL("INSERT INTO nephthys_module
                                                                      (
                                                                          moduleName,
@@ -265,11 +265,13 @@ component {
                              WHERE moduleId = :moduleId")
                    .addParam(name = "moduleId", value = variables.moduleId, cfsqltype = "cf_sql_numeric")
                    .execute();
+        
+        variables.moduleId = null;
     }
     
     
     private void function loadDetails() {
-        if(variables.moduleId != 0 && variables.moduleId != null) {
+        if(variables.moduleId != null) {
             var qModuleDetails = new Query().setSQL("SELECT * 
                                                        FROM nephthys_module
                                                       WHERE moduleId = :moduleId")
@@ -304,7 +306,7 @@ component {
     }
     
     private void function loadSubModules() {
-        if(variables.moduleId != 0 && variables.moduleId != null) {
+        if(variables.moduleId != null) {
             variables.subModules = [];
             
             var qGetSubModules = new Query().setSQL("SELECT subModuleId
@@ -324,7 +326,7 @@ component {
     }
     
     private void function loadOptions() {
-        if(variables.moduleId != 0 && variables.moduleId != null) {
+        if(variables.moduleId != null) {
             variables.options = [];
             
             var qGetOptions = new Query().setSQL("  SELECT optionId
@@ -336,7 +338,7 @@ component {
                                          .getResult();
             
             for(var i = 1; i <= qGetOptions.getRecordCount(); ++i) {
-                variables.options.append(new option(qGetOptions.optionId[i]));
+                variables.options.append(new option(qGetOptions.optionId[i], this));
             }
         }
         else {

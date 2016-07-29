@@ -119,7 +119,7 @@
             </div>
         </div>
 
-        <div ng-controller="blogCategoryCtrl" ng-show="blogpostId != 0">
+        <div ng-controller="blogCategoryCtrl" ng-if="blogpostId">
             <div class="row">
                 <div class="col-md-12">
                     <div class="card card-block">
@@ -134,7 +134,7 @@
         </div>
     </uib-tab>
     
-    <uib-tab heading="Bilder" disable="blogpost.blogpostId == 0">
+    <uib-tab heading="Bilder" disable="! blogpost.blogpostId">
         <div id="pictureTab" ng-controller="blogpostPictureCtrl">
             <div class="row" ng-if="blogpost.isEditable">
                 <div class="col-md-12">
@@ -200,7 +200,7 @@
         </div>
     </uib-tab>
     
-    <uib-tab heading="Kommentare" diable="blogpost.blogpostId == 0">
+    <uib-tab heading="Kommentare" disable="! blogpost.blogpostId">
         <div ng-controller="blogCommentsCtrl">
             <div class="row">
                 <div class="col-md-12">
@@ -235,7 +235,7 @@
         </div>
     </uib-tab>
     
-    <uib-tab heading="Statistiken" diable="blogpost.blogpostId == 0">
+    <uib-tab heading="Statistiken" disable="! blogpost.blogpostId">
         <div class="row">
             <div class="col-md-12">
                 <div class="card card-block">
@@ -248,7 +248,7 @@
         </div>
     </uib-tab>
     
-    <uib-tab heading="Genehmigungen" disable="blogpost.blogpostId == 0">
+    <uib-tab heading="Genehmigungen" disable="! blogpost.blogpostId">
         <div class="row">
             <div class="col-sm-12">
                 <div class="card card-block">

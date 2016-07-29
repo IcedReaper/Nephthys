@@ -11,7 +11,7 @@ component {
     
     
     public picture function setGalleryId(required numeric galleryId) {
-        if(variables.pictureId == 0 || variables.galleryId == arguments.galleryId) {
+        if(variables.pictureId == null || variables.galleryId == arguments.galleryId) {
             variables.galleryId = arguments.galleryId;
         }
         
@@ -44,7 +44,7 @@ component {
     }
     
     public picture function upload(required user user) {
-        if(variables.pictureId != 0) {
+        if(variables.pictureId != null) {
             deleteFiles();
         }
         
@@ -146,7 +146,7 @@ component {
     
     
     public picture function save(required user user) {
-        if(variables.pictureId == 0) {
+        if(variables.pictureId == null) {
             variables.pictureId = new Query().setSQL("INSERT INTO IcedReaper_gallery_picture
                                                                   (
                                                                       galleryId,
@@ -218,12 +218,12 @@ component {
                    .addParam(name = "pictureId", value = variables.pictureId, cfsqltype = "cf_sql_numeric")
                    .execute();
         
-        variables.pictureId = 0;
+        variables.pictureId = null;
     }
     
     
     private void function loadDetails() {
-        if(variables.pictureId != 0 && variables.pictureId != null) {
+        if(variables.pictureId != null) {
             var qPicture = new Query().setSQL("SELECT *
                                                  FROM IcedReaper_gallery_picture
                                                 WHERE pictureId = :pictureId")
@@ -245,7 +245,7 @@ component {
             }
         }
         else {
-            variables.galleryId         = 0;
+            variables.galleryId         = null;
             variables.pictureFileName   = "";
             variables.thumbnailFileName = "";
             variables.title             = "";

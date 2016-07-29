@@ -42,13 +42,15 @@ component extends="API.abstractClasses.settings" {
                     // update only non readonly or forced settings
                     if(! variables.settings[key].readonly || (variables.settings[key].readonly && variables.settings[key].keyExists("forced"))) {
                         new Query().setSQL("UPDATE nephthys_serverSetting
-                                               SET value = :value,
+                                               SET value            = :value,
                                                    lastEditorUserId = :userId,
-                                                   lastEditDate = now()
-                                             WHERE key = :key")
-                                   .addParam(name = "value",  value = convertToSaveFormat(key),   cfsqltype = "cf_sql_varchar")
-                                   .addParam(name = "key",    value = key,                        cfsqltype = "cf_sql_varchar")
-                                   .addparam(name = "userId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                                                   lastEditDate     = now()
+                                             WHERE key         = :key
+                                               AND application = :application")
+                                   .addParam(name = "value",       value = convertToSaveFormat(key),            cfsqltype = "cf_sql_varchar")
+                                   .addParam(name = "key",         value = key,                                 cfsqltype = "cf_sql_varchar")
+                                   .addparam(name = "userId",      value = arguments.user.getUserId(),          cfsqltype = "cf_sql_numeric")
+                                   .addParam(name = "application", value = variables.settings[key].application, cfsqltype = "cf_sql_varchar", null = variables.settings[key].application == null)
                                    .execute();
                         
                         
@@ -108,7 +110,8 @@ component extends="API.abstractClasses.settings" {
                 alwaysRevalidate    = qGetSettings.alwaysRevalidate[i],
                 moduleId            = qGetSettings.moduleId[i],
                 moduleName          = qGetSettings.moduleName[i],
-                sortOrder           = qGetSettings.sortOrder[i]
+                sortOrder           = qGetSettings.sortOrder[i],
+                application         = qGetSettings.application[i]
             };
             
             variables.settings[ qGetSettings.key[i] ].value = convertAfterLoad(qGetSettings.value[i], qGetSettings.type[i]);

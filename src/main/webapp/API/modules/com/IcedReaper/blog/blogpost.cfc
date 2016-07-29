@@ -307,7 +307,7 @@ component {
                                .addParam(name = "userId",                     value = arguments.user.getUserId(),           cfsqltype = "cf_sql_numeric")
                                .addParam(name = "statusId",                   value = variables.status.getStatusId(),       cfsqltype = "cf_sql_numeric");
         
-        if(variables.blogpostId == 0) {
+        if(variables.blogpostId == null) {
             variables.blogpostId = qSave.setSQL("INSERT INTO IcedReaper_blog_blogpost
                                                              (
                                                                  headline,
@@ -396,7 +396,7 @@ component {
             if(variables.status.getEditable()) {
                 for(var c = 1; c <= variables.categories.len(); c++) {
                     try {
-                        if(variables.categories[c].getCategoryId() == 0) {
+                        if(variables.categories[c].getCategoryId() == null) {
                             variables.categories[c].save(arguments.user);
                         }
                         
@@ -449,11 +449,11 @@ component {
                    .addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric")
                    .execute();
         
-        variables.blogpostId = 0;
+        variables.blogpostId = null;
     }
     
     public blogpost function reloadPictures() {
-        if(variables.blogpostId != 0) {
+        if(variables.blogpostId != null) {
             loadPictures();
             return this;
         }
@@ -464,7 +464,7 @@ component {
     
     
     private void function loadDetails() {
-        if(variables.blogpostId != 0 && variables.blogpostId != null) {
+        if(variables.blogpostId != null) {
             var qBlogpost = new Query().setSQL("SELECT * 
                                                   FROM IcedReaper_blog_blogpost
                                                  WHERE blogpostId = :blogpostId")
@@ -500,19 +500,17 @@ component {
             }
         }
         else {
-            var defaultSettings = new settings().load();
-            
             variables.headline                   = "";
             variables.link                       = "";
             variables.story                      = "";
             variables.releaseDate                = null;
-            variables.commentsActivated          = defaultSettings.getValueOfKey("commentsActivated");
-            variables.anonymousCommentAllowed    = defaultSettings.getValueOfKey("anonymousCommentAllowed");
-            variables.commentsNeedToGetPublished = defaultSettings.getValueOfKey("commentsNeedToGetPublished");
+            variables.commentsActivated          = application.system.settings.getValueOfKey("com.IcedReaper.blog.commentsActivated");
+            variables.anonymousCommentAllowed    = application.system.settings.getValueOfKey("com.IcedReaper.blog.anonymousCommentAllowed");
+            variables.commentsNeedToGetPublished = application.system.settings.getValueOfKey("com.IcedReaper.blog.commentsNeedToGetPublished");
             variables.creator                    = request.user;
-            variables.creationDate               = null;
+            variables.creationDate               = now();
             variables.lastEditor                 = request.user;
-            variables.lastEditDate               = null;
+            variables.lastEditDate               = now();
             variables.categories                 = [];
             variables.comments                   = [];
             variables.pictures                   = [];
@@ -532,7 +530,7 @@ component {
     
     private void function loadComments() {
          variables.comments = new filter().for("comment")
-                                          .setBlogpostId(variables.blogpostId)
+                                          .setBlogpost(this)
                                           .setSortBy("creationDate")
                                           .setSortDirection("DESC")
                                           .execute()

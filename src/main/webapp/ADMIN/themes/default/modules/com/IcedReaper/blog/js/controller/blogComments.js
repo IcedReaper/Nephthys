@@ -12,7 +12,7 @@ nephthysAdminApp
         
         $scope.publish = function (comment, index) {
             blogService
-                .publishComment(comment.commentId)
+                .publishComment($routeParams.blogpostId, comment.commentId)
                 .then(function() {
                     $scope.comments[index].published = true;
                 });
@@ -21,6 +21,6 @@ nephthysAdminApp
         $scope.delete = function (comment, index) {
             $scope.comments.splice(index, 1);
             
-            blogService.deleteComment(comment.commentId);
+            blogService.deleteComment($routeParams.blogpostId, comment.commentId);
         };
     }]);

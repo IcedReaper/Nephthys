@@ -133,11 +133,8 @@ component implements="WWW.interfaces.connector" {
             if(true) { // check referrer
                 if(arguments.blogpost.getCommentsActivated()) {
                     if(len(form.comment) > 0 && len(form.comment) <= 500) {
-                        if(request.user.getUserId() != 0 || (arguments.blogpost.getAnonymousCommentAllowed() && validateUsername(form.anonymousUsername) && validateEmail(form.anonymousEmail))) {
-                            var newComment = new comment(null);
-                            
-                            newComment.setBlogpostId(arguments.blogpost.getBlogpostId())
-                                      .setComment(form.comment);
+                        if(request.user.getUserId() != null || (arguments.blogpost.getAnonymousCommentAllowed() && validateUsername(form.anonymousUsername) && validateEmail(form.anonymousEmail))) {
+                            var newComment = new comment(null, arguments.blogpost);
                             
                             if(request.user.getStatus().getCanLogin() == 0) {
                                 newComment.setAnonymousUsername(form.anonymousUsername)
@@ -148,7 +145,8 @@ component implements="WWW.interfaces.connector" {
                                 newComment.setPublished(true);
                             }
                             
-                            newComment.save(request.user);
+                            newComment.setComment(form.comment)
+                                      .save(request.user);
                             
                             arguments.blogpost.addComment(newComment);
                             
@@ -179,7 +177,7 @@ component implements="WWW.interfaces.connector" {
             return false;
         }
         
-        var userFilterCtrl = createObject("component", "API.modules.com.Nephthys.userManager.filter").init();
+        var userFilterCtrl = createObject("component", "API.modules.com.Nephthys.userManager.filter").init().for("user");
         return userFilterCtrl.setUserName(arguments.userName)
                              .execute()
                              .getResultCount() == 0;

@@ -31,7 +31,7 @@ component {
     }
     
     public pageVersion function getActualPageVersion() {
-        if(variables.pageId != null && variables.pageId != 0) {
+        if(variables.pageId != null) {
             return new pageVersion(variables.pageVersionId);
         }
         else {
@@ -42,7 +42,7 @@ component {
     
     
     public page function save(required user user) {
-        if(variables.pageId == null || variables.pageId == 0) {
+        if(variables.pageId == null) {
             variables.pageId = new Query().setSQL("INSERT INTO nephthys_page_page
                                                                (
                                                                    creationDate
@@ -84,7 +84,7 @@ component {
     
     
     private void function load() {
-        if(variables.pageId != 0 && variables.pageId != null) {
+        if(variables.pageId != null) {
             var qGetPage = new Query().setSQL("SELECT *
                                                  FROM nephthys_page_page
                                                 WHERE pageId = :pageId")

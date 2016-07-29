@@ -2,7 +2,7 @@
     <div class="col-md-9 col-sm-8">
     </div>
     <div class="col-md-3 col-sm-4 text-md-right">
-        <a href="#/0" class="btn btn-primary"><i class="fa fa-plus"></i> Neue Referenz anlegen</a>
+        <a href="#/reference/" class="btn btn-primary"><i class="fa fa-plus"></i> Neue Referenz anlegen</a>
     </div>
 </div>
 
@@ -25,11 +25,11 @@
                 <tr ng-repeat="reference in references">
                     <td>{{reference.referenceId}}</td>
                     <td>
-                        <a href="#/{{reference.referenceId}}">{{reference.name}}</a>
+                        <a href="#/reference/{{reference.referenceId}}">{{reference.name}}</a>
                     </td>
                     <td>{{reference.since}}</td>
                     <td>
-                        <a href="#/{{reference.referenceId}}"
+                        <a href="#/reference/{{reference.referenceId}}"
                            class="btn btn-primary"
                            title="Referenzdetails">
                             <i class="fa fa-cog"></i>
