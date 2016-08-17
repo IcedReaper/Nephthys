@@ -1,4 +1,7 @@
 <cfoutput>
+    <cfif attributes.rootElement>
+        <div class="container">
+    </cfif>
     <section class="com-IcedReaper-blog">
         <div class="row">
             <div class="col-sm-12">
@@ -24,4 +27,7 @@
             </div>
         </div>
     </section>
+    <cfif attributes.rootElement>
+        </div>
+    </cfif>
 </cfoutput>

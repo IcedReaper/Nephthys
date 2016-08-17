@@ -37,7 +37,7 @@
                 });
             });
         </script>
-    </section>
+    </article>
     
     <cfinclude template="../generic/blueimpGallery.cfm">
 </cfoutput>

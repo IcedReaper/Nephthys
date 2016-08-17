@@ -65,8 +65,7 @@ component {
                                                                        sitemapId,
                                                                        prevStatusId,
                                                                        newStatusId,
-                                                                       approvalUserId,
-                                                                       approvalDate
+                                                                       approvalUserId
                                                                    )
                                                             VALUES (
                                                                        :pageVersionId,

@@ -361,9 +361,11 @@ component {
         
         for(var module in moduleFilter.getResult()) {
             modules[module.getModuleName()] = {
-                "useDynamicUrlSuffix" = module.getUseDynamicUrlSuffix(),
-                "options"             = [],
-                "subModules"          = []
+                "useDynamicUrlSuffix"           = module.getUseDynamicUrlSuffix(),
+                "options"                       = [],
+                "subModules"                    = [],
+                "canBeRootElement"              = module.getCanBeRootElement(),
+                "canBeRootElementMultipleTimes" = module.getCanBeRootElementMultipleTimes()
             };
             
             for(var subModule in module.getSubModules()) {

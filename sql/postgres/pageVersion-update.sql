@@ -1219,3 +1219,7 @@ alter table Nephthys_user_approval add CONSTRAINT nephthys_user_approval_userid_
 alter table icedreaper_contactform_request to IcedReaper_contactForm_contactRequest;
 alter table IcedReaper_contactForm_contactRequest rename column requestId to contactRequestId;
 alter table IcedReaper_contactForm_reply rename column requestId to contactRequestId;
+
+
+alter table nephthys_module add column canBeRootElement boolean default false NOT NULL;
+alter table nephthys_module add column canBeRootElementMultipleTimes boolean default false NOT NULL;

@@ -279,6 +279,26 @@ nephthysAdminApp
             return "total";
         };
         
+        $scope.isModuleAsRootElementAllowed = function (moduleName) {
+            var multipleRootElementsAllowed = true,
+                checkActualRootElements = function () {
+                    for(var i = 0; i < $scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].content.length; ++i) {
+                        if(! $scope.module[$scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].content[i].type].canBeRootElementMultipleTimes) {
+                            multipleRootElementsAllowed = false;
+                            return;
+                        }
+                    }
+                };
+            
+            if($scope.page.versions[$scope.selectedVersion.major][$scope.selectedVersion.minor].content.length === 0) {
+                return true;
+            }
+            else {
+                checkActualRootElements();
+                return $scope.module[moduleName].canBeRootElementMultipleTimes && multipleRootElementsAllowed;
+            }
+        };
+        
         $scope.$watch(function () {
             if($scope.page.versions) {
                 return {

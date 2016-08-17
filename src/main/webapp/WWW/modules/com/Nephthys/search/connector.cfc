@@ -12,7 +12,7 @@ component implements="WWW.interfaces.connector" {
         return getName().replace(".", "/", "ALL");
     }
     
-    public string function render(required struct options, required string childContent) {
+    public string function render(required struct options, required boolean rootElement, required string childContent) {
         var preparedOptions = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.Nephthys.search.cfc.prepareData").prepareOptions(arguments.options);
         var splitParameter  = listToArray(request.page.getParameter(), "/");
         

@@ -139,21 +139,21 @@ component {
                     if(arguments.newStatus.isOnline()) {
                         var page = new page(variables.pageId);
                         // update last page Status
-                        var offlineStatusId = application.system.settings.getValueOfKey("endStatus");
+                        var offlineStatus = new status(application.system.settings.getValueOfKey("endStatus"));
                         
                         var oldPageVersion = page.getActualPageVersion();
                         if(oldPageVersion.getPageVersionId() != variables.pageVersionId) {
                             new approval(null).setPageVersion(oldPageVersion)
                                               .setPrevStatus(oldPageVersion.getStatus())
-                                              .setNewStatus(new status(offlineStatusId))
+                                              .setNewStatus(offlineStatus)
                                               .save(arguments.user);
                             
-                            oldPageVersion.setStatusId(offlineStatusId)
+                            oldPageVersion.setStatus(offlineStatus)
                                           .save(arguments.user);
                         }
                         
                         page.setPageVersionId(variables.pageVersionId)
-                            .save();
+                            .save(arguments.user);
                     }
                     
                     new approval(null).setPageVersion(this)
@@ -204,9 +204,7 @@ component {
                                                                         useDynamicUrlSuffix,
                                                                         statusId,
                                                                         creatorUserId,
-                                                                        creationDate,
-                                                                        lastEditorUserId,
-                                                                        lastEditDate
+                                                                        lastEditorUserId
                                                                     )
                                                              VALUES (
                                                                         :pageId,
@@ -219,7 +217,7 @@ component {
                                                                         :content,
                                                                         :useDynamicUrlSuffix,
                                                                         :statusId,
-                                                                        :userId
+                                                                        :userId,
                                                                         :userId
                                                                     );
                                                         SELECT currval('nephthys_page_pageVersion_pageVersionId_seq') newPageVersionId;")

@@ -1,5 +1,5 @@
 <cfoutput>
-<nav class="navbar m-b-1">
+<nav class="navbar">
     <div class="container">
         <div class="navbar-header">
             <a href="/" class="navbar-brand"><img src="/themes/default/img/brand.gif" title="IcedReaper's Nephthys CMS" alt="IcedReaper's Nephthys CMS"></a>

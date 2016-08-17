@@ -190,14 +190,12 @@
                     <div class="m-b-1">
                         <div ng-repeat="child in page.versions[selectedVersion.major][selectedVersion.minor].content" ng-include="'contentChild'"></div>
                     </div>
-                
-                    <button class="btn btn-primary"
-                            ng-click="appendChild(page.versions[selectedVersion.major][selectedVersion.minor].content, 'com.Nephthys.container');"
-                            ng-disabled="isReadonly()"><i class="fa fa-plus"></i> Neuen Container hinzufügen</button>
-                    <button class="btn btn-primary"
-                            ng-click="appendChild(page.versions[selectedVersion.major][selectedVersion.minor].content, 'com.IcedReaper.startpage');"
-                            ng-if="page.versions[selectedVersion.major][selectedVersion.minor].content.length === 0"
-                            ng-disabled="isReadonly()"><i class="fa fa-plus"></i> Nur Startseite verwenden</button>
+                    
+                    <button ng-repeat="(mod, modOptions) in module"
+                            class="btn btn-primary m-r-1 m-b-1"
+                            ng-click="appendChild(page.versions[selectedVersion.major][selectedVersion.minor].content, mod);"
+                            ng-if="modOptions.canBeRootElement && isModuleAsRootElementAllowed(mod)"
+                            ng-disabled="isReadonly()"><i class="fa fa-plus"></i> {{mod}} hinzufügen</button>
                 </div>
             </div>
         </div>

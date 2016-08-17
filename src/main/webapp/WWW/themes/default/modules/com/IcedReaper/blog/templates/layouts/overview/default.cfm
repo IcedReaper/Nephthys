@@ -1,4 +1,7 @@
 <cfoutput>
+    <cfif attributes.rootElement>
+        <div class="container">
+    </cfif>
     <section class="com-IcedReaper-blog">
         <cfif attributes.blogposts.len() GT 0>
             <div class="row">
@@ -88,4 +91,8 @@
             <p>Es tut uns leid und würden Dich bitten später noch einmal vorbeizuschauen</p>
         </cfif>
     </section>
+    
+    <cfif attributes.rootElement>
+        </div>
+    </cfif>
 </cfoutput>

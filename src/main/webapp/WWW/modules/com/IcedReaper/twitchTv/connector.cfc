@@ -12,7 +12,7 @@ component implements="WWW.interfaces.connector" {
         return getName().replace(".", "/", "ALL");
     }
     
-    public string function render(required struct options, required string childContent) {
+    public string function render(required struct options, required boolean rootElement, required string childContent) {
         if(arguments.options.keyExists("channelName") && arguments.options.channelName != "") {
             var channel = new channel(arguments.options.channelName);
             

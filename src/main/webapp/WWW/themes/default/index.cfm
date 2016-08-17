@@ -31,7 +31,7 @@
     <header<cfif request.page.isSpecialCssClassSet("header")> class="#request.page.getSpecialCssClass('header')#"</cfif>>
         #createObject("component", "WWW.modules.com.Nephthys.navigation.connector").init().header()#
     </header>
-    <main<cfif request.page.isSpecialCssClassSet("main")> class="#request.page.getSpecialCssClass('main')#"</cfif>>
+    <main class="m-y-2<cfif request.page.isSpecialCssClassSet("main")>#request.page.getSpecialCssClass('main')#</cfif>">
         #request.page.getRenderedContent()#
     </main>
     <footer<cfif request.page.isSpecialCssClassSet("footer")> class="#request.page.getSpecialCssClass('footer')#"</cfif>>

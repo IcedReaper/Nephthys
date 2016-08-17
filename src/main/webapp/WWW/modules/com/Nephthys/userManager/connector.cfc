@@ -14,7 +14,7 @@ component implements="WWW.interfaces.connector" {
         return getName().replace(".", "/", "ALL");
     }
     
-    public string function render(required struct options, required string childContent) {
+    public string function render(required struct options, required boolean rootElement, required string childContent) {
         var preparedOptions = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.Nephthys.userManager.cfc.prepareData").prepareOptions(arguments.options);
         var splitParameter  = listToArray(request.page.getParameter(), "/");
         var userListCtrl    = new filter().for("user");
@@ -34,6 +34,7 @@ component implements="WWW.interfaces.connector" {
                     .addParam("childContent", arguments.childContent)
                     .addParam("searchQuery",  form.username)
                     .addParam("results",      user)
+                    .addParam("rootElement",  arguments.rootElement)
                     .render();
             }
             else {
@@ -42,6 +43,7 @@ component implements="WWW.interfaces.connector" {
                     .setTemplate("userSearch.cfm")
                     .addParam("options",      preparedOptions)
                     .addParam("childContent", arguments.childContent)
+                    .addParam("rootElement",  arguments.rootElement)
                     .render();
             }
         }
@@ -115,7 +117,8 @@ component implements="WWW.interfaces.connector" {
                 return application.system.settings.getValueOfKey("templateRenderer")
                     .setModulePath(getModulePath())
                     .setTemplate("register.cfm")
-                    .addParam("errors",   errors)
+                    .addParam("errors",      errors)
+                    .addParam("rootElement", arguments.rootElement)
                     .render();
             }
             else {
@@ -132,6 +135,7 @@ component implements="WWW.interfaces.connector" {
                         .addParam("options",      preparedOptions)
                         .addParam("childContent", arguments.childContent)
                         .addParam("user",         user[1])
+                        .addParam("rootElement",  arguments.rootElement)
                         .render();
                 }
                 else {
@@ -142,6 +146,7 @@ component implements="WWW.interfaces.connector" {
                         .setTemplate("noResults.cfm")
                         .addParam("options",      preparedOptions)
                         .addParam("childContent", arguments.childContent)
+                        .addParam("rootElement",  arguments.rootElement)
                         .render();
                 }
             }
@@ -272,6 +277,7 @@ component implements="WWW.interfaces.connector" {
                                 .addParam("themes",        themeFilter.getResult())
                                 .addParam("extProperties", extProperties)
                                 .addParam("result",        result)
+                                .addParam("rootElement",   arguments.rootElement)
                                 .render();
                         }
                         else {
@@ -305,15 +311,16 @@ component implements="WWW.interfaces.connector" {
                                            .render({
                                                userId         = user.getUserId(),
                                                otherParameter = otherParameter
-                                           }, "");
+                                           }, arguments.rootElement, "");
                             }
                             else {
                                 return application.system.settings.getValueOfKey("templateRenderer")
                                     .setModulePath(getModulePath())
                                     .setTemplate("noPermission.cfm")
-                                    .addParam("options",   preparedOptions)
-                                    .addParam("user",      user.getUsername())
-                                    .addParam("subModule", "Private Nachrichten")
+                                    .addParam("options",     preparedOptions)
+                                    .addParam("user",        user.getUsername())
+                                    .addParam("subModule",   "Private Nachrichten")
+                                    .addParam("rootElement", arguments.rootElement)
                                     .render();
                             }
                         }
@@ -325,6 +332,7 @@ component implements="WWW.interfaces.connector" {
                                 .setTemplate("noResults.cfm")
                                 .addParam("options",      preparedOptions)
                                 .addParam("childContent", arguments.childContent)
+                                .addParam("rootElement",  arguments.rootElement)
                                 .render();
                         }
                     }
@@ -355,15 +363,16 @@ component implements="WWW.interfaces.connector" {
                                            .render({
                                                userId         = user.getUserId(),
                                                otherParameter = otherParameter
-                                           }, "");
+                                           }, arguments.rootElement, "");
                             }
                             else {
                                 return application.system.settings.getValueOfKey("templateRenderer")
                                     .setModulePath(getModulePath())
                                     .setTemplate("noPermission.cfm")
-                                    .addParam("options",   preparedOptions)
-                                    .addParam("user",      user.getUsername())
-                                    .addParam("subModule", "Private Nachrichten")
+                                    .addParam("options",     preparedOptions)
+                                    .addParam("user",        user.getUsername())
+                                    .addParam("subModule",   "Private Nachrichten")
+                                    .addParam("rootElement", arguments.rootElement)
                                     .render();
                             }
                         }
@@ -375,6 +384,7 @@ component implements="WWW.interfaces.connector" {
                                 .setTemplate("noResults.cfm")
                                 .addParam("options",      preparedOptions)
                                 .addParam("childContent", arguments.childContent)
+                                .addParam("rootElement",  arguments.rootElement)
                                 .render();
                         }
                     }

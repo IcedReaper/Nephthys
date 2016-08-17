@@ -379,7 +379,7 @@ component {
         }
     }
     
-    private string function renderPageContent(required array pageContent, required string parameter) {
+    private string function renderPageContent(required array pageContent, required string parameter, boolean root = true) {
         var content = "";
         
         for(var i = 1; i <= arguments.pageContent.len(); i++) {
@@ -387,7 +387,8 @@ component {
                 var entityConnector = createObject("component", "WWW.modules." & arguments.pageContent[i].type & ".connector").init();
                 
                 content &= entityConnector.render(arguments.pageContent[i].options,
-                                                  renderPageContent(arguments.pageContent[i].children, arguments.parameter));
+                                                  arguments.root,
+                                                  renderPageContent(arguments.pageContent[i].children, arguments.parameter, false));
             }
         }
         return content;

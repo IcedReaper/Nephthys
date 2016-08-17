@@ -12,7 +12,7 @@ component implements="WWW.interfaces.connector" {
         return getName().replace(".", "/", "ALL");
     }
     
-    public string function render(required struct options, required string childContent) {
+    public string function render(required struct options, required boolean rootElement, required string childContent) {
         // prepare the options required for the theme
         var themeIndividualizer = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.IcedReaper.blog.cfc.prepareData");
         var preparedOptions = themeIndividualizer.prepareOptions(arguments.options);
@@ -33,8 +33,10 @@ component implements="WWW.interfaces.connector" {
             
             return application.system.settings.getValueOfKey("templateRenderer")
                 .setTemplate("/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/lastEntry.cfm")
-                .render(options   = arguments.options,
-                        blogposts = blogpostFilterCtrl.getResult());
+                .addParam("options", arguments.options)
+                .addParam("blogposts", blogpostFilterCtrl.getResult())
+                .addParam("rootElement",  arguments.rootElement)
+                .render();
         }
         
         if(splitParameter.len() == 0) {
@@ -42,7 +44,7 @@ component implements="WWW.interfaces.connector" {
                               .setCount(arguments.options.maxEntries)
                               .execute();
             
-            return renderOverview(arguments.options, blogpostFilterCtrl, 1);
+            return renderOverview(arguments.options, blogpostFilterCtrl, 1, arguments.rootElement);
         }
         else {
             if(splitParameter[1] == "Seite" && splitParameter.len() == 2) {
@@ -51,7 +53,7 @@ component implements="WWW.interfaces.connector" {
                                   .setOffset((splitParameter[2]-1) * arguments.options.maxEntries)
                                   .execute();
                 
-                return renderOverview(arguments.options, blogpostFilterCtrl, splitParameter[2]);
+                return renderOverview(arguments.options, blogpostFilterCtrl, splitParameter[2], arguments.rootElement);
             }
             else if(splitParameter[1] == "Kategorie") {
                 if(splitParameter.len() == 2) {
@@ -60,7 +62,7 @@ component implements="WWW.interfaces.connector" {
                                       .setCount(arguments.options.maxEntries)
                                       .execute();
                     
-                    return renderOverview(arguments.options, blogpostFilterCtrl, 1, splitParameter[2]);
+                    return renderOverview(arguments.options, blogpostFilterCtrl, 1, arguments.rootElement, splitParameter[2]);
                 }
                 else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") {
                     blogpostFilterCtrl.setReleased(true)
@@ -69,7 +71,7 @@ component implements="WWW.interfaces.connector" {
                                       .setOffset((splitParameter[4]-1) * arguments.options.maxEntries)
                                       .execute();
                     
-                    return renderOverview(arguments.options, blogpostFilterCtrl, splitParameter[2]);
+                    return renderOverview(arguments.options, blogpostFilterCtrl, splitParameter[2], arguments.rootElement);
                 }
             }
             else { // Detail view
@@ -86,7 +88,7 @@ component implements="WWW.interfaces.connector" {
                     
                     var commentAdded = checkAndAddComment(blogpost);
                     
-                    return renderDetails(arguments.options, blogpost, commentAdded);
+                    return renderDetails(arguments.options, blogpost, commentAdded, arguments.rootElement);
                 }
                 else {
                     throw(type = "icedreaper.blog.notFound", message = "Could not find the blogpost " & request.page.getParameter(), detail = request.page.getParameter());
@@ -98,6 +100,7 @@ component implements="WWW.interfaces.connector" {
     private string function renderOverview(required struct  options,
                                            required filter  blogpostFilterCtrl,
                                            required numeric actualPage,
+                                           required boolean rootElement,
                                                     string  activeCategory = "") {
         var categoryFilter = new filter().for("category").setUsed(true);
         
@@ -111,10 +114,14 @@ component implements="WWW.interfaces.connector" {
             .addParam("actualPage",         arguments.actualPage)
             .addParam("categories",         categoryFilter.execute().getResult())
             .addParam("activeCategory",     arguments.activeCategory)
+            .addParam("rootElement",        arguments.rootElement)
             .render();
     }
     
-    private string function renderDetails(required struct options, required blogpost blogpost, required boolean commentAdded) {
+    private string function renderDetails(required struct options,
+                                          required blogpost blogpost,
+                                          required boolean commentAdded,
+                                          required boolean rootElement) {
         var statisticsCtrl = new statistics();
         
         statisticsCtrl.add(arguments.blogpost.getBlogpostId());
@@ -125,6 +132,7 @@ component implements="WWW.interfaces.connector" {
             .addParam("options",      arguments.options)
             .addParam("blogpost",     arguments.blogpost)
             .addParam("commentAdded", commentAdded)
+            .addParam("rootElement",  arguments.rootElement)
             .render();
     }
     
