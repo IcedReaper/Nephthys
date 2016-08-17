@@ -91,8 +91,7 @@ component {
             else {
                 new Query().setSQL("UPDATE icedReaper_teamOverview_member
                                        SET sortId           = :sortId,
-                                           lastEditorUserId = :actualUserId,
-                                           lastEditDate     = now()
+                                           lastEditorUserId = :actualUserId
                                      WHERE memberId = :memberId")
                            .addParam(name = "memberId",     value = variables.memberId,         cfsqltype = "cf_sql_numeric")
                            .addParam(name = "sortId",       value = variables.sortId,           cfsqltype = "cf_sql_numeric")

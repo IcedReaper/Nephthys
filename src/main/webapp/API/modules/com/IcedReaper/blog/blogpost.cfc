@@ -363,8 +363,7 @@ component {
                                          commentsNeedToGetPublished = :commentsNeedToGetPublished,
                                          private                    = :private,
                                          statusId                   = :statusId,
-                                         lastEditorUserId           = :userId,
-                                         lastEditDate               = now()
+                                         lastEditorUserId           = :userId
                                    WHERE blogpostId = :blogpostId")
                          .addParam(name = "blogpostId", value = variables.blogpostId, cfsqltype = "cf_sql_numeric")
                          .execute();

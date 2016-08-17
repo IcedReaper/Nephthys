@@ -197,39 +197,39 @@ component {
                                .addParam(name = "userId",       value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric");
         
         if(variables.reviewId == null) {
-            variables.reviewId = new Query().setSQL("INSERT INTO IcedReaper_review_review
-                                                                 (
-                                                                     typeId,
-                                                                     rating,
-                                                                     description,
-                                                                     headline,
-                                                                     introduction,
-                                                                     reviewText,
-                                                                     imagePath,
-                                                                     viewCounter,
-                                                                     link,
-                                                                     private,
-                                                                     creatorUserId,
-                                                                     lastEditorUserId
-                                                                 )
-                                                          VALUES (
-                                                                     :typeId,
-                                                                     :rating,
-                                                                     :description,
-                                                                     :headline,
-                                                                     :introduction,
-                                                                     :reviewText,
-                                                                     :imagePath,
-                                                                     :viewCounter,
-                                                                     :link,
-                                                                     :private,
-                                                                     :userId,
-                                                                     :userId
-                                                                 );
-                                                     SELECT currval('seq_icedreaper_review_reviewId') newReviewId;")
-                                            .execute()
-                                            .getResult()
-                                            .newReviewId[1];
+            variables.reviewId = qSave.setSQL("INSERT INTO IcedReaper_review_review
+                                                           (
+                                                               typeId,
+                                                               rating,
+                                                               description,
+                                                               headline,
+                                                               introduction,
+                                                               reviewText,
+                                                               imagePath,
+                                                               viewCounter,
+                                                               link,
+                                                               private,
+                                                               creatorUserId,
+                                                               lastEditorUserId
+                                                           )
+                                                    VALUES (
+                                                               :typeId,
+                                                               :rating,
+                                                               :description,
+                                                               :headline,
+                                                               :introduction,
+                                                               :reviewText,
+                                                               :imagePath,
+                                                               :viewCounter,
+                                                               :link,
+                                                               :private,
+                                                               :userId,
+                                                               :userId
+                                                           );
+                                               SELECT currval('seq_icedreaper_review_reviewId') newReviewId;")
+                                      .execute()
+                                      .getResult()
+                                      .newReviewId[1];
             
             variables.creator = arguments.user;
             variables.creationDate = now();
@@ -237,22 +237,21 @@ component {
             variables.lastEditDate = now();
         }
         else {
-            new Query().setSQL("UPDATE IcedReaper_review_review
-                                   SET typeId           = :typeId,
-                                       rating           = :rating,
-                                       description      = :description,
-                                       headline         = :headline,
-                                       introduction     = :introduction,
-                                       reviewText       = :reviewText,
-                                       imagePath        = :imagePath,
-                                       viewCounter      = :viewCounter,
-                                       link             = :link,
-                                       private          = :private,
-                                       lastEditorUserId = :userId,
-                                       lastEditDate     = now()
-                                 WHERE reviewId = :reviewId ")
-                       .addParam(name = "reviewId", value = variables.reviewId, cfsqltype = "cf_sql_numeric")
-                       .execute();
+            qSave.setSQL("UPDATE IcedReaper_review_review
+                             SET typeId           = :typeId,
+                                 rating           = :rating,
+                                 description      = :description,
+                                 headline         = :headline,
+                                 introduction     = :introduction,
+                                 reviewText       = :reviewText,
+                                 imagePath        = :imagePath,
+                                 viewCounter      = :viewCounter,
+                                 link             = :link,
+                                 private          = :private,
+                                 lastEditorUserId = :userId
+                           WHERE reviewId = :reviewId ")
+                 .addParam(name = "reviewId", value = variables.reviewId, cfsqltype = "cf_sql_numeric")
+                 .execute();
             
             variables.lastEditor = arguments.user;
             variables.lastEditDate = now();

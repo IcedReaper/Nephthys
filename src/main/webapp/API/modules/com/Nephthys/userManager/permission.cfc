@@ -97,8 +97,7 @@ component {
         else {
             qSave.setSQL("UPDATE nephthys_user_permission
                              SET permissionRoleId = :permissionRoleId,
-                                 lastEditorUserId = :userId,
-                                 lastEditDate     = now()
+                                 lastEditorUserId = :userId
                            WHERE permissionId = :permissionId")
                  .addParam(name = "permissionId", value = variables.permissionId, cfsqltype = "cf_sql_numeric")
                  .execute();

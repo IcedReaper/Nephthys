@@ -252,8 +252,7 @@ component {
                                      content             = :content,
                                      useDynamicUrlSuffix = :useDynamicUrlSuffix,
                                      statusId            = :statusId,
-                                     lastEditorUserId    = :userId,
-                                     lastEditDate        = now()
+                                     lastEditorUserId    = :userId
                                WHERE pageVersionId = :pageVersionId")
                      .addParam(name = "pageVersionId", value = variables.pageVersionId, cfsqltype = "cf_sql_numeric")
                      .execute();

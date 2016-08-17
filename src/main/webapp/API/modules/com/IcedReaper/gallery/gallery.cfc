@@ -285,79 +285,66 @@ component {
     
     
     public gallery function save(required user user) {
+        var qSave = new query().addParam(name = "headline",     value = variables.headline,             cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "description",  value = variables.description,          cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "title",        value = variables.title,                cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "link",         value = variables.link,                 cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "folderName",   value = variables.folderName,           cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "introduction", value = variables.introduction,         cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "story",        value = variables.story,                cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "private",      value = variables.private,              cfsqltype = "cf_sql_bit")
+                               .addParam(name = "statusId",     value = variables.status.getStatusId(), cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "userId",       value = arguments.user.getUserId(),     cfsqltype = "cf_sql_numeric");
+        
         if(variables.galleryId == null) {
-            variables.galleryId = new Query().setSQL("INSERT INTO IcedReaper_gallery_gallery
-                                                                  (
-                                                                      headline,
-                                                                      description,
-                                                                      title,
-                                                                      link,
-                                                                      folderName,
-                                                                      introduction,
-                                                                      story,
-                                                                      private,
-                                                                      statusId,
-                                                                      creatorUserId,
-                                                                      lastEditorUserId,
-                                                                      lastEditDate
-                                                                  )
-                                                           VALUES (
-                                                                      :headline,
-                                                                      :description,
-                                                                      :title,
-                                                                      :link,
-                                                                      :folderName,
-                                                                      :introduction,
-                                                                      :story,
-                                                                      :private,
-                                                                      :statusId,
-                                                                      :creatorUserId,
-                                                                      :lastEditorUserId,
-                                                                      now()
-                                                                  );
-                                                      SELECT currval('seq_icedreaper_gallery_gallery_id') newGalleryId;")
-                                             .addParam(name = "headline",         value = variables.headline,             cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "description",      value = variables.description,          cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "title",            value = variables.title,                cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "link",             value = variables.link,                 cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "folderName",       value = variables.folderName,           cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "introduction",     value = variables.introduction,         cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "story",            value = variables.story,                cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "private",          value = variables.private,              cfsqltype = "cf_sql_bit")
-                                             .addParam(name = "statusId",         value = variables.status.getStatusId(), cfsqltype = "cf_sql_numeric")
-                                             .addParam(name = "creatorUserId",    value = request.user.getUserId(),       cfsqltype = "cf_sql_numeric")
-                                             .addParam(name = "lastEditorUserId", value = request.user.getUserId(),       cfsqltype = "cf_sql_numeric")
-                                             .execute()
-                                             .getResult()
-                                             .newGalleryId[1];
+            variables.galleryId = qSave.setSQL("INSERT INTO IcedReaper_gallery_gallery
+                                                            (
+                                                                headline,
+                                                                description,
+                                                                title,
+                                                                link,
+                                                                folderName,
+                                                                introduction,
+                                                                story,
+                                                                private,
+                                                                statusId,
+                                                                creatorUserId,
+                                                                lastEditorUserId
+                                                            )
+                                                     VALUES (
+                                                                :headline,
+                                                                :description,
+                                                                :title,
+                                                                :link,
+                                                                :folderName,
+                                                                :introduction,
+                                                                :story,
+                                                                :private,
+                                                                :statusId,
+                                                                :userId,
+                                                                :userId
+                                                            );
+                                                SELECT currval('seq_icedreaper_gallery_gallery_id') newGalleryId;")
+                                       .execute()
+                                       .getResult()
+                                       .newGalleryId[1];
         }
         else {
             if(variables.status.getEditable()) {
-                new Query().setSQL("UPDATE IcedReaper_gallery_gallery
-                                       SET headline         = :headline,
-                                           description      = :description,
-                                           title            = :title,
-                                           link             = :link,
-                                           folderName       = :folderName,
-                                           introduction     = :introduction,
-                                           story            = :story,
-                                           private          = :private,
-                                           statusId         = :statusId,
-                                           lastEditorUserId = :lastEditorUserId,
-                                           lastEditDate     = now()
-                                     WHERE galleryId = :galleryId")
-                           .addParam(name = "galleryId",        value = variables.galleryId,            cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "headline",         value = variables.headline,             cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "description",      value = variables.description,          cfsqltype = "cf_sql_varchar", null = variables.description == "")
-                           .addParam(name = "title",            value = variables.title,                cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "link",             value = variables.link,                 cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "folderName",       value = variables.folderName,           cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "introduction",     value = variables.introduction,         cfsqltype = "cf_sql_varchar", null = variables.introduction == "")
-                           .addParam(name = "story",            value = variables.story,                cfsqltype = "cf_sql_varchar", null = variables.story == "")
-                           .addParam(name = "private",          value = variables.private,              cfsqltype = "cf_sql_bit")
-                           .addParam(name = "statusId",         value = variables.status.getStatusId(), cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "lastEditorUserId", value = request.user.getUserId(),       cfsqltype = "cf_sql_numeric")
-                           .execute();
+                qSave.setSQL("UPDATE IcedReaper_gallery_gallery
+                                 SET headline         = :headline,
+                                     description      = :description,
+                                     title            = :title,
+                                     link             = :link,
+                                     folderName       = :folderName,
+                                     introduction     = :introduction,
+                                     story            = :story,
+                                     private          = :private,
+                                     statusId         = :statusId,
+                                     lastEditorUserId = :userId
+                               WHERE galleryId = :galleryId")
+                     .addParam(name = "galleryId", value = variables.galleryId, cfsqltype = "cf_sql_numeric")
+                     .execute();
                 
                 if(variables.picturesChanged) {
                     for(var p = 1; p <= variables.pictures.len(); p++) {

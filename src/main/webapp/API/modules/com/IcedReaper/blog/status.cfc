@@ -230,8 +230,7 @@ component {
                                            editable         = :editable,
                                            deleteable       = :deleteable,
                                            showInTasklist   = :showInTasklist,
-                                           lastEditorUserId = :userId,
-                                           lastEditDate     = now()
+                                           lastEditorUserId = :userId
                                      WHERE statusId = :statusId")
                            .addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric")
                            .execute();

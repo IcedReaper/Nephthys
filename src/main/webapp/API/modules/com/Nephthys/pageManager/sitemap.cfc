@@ -138,8 +138,7 @@ component {
         else {
             qSave.setSQL("UPDATE nephthys_page_sitemap
                              SET statusId         = :statusId,
-                                 lastEditorUserId = :userId,
-                                 lastEditDate     = now()
+                                 lastEditorUserId = :userId
                            WHERE sitemapId = :sitemapId")
                  .addParam(name = "sitemapId", value = variables.sitemapId, cfsqltype = "cf_sql_numeric")
                  .execute();

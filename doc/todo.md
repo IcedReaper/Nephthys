@@ -19,8 +19,6 @@
     - privateMessage.message.read() per filter regeln
     - review.review.loadGenre() per filter regeln
     - status - getNextStatus
-- lastEditDate per trigger setzen
-- gallery.picture und blog.picture mit creator / lastEditor ausstatten
 
 ## Allgemein
     1. Validierungen

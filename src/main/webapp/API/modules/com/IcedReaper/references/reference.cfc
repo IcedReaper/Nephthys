@@ -160,8 +160,7 @@ component {
                                  homepage         = :homepage,
                                  imageName        = :imageName,
                                  position         = :position,
-                                 lastEditorUserId = :userId,
-                                 lastEditDate     = now()
+                                 lastEditorUserId = :userId
                            WHERE referenceId = :referenceId ")
                  .addParam(name = "referenceId", value = variables.referenceId, cfsqltype = "cf_sql_numeric")
                  .execute();

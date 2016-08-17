@@ -8,9 +8,9 @@ nephthysAdminApp
                     });
         };
         
-        $scope.save = function (picture) {
+        $scope.save = function (pictureDetails) {
             blogService
-                .updatePicture(picture);
+                .updatePicture($routeParams.blogpostId, pictureDetails);
         };
         
         $scope.delete = function (pictureId) {

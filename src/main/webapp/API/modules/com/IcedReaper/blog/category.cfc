@@ -78,8 +78,7 @@ component {
             if(variables.attributesChanged) {
                 qSave.setSQL("UPDATE IcedReaper_blog_category
                                  SET name             = :name,
-                                     lastEditorUserId = :userId,
-                                     lastEditDate     = now()
+                                     lastEditorUserId = :userId
                                WHERE categoryId = :categoryId")
                      .addParam(name = "categoryId", value = variables.categoryId, cfsqltype = "cf_sql_numeric")
                      .execute();

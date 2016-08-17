@@ -1,4 +1,6 @@
 component {
+    import "API.modules.com.Nephthys.userManager.user";
+    
     public picture function init(required numeric pictureId) {
         variables.pictureId = arguments.pictureId;
         
@@ -143,65 +145,79 @@ component {
     public numeric function getSortId() {
         return variables.sortId;
     }
+    public user function getCreator() {
+        return duplicate(variables.creator);
+    }
+    public date function getCreationDate() {
+        return variables.creationDate;
+    }
+    public user function getLastEditor() {
+        return duplicate(variables.lastEditor);
+    }
+    public date function getLastEditDate() {
+        return variables.lastEditDate;
+    }
     
     
     public picture function save(required user user) {
+        var qSave = new query().addParam(name = "pictureFileName",   value = variables.pictureFileName,    cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "thumbnailFileName", value = variables.thumbnailFileName,  cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "title",             value = left(variables.title, 250),   cfsqltype = "cf_sql_varchar", null = variables.title == "")
+                               .addParam(name = "alt",               value = left(variables.alt, 250),     cfsqltype = "cf_sql_varchar", null = variables.alt == "")
+                               .addParam(name = "caption",           value = left(variables.caption, 300), cfsqltype = "cf_sql_varchar", null = variables.caption == "")
+                               .addParam(name = "userId",            value = arguments.user.getUserId(),   cfsqltype = "cf_sql_numeric");
+        
         if(variables.pictureId == null) {
-            variables.pictureId = new Query().setSQL("INSERT INTO IcedReaper_gallery_picture
-                                                                  (
-                                                                      galleryId,
-                                                                      pictureFileName,
-                                                                      thumbnailFileName,
-                                                                      title,
-                                                                      alt,
-                                                                      caption,
-                                                                      sortId
-                                                                  )
-                                                           VALUES (
-                                                                      :galleryId,
-                                                                      :pictureFileName,
-                                                                      :thumbnailFileName,
-                                                                      :title,
-                                                                      :alt,
-                                                                      :caption,
-                                                                      (SELECT CASE
-                                                                                WHEN max(sortId) IS NOT NULL THEN
-                                                                                  max(sortId)+1
-                                                                                ELSE
-                                                                                  1
-                                                                              END newSortId
-                                                                         FROM IcedReaper_gallery_picture
-                                                                        WHERE galleryId = :galleryId)
-                                                                  );
-                                                      SELECT currval('seq_icedreaper_gallery_picture_id') newPictureId;")
-                                             .addParam(name = "galleryId",         value = variables.galleryId,          cfsqltype = "cf_sql_numeric")
-                                             .addParam(name = "pictureFileName",   value = variables.pictureFileName,    cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "thumbnailFileName", value = variables.thumbnailFileName,  cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "title",             value = left(variables.title, 250),   cfsqltype = "cf_sql_varchar", null = variables.title == "")
-                                             .addParam(name = "alt",               value = left(variables.alt, 250),     cfsqltype = "cf_sql_varchar", null = variables.alt == "")
-                                             .addParam(name = "caption",           value = left(variables.caption, 300), cfsqltype = "cf_sql_varchar", null = variables.caption == "")
-                                             .execute()
-                                             .getResult()
-                                             .newPictureId[1];
+            variables.pictureId = qSave.setSQL("INSERT INTO IcedReaper_gallery_picture
+                                                            (
+                                                                galleryId,
+                                                                pictureFileName,
+                                                                thumbnailFileName,
+                                                                title,
+                                                                alt,
+                                                                caption,
+                                                                sortId,
+                                                                creatorUserId,
+                                                                lastEditorUserId
+                                                            )
+                                                     VALUES (
+                                                                :galleryId,
+                                                                :pictureFileName,
+                                                                :thumbnailFileName,
+                                                                :title,
+                                                                :alt,
+                                                                :caption,
+                                                                (SELECT CASE
+                                                                          WHEN max(sortId) IS NOT NULL THEN
+                                                                            max(sortId)+1
+                                                                          ELSE
+                                                                            1
+                                                                        END newSortId
+                                                                   FROM IcedReaper_gallery_picture
+                                                                  WHERE galleryId = :galleryId),
+                                                                :userId,
+                                                                :userId
+                                                            );
+                                                SELECT currval('seq_icedreaper_gallery_picture_id') newPictureId;")
+                                       .addParam(name = "galleryId", value = variables.galleryId, cfsqltype = "cf_sql_numeric")
+                                       .execute()
+                                       .getResult()
+                                       .newPictureId[1];
         }
         else {
             if(variables.attributesChanged) {
-                new Query().setSQL("UPDATE IcedReaper_gallery_picture
-                                       SET pictureFileName   = :pictureFileName,
-                                           thumbnailFileName = :thumbnailFileName,
-                                           title             = :title,
-                                           alt               = :alt,
-                                           caption           = :caption,
-                                           sortId            = :sortId
-                                     WHERE pictureId = :pictureId")
-                           .addParam(name = "pictureId",         value = variables.pictureId,          cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "pictureFileName",   value = variables.pictureFileName,    cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "thumbnailFileName", value = variables.thumbnailFileName,  cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "title",             value = left(variables.title, 250),   cfsqltype = "cf_sql_varchar", null = variables.title == "")
-                           .addParam(name = "alt",               value = left(variables.alt, 250),     cfsqltype = "cf_sql_varchar", null = variables.alt == "")
-                           .addParam(name = "caption",           value = left(variables.caption, 300), cfsqltype = "cf_sql_varchar", null = variables.caption == "")
-                           .addParam(name = "sortId",            value = variables.sortId,             cfsqltype = "cf_sql_numeric")
-                           .execute();
+                qSave.setSQL("UPDATE IcedReaper_gallery_picture
+                                 SET pictureFileName   = :pictureFileName,
+                                     thumbnailFileName = :thumbnailFileName,
+                                     title             = :title,
+                                     alt               = :alt,
+                                     caption           = :caption,
+                                     sortId            = :sortId,
+                                     lastEditorUserId  = :userId
+                               WHERE pictureId = :pictureId")
+                     .addParam(name = "pictureId", value = variables.pictureId, cfsqltype = "cf_sql_numeric")
+                     .addParam(name = "sortId",    value = variables.sortId,    cfsqltype = "cf_sql_numeric")
+                     .execute();
             }
         }
         
@@ -239,6 +255,10 @@ component {
                 variables.alt               = qPicture.alt[1];
                 variables.caption           = qPicture.caption[1];
                 variables.sortId            = qPicture.sortId[1];
+                variables.creator           = new user(qPicture.creatorUserId[1]);
+                variables.creationDate      = qPicture.creationDate[1];
+                variables.lastEditor        = new user(qPicture.lastEditorUserId[1]);
+                variables.lastEditDate      = qPicture.lastEditDate[1];
             }
             else {
                 throw(type = "pictureNotFound", message = "Could not find the imahe", detail = variables.pictureId);
@@ -252,6 +272,10 @@ component {
             variables.alt               = "";
             variables.caption           = "";
             variables.sortId            = 0;
+            variables.creator           = request.user;
+            variables.creationDate      = now();
+            variables.lastEditor        = request.user;
+            variables.lastEditDate      = now();
         }
     }
     

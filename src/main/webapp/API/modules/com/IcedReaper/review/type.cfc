@@ -63,8 +63,7 @@ component {
         else {
             qSave.setSQL("UPDATE IcedReaper_review_type
                              SET name             = :name,
-                                 lastEditorUserId = :lastEditorUserId,
-                                 lastEditDate     = now()
+                                 lastEditorUserId = :lastEditorUserId
                            WHERE typeId = :typeId")
                  .addParam(name = "typeId", value = variables.typeId, cfsqltype = "cf_sql_numeric")
                  .execute();

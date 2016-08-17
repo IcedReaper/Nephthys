@@ -95,8 +95,7 @@ component {
             new Query().setSQL("UPDATE Nephthys_user_extPropertyKey
                                    SET description      = :description,
                                        type             = :type,
-                                       lastEditorUserId = :userId,
-                                       lastEditDate     = now()
+                                       lastEditorUserId = :userId
                                  WHERE extPropertyKeyId = :extPropertyKeyId ")
                       .addParam(name = "extPropertyKeyId", value = variables.extPropertyKeyId, cfsqltype = "cf_sql_numeric")
                       .execute();

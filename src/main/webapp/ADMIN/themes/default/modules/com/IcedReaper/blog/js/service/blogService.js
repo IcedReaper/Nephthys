@@ -130,8 +130,11 @@ nephthysAdminApp
                 });
             },
             
-            updatePicture: function (picture) {
-                return $http.post('/ajax/com/IcedReaper/blog/updatePicture', picture);
+            updatePicture: function (blogpostId, pictureDetails) {
+                return $http.post('/ajax/com/IcedReaper/blog/updatePicture', {
+                    blogpostId:     blogpostId,
+                    pictureDetails: pictureDetails
+                });
             },
             
             deletePicture: function (blogpostId, pictureId) {

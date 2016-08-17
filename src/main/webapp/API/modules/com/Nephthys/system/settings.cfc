@@ -43,8 +43,7 @@ component extends="API.abstractClasses.settings" {
                     if(! variables.settings[key].readonly || (variables.settings[key].readonly && variables.settings[key].keyExists("forced"))) {
                         new Query().setSQL("UPDATE nephthys_serverSetting
                                                SET value            = :value,
-                                                   lastEditorUserId = :userId,
-                                                   lastEditDate     = now()
+                                                   lastEditorUserId = :userId
                                              WHERE key         = :key
                                                AND application = :application")
                                    .addParam(name = "value",       value = convertToSaveFormat(key),            cfsqltype = "cf_sql_varchar")

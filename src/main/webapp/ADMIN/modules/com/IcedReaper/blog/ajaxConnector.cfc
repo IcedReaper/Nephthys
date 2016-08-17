@@ -451,17 +451,15 @@
         }
     }
     
-    remote boolean function updatePicture(required numeric pictureId,
-                                          required string  caption,
-                                          required string  alt,
-                                          required string  title) {
-        var blogpost = new blogpost(picture.getBlogpostId());
-        var picture = new picture(arguments.pictureId, blogpost);
+    remote boolean function updatePicture(required numeric blogpostId,
+                                          required struct  pictureDetails) {
+        var blogpost = new blogpost(arguments.blogpostId);
+        var picture = new picture(arguments.pictureDetails.pictureId, blogpost);
         
         if(blogpost.isEditable(request.user)) {
-            picture.setCaption(arguments.caption)
-                   .setAlt(arguments.alt)
-                   .setTitle(arguments.title)
+            picture.setCaption(arguments.pictureDetails.caption)
+                   .setAlt(arguments.pictureDetails.alt)
+                   .setTitle(arguments.pictureDetails.title)
                    .save(request.user);
             
             return true;

@@ -1223,3 +1223,62 @@ alter table IcedReaper_contactForm_reply rename column requestId to contactReque
 
 alter table nephthys_module add column canBeRootElement boolean default false NOT NULL;
 alter table nephthys_module add column canBeRootElementMultipleTimes boolean default false NOT NULL;
+
+
+alter table IcedReaper_blog_picture add column creatorUserId integer references nephthys_user;
+alter table IcedReaper_blog_picture add column creationDate timestamp with time zone not null default now();
+
+alter table IcedReaper_blog_picture add column lastEditorUserId integer references nephthys_user;
+alter table IcedReaper_blog_picture add column lastEditDate timestamp with time zone not null default now();
+
+update IcedReaper_blog_picture SET creatorUserId = 1, lastEditorUserId = 1;
+
+alter table IcedReaper_blog_picture alter column creatorUserId set not null;
+alter table IcedReaper_blog_picture alter column lastEditorUserId set not null;
+
+alter table IcedReaper_gallery_picture add column creatorUserId integer references nephthys_user;
+alter table IcedReaper_gallery_picture add column creationDate timestamp with time zone not null default now();
+
+alter table IcedReaper_gallery_picture add column lastEditorUserId integer references nephthys_user;
+alter table IcedReaper_gallery_picture add column lastEditDate timestamp with time zone not null default now();
+
+update IcedReaper_gallery_picture SET creatorUserId = 1, lastEditorUserId = 1;
+
+alter table IcedReaper_gallery_picture alter column creatorUserId set not null;
+alter table IcedReaper_gallery_picture alter column lastEditorUserId set not null;
+
+
+CREATE FUNCTION updateLastEditDate() RETURNS trigger AS $updateLastEditDate$
+    BEGIN
+        NEW.lastEditDate := current_timestamp;
+        RETURN NEW;
+    END;
+$updateLastEditDate$ LANGUAGE plpgsql;
+
+create trigger trg_updateLastEditDate BEFORE UPDATE ON IcedReaper_blog_blogpost FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+create trigger trg_updateLastEditDate BEFORE UPDATE ON IcedReaper_blog_category FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+create trigger trg_updateLastEditDate BEFORE UPDATE ON IcedReaper_blog_picture    FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+create trigger trg_updateLastEditDate BEFORE UPDATE ON IcedReaper_blog_status FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+
+create trigger trg_updateLastEditDate BEFORE UPDATE ON IcedReaper_gallery_gallery FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+create trigger trg_updateLastEditDate BEFORE UPDATE ON IcedReaper_gallery_category FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+create trigger trg_updateLastEditDate BEFORE UPDATE ON IcedReaper_gallery_picture FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+create trigger trg_updateLastEditDate BEFORE UPDATE ON IcedReaper_gallery_status FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+
+create trigger trg_updateLastEditDate BEFORE UPDATE ON IcedReaper_references_reference FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+
+create trigger trg_updateLastEditDate BEFORE UPDATE ON IcedReaper_review_genre FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+create trigger trg_updateLastEditDate BEFORE UPDATE ON IcedReaper_review_review FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+create trigger trg_updateLastEditDate BEFORE UPDATE ON IcedReaper_review_type FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+
+create trigger trg_updateLastEditDate BEFORE UPDATE ON IcedReaper_teamoverview_member FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+
+create trigger trg_updateLastEditDate BEFORE UPDATE ON nephthys_page_pageVersion FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+create trigger trg_updateLastEditDate BEFORE UPDATE ON nephthys_page_sitemap FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+create trigger trg_updateLastEditDate BEFORE UPDATE ON nephthys_page_status FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+
+create trigger trg_updateLastEditDate BEFORE UPDATE ON nephthys_serversetting FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+
+create trigger trg_updateLastEditDate BEFORE UPDATE ON nephthys_user_extPropertyKey FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+create trigger trg_updateLastEditDate BEFORE UPDATE ON nephthys_user_permission FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+create trigger trg_updateLastEditDate BEFORE UPDATE ON nephthys_user_status FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
