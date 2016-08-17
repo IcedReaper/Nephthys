@@ -1282,3 +1282,6 @@ create trigger trg_updateLastEditDate BEFORE UPDATE ON nephthys_serversetting FO
 create trigger trg_updateLastEditDate BEFORE UPDATE ON nephthys_user_extPropertyKey FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
 create trigger trg_updateLastEditDate BEFORE UPDATE ON nephthys_user_permission FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
 create trigger trg_updateLastEditDate BEFORE UPDATE ON nephthys_user_status FOR EACH ROW WHEN (OLD.* IS DISTINCT FROM NEW.*) EXECUTE PROCEDURE updateLastEditDate();
+
+alter table nephthys_module add column actualVersion character varying(25) not null default '1.0';
+alter table nephthys_module add column actualVersionNumber integer not null default 1;

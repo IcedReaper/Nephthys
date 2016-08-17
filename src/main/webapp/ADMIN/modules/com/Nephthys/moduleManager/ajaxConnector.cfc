@@ -222,13 +222,15 @@ component {
     
     private struct function prepareModule(required module module) {
         return {
-            "moduleId"       = arguments.module.getModuleId(),
-            "moduleName"     = arguments.module.getModuleName(),
-            "description"    = arguments.module.getDescription(),
-            "active"         = arguments.module.getActiveStatus(),
-            "systemModule"   = arguments.module.getSystemModule(),
-            "availableWWW"   = arguments.module.getAvailableWWW(),
-            "availableADMIN" = arguments.module.getAvailableADMIN()
+            "moduleId"            = arguments.module.getModuleId(),
+            "moduleName"          = arguments.module.getModuleName(),
+            "description"         = arguments.module.getDescription(),
+            "active"              = arguments.module.getActiveStatus(),
+            "systemModule"        = arguments.module.getSystemModule(),
+            "availableWWW"        = arguments.module.getAvailableWWW(),
+            "availableADMIN"      = arguments.module.getAvailableADMIN(),
+            "actualVersion"       = arguments.module.getActualVersion(),
+            "actualVersionNumber" = arguments.module.getActualVersionNumber()
         };
     }
 }

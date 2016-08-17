@@ -138,6 +138,16 @@ component {
         
         return this;
     }
+    public module function setActualVersion(required string actualVersion) {
+        // todo: check for install or update
+        variables.actualVersion = arguments.actualVersion;
+        return this;
+    }
+    public module function setActualVersionNumber(required numeric actualVersionNumber) {
+        // todo: check for install or update
+        variables.actualVersionNumber = arguments.actualVersionNumber;
+        return this;
+    }
     
     
     public numeric function getModuleId() {
@@ -187,6 +197,12 @@ component {
     public boolean function getUseDynamicUrlSuffix() {
         return variables.useDynamicUrlSuffix == 1;
     }
+    public string function getActualVersion() {
+        return variables.actualVersion;
+    }
+    public numeric function getActualVersionNumber() {
+        return variables.actualVersionNumber;
+    }
     
     
     public module function save(required user user) {
@@ -199,7 +215,9 @@ component {
                                .addParam(name = "availableADMIN",                value = variables.availableADMIN,                cfsqltype = "cf_sql_bit")
                                .addParam(name = "useDynamicUrlSuffix",           value = variables.useDynamicUrlSuffix,           cfsqltype = "cf_sql_bit")
                                .addParam(name = "canBeRootElement",              value = variables.canBeRootElement,              cfsqltype = "cf_sql_bit")
-                               .addParam(name = "canBeRootElementMultipleTimes", value = variables.canBeRootElementMultipleTimes, cfsqltype = "cf_sql_bit");
+                               .addParam(name = "canBeRootElementMultipleTimes", value = variables.canBeRootElementMultipleTimes, cfsqltype = "cf_sql_bit")
+                               .addParam(name = "actualVersion",                 value = variables.actualVersion,                 cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "actualVersionNumber",           value = variables.actualVersionNumber,           cfsqltype = "cf_sql_numeric");
         
         transaction {
             if(variables.moduleId == null) {
@@ -214,7 +232,9 @@ component {
                                                                          availableADMIN,
                                                                          useDynamicUrlSuffix,
                                                                          canBeRootElement,
-                                                                         canBeRootElementMultipleTimes
+                                                                         canBeRootElementMultipleTimes,
+                                                                         actualVersion,
+                                                                         actualVersionNumber
                                                                      )
                                                               VALUES (
                                                                          :moduleName,
@@ -226,7 +246,9 @@ component {
                                                                          :availableADMIN,
                                                                          :useDynamicUrlSuffix,
                                                                          :canBeRootElement,
-                                                                         :canBeRootElementMultipleTimes
+                                                                         :canBeRootElementMultipleTimes,
+                                                                         :actualVersion,
+                                                                         :actualVersionNumber
                                                                      );
                                                         SELECT currval('seq_nephthys_module_id') newModuleId;")
                                                 .execute()
@@ -244,7 +266,9 @@ component {
                                            availableADMIN                = :availableADMIN,
                                            useDynamicUrlSuffix           = :useDynamicUrlSuffix,
                                            canBeRootElement              = :canBeRootElement,
-                                           canBeRootElementMultipleTimes = :canBeRootElementMultipleTimes
+                                           canBeRootElementMultipleTimes = :canBeRootElementMultipleTimes,
+                                           actualVersion                 = :actualVersion,
+                                           actualVersionNumber           = :actualVersionNumber
                                      WHERE moduleId    = :moduleId")
                            .addParam(name = "moduleId",       value = variables.moduleId,       cfsqltype = "cf_sql_numeric")
                            .execute();
@@ -314,6 +338,8 @@ component {
                 variables.useDynamicUrlSuffix           = qModuleDetails.useDynamicUrlSuffix[1];
                 variables.canBeRootElement              = qModuleDetails.canBeRootElement[1];
                 variables.canBeRootElementMultipleTimes = qModuleDetails.canBeRootElementMultipleTimes[1];
+                variables.actualVersion                 = qModuleDetails.actualVersion[1];
+                variables.actualVersionNumber           = qModuleDetails.actualVersionNumber[1];
             }
             else {
                 throw(type = "nephthys.notFound.module", message = "Could not find module by ID ", detail = variables.moduleId);
@@ -330,6 +356,8 @@ component {
             variables.useDynamicUrlSuffix           = false;
             variables.canBeRootElement              = false;
             variables.canBeRootElementMultipleTimes = false;
+            variables.actualVersion                 = "1.0";
+            variables.actualVersionNumber           = 1;
         }
     }
     

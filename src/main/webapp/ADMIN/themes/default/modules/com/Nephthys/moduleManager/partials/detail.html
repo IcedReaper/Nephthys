@@ -66,6 +66,12 @@
                         <p class="form-control-static">{{module.availableADMIN ? 'Ja' : 'Nein'}}</p>
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 form-control-label">Aktuell installierte Versions</label>
+                    <div class="col-sm-8">
+                        <p class="form-control-static">{{module.actualVersion}}</p>
+                    </div>
+                </div>
                 
                 <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
             </div>

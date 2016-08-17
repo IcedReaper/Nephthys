@@ -57,6 +57,7 @@
         <th>ID</th>
         <th>Modul</th>
         <th>Modulname</th>
+        <th>Aktuelle Version</th>
         <th>WWW</th>
         <th>ADMIN</th>
         <th>Aktionen</th>
@@ -68,6 +69,7 @@
                 <a href="#/{{module.moduleId}}">{{module.description}}</a>
             </td>
             <td>{{module.moduleName}}</td>
+            <td>{{module.actualVersion}}</td>
             <td>
                 <i class="fa fa-check fa-border text-success" ng-if="module.availableWWW"></i>
                 <i class="fa fa-times fa-border text-danger" ng-if="! module.availableWWW"></i>
