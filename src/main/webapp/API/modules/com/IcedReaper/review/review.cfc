@@ -173,9 +173,9 @@ component {
         return variables.private == 1;
     }
     
-    public boolean function isEditable(required numeric userId) {
+    public boolean function isEditable(required user user) {
         if(variables.private) {
-            return variables.creatorUserId == arguments.userId;
+            return variables.creator.getUserId() == arguments.user.getUserId();
         }
         else {
             return true;

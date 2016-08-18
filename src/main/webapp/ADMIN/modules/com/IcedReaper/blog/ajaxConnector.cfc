@@ -128,7 +128,7 @@
                                         required string  categoryName) {
         var blogpost = new blogpost(arguments.blogpostId);
         
-        if(blogpost.isEditable(request.user.getUserId())) {
+        if(blogpost.isEditable(request.user)) {
             var newCategory = new category(arguments.categoryId);
             if(arguments.categoryId == null) {
                 newCategory.setName(arguments.categoryName)

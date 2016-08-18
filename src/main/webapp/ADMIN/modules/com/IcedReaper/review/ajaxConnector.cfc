@@ -73,7 +73,7 @@ component {
                                  required boolean private) {
         var review = new review(arguments.reviewId);
         
-        if(review.isEditable(request.user.getUserId())) {
+        if(review.isEditable(request.user)) {
             review.setTypeId(arguments.typeId)
                   .setRating(arguments.rating)
                   .setDescription(arguments.description)
@@ -94,7 +94,7 @@ component {
     remote string function uploadImage(required numeric reviewId) {
         var review = new review(arguments.reviewId);
         
-        if(review.isEditable(request.user.getUserId())) {
+        if(review.isEditable(request.user)) {
             review.uploadImage()
                   .save(request.user);
             
@@ -108,7 +108,7 @@ component {
     remote boolean function delete(required numeric reviewId) {
         new review(arguments.reviewId);
         
-        if(review.isEditable(request.user.getUserId())) {
+        if(review.isEditable(request.user)) {
             review.delete(request.user);
         
             return true;
@@ -136,7 +136,7 @@ component {
                                      required string  genreName) {
         var review = new review(arguments.reviewId);
         
-        if(review.isEditable(request.user.getUserId())) {
+        if(review.isEditable(request.user)) {
             if(arguments.genreId == null) {
                 var genre = new genre(null).setName(arguments.genreName)
                                            .save(request.user);
@@ -159,7 +159,7 @@ component {
                                         required numeric genreId) {
         var review = new review(arguments.reviewId);
         
-        if(review.isEditable(request.user.getUserId())) {
+        if(review.isEditable(request.user)) {
             review
                 .removeGenreById(arguments.genreId)
                 .save(request.user);
@@ -282,7 +282,7 @@ component {
                 "link"         = arguments.review.getLink(),
                 "viewCounter"  = arguments.review.getViewCounter(),
                 "private"      = arguments.review.getPrivate(),
-                "isEditable"   = arguments.review.isEditable(request.user.getUserId()),
+                "isEditable"   = arguments.review.isEditable(request.user),
                 "creator"      = getUserInformation(arguments.review.getCreator()),
                 "lastEditor"   = getUserInformation(arguments.review.getLastEditor())
         };

@@ -4,15 +4,6 @@
 - required approvals
 - +Attribut zu Module => Uses permissions (if false hide in permission screens)
 - Globale Tasklist (dashboard | com.IcedReaper.tileDashboard) variabel gestalten
-- Check: Komponenten umbauen: Load nur noch ausführen, wenn nur ID angegeben ist | Init mit allen parametern ausstatten / alle außer ID auf default => in variables umbauen | Ermöglicht Parent in Child object ohne Endlosschleife
-    - bisher umgesetzt
-        - IcedReaper.Blog
-            - comment
-            - picture
-        - Nephthys.moduleManager
-            - option
-        - IcedReaper.ContactForm
-            - reply
 
 ## Allgemein
     1. Validierungen
@@ -181,9 +172,8 @@
     4. (CFIDE/LuceeAdmin) Serversettings in Applikation verankern
     5. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
     6. Verwendung von nicht Klassenattributen (z.B. request.user) aus den Klassen entfernen und als Parameter erwarten
-    7. Berechtigungen (Admin, Editor, User) in Module einbauen
-    8. Creator und lastEditor direkt als Objekte in Objekten erstellen
-    9. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
-    10. Charts responsive mit maxHeight!?
-    11. Checkout Lucee REST Servlet (web.xml)
-    12. Client Side validation für Formulare
+    7. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
+    8. Charts responsive mit maxHeight!?
+    9. Checkout Lucee REST Servlet (web.xml)
+    10. Client Side validation für Formulare
+    11. Check: Komponenten umbauen: Load nur noch ausführen, wenn nur ID angegeben ist | Init mit allen parametern ausstatten / alle außer ID auf default => in variables umbauen | Ermöglicht Parent in Child object ohne Endlosschleife

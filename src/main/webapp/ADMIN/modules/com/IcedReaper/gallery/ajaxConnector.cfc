@@ -61,7 +61,7 @@ component {
                                 required boolean private) {
         var gallery = new gallery(arguments.galleryId);
         
-        if(gallery.isEditable(request.user.getUserId())) {
+        if(gallery.isEditable(request.user)) {
             if(arguments.galleryId == null) {
                 gallery.setFoldername(arguments.foldername);
             }
@@ -85,7 +85,7 @@ component {
     remote boolean function delete(required numeric galleryId) {
         var gallery = new gallery(arguments.galleryId);
         
-        if(gallery.isEditable(request.user.getUserId())) {
+        if(gallery.isEditable(request.user)) {
             gallery.delete(request.user);
             
             return true;
@@ -100,7 +100,7 @@ component {
                                         required string  categoryName) {
         var gallery = new gallery(arguments.galleryId);
         
-        if(gallery.isEditable(request.user.getUserId())) {
+        if(gallery.isEditable(request.user)) {
             var newCategory = new category(arguments.categoryId);
             if(arguments.categoryId == null) {
                 newCategory.setName(arguments.categoryName)
@@ -120,7 +120,7 @@ component {
                                           required numeric categoryId) {
         var gallery = new gallery(arguments.galleryId);
         
-        if(gallery.isEditable(request.user.getUserId())) {
+        if(gallery.isEditable(request.user)) {
             gallery.removeCategory(arguments.categoryId);
             
             return true;
@@ -133,7 +133,7 @@ component {
     remote boolean function uploadPictures(required numeric galleryId) {
         var gallery = new gallery(arguments.galleryId);
         
-        if(gallery.isEditable(request.user.getUserId())) {
+        if(gallery.isEditable(request.user)) {
             var newPicture = new picture(null);
             newPicture.setGalleryId(arguments.galleryId)
                       .upload(request.user);
@@ -154,7 +154,7 @@ component {
         var picture = new picture(arguments.pictureId);
         var gallery = new gallery(picture.getGalleryId());
         
-        if(gallery.isEditable(request.user.getUserId())) {
+        if(gallery.isEditable(request.user)) {
             picture.setCaption(arguments.caption)
                    .setAlt(arguments.alt)
                    .setTitle(arguments.title)
@@ -171,7 +171,7 @@ component {
         var picture = new picture(arguments.pictureId);
         var gallery = new gallery(picture.getGalleryId());
         
-        if(gallery.isEditable(request.user.getUserId())) {
+        if(gallery.isEditable(request.user)) {
             gallery.removePicture(arguments.pictureId, request.user);
             
             return preparePictureStruct(gallery.getPictures(), gallery.getRelativePath() & "/");
@@ -443,7 +443,7 @@ component {
             "pictureCount" = arguments.gallery.getPictureCount(),
             "categories"   = categories,
             "private"      = arguments.gallery.getPrivate(),
-            "isEditable"   = arguments.gallery.isEditable(request.user.getUserId()),
+            "isEditable"   = arguments.gallery.isEditable(request.user),
             "statusId"     = arguments.gallery.getStatus().getStatusId(),
             "creator"      = getUserInformation(arguments.gallery.getCreator()),
             "creationDate" = formatCtrl.formatDate(arguments.gallery.getCreationDate()),

@@ -190,18 +190,12 @@ component {
         return variables.pictures;
     }
     public user function getCreator() {
-        if(! variables.keyExists("creator")) {
-            variables.creator = new user(variables.creatorUserId);
-        }
         return variables.creator;
     }
     public date function getCreationDate() {
         return variables.creationDate;
     }
     public user function getLastEditor() {
-        if(! variables.keyExists("lastEditor")) {
-            variables.lastEditor = new user(variables.lastEditorUserId);
-        }
         return variables.lastEditor;
     }
     public date function getLastEditDate() {
@@ -223,9 +217,9 @@ component {
         return variables.private == 1;
     }
     
-    public boolean function isEditable(required numeric userId) {
+    public boolean function isEditable(required user user) {
         if(variables.private) {
-            if(! variables.creatorUserId == arguments.userId) {
+            if(! variables.creator.getUserId() == arguments.user.getUserId()) {
                 return false;
             }
         }
@@ -377,7 +371,7 @@ component {
                                                     )")
                                .addParam(name = "galleryId",     value = variables.galleryId,                     cfsqltype = "cf_sql_numeric")
                                .addParam(name = "categoryId",    value = variables.categories[c].getCategoryId(), cfsqltype = "cf_sql_numeric")
-                               .addParam(name = "creatorUserId", value = request.user.getUserId(),                cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "creatorUserId", value = arguments.user.getUserId(),              cfsqltype = "cf_sql_numeric")
                                .execute();
                 }
                 catch(any e) {
@@ -422,9 +416,9 @@ component {
                 variables.introduction     = qGallery.introduction[1];
                 variables.title            = qGallery.title[1];
                 variables.story            = qGallery.story[1];
-                variables.creatorUserId    = qGallery.creatorUserId[1];
+                variables.creator          = new user(qGallery.creatorUserId[1]);
                 variables.creationDate     = qGallery.creationDate[1];
-                variables.lastEditorUserId = qGallery.lastEditorUserId[1];
+                variables.lastEditor       = new user(qGallery.lastEditorUserId[1]);
                 variables.lastEditDate     = qGallery.lastEditDate[1];
                 variables.pictures         = [];
                 variables.categories       = [];
@@ -447,9 +441,9 @@ component {
             variables.introduction     = "";
             variables.title            = "";
             variables.story            = "";
-            variables.creatorUserId    = request.user.getUserId();
+            variables.creator          = new user(null);
             variables.creationDate     = now();
-            variables.lastEditorUserId = request.user.getUserId();
+            variables.lastEditor       = new user(null);
             variables.lastEditDate     = now();
             variables.pictures         = [];
             variables.categories       = [];

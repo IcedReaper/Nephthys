@@ -197,12 +197,12 @@ component {
         }
         else {
             variables.comment           = "";
-            variables.creatorUserId     = new user(null);
+            variables.creator           = new user(null);
             variables.creationDate      = now();
             variables.anonymousUsername = "";
             variables.anonymousEmail    = "";
             variables.published         = false;
-            variables.publisherUserId   = new user(null);
+            variables.publisher         = new user(null);
             variables.publishedDate     = null;
         }
     }

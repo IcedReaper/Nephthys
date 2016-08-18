@@ -1,5 +1,5 @@
 component implements="API.interfaces.filter" {
-    import "API.modules.com.IcedReaper.blog.*";
+    import "API.modules.com.IcedReaper.gallery.*";
     
     public filter function init() {
         variables.status = null;
