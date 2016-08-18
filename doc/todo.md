@@ -1,5 +1,20 @@
 # TODO List
 
+## V0.6 Tasks
+    1. Installationssystem
+        * Datasources bei der Installation im cfAdmin eintragen
+    2. Updatesystem
+    3. Resource provider
+    4. Module-/Thememanagement
+        * Installation
+            * Per zip/rar upload
+            * Per Resource provider on central domain
+        * Update
+            * Per zip/rar upload
+            * Per Resource provider on central domain
+            * Option: Alpha, Beta, Release Candidates, Only Stable releases
+
+
 ## Allgemein
     1. Validierungen
         1. Mehr Validierungsregeln implementieren
@@ -7,9 +22,6 @@
     3. Formbuilder
     4. getUserInformation zentral ablegen | Aktuell mehrfach identisch vorhanden ?
         * user informationen für den ajax JSON Rückweg vorbereiten
-    5. Installationssystem
-        * Datasources bei der Installation im cfAdmin eintragen
-    6. Updatesystem
     7. Repairmodus ?
     8. Lizenzen von Assets und Plugins überprüfen
     9. Mehrsprachigkeit/Internationalisierung
@@ -39,10 +51,6 @@
 
 ## Adminbereich
     1. Modulverwaltung
-        * Installation
-            1. Fileupload von einer zip/rar-Datei (siehe theme installation)
-            2. Installation per git-repository
-            3. Module-Modul überarbeiten: Neues Modul => Installation
         * Bugs und benötigte Features
             * Berechtigungen
             * Untermodule (Children)
@@ -53,12 +61,6 @@
         4. Themeswitch in Vorschau
         5. Sitemap zum Zeitpunkt X releasen
     3. Thememanagement
-        * Installation
-            - Per git Repo
-            - Per zip/rar
-        * Update
-            - Per git Repo mit Branch/tag
-            - per zip
         * CustomTag path im cfadmin eintragen
     4. Backup
         * https://www.postgresql.org/docs/9.3/static/app-pgdump.html
@@ -79,6 +81,17 @@
             * Bewertungen
                 * Anonym per Option
                 * Als eingeloggter User
+            * Schnittstelle zu Flickr
+                (ggf in das Modul com.IcedReaper.gallery inkludieren)
+                * UserId
+                * AlbumId oder -name
+                * Designauswahl
+                * Upload der Bilder direkt nach Flickr. Erstellt das Album auf beiden Plattformen (API checken)
+            * Schnittstelle zu DeviantArt
+                (ggf in das Modul com.IcedReaper.gallery inkludieren)
+                * UserId
+                * AlbumId oder -name
+                * Designauswahl
         2. Statistiken pro Bild
             - Jegliche Idee zum Erfassen der Daten sind bisher crap
                 * Für onSlideEnd von blueimp image gallery muss per jQuery der Filename ausgelesen werden
@@ -131,37 +144,26 @@
             * Zeitraum
         * Ggf Authentifizierung
         * Designauswahl
-    9. Schnittstelle zu Flickr
-        (ggf in das Modul com.IcedReaper.gallery inkludieren)
-        * UserId
-        * AlbumId oder -name
-        * Designauswahl
-        * Upload der Bilder direkt nach Flickr. Erstellt das Album auf beiden Plattformen (API checken)
-    10. Schnittstelle zu DeviantArt
-        (ggf in das Modul com.IcedReaper.gallery inkludieren)
-        * UserId
-        * AlbumId oder -name
-        * Designauswahl
-    11. Downloadmodul
+    9. Downloadmodul
         * Kategorien
         * Tags
         * Suche
         * Admintool
         * Übersicht
         * Anzeige der letzten 4 Suchbegriffe
-    12. Adminchat
+    10. Adminchat
         * Globaler Channel
         * Private Chats/Channel
-    13. Private Nachrichten
+    11. Private Nachrichten
         * Infos zu neuen Nachrichten per Websockets melden
-    14. Admintaskliste (Aufgabenverwaltung)
+    12. Admintaskliste (Aufgabenverwaltung)
          * private / globale tasks
          * Status
              * Offen
              * in Bearbeitung
              * geschlossen
          * "PostIt"-Setup des Desktops
-    15. com.IcedReaper.tileDashboard
+    13. com.IcedReaper.tileDashboard
         * Anzahl an offenen Tasks (Gute Idee fehlt zum Managen der Module, die, und wie, eine Taskliste haben)
 
 ## Optimierungen
