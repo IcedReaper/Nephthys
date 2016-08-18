@@ -274,7 +274,7 @@ component {
                 };
             }
             
-            for(participant in getConversation().getParticipants()) {
+            for(var participant in getConversation().getParticipants()) {
                 for(i = 1; i <= variables.read.len(); ++i) {
                     if(variables.read[i].user.getUserId() == participant.getUserId()) {
                         variables.read.append({

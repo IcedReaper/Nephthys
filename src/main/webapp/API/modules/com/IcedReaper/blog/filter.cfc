@@ -7,6 +7,7 @@ component {
         switch(arguments.for) {
             case "blogpost":
             case "status":
+            case "nextStatus":
             case "category":
             case "comment":
             case "picture":

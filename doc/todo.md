@@ -13,12 +13,6 @@
             - option
         - IcedReaper.ContactForm
             - reply
-    - 
--  per filter regeln
-    - contactForm.request.loadReplies()
-    - privateMessage.message.read() per filter regeln
-    - review.review.loadGenre() per filter regeln
-    - status - getNextStatus
 
 ## Allgemein
     1. Validierungen

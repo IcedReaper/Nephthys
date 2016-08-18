@@ -1,6 +1,6 @@
 <cfoutput>
     <cfif attributes.rootElement>
-        <div class="container">
+        <div class="container m-y-2">
     </cfif>
     <section class="com-IcedReaper-blog">
         <cfif attributes.blogposts.len() GT 0>

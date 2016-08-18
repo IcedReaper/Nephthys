@@ -314,17 +314,9 @@ component {
     }
     
     private void function loadNextStatus() {
-        variables.nextStatus = [];
-        
-        var qGetNextStatus = new Query().setSQL("SELECT nextStatusId
-                                                   FROM IcedReaper_gallery_statusFlow
-                                                  WHERE statusId = :statusId")
-                                        .addParam(name = "statusId", value = variables.statusId, cfsqltype = "cf_sql_numeric")
-                                        .execute()
-                                        .getResult();
-        
-        for(var i = 1; i <= qGetNextStatus.getRecordCount(); ++i) {
-            variables.nextStatus.append(new status(qGetNextStatus.nextStatusId[i]));
-        }
+        variables.nextStatus = new filter().for("nextStatus")
+                                           .setStatus(this)
+                                           .execute()
+                                           .getResult();
     }
 }

@@ -165,17 +165,9 @@ component {
     }
     
     private void function loadReplies() {
-        var qReplies = new Query().setSQL("  SELECT replyId
-                                               FROM IcedReaper_contactForm_reply
-                                              WHERE contactRequestId = :contactRequestId
-                                           ORDER BY replyDate DESC")
-                                  .addParam(name = "contactRequestId", value = variables.contactRequestId, cfsqltype = "cf_sql_numeric")
-                                  .execute()
-                                  .getResult();
-        
-        variables.replies = [];
-        for(var i = 1; i <= qReplies.getRecordCount(); ++i) {
-            variables.replies.append(new reply(qReplies.replyId[i], this));
-        }
+        variables.replies = new filter().for("reply")
+                                        .setContactRequest(this)
+                                        .execute()
+                                        .getResult();
     }
 }

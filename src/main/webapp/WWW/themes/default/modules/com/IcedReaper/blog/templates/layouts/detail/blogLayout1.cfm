@@ -1,5 +1,5 @@
 <cfoutput>
-    <article class="com-IcedReaper-blog">
+    <article class="com-IcedReaper-blog m-y-2">
         <header>
             <div class="container">
                 <div class="row">

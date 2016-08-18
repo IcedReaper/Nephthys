@@ -2,6 +2,8 @@ component implements="API.interfaces.filter" {
     import "API.modules.com.IcedReaper.review.*";
     
     public filter function init() {
+        variables.review = null;
+        
         variables.offset        = 0;
         variables.count         = 0;
         variables.likeName      = null;
@@ -60,6 +62,12 @@ component implements="API.interfaces.filter" {
         return this;
     }
     
+    public filter function setReview(required review review) {
+        variables.review = arguments.review;
+        
+        return this;
+    }
+    
     
     public filter function execute() {
         var qryFilter = new Query();
@@ -71,6 +79,11 @@ component implements="API.interfaces.filter" {
         if(variables.likeName != null) {
             where &= (where == "" ? " WHERE " : " AND ") & " name LIKE :likeName ";
             qryFilter.addParam(name = "likeName", value = "%" & variables.likeName & "%", cfsqltype = "cf_sql_varchar");
+        }
+        
+        if(! isNull(variables.review) {
+            where &= (where == "" ? " WHERE " : " AND ") & " reviewId = :reviewId ";
+            qryFilter.addParam(name = "reviewId", value = variables.review.getReviewId(), cfsqltype = "cf_sql_numeric");
         }
         
         var orderBy = " ORDER BY " & variables.sortBy & " " & variables.sortDirection;

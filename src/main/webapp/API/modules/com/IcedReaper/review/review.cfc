@@ -355,15 +355,9 @@ component {
     }
     
     private void function loadGenre() {
-        var qGenreIds = new Query().setSQL("SELECT genreId
-                                              FROM IcedReaper_review_reviewGenre
-                                             WHERE reviewId = :reviewId")
-                                   .addParam(name = "reviewId", value = variables.reviewId, cfsqltype = "cf_sql_numeric")
-                                   .execute()
-                                   .getResult();
-        
-        for(var i = 1; i <= qGenreIds.getRecordCount(); ++i) {
-            variables.genre.append(new genre(qGenreIds.genreId[i]));
-        }
+        variables.genre = new filter().for("genre")
+                                      .setReview(this)
+                                      .execute()
+                                      .getResult();
     }
 }

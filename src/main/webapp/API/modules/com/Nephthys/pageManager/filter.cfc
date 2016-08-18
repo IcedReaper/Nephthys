@@ -12,6 +12,7 @@ component {
             case "region":
             case "pageVersion":
             case "status":
+            case "nextStatus":
             case "pageRequest":
             case "pageWithModule":
             case "approval": {
