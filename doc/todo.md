@@ -1,10 +1,5 @@
 # TODO List
 
-## Actual Task TODO - Reminder:
-- required approvals
-- +Attribut zu Module => Uses permissions (if false hide in permission screens)
-- Globale Tasklist (dashboard | com.IcedReaper.tileDashboard) variabel gestalten
-
 ## Allgemein
     1. Validierungen
         1. Mehr Validierungsregeln implementieren
@@ -34,6 +29,9 @@
     15. Erweiterte Sicherheit in Modulen
         * Personen freischalten => Nur normales Editieren
     16. Eigenes Date objekt? Date auch als null möglich | date.format() möglich
+    17. required approvals
+    18. +Attribut zu Module => Uses permissions (if false hide in permission screens)
+    19. Globale Tasklist (dashboard | com.IcedReaper.tileDashboard) variabel gestalten
 
 ## Website
     1. Codeoptimierung
@@ -168,12 +166,11 @@
 
 ## Optimierungen
     1. Datenbank optimieren
-    2. Tabellenprefix in Application verankern. Aus Datei auslesen.
-    4. (CFIDE/LuceeAdmin) Serversettings in Applikation verankern
-    5. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
-    6. Verwendung von nicht Klassenattributen (z.B. request.user) aus den Klassen entfernen und als Parameter erwarten
-    7. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
-    8. Charts responsive mit maxHeight!?
-    9. Checkout Lucee REST Servlet (web.xml)
-    10. Client Side validation für Formulare
-    11. Check: Komponenten umbauen: Load nur noch ausführen, wenn nur ID angegeben ist | Init mit allen parametern ausstatten / alle außer ID auf default => in variables umbauen | Ermöglicht Parent in Child object ohne Endlosschleife
+    2. (CFIDE/LuceeAdmin) Serversettings in Applikation verankern
+    3. Check handling of not found results for twitch and youtube. Check if it's best to throw an error or set a status and check it
+    4. Verwendung von nicht Klassenattributen (z.B. request.user) aus den Klassen entfernen und als Parameter erwarten
+    5. ggf. setter der Objekte "neue" Werte aktualisieren und bei speichern in die originalen übertragen.
+    6. Charts responsive mit maxHeight!?
+    7. Checkout Lucee REST Servlet (web.xml)
+    8. Client Side validation für Formulare
+    9. Check: Komponenten umbauen: Load nur noch ausführen, wenn nur ID angegeben ist | Init mit allen parametern ausstatten / alle außer ID auf default => in variables umbauen | Ermöglicht Parent in Child object ohne Endlosschleife
