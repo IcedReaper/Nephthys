@@ -1,0 +1,31 @@
+<h1>Suchanfragen</h1>
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="card card-block">
+            <div class="row">
+                <div class="col-sm-12">
+                    <nephthys-date-picker from-date = "selectedDate.fromDate"
+                                          to-date   = "selectedDate.toDate"
+                                          format    = "dd.MM.yyyy"></nephthys-date-picker>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <nephthys-search-statistics total               = "'true'"
+                                                show-date-picker    = "options.showDatePicker"
+                                                show-refresh-button = "options.showRefreshButton"
+                                                chart-type          = "'line'"
+                                                selected-date       = "selectedDate"></nephthys-search-statistics>
+                </div>
+            </div>
+            <div class="row m-t-1">
+                <div class="col-sm-12">
+                    <nephthys-search-overview show-date-picker    = "options.showDatePicker"
+                                              show-refresh-button = "options.showRefreshButton"
+                                              selected-date       = "selectedDate"></nephthys-search-overview>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,8 +1,12 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="pull-right">
-            <a href="#/categories" class="btn btn-primary"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
-        </div>
+<div class="row m-b-2">
+    <div class="col-md-12 col-sm-12">
+        <a href="#/tasklist" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>
+        <a href="#/blogpost/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Blogpostübersicht</a>
+        <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
+        <a href="#/category/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Kategorieübersicht</a>
+        <a href="#/settings" class="btn btn-secondary"><i class="fa fa-cogs"></i> Einstellungen</a>
+        <a href="#/statistics" class="btn btn-secondary"><i class="fa fa-area-chart"></i> Gesamtstatistik</a>
     </div>
 </div>
 
@@ -26,16 +30,16 @@
                 </div>
                 
                 <div class="row">
-                    <div class="col-md-12 m-t">
+                    <div class="col-md-12 m-t-1">
                         <button class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
                     </div>
                 </div>
             </form>
             
-            <p ng-show="category.categoryId != 0">Diese Kategorie wurde am {{category.creationDate}} angelegt von <a href="/com.Nephthys.user#/{{category.creator.userId}}">{{category.creator.userName}}</a></p>
-            <p ng-show="category.categoryId != 0">Diese Kategorie wurde zuletzt am {{category.creationDate}} geändert von <a href="/com.Nephthys.user#/{{category.creator.userId}}">{{category.creator.userName}}</a></p>
+            <p ng-show="category.categoryId">Diese Kategorie wurde am {{category.creationDate}} angelegt von <a href="/com.Nephthys.userManager#/{{category.creator.userId}}">{{category.creator.userName}}</a></p>
+            <p ng-show="category.categoryId">Diese Kategorie wurde zuletzt am {{category.creationDate}} geändert von <a href="/com.Nephthys.userManager#/{{category.creator.userId}}">{{category.creator.userName}}</a></p>
             
-            <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
+            <div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
                 <h3>{{message.headline}}</h3>
                 <p>{{message.text}}</p>
                 <p>{{message.errorMessage}}</p>

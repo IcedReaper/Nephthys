@@ -1,0 +1,38 @@
+<div>
+    <div class="row m-t-2" ng-if="tasklist.length > 0">
+        <div class="col-md-12">
+            <table class="table table-striped" ng-class="tableClass">
+                <thead>
+                    <th>&nbsp;</th>
+                    <th class="text-nowrap">User</th>
+                    <th class="text-nowrap">Modul</th>
+                    <th class="text-nowrap">Rolle</th>
+                    <th class="text-nowrap">Erstellt am</th>
+                    <th class="text-nowrap" ng-if="showActions">Aktionen</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="request in tasklist">
+                        <td>
+                            <a class="btn btn-primary" href="#/request/{{request.requestId}}"><i class="fa fa-info"></i></a>
+                        </td>
+                        <td>
+                            <nephthys-user-info user="request.creator"></nephthys-user-info>
+                        </td>
+                        <td>{{request.module.name}}</td>
+                        <td>{{request.role.name}}</td>
+                        <td>{{request.creationDate}}</td>
+                        <td ng-if="showActions" class="text-nowrap">
+                            <button class="btn btn-success" ng-click="approve(request.requestId);"><i class="fa fa-check"></i> Akzeptieren</button>
+                            <button class="btn btn-danger" ng-click="decline(request.requestId);"><i class="fa fa-ban"></i> Ablehnen</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div ng-if="tasklist.length === 0">
+        <div class="alert alert-success m-t-1" role="alert">
+            <h2><i class="fa fa-check"></i> Aktuell sind keine Aufgaben offen</h2>
+        </div>
+    </div>
+</div>

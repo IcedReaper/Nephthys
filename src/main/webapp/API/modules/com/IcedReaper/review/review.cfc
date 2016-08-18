@@ -1,4 +1,6 @@
 component {
+    import "API.modules.com.Nephthys.userManager.*";
+    
     public review function init(required numeric reviewId) {
         variables.reviewId = arguments.reviewId;
         
@@ -11,8 +13,8 @@ component {
     }
     
     
-    public review function setTypeId(required string typeId) {
-        variables.typeId = arguments.typeId;
+    public review function setType(required type type) {
+        variables.type = arguments.type;
         return this;
     }
     public review function setRating(required string rating) {
@@ -79,7 +81,7 @@ component {
         return this;
     }
     public review function uploadImage() {
-        if(variables.reviewId != 0) {
+        if(variables.reviewId != null) {
             variables.oldImagePath = variables.imagePath;
             
             var uploaded = fileUpload(expandPath("/upload/com.IcedReaper.review/"), "image", "image/*", "MakeUnique");
@@ -93,6 +95,11 @@ component {
         else {
             throw(type = "nephthys.application.notAllowed", message = "Cannot upload an image to a non existing review.");
         }
+        
+        return this;
+    }
+    public review function setPrivate(required boolean private) {
+        variables.private = arguments.private;
         
         return this;
     }
@@ -114,9 +121,6 @@ component {
     
     public numeric function getReviewId() {
         return variables.reviewId;
-    }
-    public numeric function getTypeId() {
-        return variables.typeId;
     }
     public numeric function getRating() {
         return variables.rating;
@@ -147,115 +151,110 @@ component {
     public string function getLink() {
         return variables.link;
     }
-    public numeric function getCreatorUserId() {
-        return variables.creatorUserId;
-    }
     public date function getCreationDate() {
         return variables.creationDate;
-    }
-    public numeric function getLastEditorUserId() {
-        return variables.lastEditorUserId;
     }
     public date function getlastEditDate() {
         return variables.lastEditDate;
     }
     public user function getCreator() {
-        if(! variables.keyExists("creator")) {
-            variables.creator = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.creatorUserId);
-        }
         return variables.creator;
     }
     public user function getLastEditor() {
-        if(! variables.keyExists("lastEditor")) {
-            variables.lastEditor = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.creatorUserId);
-        }
         return variables.lastEditor;
     }
     public array function getGenre() {
         return variables.genre;
     }
     public type function getType() {
-        return new type(variables.typeId);
+        return variables.type;
+    }
+    public boolean function getPrivate() {
+        return variables.private == 1;
+    }
+    
+    public boolean function isEditable(required user user) {
+        if(variables.private) {
+            return variables.creator.getUserId() == arguments.user.getUserId();
+        }
+        else {
+            return true;
+        }
     }
     
     
-    public review function save() {
-        if(variables.reviewId == null || variables.reviewId == 0) {
-            variables.reviewId = new Query().setSQL("INSERT INTO IcedReaper_review_review
-                                                                 (
-                                                                     typeId,
-                                                                     rating,
-                                                                     description,
-                                                                     headline,
-                                                                     introduction,
-                                                                     reviewText,
-                                                                     imagePath,
-                                                                     viewCounter,
-                                                                     link,
-                                                                     creatorUserId,
-                                                                     lastEditorUserId
-                                                                 )
-                                                          VALUES (
-                                                                     :typeId,
-                                                                     :rating,
-                                                                     :description,
-                                                                     :headline,
-                                                                     :introduction,
-                                                                     :reviewText,
-                                                                     :imagePath,
-                                                                     :viewCounter,
-                                                                     :link,
-                                                                     :userId,
-                                                                     :userId
-                                                                 );
-                                                     SELECT currval('seq_icedreaper_review_reviewId' :: regclass) newReviewId;")
-                                            .addParam(name = "typeId",       value = variables.typeId,         cfsqltype = "cf_sql_numeric")
-                                            .addParam(name = "rating",       value = variables.rating,         cfsqltype = "cf_sql_numeric")
-                                            .addParam(name = "description",  value = variables.description,    cfsqltype = "cf_sql_varchar")
-                                            .addParam(name = "headline",     value = variables.headline,       cfsqltype = "cf_sql_varchar")
-                                            .addParam(name = "introduction", value = variables.introduction,   cfsqltype = "cf_sql_varchar")
-                                            .addParam(name = "reviewText",   value = variables.reviewText,     cfsqltype = "cf_sql_varchar")
-                                            .addParam(name = "imagePath",    value = variables.imagePath,      cfsqltype = "cf_sql_varchar")
-                                            .addParam(name = "viewCounter",  value = variables.viewCounter,    cfsqltype = "cf_sql_numeric")
-                                            .addParam(name = "link",         value = variables.link,           cfsqltype = "cf_sql_varchar")
-                                            .addParam(name = "userId",       value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                                            .execute()
-                                            .getResult()
-                                            .newReviewId[1];
+    public review function save(required user user) {
+        var qSave = new Query().addParam(name = "typeId",       value = variables.type.getTypeId(), cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "rating",       value = variables.rating,           cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "description",  value = variables.description,      cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "headline",     value = variables.headline,         cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "introduction", value = variables.introduction,     cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "reviewText",   value = variables.reviewText,       cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "imagePath",    value = variables.imagePath,        cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "viewCounter",  value = variables.viewCounter,      cfsqltype = "cf_sql_numeric")
+                               .addParam(name = "link",         value = variables.link,             cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "private",      value = variables.private,          cfsqltype = "cf_sql_bit")
+                               .addParam(name = "userId",       value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric");
+        
+        if(variables.reviewId == null) {
+            variables.reviewId = qSave.setSQL("INSERT INTO IcedReaper_review_review
+                                                           (
+                                                               typeId,
+                                                               rating,
+                                                               description,
+                                                               headline,
+                                                               introduction,
+                                                               reviewText,
+                                                               imagePath,
+                                                               viewCounter,
+                                                               link,
+                                                               private,
+                                                               creatorUserId,
+                                                               lastEditorUserId
+                                                           )
+                                                    VALUES (
+                                                               :typeId,
+                                                               :rating,
+                                                               :description,
+                                                               :headline,
+                                                               :introduction,
+                                                               :reviewText,
+                                                               :imagePath,
+                                                               :viewCounter,
+                                                               :link,
+                                                               :private,
+                                                               :userId,
+                                                               :userId
+                                                           );
+                                               SELECT currval('seq_icedreaper_review_reviewId') newReviewId;")
+                                      .execute()
+                                      .getResult()
+                                      .newReviewId[1];
             
-            variables.creatorUserId    = request.user.getUserId();
-            variables.lastEditorUserId = request.user.getUserId();
-            variables.creationDate     = now();
-            variables.lastEditDate     = now();
+            variables.creator = arguments.user;
+            variables.creationDate = now();
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         else {
-            new Query().setSQL("UPDATE IcedReaper_review_review
-                                   SET typeId           = :typeId,
-                                       rating           = :rating,
-                                       description      = :description,
-                                       headline         = :headline,
-                                       introduction     = :introduction,
-                                       reviewText       = :reviewText,
-                                       imagePath        = :imagePath,
-                                       viewCounter      = :viewCounter,
-                                       link             = :link,
-                                       lastEditorUserId = :lastEditorUserId,
-                                       lastEditDate     = now()
-                                 WHERE reviewId = :reviewId ")
-                       .addParam(name = "reviewId",         value = variables.reviewId,       cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "typeId",           value = variables.typeId,         cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "rating",           value = variables.rating,         cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "description",      value = variables.description,    cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "headline",         value = variables.headline,       cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "introduction",     value = variables.introduction,   cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "reviewText",       value = variables.reviewText,     cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "imagePath",        value = variables.imagePath,      cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "viewCounter",      value = variables.viewCounter,    cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "link",             value = variables.link,           cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                       .execute();
-            variables.lastEditorUserId = request.user.getUserId();
-            variables.lastEditDate     = now();
+            qSave.setSQL("UPDATE IcedReaper_review_review
+                             SET typeId           = :typeId,
+                                 rating           = :rating,
+                                 description      = :description,
+                                 headline         = :headline,
+                                 introduction     = :introduction,
+                                 reviewText       = :reviewText,
+                                 imagePath        = :imagePath,
+                                 viewCounter      = :viewCounter,
+                                 link             = :link,
+                                 private          = :private,
+                                 lastEditorUserId = :userId
+                           WHERE reviewId = :reviewId ")
+                 .addParam(name = "reviewId", value = variables.reviewId, cfsqltype = "cf_sql_numeric")
+                 .execute();
+            
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         
         if(variables.genreAdded.len() > 0) {
@@ -271,9 +270,9 @@ component {
                                                     :genreId,
                                                     :userId
                                                 )")
-                          .addParam(name = "reviewId", value = variables.reviewId,       cfsqltype = "cf_sql_numeric")
-                          .addParam(name = "genreId",  value = genreId,                  cfsqltype = "cf_sql_numeric")
-                          .addParam(name = "userId",   value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
+                          .addParam(name = "reviewId", value = variables.reviewId,         cfsqltype = "cf_sql_numeric")
+                          .addParam(name = "genreId",  value = genreId,                    cfsqltype = "cf_sql_numeric")
+                          .addParam(name = "userId",   value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric")
                           .execute();
             }
         }
@@ -283,15 +282,15 @@ component {
                 new Query().setSQL("DELETE FROM IcedReaper_review_reviewGenre
                                           WHERE reviewId = :reviewId
                                             AND genreId  = :genreId")
-                          .addParam(name = "reviewId", value = variables.reviewId,       cfsqltype = "cf_sql_numeric")
-                          .addParam(name = "genreId",  value = genreId,                  cfsqltype = "cf_sql_numeric")
+                          .addParam(name = "reviewId", value = variables.reviewId, cfsqltype = "cf_sql_numeric")
+                          .addParam(name = "genreId",  value = genreId,            cfsqltype = "cf_sql_numeric")
                           .execute();
             }
         }
         
         return this;
     }
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE
                              FROM IcedReaper_review_review
                             WHERE reviewId = :reviewId")
@@ -299,11 +298,13 @@ component {
                    .execute();
         
         fileDelete(expandPath("/upload/com.IcedReaper.review/" & variables.imagePath));
+        
+        variables.reviewId = null;
     }
     
     
     private void function loadDetails() {
-        if(variables.reviewId != null && variables.reviewId != 0) {
+        if(variables.reviewId != null) {
             var qReview = new Query().setSQL("SELECT *
                                                 FROM IcedReaper_review_review
                                                WHERE reviewId = :reviewId")
@@ -312,20 +313,21 @@ component {
                                      .getResult();
             
             if(qReview.getRecordCount() == 1) {
-                variables.typeId           = qReview.typeId[1];
-                variables.rating           = qReview.rating[1];
-                variables.description      = qReview.description[1];
-                variables.headline         = qReview.headline[1];
-                variables.introduction     = qReview.introduction[1];
-                variables.reviewText       = qReview.reviewText[1];
-                variables.imagePath        = qReview.imagePath[1];
-                variables.viewCounter      = qReview.viewCounter[1];
-                variables.creatorUserId    = qReview.creatorUserId[1];
-                variables.creationDate     = qReview.creationDate[1];
-                variables.lastEditorUserId = qReview.lastEditorUserId[1];
-                variables.lastEditDate     = qReview.lastEditDate[1];
-                variables.link             = qReview.link[1];
-                variables.genre            = [];
+                variables.type         = new type(qReview.typeId[1]);
+                variables.rating       = qReview.rating[1];
+                variables.description  = qReview.description[1];
+                variables.headline     = qReview.headline[1];
+                variables.introduction = qReview.introduction[1];
+                variables.reviewText   = qReview.reviewText[1];
+                variables.imagePath    = qReview.imagePath[1];
+                variables.viewCounter  = qReview.viewCounter[1];
+                variables.creator      = new user(qReview.creatorUserId[1]);
+                variables.creationDate = qReview.creationDate[1];
+                variables.lastEditor   = new user(qReview.lastEditorUserId[1]);
+                variables.lastEditDate = qReview.lastEditDate[1];
+                variables.link         = qReview.link[1];
+                variables.private      = qReview.private[1];
+                variables.genre        = [];
                 
                 loadGenre();
             }
@@ -334,33 +336,28 @@ component {
             }
         }
         else {
-            variables.typeId           = null;
-            variables.rating           = 0;
-            variables.description      = "";
-            variables.headline         = "";
-            variables.introduction     = "";
-            variables.reviewText       = "";
-            variables.imagePath        = "";
-            variables.viewCounter      = 0;
-            variables.creatorUserId    = null;
-            variables.creationDate     = now();
-            variables.lastEditorUserId = null;
-            variables.lastEditDate     = now();
-            variables.link             = "";
-            variables.genre            = [];
+            variables.type         = new type(null);
+            variables.rating       = 0;
+            variables.description  = "";
+            variables.headline     = "";
+            variables.introduction = "";
+            variables.reviewText   = "";
+            variables.imagePath    = "";
+            variables.viewCounter  = 0;
+            variables.creator      = new user(null);
+            variables.creationDate = now();
+            variables.lastEditor   = new user(null);
+            variables.lastEditDate = now();
+            variables.link         = "";
+            variables.genre        = [];
+            variables.private      = false;
         }
     }
     
     private void function loadGenre() {
-        var qGenreIds = new Query().setSQL("SELECT genreId
-                                              FROM IcedReaper_review_reviewGenre
-                                             WHERE reviewId = :reviewId")
-                                   .addParam(name = "reviewId", value = variables.reviewId, cfsqltype = "cf_sql_numeric")
-                                   .execute()
-                                   .getResult();
-        
-        for(var i = 1; i <= qGenreIds.getRecordCount(); ++i) {
-            variables.genre.append(new genre(qGenreIds.genreId[i]));
-        }
+        variables.genre = new filter().for("genre")
+                                      .setReview(this)
+                                      .execute()
+                                      .getResult();
     }
 }

@@ -1,0 +1,57 @@
+<div>
+    <div class="row m-t-2" ng-repeat="status in tasklist" ng-if="status.user.length > 0">
+        <div class="col-md-12">
+            <h3>User <small>{{status.name}}</small></h3>
+            
+            <table class="table table-striped" ng-class="tableClass">
+                <thead>
+                    <th class="text-nowrap">ID</th>
+                    <th class="text-nowrap">Username</th>
+                    <th class="text-nowrap">Email</th>
+                    <th class="text-nowrap">Letztes Approval durch</th>
+                    <th class="text-nowrap" ng-if="showActions">Aktionen</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="user in status.user">
+                        <td>{{user.userId}}</td>
+                        <td><a href="/com.Nephthys.userManager#/user/{{user.userId}}">{{user.username}}</a></td>
+                        <td><a href="/com.Nephthys.userManager#/user/{{user.userId}}">{{user.email}}</a></td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="user.lastApprover"></nephthys-user-info>
+                                <span class="text-nowrap">{{user.lastApprovalDate}}</span>
+                            </p>
+                        </td>
+                        <td ng-if="showActions" class="text-nowrap">
+                            <div>
+                                <button class="btn m-r-1"
+                                        ng-repeat="ps in status.nextStatus"
+                                        ng-class="statusButtonClass(status.online, ps.online)"
+                                        ng-click="pushToStatus(user.userId, ps.statusId);"
+                                        ng-if="! combineNextStatusButton">{{ps.name}}</button>
+                                
+                                <div class="btn-group" ng-if="combineNextStatusButton">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Status ändern
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <button class="dropdown-item"
+                                                ng-repeat="ps in status.nextStatus"
+                                                ng-class="statusButtonClass(status.online, ps.online)"
+                                                ng-click="pushToStatus(user.userId, ps.statusId);">{{ps.name}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div ng-if="showNoWorkMessage && tasklist.sumOfSubArrayLength('user') === 0">
+        <div class="alert alert-success m-t-1" role="alert">
+            <h2><i class="fa fa-check"></i> Aktuell sind keine Aufgaben offen</h2>
+        </div>
+    </div>
+</div>

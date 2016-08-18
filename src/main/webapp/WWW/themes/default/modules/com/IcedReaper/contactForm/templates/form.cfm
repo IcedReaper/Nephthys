@@ -9,40 +9,56 @@
 </div>
 <div class="row">
     <div class="col-md-8">
+        <cfif attributes.errors.error>
+            <div class="alert alert-danger" role="alert">
+                <h2><span class="fa fa-exclamation" aria-hidden="true"></span> Fehler während der Eingabe</h2>
+                <p>
+                    Es gab Fehler während der Kontaktaufnahme.
+                </p>
+                <cfif attributes.errors.usernameUsed>
+                    <p>Der Username ist schon vergeben. Sollte es deiner sein, log dich bitte ein.</p>
+                </cfif>
+                <cfif attributes.errors.emailUsed>
+                    <p>Die E-Mail Adresse ist schon vergeben. Sollte es deine sein, log dich bitte ein.</p>
+                </cfif>
+            </div>
+        </cfif>
+        
         <form autocomplete="off" method="post" action="?">
-            <cfif request.user.isActive()>
+            <input type="hidden" name="name" value="com.IcedReaper.contactForm">
+            <cfif request.user.getStatus().getCanLogin()>
                 <p>Anfrage wird von durch Ihren Account #request.user.getUsername()# verschickt.</p>
             <cfelse>
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="form-group">
+                        <div class="form-group<cfif attributes.errors.email OR attributes.errors.emailUsed> has-danger</cfif>">
                             <label class="sr-only" for="eMail">Email address</label>
-                            <input type="email" class="form-control" id="eMail" name="email" placeholder="Email Adresse *wird nicht veröffentlicht">
+                            <input type="email" class="form-control<cfif attributes.errors.email OR attributes.errors.emailUsed> form-control-danger</cfif>" id="eMail" name="email" placeholder="Email Adresse *wird nicht veröffentlicht"<cfif attributes.errors.error> value="#form.email#"</cfif>>
                         </div>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="form-group">
+                        <div class="form-group<cfif attributes.errors.username OR attributes.errors.usernameUsed> has-danger</cfif>">
                             <label class="sr-only" for="username">Username</label>
-                            <input type="text" class="form-control" id="username" name="username" placeholder="Username *wird nicht veröffentlicht">
+                            <input type="text" class="form-control<cfif attributes.errors.username OR attributes.errors.usernameUsed> form-control-danger</cfif>" id="username" name="username" placeholder="Username *wird nicht veröffentlicht"<cfif attributes.errors.error> value="#form.username#"</cfif>>
                         </div>
                     </div>
                 </div>
             </cfif>
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="form-group">
+                    <div class="form-group<cfif attributes.errors.subject> has-danger</cfif>">
                         <label class="sr-only" for="subject">Thema</label>
-                        <input type="text" class="form-control" id="subject" name="subject" placeholder="Thema">
+                        <input type="text" class="form-control<cfif attributes.errors.subject> form-control-danger</cfif>" id="subject" name="subject" placeholder="Thema"<cfif attributes.errors.error> value="#form.subject#"</cfif>>
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="form-group">
+                    <div class="form-group<cfif attributes.errors.message> has-danger</cfif>">
                         <label class="sr-only" for="message">Mitteilung</label>
-                        <textarea class="form-control" id="message" name="message" placeholder="Mitteilung"></textarea>
+                        <textarea class="form-control<cfif attributes.errors.message> form-control-danger</cfif>" id="message" name="message" placeholder="Mitteilung"><cfif attributes.errors.error>#form.message#</cfif></textarea>
                     </div>
                 </div>
             </div>

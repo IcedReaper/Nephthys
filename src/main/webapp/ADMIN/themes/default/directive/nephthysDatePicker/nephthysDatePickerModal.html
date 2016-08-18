@@ -1,0 +1,84 @@
+<div class="modal-header">
+    <div class="col-md-10">
+        <h4 class="modal-title"><i class="fa fa-calendar"></i> Zeitraum auswählen</h4>
+    </div>
+    <div class="col-md-2 right">
+        <a class="close" href data-ng-click="$dismiss()"><span class="fa fa-times"></span></a>
+    </div>
+</div>
+
+<div class="modal-body">
+    <div class="row">
+        <div class="col-sm-6 col-md-4">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-link btn-sm" ng-click="selectTotal();">Insgesamt</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-link btn-sm" ng-click="selectYear('this');">Dieses Jahr</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-link btn-sm" ng-click="selectMonth('this');">Dieser Monat</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-link btn-sm" ng-click="selectMonth('last');">Vorheriger Monat</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-4">
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-link btn-sm" ng-click="selectDayCount('30');">Letzte 30 Tage</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-link btn-sm" ng-click="selectDayCount('60');">Letzte 60 Tage</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-link btn-sm" ng-click="selectDayCount('90');">Letzte 90 Tage</button>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <button class="btn btn-link btn-sm" ng-click="selectDayCount('180');">Letzte 180 Tage</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-md-6">
+            <p class="input-group m-b-0">
+                <input type="text" class="form-control" uib-datepicker-popup ng-model="fromDate" is-open="fromDatePicker.opened" datepicker-options="fromDateOptions" ng-required="true" close-text="Schließen" datepicker-options="fromDateOptions" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openDatePicker('fromDatePicker')"><i class="fa fa-calendar"></i></button>
+                </span>
+            </p>
+        </div>
+        
+        <div class="col-md-6">
+            <p class="input-group m-b-0">
+                <input type="text" class="form-control" uib-datepicker-popup ng-model="toDate" is-open="toDatePicker.opened" datepicker-options="toDateOptions" ng-required="true" close-text="Schließen" datepicker-options="toDateOptions" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="openDatePicker('toDatePicker')"><i class="fa fa-calendar"></i></button>
+                </span>
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="modal-footer center clearfix">
+    <button data-ng-click="$dismiss()" type="button" class="btn btn-secondary pull-left">abbrechen</button>
+    <button data-ng-click="selectDates()" type="button" class="btn btn-success pull-right">Auswählen</button>
+</div>

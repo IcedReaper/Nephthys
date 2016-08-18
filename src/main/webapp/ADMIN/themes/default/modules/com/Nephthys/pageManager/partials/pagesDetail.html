@@ -1,0 +1,241 @@
+<div class="row m-b-2">
+    <div class="col-md-10 col-sm-8">
+        <a href="#/" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>
+        <a href="#/pages/list" class="btn btn-secondary"><i class="fa fa-list"></i> Seitenübersicht</a>
+        <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
+        <a href="#/sitemap" class="btn btn-secondary"><i class="fa fa-sitemap"></i> Sitemap</a>
+        <a href="#/statistic" class="btn btn-secondary"><i class="fa fa-area-chart"></i> Gesamt Statistiken</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
+        <div class="pull-right">
+            <a href="#/pages/list" class="btn btn-primary"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Seite <small>{{page.versions[selectedVersion.major][selectedVersion.minor].link}}</small></h1>
+    </div>
+</div>
+
+<uib-tabset active="active">
+    <uib-tab heading="Details">
+        <div class="row" ng-if="! versionSpecified">
+            <div class="col-xl-12">
+                <div class="card card-block">
+                    <form>
+                        <div class="form-group row">
+                            <label for="versionSelection" class="col-md-2 col-sm-4 form-control-label">Version</label>
+                            <div class="col-md-8 col-sm-5">
+                                <select class="form-control" id="versionSelection" ng-model="selectedVersion.complete" ng-change="setVersion()">
+                                    <optgroup ng-repeat="(majorVersion, mvs) in page.availableVersions" label="Majorversion: {{majorVersion}}">
+                                        <option ng-repeat="(minorVersion, mnvs) in page.availableVersions[majorVersion]" value="{{majorVersion}}.{{minorVersion}}">Version {{majorVersion}}.{{minorVersion}}</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            <div class="col-md-2 col-sm-3">
+                                <button class="btn btn-primary" ng-click="addMajorVersion()" title="Major Version hinzufügen"><i class="fa fa-plus"></i></button>
+                                <button class="btn btn-primary" ng-click="addMinorVersion()" title="Minor Version hinzufügen"><i class="fa fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-block">
+                    <h3>Seitenoptionen und - details</h3>
+                    <form novalidate>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="link">Link</label>
+                                    <input type="text" class="form-control" id="link" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].link" ng-disabled="isReadonly()">
+                                </div>
+                                <div class="form-group">
+                                    <label for="linktext">Text des Links</label>
+                                    <input type="text" class="form-control" id="linktext" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].linktext" ng-disabled="isReadonly()">
+                                </div>
+                                <div class="form-group">
+                                    <label>Aktueller Status</label>
+                                    <p class="form-control-static">{{status[ page.versions[selectedVersion.major][selectedVersion.minor].statusId ].name}}</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="title">Titel der Seite / des Links</label>
+                                    <input type="text" class="form-control" id="title" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].title" ng-disabled="isReadonly()">
+                                </div>
+                                <div class="form-group">
+                                    <label for="description">Beschreibung der Seite</label>
+                                    <input type="text" class="form-control" id="description" ng-model="page.versions[selectedVersion.major][selectedVersion.minor].description" ng-disabled="isReadonly()">
+                                </div>
+                                <div class="form-group">
+                                    <label for="useDynamicUrlSuffix" title="Dynamische Seiten Suffixe sind Erweiterungen der Url, über welche sich Datensätze eines Moduls laden lassen">Dynamische Seiten Suffixe verwenden</label>
+                                    <p class="form-control-static">{{page.versions[selectedVersion.major][selectedVersion.minor].useDynamicUrlSuffix ? 'Ja' : 'Nein'}}</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div ng-if="status[ page.versions[selectedVersion.major][selectedVersion.minor].statusId ].nextStatus && page.pageId && page.versions[selectedVersion.major][selectedVersion.minor].pageVersionId">
+                                    <h4>Status ändern in</h4>
+                                    <button type="submit"
+                                            class="btn m-r-1"
+                                            ng-repeat="ps in status[ page.versions[selectedVersion.major][selectedVersion.minor].statusId ].nextStatus"
+                                            ng-class="statusButtonClass(page.versions[selectedVersion.major][selectedVersion.minor].isOnline, ps.online)"
+                                            ng-click="pushToStatus(ps.statusId);">{{ps.name}}</button>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="pull-right">
+                                    <button type="submit" class="btn btn-success" ng-click="save()" ng-if="isEditable()"><i class="fa fa-floppy-o"></i> Diese Version speichern</button>
+                                    <a href="{{page.versions[selectedVersion.major][selectedVersion.minor].completeLink}}?pageVersionId={{page.versions[selectedVersion.major][selectedVersion.minor].pageVersionId}}" class="btn btn-info" target="_blank"><i class="fa fa-eye"></i> Vorschau</a>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
+                    <h3>{{message.headline}}</h3>
+                    <p>{{message.text}}</p>
+                    <p>{{message.errorMessage}}</p>
+                </div>
+            </div>
+        </div>
+
+        <script type="text/ng-template" id="contentChild">
+            <form>
+                <button class="btn btn-danger pull-right"
+                        ng-click="deleteElement(child)"
+                        ng-disabled="isReadonly()"><i class="fa fa-trash"></i></button>
+                <button class="btn btn-secondary pull-right"
+                        ng-if="! $first"
+                        ng-click="moveUp(child)"
+                        ng-disabled="isReadonly()"><i class="fa fa-arrow-up"></i></button>
+                <button class="btn btn-secondary pull-right"
+                        ng-if="! $last"
+                        ng-click="moveDown(child)"
+                        ng-disabled="isReadonly()"><i class="fa fa-arrow-down"></i></button>
+                
+                <h2>{{child.type}}</h2>
+                
+                <div class="form-group row" ng-repeat="option in module[child.type].options">
+                    <label class="col-sm-2">{{option.description}}</label>
+                    <div class="col-sm-10">
+                        <input ng-model="child.options[option.dbName]"
+                               class="form-control"
+                               ng-if="option.type == 'text'"
+                               ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
+                               ng-disabled="isReadonly()">
+                        <select class="form-control"
+                                ng-model="child.options[option.dbName]"
+                                ng-if="option.type == 'boolean'"
+                                ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
+                                ng-options="o.v as o.n for o in [{ n: 'Option entfernen/Nicht gesetzt', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]"
+                                ng-disabled="isReadonly()">
+                        </select>
+                        <select ng-model="child.options[option.dbName]"
+                                class="form-control"
+                                ng-if="(option.type == 'select' || option.type == 'query') && ! option.multiple"
+                                ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
+                                ng-disabled="isReadonly()"
+                                ng-options="o.value as o.description for o in option.selectOptions">
+                            <option value="">Option entfernen/Nicht gesetzt</option>
+                        </select>
+                        <select ng-model="child.options[option.dbName]"
+                                class="form-control"
+                                ng-if="(option.type == 'select' || option.type == 'query') && option.multiple"
+                                ng-change="checkOption(child, option.dbName, child.options[option.dbName])"
+                                ng-disabled="isReadonly()"
+                                ng-options="o.value as o.description for o in option.selectOptions"
+                                multiple="multiple">
+                            <option value="">Option entfernen/Nicht gesetzt</option>
+                        </select>
+                        <div ng-model="child.options[option.dbName]"
+                             class="form-control"
+                             ng-if="option.type == 'wysiwyg'"
+                             text-angular ta-toolbar="[['h1', 'h2', 'h3', 'h4', 'h5', 'h6'], ['p', 'pre', 'quote'], ['ul', 'ol'], ['bold','italics','underline','strikeThrough'], ['justifyLeft','justifyCenter','justifyRight','justifyFull'], ['insertLink'], ['undo', 'redo'],['wordcount','charcount']]"
+                             ta-readonly="isReadonly()"></div>
+                    </div>
+                </div>
+                
+                <div ng-if="child.children.length > 0">
+                    <h4>Unterelemente</h4>
+                    <div class="card card-block" ng-repeat="child in child.children" ng-include="'contentChild'"></div>
+                </div>
+                
+                <div ng-if="module[child.type].subModules.length > 0">
+                    <h4>Weiteres Unterelement hinzufügen</h4>
+                    
+                    <select class="form-control"
+                            ng-change="appendChild(child, child.newChildren)"
+                            ng-model="child.newChildren"
+                            ng-options="subModule as subModule for subModule in module[child.type].subModules"
+                            ng-disabled="isReadonly()">
+                        <option value="" selected="selected"></option>
+                    </select>
+                </div>
+            </form>
+        </script>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-block">
+                    <div class="m-b-1">
+                        <div ng-repeat="child in page.versions[selectedVersion.major][selectedVersion.minor].content" ng-include="'contentChild'"></div>
+                    </div>
+                    
+                    <button ng-repeat="(mod, modOptions) in module"
+                            class="btn btn-primary m-r-1 m-b-1"
+                            ng-click="appendChild(page.versions[selectedVersion.major][selectedVersion.minor].content, mod);"
+                            ng-if="modOptions.canBeRootElement && isModuleAsRootElementAllowed(mod)"
+                            ng-disabled="isReadonly()"><i class="fa fa-plus"></i> {{mod}} hinzufügen</button>
+                </div>
+            </div>
+        </div>
+    </uib-tab>
+    
+    <uib-tab heading="Statistiken" disable="! pageId">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-block">
+                    <nephthys-page-statistics request-type="getStatisticsRequestType()"
+                                              page-id="pageId"
+                                              chart-type="getStatisticsChartType()"
+                                              sort-order="ASC"
+                                              headline="Verlauf von Seitenaufrufen"></nephthys-page-statistics>
+                </div>
+            </div>
+        </div>
+    </uib-tab>
+    
+    <uib-tab heading="Genehmigungen" disable="! pageId || ! page.versions[selectedVersion.major][selectedVersion.minor].pageVersionId">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-block">
+                    <h3>Statusänderungshistorie</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <th>User</th>
+                            <th>Alter Status</th>
+                            <th>Neuer Status</th>
+                            <th>Datum</th>
+                        </thead>
+                        <tbody ng-repeat="approval in page.versions[selectedVersion.major][selectedVersion.minor].approvalList">
+                            <td><nephthys-user-info user="approval.approver"></nephthys-user-info></td>
+                            <td>{{approval.previousStatusName}}</td>
+                            <td>{{approval.newStatusName}}</td>
+                            <td>{{approval.approvalDate}}</td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </uib-tab>
+</uib-tabset>

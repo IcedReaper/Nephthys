@@ -1,46 +1,62 @@
 nephthysAdminApp
-    .controller('galleryDetailCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "galleryService", function ($scope, $rootScope, $routeParams, $q, galleryService) {
-        $rootScope.$$listeners['gallery-loaded'] = null; // as the different js-files will be invoken again and again the event listeners get applied multiple times, so we reset them here
-            
-        var activePage = "detail";
-        // load
+    .controller('galleryDetailCtrl', ["$scope", "$routeParams", "$route", "$q", "galleryService", function ($scope, $routeParams, $route, $q, galleryService) {
         $scope.load = function() {
-            return galleryService
-                       .getDetails($routeParams.galleryId)
-                       .then(function (galleryDetails) {
-                           $scope.gallery = galleryDetails;
-                           
-                           $rootScope.$emit('gallery-loaded', {galleryId: galleryDetails.galleryId});
-                       });
+            $q.all([
+                galleryService.getDetails($routeParams.galleryId),
+                galleryService.getStatus()
+            ])
+            .then($q.spread(function (galleryDetails, status) {
+                $scope.gallery = galleryDetails;
+                $scope.status  = status;
+            }));
         };
         
         $scope.save = function () {
             galleryService
                 .save($scope.gallery)
                 .then(function (result) {
+                    var oldGalleryId = $scope.gallery.galleryId;
                     $scope.gallery = result;
-                })
-                .then($scope.loadPictures);
+                    
+                    if(! oldGalleryId) {
+                        $route.updateParams({
+                            galleryId: result.galleryId
+                        });
+                    }
+                });
         };
         
-        // tabs and paging
-        $scope.showPage = function (page) {
-            activePage = page;
+        $scope.pushToStatus = function (newStatusId) {
+            if(newStatusId) {
+                galleryService
+                    .pushToStatus($routeParams.galleryId,
+                                  newStatusId)
+                    .then(function() {
+                        $scope.gallery.statusId = newStatusId;
+                    });
+            }
         };
         
-        $scope.tabClasses = function (page) {
-            return (activePage === page ? "active" : "");
-        };
-        
-        $scope.pageClasses = function (page) {
-            return (activePage === page ? "active" : "");
+        $scope.statusButtonClass = function (actualOnline, nextOnline) {
+            if(! actualOnline && nextOnline) {
+                return "btn-success";
+            }
+            if(actualOnline && ! nextOnline) {
+                return "btn-danger";
+            }
+            if(! actualOnline && ! nextOnline) {
+                return "btn-primary";
+            }
+            if(actualOnline && nextOnline) {
+                return "btn-secondary";
+            }
+            
+            return "btn-warning";
         };
         
         // init
-        $scope
-            .load()
-            .then($scope.showPage('details'));
+        $scope.gallery = {};
+        $scope.load();
         
-        $rootScope.galleryId = $routeParams.galleryId;
         $scope.initialized = false;
     }]);

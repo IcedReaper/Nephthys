@@ -1,4 +1,6 @@
 component {
+    import "API.modules.com.Nephthys.userManager.*";
+    
     public genre function init(required numeric genreId) {
         variables.genreId = arguments.genreId;
         
@@ -13,6 +15,15 @@ component {
         return this;
     }
     
+    public category function setCreator(required user creator) {
+        variables.creator = arguments.creator;
+        return this;
+    }
+    public category function setLastEditor(required user lastEditor) {
+        variables.lastEditor = arguments.lastEditor;
+        return this;
+    }
+    
     
     public numeric function getGenreId() {
         return variables.genreId;
@@ -20,84 +31,66 @@ component {
     public string function getName() {
         return variables.name;
     }
-    public numeric function getCreatorUserId() {
-        return variables.creatorUserId;
-    }
     public date function getCreationDate() {
         return variables.creationDate;
-    }
-    public numeric function getLastEditorUserId() {
-        return variables.lastEditorUserId;
     }
     public date function getlastEditDate() {
         return variables.lastEditDate;
     }
-    public user function getCreator() {
-        if(! variables.keyExists("creator")) {
-            variables.creator = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.creatorUserId);
-        }
-        return variables.creator;
-    }
-    public user function getLastEditor() {
-        if(! variables.keyExists("lastEditor")) {
-            variables.lastEditor = createObject("component", "API.modules.com.Nephthys.user.user").init(variables.creatorUserId);
-        }
-        return variables.lastEditor;
-    }
     
-    public genre function save() {
-        if(variables.genreId == null || variables.genreId == 0) {
-            variables.genreId = new Query().setSQL("INSERT INTO IcedReaper_review_genre
-                                                                (
-                                                                    name,
-                                                                    creatorUserId,
-                                                                    lastEditorUserId
-                                                                )
-                                                         VALUES (
-                                                                    :name,
-                                                                    :userId,
-                                                                    :userId
-                                                                );
-                                                      SELECT currval('seq_icedreaper_review_genre_id' :: regclass) newGenreId;")
-                                           .addParam(name = "name",   value = variables.name,           cfsqltype = "cf_sql_varchar")
-                                           .addParam(name = "userId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                                           .execute()
-                                           .getResult()
-                                           .newGenreId[1];
+    public genre function save(required user user) {
+        var qSave = new Query().addParam(name = "name",   value = variables.name,             cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "userId", value = arguments.user.getUserId(), cfsqltype = "cf_sql_numeric");
+        
+        if(variables.genreId == null) {
+            variables.genreId = qSave.setSQL("INSERT INTO IcedReaper_review_genre
+                                                          (
+                                                              name,
+                                                              creatorUserId,
+                                                              lastEditorUserId
+                                                          )
+                                                   VALUES (
+                                                              :name,
+                                                              :userId,
+                                                              :userId
+                                                          );
+                                                SELECT currval('seq_icedreaper_review_genre_id') newGenreId;")
+                                     .execute()
+                                     .getResult()
+                                     .newGenreId[1];
             
-            variables.creatorUserId    = request.user.getUserId();
-            variables.lastEditorUserId = request.user.getUserId();
-            variables.creationDate     = now();
-            variables.lastEditDate     = now();
+            variables.creator = arguments.user;
+            variables.creationDate = now();
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         else {
-            new Query().setSQL("UPDATE IcedReaper_review_genre
-                                   SET name = :name,
-                                       lastEditorUserId = :lastEditorUserId,
-                                       lastEditDate     = now()
-                                 WHERE genreId = :genreId")
-                       .addParam(name = "genreId",          value = variables.genreId,        cfsqltype = "cf_sql_numeric")
-                       .addParam(name = "name",             value = variables.name,           cfsqltype = "cf_sql_varchar")
-                       .addParam(name = "lastEditorUserId", value = request.user.getUserId(), cfsqltype = "cf_sql_numeric")
-                       .execute();
+            qSave.setSQL("UPDATE IcedReaper_review_genre
+                             SET name             = :name,
+                                 lastEditorUserId = :userId
+                           WHERE genreId = :genreId")
+                 .addParam(name = "genreId", value = variables.genreId, cfsqltype = "cf_sql_numeric")
+                 .execute();
             
-            variables.lastEditorUserId = request.user.getUserId();
-            variables.lastEditDate     = now();
+            variables.lastEditor = arguments.user;
+            variables.lastEditDate = now();
         }
         
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         new Query().setSQL("DELETE
                               FROM IcedReaper_review_genre
                              WHERE genreId = :genreId")
                    .addParam(name = "genreId", value = variables.genreId, cfsqltype = "cf_sql_numeric")
                    .execute();
+        
+        variables.genreId = null;
     }
     
     private void function loadDetails() {
-        if(variables.genreId != null && variables.genreId != 0) {
+        if(variables.genreId != null) {
             var qGenre = new Query().setSQL("SELECT *
                                                FROM IcedReaper_review_genre
                                               WHERE genreId = :genreId")
@@ -106,22 +99,22 @@ component {
                                     .getResult();
             
             if(qGenre.getRecordCount() == 1) {
-                variables.name             = qGenre.name[1];
-                variables.creatorUserId    = qGenre.creatorUserId[1];
-                variables.creationDate     = qGenre.creationDate[1];
-                variables.lastEditorUserId = qGenre.lastEditorUserId[1];
-                variables.lastEditDate     = qGenre.lastEditDate[1];
+                variables.name         = qGenre.name[1];
+                variables.creator      = new user(qGenre.creatorUserId[1]);
+                variables.creationDate = qGenre.creationDate[1];
+                variables.lastEditor   = new user(qGenre.lastEditorUserId[1]);
+                variables.lastEditDate = qGenre.lastEditDate[1];
             }
             else {
                 throw(type = "icedreaper.review.notFound", message = "The genre could not be found", detail = variables.genreId);
             }
         }
         else {
-            variables.name             = "";
-            variables.creatorUserId    = null;
-            variables.creationDate     = now();
-            variables.lastEditorUserId = null;
-            variables.lastEditDate     = now();
+            variables.name         = "";
+            variables.creator      = new user(null);
+            variables.creationDate = now();
+            variables.lastEditor   = new user(null);
+            variables.lastEditDate = now();
         }
     }
 }

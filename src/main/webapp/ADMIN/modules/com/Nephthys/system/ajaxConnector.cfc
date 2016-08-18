@@ -1,63 +1,98 @@
 component {
-    remote struct function getSettings() {
-        var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
-        serverSettings.load();
+    import "API.modules.com.Nephthys.system.*";
+    import "API.tools.com.Nephthys.security.encryptionMethodLoader";
+    
+    remote array function getSettings() {
+        var serverSettings = new settings("WWW,ADMIN,NULL").load();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var settings = duplicate(serverSettings.getAllSettings());
         
+        var configurations = [];
+        var index = 0;
         for(var key in settings) {
+            configurations[++index] = settings[key];
+            configurations[index].key = key;
+            
+            if(configurations[index].moduleName == null) {
+                configurations[index].moduleName = "";
+            }
+            
+            configurations[index].hidden           = configurations[index].hidden           == 1;
+            configurations[index].systemKey        = configurations[index].systemKey        == 1;
+            configurations[index].alwaysRevalidate = configurations[index].alwaysRevalidate == 1;
+            configurations[index].readonly         = configurations[index].readonly         == 1;
+            
             if(lcase(settings[key].type) == "datetime") {
-                settings[key].value = settings[key].value != null ? formatCtrl.formatDate(settings[key].value, true, "DD.MM.YYYY") : "";
+                configurations[index].value = settings[key].value != null ? formatCtrl.formatDate(settings[key].value, true, "DD.MM.YYYY") : "";
             }
             if(lcase(settings[key].type) == "date") {
-                settings[key].value = settings[key].value != null ? formatCtrl.formatDate(settings[key].value, false, "DD.MM.YYYY") : "";
+                configurations[index].value = settings[key].value != null ? formatCtrl.formatDate(settings[key].value, false, "DD.MM.YYYY") : "";
             }
-            settings[key].delete("foreignTableOptions");
+            configurations[index].delete("foreignTableOptions");
         }
         
-        return settings;
+        return configurations;
     }
     
-    remote boolean function saveSettings(required string settings) {
-        var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
-        var newSettings = deserializeJSON(arguments.settings);
+    remote boolean function saveSettings(required array settings) {
+        var wwwSettings   = new settings("WWW").load();
+        var adminSettings = new settings("ADMIN").load();
+        var nullSettings  = new settings("NULL").load();
         var resetAllPasswords = false;
         
-        for(var key in newSettings) {
-            if(key != "encryptionMethodId" || key != "encryptionKey") {
-                if(newSettings[key].keyExists("value")) {
-                    if(! serverSettings.isKeyReadonly(key)) {
-                        serverSettings.setValueOfKey(key, newSettings[key].rawValue);
+        var tmpSettings = null;
+        
+        transaction {
+            try {
+                for(var setting in arguments.settings) {
+                    switch(setting.application) {
+                        case "WWW": {
+                            tmpSettings = wwwSettings;
+                            break;
+                        }
+                        case "ADMIN": {
+                            tmpSettings = adminSettings;
+                            break;
+                        }
+                        default: {
+                            tmpSettings = nullSettings;
+                        }
+                    }
+                    
+                    if(setting.key != "encryptionMethodId" && setting.key != "encryptionKey") {
+                        if(setting.keyExists("value")) {
+                            if(! tmpSettings.isKeyReadonly(setting.key)) {
+                                tmpSettings.setValueOfKey(setting.key, setting.rawValue);
+                            }
+                        }
+                    }
+                    else {
+                        if(setting.key == "encryptionMethodId" && setting.value != tmpSettings.getValueOfKey("encryptionMethodId")) {
+                            var encryptionMethodLoader = new encryptionMethodLoader();
+            
+                            var newAlgorithm = encryptionMethodLoader.getAlgorithm(setting.value);
+                            var newSecretKey = generateSecretKey(newAlgorithm);
+                            
+                            resetPasswordOfAllUsers(newSecretKey,
+                                                    newAlgorithm,
+                                                    tmpSettings.getValueOfKey("encryptionKey"),
+                                                    encryptionMethodLoader.getAlgorithm(tmpSettings.getValueOfKey("encryptionMethodId")));
+                            
+                            tmpSettings.setValueOfKey("encryptionMethodId", setting.value)
+                                          .setValueOfKey("encryptionKey", newSecretKey);
+                        }
                     }
                 }
+                wwwSettings.save(request.user);
+                adminSettings.save(request.user);
+                nullSettings.save(request.user);
+                
+                transactionCommit();
             }
-        }
-        serverSettings.save();
-        
-        if(newSettings["encryptionMethodId"].value != serverSettings.getValueOfKey("encryptionMethodId")) {
-            var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.security.encryptionMethodLoader").init();
-            
-            transaction {
-                try {
-                    var newAlgorithm = encryptionMethodLoader.getAlgorithm(newSettings["encryptionMethodId"].value);
-                    var newSecretKey = generateSecretKey(newAlgorithm);
-                    
-                    resetPasswordOfAllUsers(newSecretKey,
-                                            newAlgorithm,
-                                            serverSettings.getValueOfKey("encryptionKey"),
-                                            encryptionMethodLoader.getAlgorithm(serverSettings.getValueOfKey("encryptionMethodId")));
-                    
-                    serverSettings.setValueOfKey("encryptionMethodId", newSettings["encryptionMethodId"].value)
-                                  .setValueOfKey("encryptionKey", newSecretKey)
-                                  .save();
-                    
-                    transactionCommit();
-                }
-                catch(any e) {
-                    transactionRollback();
-                    throw(object=e);
-                }
+            catch(any e) {
+                transactionRollback();
+                throw(object=e);
             }
         }
         
@@ -67,46 +102,28 @@ component {
         return true;
     }
     
-    remote boolean function activate() {
-        var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
-        
-        serverSettings.setValueOfKey("active", true)
-                      .save();
-        
-        return true;
+    
+    remote struct function getModuleSettings(required string moduleName) {
+        if(arguments.moduleName != "") {
+            return application.system.settings.getAllSettingsForModuleName(arguments.moduleName);
+        }
+        else {
+            throw(type = "nephthys.application.invalid", message = "Please specify a module");
+        }
     }
     
-    remote boolean function deactivate() {
-        var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
+    remote boolean function saveModuleSettings(required string moduleName, required string settings) {
+        var newSettings = deserializeJSON(arguments.settings);
         
-        serverSettings.setValueOfKey("active", false)
-                      .save();
+        for(var setting in newSettings) {
+            if(newSettings[setting].keyExists("rawValue")) {
+                application.system.settings.setValueOfKey(setting, newSettings[setting].rawValue);
+            }
+        }
         
-        return true;
-    }
-    
-    remote boolean function activateMaintenanceMode() {
-        var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
-        
-        serverSettings.setValueOfKey("maintenanceMode", true)
-                      .save();
+        application.system.settings.save(request.user);
         
         return true;
-    }
-    
-    remote boolean function deactivateMaintenanceMode() {
-        var serverSettings = createObject("component", "API.modules.com.Nephthys.system.settings").init();
-        
-        serverSettings.setValueOfKey("maintenanceMode", false)
-                      .save();
-        
-        return true;
-    }
-    
-    remote array function getEncryptionMethods() {
-        var encryptionMethodLoader = createObject("component", "API.tools.com.Nephthys.controller.encryptionMethodLoader").init();
-        
-        return encryptionMethodLoader.getEncryptionMethods();
     }
     
     
@@ -138,12 +155,12 @@ component {
     
     private void function resetPasswordOfAllUsers(required string newSecretKey, required string newAlgorithm,
                                                   required string oldSecretKey, required string oldAlgorithm) {
-        var userListCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
+        var userListCtrl = createObject("component", "API.modules.com.Nephthys.userManager.filter").init().for("user");
         
         for(var user in userListCtrl.execute().getResult()) {
             var rawPassword = decrypt(user.getPassword(), arguments.oldSecretKey, arguments.oldAlgorithm);
             user.setPassword(encrypt(rawPassword, arguments.newSecretKey, arguments.newAlgorithm))
-                .save();
+                .save(request.user);
         }
     }
 }

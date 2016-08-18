@@ -1,0 +1,128 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>Modulübersicht</h1>
+    </div>
+</div>
+
+<h3>Filtern</h3>
+<form class="form-horizontal">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="filterActiveStatus" class="col-sm-3 control-label">Aktiv</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="filterActiveStatus" ng-model="search.active"
+                            ng-options="o.v as o.n for o in [{ n: 'Alle', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="filterSystemModuleStatus" class="col-sm-3 control-label">Sytemmodul</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="filterActiveStatus" ng-model="search.systemModule"
+                            ng-options="o.v as o.n for o in [{ n: 'Alle', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]">
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row m-t-1">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="filterAvailableWWW" class="col-sm-3 control-label">Verfügbar auf der Webseite</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="filterAvailableWWW" ng-model="search.availableWWW"
+                            ng-options="o.v as o.n for o in [{ n: 'Alle', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="filterAvailableADMIN" class="col-sm-3 control-label">Verfügbar im Adminbereich</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="filterAvailableADMIN" ng-model="search.availableADMIN"
+                            ng-options="o.v as o.n for o in [{ n: 'Alle', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]">
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table table-inverse m-t-1">
+    <thead>
+        <th>ID</th>
+        <th>Modul</th>
+        <th>Modulname</th>
+        <th>Aktuelle Version</th>
+        <th>WWW</th>
+        <th>ADMIN</th>
+        <th>Aktionen</th>
+    </thead>
+    <tbody>
+        <tr ng-repeat="module in modules | filter:search">
+            <td>{{module.moduleId}}</td>
+            <td>
+                <a href="#/{{module.moduleId}}">{{module.description}}</a>
+            </td>
+            <td>{{module.moduleName}}</td>
+            <td>{{module.actualVersion}}</td>
+            <td>
+                <i class="fa fa-check fa-border text-success" ng-if="module.availableWWW"></i>
+                <i class="fa fa-times fa-border text-danger" ng-if="! module.availableWWW"></i>
+            </td>
+            <td>
+                <i class="fa fa-check fa-border text-success" ng-if="module.availableADMIN"></i>
+                <i class="fa fa-times fa-border text-danger" ng-if="! module.availableADMIN"></i>
+            </td>
+            <td>
+                <a href="#/{{module.moduleId}}"
+                   class="btn btn-primary"
+                   title="Moduldetails">
+                    <i class="fa fa-cog"></i>
+                </a>
+                
+                <a class="btn btn-secondary"
+                   href="#/settings/{{module.moduleName}}"
+                   title="Moduleinstellungen">
+                    <i class="fa fa-cogs"></i>
+                </a>
+                <button class="btn btn-warning"
+                        ng-click="activate(module.moduleId)"
+                        ng-show="module.active == 0"
+                        title="Modul aktivieren">
+                    <i class="fa fa-toggle-on"></i>
+                </button>
+                <button class="btn btn-success"
+                        ng-click="deactivate(module.moduleId)"
+                        ng-show="module.active == 1"
+                        ng-disabled="module.systemModule != 0"
+                        title="Modul deaktivieren">
+                    <i class="fa fa-toggle-off"></i>
+                </button>
+                
+                <a href="#/{{module.moduleId}}/permissions"
+                   class="btn btn-secondary"
+                   title="Berechtigungen des Moduls editieren">
+                    <i class="fa fa-lock"></i>
+                </a>
+                
+                <a href="#/{{module.moduleId}}/dbDump"
+                   class="btn btn-secondary"
+                   title="DB Dump des Moduls erstellen">
+                    <i class="fa fa-database"></i>
+                </a>
+                
+                <button class="btn btn-danger"
+                        ng-click="delete(module.moduleId)"
+                        ng-disabled="module.systemModule != 0"
+                        title="Modul löschen">
+                    <i class="fa fa-trash-o"></i>
+                </button>
+            </td>
+        </tr>
+    </tbody>
+</table>

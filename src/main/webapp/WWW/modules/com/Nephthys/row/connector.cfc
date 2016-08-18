@@ -4,19 +4,20 @@ component implements="WWW.interfaces.connector" {
     }
     
     public string function getName() {
-        return "row";
+        return "com.Nephthys.row";
+    }
+    public string function getModulePath() {
+        return getName().replace(".", "/", "ALL");
     }
     
-    public string function render(required struct options, required string childContent) {
+    public string function render(required struct options, required boolean rootElement, required string childContent) {
         var preparedOptions = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.Nephthys.row.cfc.prepareData").prepareOptions(arguments.options);
-        var renderedContent = "";
         
-        saveContent variable="renderedContent" {
-            module template     = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/Nephthys/row/templates/index.cfm"
-                   options      = preparedOptions
-                   childContent = arguments.childContent;
-        }
-        
-        return renderedContent;
+        return application.system.settings.getValueOfKey("templateRenderer")
+            .setModulePath(getModulePath())
+            .setTemplate("index.cfm")
+            .addParam("options", preparedOptions)
+            .addParam("childContent", arguments.childContent)
+            .render();
     }
 }

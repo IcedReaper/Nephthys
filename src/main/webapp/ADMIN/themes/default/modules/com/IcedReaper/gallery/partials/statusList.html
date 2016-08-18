@@ -1,0 +1,118 @@
+<div class="row m-b-2">
+    <div class="col-md-10 col-sm-8">
+        <a href="#/tasklist" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>
+        <a href="#/gallery/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Gallerieübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
+        <a href="#/category/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Kategorieübersicht</a>
+        <a href="#/settings" class="btn btn-secondary"><i class="fa fa-cogs"></i> Einstellungen</a>
+        <a href="#/statistics" class="btn btn-secondary"><i class="fa fa-area-chart"></i> Gesamtstatistik</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
+        <div class="pull-right">
+            <a href="#/status/" class="btn btn-primary"><i class="fa fa-plus"></i> Neuen Status anlegen</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Statusübersicht</h1>
+        
+        <div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
+            <h3>{{message.headline}}</h3>
+            <p>{{message.text}}</p>
+            <p>{{message.errorMessage}}</p>
+        </div>
+        
+        <h3>Filtern</h3>
+        <form class="form-horizontal m-b-1">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="filterActiveStatus" class="col-sm-3 control-label">Aktiv</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" name="filterActiveStatus" ng-model="filter.active"
+                                    ng-options="o.v as o.n for o in [{ n: 'Alle', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="filterOnlineStatus" class="col-sm-3 control-label">Online</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" name="filterOnlineStatus" ng-model="filter.online"
+                                    ng-options="o.v as o.n for o in [{ n: 'Alle', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-inverse m-t-1">
+            <thead>
+                <th><i class="fa fa-eye"></i></th>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Online</th>
+                <th>Mögliche Folgestatus</th>
+                <th title="Seiten mit diesem Status sind editierbar"><i class="fa fa-pencil"></i></th>
+                <th title="Seiten mit diesem Status sind permanent löschbar"><i class="fa fa-trash"></i></th>
+                <th title="Seiten in der Aufgabenliste aufführen"><i class="fa fa-cogs"></i></th>
+
+                <th>&nbsp;</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="status in status"
+                    ng-show="(filter.active === '' || status.active === filter.active) && (filter.online === '' || status.online === filter.online)">
+                    <td>
+                        <i ng-if="status.active" class="fa fa-circle text-success" title="Aktiv"></i>
+                        <i ng-if="! status.active" class="fa fa-circle text-danger" title="Unaktiv"></i>
+                    </td>
+                    <td>{{status.statusId}}</td>
+                    <td>
+                        <a href="#/status/{{status.statusId}}">{{status.name}}</a>
+                    </td>
+                    <td ng-if="! status.online" class="text-danger">Nein</td>
+                    <td ng-if="status.online" class="text-success">Ja</td>
+                    <td>
+                        <a class="tag tag-default m-r-1" ng-repeat="ps in status.nextStatus" href="#/status/{{ps.statusId}}">{{ps.name}}</a>
+                    </td>
+                    <td>
+                        <i ng-if="status.editable" class="fa fa-pencil fa-border text-success" title="In diesem Status bearbeitbar"></i>
+                        <i ng-if="! status.editable" class="fa fa-pencil fa-border text-danger" title="In diesem Status nicht bearbeitbar"></i>
+                    </td>
+                    <td>
+                        <i ng-if="status.deleteable" class="fa fa-trash fa-border text-success" title="In diesem Status permanent löschbar"></i>
+                        <i ng-if="! status.deleteable" class="fa fa-trash fa-border text-danger" title="In diesem Status nicht permanent löschbar"></i>
+                    </td>
+                    <td>
+                        <i ng-if="status.showInTasklist" class="fa fa-cogs fa-border text-success" title="In diesem Status in der Aufgabenliste aufführen"></i>
+                        <i ng-if="! status.showInTasklist" class="fa fa-cogs fa-border text-danger" title="In diesem Status nicht in der Aufgabenliste aufführen"></i>
+                    </td>
+                    <td>
+                        <button class="btn btn-warning"
+                                ng-click="activate(status.statusId)"
+                                ng-show="! status.active"
+                                title="Status aktivieren">
+                            <span class="fa fa-toggle-off"></span>
+                        </button>
+                        <button class="btn btn-success"
+                                ng-click="deactivate(status.statusId)"
+                                ng-show="status.active"
+                                title="Status deaktivieren">
+                            <span class="fa fa-toggle-on"></span>
+                        </button>
+                        
+                        <button class="btn btn-danger"
+                                ng-click="delete(status.statusId)"
+                                title="Status löschen">
+                            <span class="fa fa-trash-o"></span>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

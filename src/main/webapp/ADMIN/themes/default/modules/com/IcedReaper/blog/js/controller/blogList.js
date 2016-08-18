@@ -1,16 +1,5 @@
 nephthysAdminApp
-    .controller('blogListCtrl', ["$scope", "blogService", function ($scope, blogService) {
-        $scope.activate = function (blogpostId) {
-            blogService
-                .activate(blogpostId)
-                .then($scope.refresh);
-        };
-        $scope.deactivate = function (blogpostId) {
-            blogService
-                .deactivate(blogpostId)
-                .then($scope.refresh);
-        };
-        
+    .controller('blogListCtrl', ["$scope", "$q", "blogService", function ($scope, $q, blogService) {
         $scope.delete = function (blogpostId) {
             blogService
                 .delete(blogpostId)
@@ -18,17 +7,45 @@ nephthysAdminApp
         }
         
         $scope.refresh = function () {
-            blogService
-                .getList()
-                .then(function (blogposts) {
-                    $scope.blogposts = blogposts;
-                });
+            $q.all([
+                blogService.getList(),
+                blogService.getStatus()
+            ])
+            .then($q.spread(function (blogposts, status) {
+                $scope.blogposts = blogposts;
+                $scope.status    = status;
+            }));
+        };
+        
+        $scope.pushToStatus = function (blogpostId, newStatusId) {
+            if(blogpostId && newStatusId) {
+                blogService
+                    .pushToStatus(blogpostId,
+                                  newStatusId)
+                    .then($scope.refresh);
+            }
+        };
+        
+        $scope.statusButtonClass = function (actualOnline, nextOnline) {
+            if(! actualOnline && nextOnline) {
+                return "btn-success";
+            }
+            if(actualOnline && ! nextOnline) {
+                return "btn-danger";
+            }
+            if(! actualOnline && ! nextOnline) {
+                return "btn-primary";
+            }
+            if(actualOnline && nextOnline) {
+                return "btn-secondary";
+            }
+            
+            return "btn-warning";
         };
         
         $scope.blogposts = [];
         $scope.search = {
-            released: "",
-            creatorUserId: ""
+            released: ''
         };
         $scope.refresh();
     }]);

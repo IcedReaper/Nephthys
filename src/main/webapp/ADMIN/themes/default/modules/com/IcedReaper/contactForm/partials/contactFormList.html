@@ -11,10 +11,8 @@
             <div class="form-group">
                 <label for="filterReadStatus" class="col-sm-3 control-label">Gelesen</label>
                 <div class="col-sm-6">
-                    <select class="form-control" name="filterReadStatus" ng-model="search.read">
-                        <option value="">Alle</option>
-                        <option value="1">Ja</option>
-                        <option value="0">Nein</option>
+                    <select class="form-control" name="filterReadStatus" ng-model="search.read"
+                            ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Alle', v: ''}, { n: 'Nein', v: false }]">
                     </select>
                 </div>
             </div>
@@ -23,10 +21,8 @@
             <div class="form-group">
                 <label for="filterRepliedStatus" class="col-sm-3 control-label">Beantwortet</label>
                 <div class="col-sm-6">
-                    <select class="form-control" name="filterRepliedStatus" ng-model="search.replied">
-                        <option value="">Alle</option>
-                        <option value="1">Ja</option>
-                        <option value="0">Nein</option>
+                    <select class="form-control" name="filterRepliedStatus" ng-model="search.replied"
+                            ng-options="o.v as o.n for o in [{ n: 'Alle', v: ''}, { n: 'Ja', v: true }, { n: 'Nein', v: false }]">
                     </select>
                 </div>
             </div>
@@ -34,38 +30,38 @@
     </div>
 </form>
 
-<table class="table table-inverse m-t">
+<table class="table table-inverse m-t-1">
     <thead>
         <th><i class="fa fa-eye"></i></th>
         <th><i class="fa fa-envelope"></i></th>
-        <th>Datum</th>
-        <th>Betreff</th>
         <th>User</th>
+        <th>Betreff</th>
+        <th>Datum</th>
         <th>Antworten</th>
     </thead>
     <tbody>
-        <tr ng-repeat="request in requests | filter:search">
+        <tr ng-repeat="contactRequest in contactRequests | filter:search">
             <td>
-                <i ng-if="request.read == true" class="fa fa-circle text-success" title="Gelesen"></i>
-                <i ng-if="request.read == false" class="fa fa-circle text-danger" title="Ungelesen"></i>
-            </td>
-            <td>
-                <i ng-if="request.replied == true" class="fa fa-circle text-success" title="Beantwortet"></i>
-                <i ng-if="request.replied == false" class="fa fa-circle text-danger" title="Unbeantwortet"></i>
+                <i ng-if="contactRequest.read" class="fa fa-circle text-success" title="Gelesen"></i>
+                <i ng-if="! contactRequest.read" class="fa fa-circle text-danger" title="Ungelesen"></i>
             </td>
             <td>
-                <a href="#/{{request.requestId}}">{{request.requestDate}}</a>
+                <i ng-if="contactRequest.replied" class="fa fa-circle text-success" title="Beantwortet"></i>
+                <i ng-if="! contactRequest.replied" class="fa fa-circle text-danger" title="Unbeantwortet"></i>
+            </td>
+            <td ng-if="contactRequest.requestorUserId">
+                <a href="/com.Nephthys.userManager#/user/{{contactRequest.requestorUserId}}">{{contactRequest.userName}}</a>
+            </td>
+            <td ng-if="! contactRequest.requestorUserId">
+                {{contactRequest.userName}}
             </td>
             <td>
-                <a href="#/{{request.requestId}}">{{request.subject}}</a>
+                <a href="#/{{contactRequest.contactRequestId}}">{{contactRequest.subject}}</a>
             </td>
-            <td ng-if="request.requestorUserId != 0 && request.requestorUserId != null">
-                <a href="/com.Nephthys.user#/{{request.requestorUserId}}">{{request.userName}}</a>
+            <td>
+                <a href="#/{{contactRequest.contactRequestId}}">{{contactRequest.requestDate}}</a>
             </td>
-            <td ng-if="request.requestorUserId == 0 || request.requestorUserId == null">
-                {{request.userName}}
-            </td>
-            <td>{{request.replyCount}}</td>
+            <td>{{contactRequest.replyCount}}</td>
         </tr>
     </tbody>
 </table>

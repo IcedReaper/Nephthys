@@ -1,7 +1,7 @@
 <cfoutput>
 <div class="com-IcedReaper-youTube">
     <cfloop item="video" array="#attributes.playlist.getVideos()#" index="videoIndex">
-        <div class="row<cfif videoIndex NEQ 1> m-t-lg</cfif>">
+        <div class="row<cfif videoIndex NEQ 1> m-t-2</cfif>">
             <div class="col-md-12">
                 <header>
                     <h2>#video.getTitle()#</h2>
@@ -17,7 +17,7 @@
                         </div>
                     </cfif>
                     
-                    <div class="m-t bg-inverse p-a">
+                    <div class="m-t-1 bg-inverse p-a-1">
                         <div class="row">
                             <div class="col-md-9">
                                 <cfif video.getDescription() NEQ "">
@@ -26,7 +26,7 @@
                             </div>
                             <div class="col-md-3">
                                 <span class="label label-success label-md"><i class="fa fa-eye"></i> #video.getViewCount()#</span><br>
-                                <span class="label label-success label-md m-t"><i class="fa fa-thumbs-up"></i> #video.getLikeCount()#</span>
+                                <span class="label label-success label-md m-t-1"><i class="fa fa-thumbs-up"></i> #video.getLikeCount()#</span>
                             </div>
                         </div>
                     </div>

@@ -1,0 +1,36 @@
+.com-IcedReaper-privateMessage {
+    .card-footer {
+        background-color: none;
+    }
+    
+    .myMessage {
+        [class^="card-"] {
+            background-color: rgba($highlight-color, 0.2);
+            color: $body-color;
+        }
+        
+        &.deleted {
+            display: none;
+        }
+    }
+    
+    .response {
+        &.read {
+            [class^="card-"] {
+                background-color: rgba($body-color, 0.95);
+                color: $highlight-color;
+            }
+        }
+        
+        &.unread {
+            [class^="card-"] {
+                background-color: rgba($brand-success, 0.5); // green
+                color: $body-color;
+                
+                a, a:hover, a:active, a:visited {
+                    color: darken($body-color, 20%);
+                }
+            }
+        }
+    }
+}

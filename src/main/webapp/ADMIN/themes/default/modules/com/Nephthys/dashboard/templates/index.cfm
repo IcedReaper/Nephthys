@@ -1,155 +1,128 @@
 <script type="text/javascript" src="/themes/default/assets/ChartJS/Chart.min.js"></script>
-<script type="text/javascript" src="/themes/default/assets/ChartJS/Chart.HorizontalBar.js"></script>
 <script type="text/javascript" src="/themes/default/assets/angular-chart/angular-chart.min.js"></script>
-<link rel="stylesheet" href="/themes/default/assets/angular-chart/angular-chart.min.css"></script> <!--- check if this works - overwise implement resource handler - then refactor resource handler to work with website and admin panel --->
 
-<script src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
+<script type="text/javascript" src='/themes/default/assets/angularUI/ui-bootstrap-tpls-1.3.2.min.js'></script>
+
+<script type="text/javascript" src="/themes/default/directive/nephthysLoadingBar/nephthysLoadingBar.js"></script>
+<script type="text/javascript" src="/themes/default/directive/nephthysUserInfo/nephthysUserInfo.js"></script>
+<script type="text/javascript" src="/themes/default/directive/nephthysDatePicker/nephthysDatePicker.js"></script>
+
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/directives/statistics/statistics.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/userManager/directives/loginLog/loginLog.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/userManager/directives/statistics/statistics.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/errorLog/directives/statistics/statistics.js"></script>
+
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/pageManager/directives/tasklist/tasklist.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/userManager/directives/tasklist/tasklist.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/gallery/directives/tasklist/tasklist.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/IcedReaper/blog/directives/tasklist/tasklist.js"></script>
 
 <script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/dashboardApp.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/serverInfo.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/news.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/service/dashboard.js"></script>
+<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/tasklist.js"></script>
 
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/service/visitService.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/visitCtrl.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/pageCtrl.js"></script>
-
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/service/loginStatisticsService.js"></script>
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/loginStatisticsCtrl.js"></script>
-
-<script type="text/javascript" src="/themes/default/modules/com/Nephthys/dashboard/js/controller/datePickerModalCtrl.js"></script>
-
-<cfoutput>
+<nephthys-loading-bar></nephthys-loading-bar>
 <div class="com-Nephthys-dashboard">
-    <h1>Willkommen im Adminpanel <small>#request.user.getUsername()#</small></h1>
+    <h1>Willkommen</h1>
     
     <div class="row">
-        <div class="col-md-8">
-            <div class="card card-block">
-                <h2>Serverinformationen</h2>
-                <div class="row">
-                    <div class="col-md-3 text-right">
-                        <strong>Status</strong>
-                    </div>
-                    <div class="col-md-9">
-                        <cfif attributes.serverStatus.getValueOfKey("active") EQ 1>
-                            <p class="text-success"><strong>Online</strong></p>
-                        <cfelse>
-                            <p class="text-danger"><strong>Offline</strong></p>
-                        </cfif>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-3 text-right">
-                        <strong>Wartungsmodus</strong>
-                    </div>
-                    <div class="col-md-9">
-                        <cfif attributes.serverStatus.getValueOfKey("maintenanceMode") EQ 1>
-                            <p class="text-danger"><strong>Aktiv</strong></p>
-                        <cfelse>
-                            <p class="text-success"><strong>Inaktiv</strong></p>
-                        </cfif>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-3 text-right">
-                        <strong>Installationsdatum</strong>
-                    </div>
-                    <div class="col-md-9">
-                        <p>#application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.serverStatus.getValueOfKey("installDate"))#</p>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-3 text-right">
-                        <strong>Aktuell installierte Nephthys-Version</strong>
-                    </div>
-                    <div class="col-md-9">
-                        <p>#attributes.serverStatus.getValueOfKey("nephthysVersion")#</p>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-3 text-right">
-                        <strong>Aktuelle Speicherauslastung</strong>
-                    </div>
-                    <div class="col-md-6">
-                        #attributes.memory.used#MB / #attributes.memory.total#MB<br>
-                        <progress class="progress <cfif attributes.memory.percentageUsed LT 50>progress-success<cfelseif attributes.memory.percentageUsed LT 80>progress-warning<cfelse>progress-danger</cfif>" value="#attributes.memory.used#" max="#attributes.memory.total#">#attributes.memory.percentageUsed#%</progress>
-                    </div>
-                </div>
-            </div>
-            
-            <div>
-                <div class="card card-block">
-                    <div ng-controller="visitCtrl">
-                        <div class="container-fluid">
-                            <div class="col-sm-12">
-                                <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> refresh</button>
-                                <h2>Seitenbesuchsstatistiken</h2>
-                            </div>
-                        </div>
-                        
-                        <div class="container-fluid">
-                            <div class="col-lg-6 col-md-12">
-                                <h3>Heutige Aufrufe <small>Top 20</small></h3>
-                                <canvas chart-options="todayVisitChart.options" chart-series="todayVisitChart.series" chart-labels="todayVisitChart.labels" chart-data="todayVisitChart.data" class="chart chart-bar ng-isolate-scope"></canvas>
-                                
-                                <ul class="m-b container-fluid">
-                                    <li ng-repeat="legend in todayVisitChartLegend" class="col-md-6"><a href="{{legend.link}}" target="_blank">{{legend.label}}</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-6 col-md-12">
-                                <h3>Gestrige Aufrufe <small>Top 20</small></h3>
-                                <canvas chart-options="yesterdayVisitChart.options" chart-series="yesterdayVisitChart.series" chart-labels="yesterdayVisitChart.labels" chart-data="yesterdayVisitChart.data" class="chart chart-bar ng-isolate-scope"></canvas>
-                                
-                                <ul class="container-fluid">
-                                    <li ng-repeat="legend in yesterdayVisitChartLegend" class="col-md-6"><a href="{{legend.link}}" target="_blank">{{legend.label}}</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="card card-block">
-                    <div ng-controller="loginStatisticsCtrl">
-                        <div class="container-fluid">
-                            <div class="col-sm-12">
-                                <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> refresh</button>
-                                <h2>Loginstatistiken</h2>
-                            </div>
-                        </div>
-                        
-                        <div class="container-fluid">
-                            <div class="col-lg-6 col-md-12">
-                                <h3>Letzte erfolgreiche Logins</h3>
-                                <ul>
-                                    <li ng-repeat="login in successfulLogins">{{login.username}} - {{login.loginDate}}</li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-6 col-md-12">
-                                <h3>Letzte fehlgeschlagene Logins</h3>
-                                <ul>
-                                    <li ng-repeat="login in failedLogins">{{login.username}} - {{login.loginDate}}</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="col-md-12">
+            <div class="card card-block" ng-include="'/themes/default/modules/com/Nephthys/dashboard/partials/serverInfo.html'"></div>
         </div>
-        <div class="col-md-4">
-            <div class="card card-block" ng-controller="pageCtrl">
-                <button ng-click="refresh()" class="btn btn-primary pull-right"><i class="fa fa-refresh"></i> refresh</button>
-                <h2>Verlauf von Seitenaufrufen</h2>
+    </div>
+    
+    <div class="row" ng-controller="newsCtrl">
+        <div class="col-md-12">
+            <div class="card card-block">
+                <button class="btn btn-primary pull-right"
+                        ng-click="refresh();"><i class="fa fa-refresh"></i> refresh</button>
+                <h3>Aktuelles</h3>
                 
-                <h4 class="datePicker clickable" ng-click="openDatePickerDialog()">
-                    <apan>Von <em>{{fromDate | date:'dd.MM.yyyy' }} bis {{toDate | date:'dd.MM.yyyy' }}</em></span>
-                    <button class="btn btn-link"><i class="fa fa-calendar"></i></button>
-                </h4>
+                <nephthys-date-picker from-date = "selectedDate.fromDate"
+                                      to-date   = "selectedDate.toDate"
+                                      format    = "dd.MM.yyyy"></nephthys-date-picker>
                 
-                <canvas chart-options="chartData.options" chart-series="chartData.series" chart-labels="chartData.labels" chart-data="chartData.data" chart-type="chartData.type" class="chart chart-base ng-isolate-scope" height="1000px" chart-click="handleClick"></canvas>
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4>Loginverlauf</h4>
+                                <nephthys-user-statistics chart-type          = "'line'"
+                                                          selected-date       = "selectedDate"
+                                                          show-date-picker    = "options.showDatePicker"
+                                                          show-refresh-button = "options.showRefreshButton"
+                                                          chart-options       = "loginChart.options"
+                                                          auto-load           = "true"></nephthys-user-statistics>
+                            </div>
+                        </div>
+                        <div class="row m-t-1">
+                            <div class="col-md-12">
+                                <h4>Besuchverlauf</h4>
+                                <nephthys-page-statistics request-type        = "'perPage'"
+                                                          selected-date       = "selectedDate"
+                                                          chart-type          = "'line'"
+                                                          sort-order          = "ASC"
+                                                          show-date-picker    = "options.showDatePicker"
+                                                          show-refresh-button = "options.showRefreshButton"
+                                                          chart-options       = "pageChart.options"
+                                                          auto-load           = "true"></nephthys-page-statistics>
+                            </div>
+                        </div>
+                        <div class="row m-t-1">
+                            <div class="col-md-12">
+                                <h4>Fehlerverlauf</h4>
+                                <nephthys-errorlog-statistics selected-date       = "selectedDate"
+                                                              chart-type          = "'line'"
+                                                              sort-order          = "ASC"
+                                                              show-date-picker    = "options.showDatePicker"
+                                                              show-refresh-button = "options.showRefreshButton"
+                                                              chart-options       = "errorChart.options"
+                                                              auto-load           = "true"></nephthys-page-statistics>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <nephthys-page-statistics request-type        = "'total'"
+                                                  selected-date       = "selectedDate"
+                                                  sort-order          = "DESC"
+                                                  show-date-picker    = "options.showDatePicker"
+                                                  show-refresh-button = "options.showRefreshButton"></nephthys-page-statistics>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <cfif request.user.hasPermission("com.Nephthys.pageManager", "user")>
+        <div class="row" ng-controller="tasklistCtrl">
+            <div class="col-md-12">
+                <div class="card card-block">
+                    <h2>Aufgabenliste <small>Aktuelle Aufgaben: {{taskCount.sumOfKey('taskcount')}}</small></h2>
+                    <nephthys-page-tasklist class="tasklist-sm"
+                                            show-page-button="'false'"
+                                            combine-next-status-button="'true'"
+                                            show-no-work-message="showNoWorkMessages"></nephthys-page-tasklist>
+                    <nephthys-usermanager-tasklist class="tasklist-sm"
+                                                   show-page-button="'false'"
+                                                   combine-next-status-button="'true'"
+                                                   show-no-work-message="showNoWorkMessages"></nephthys-usermanager-tasklist>
+                    <icedreaper-gallery-tasklist class="tasklist-sm"
+                                                 show-page-button="'false'"
+                                                 combine-next-status-button="'true'"
+                                                 show-no-work-message="showNoWorkMessages"></icedreaper-gallery-tasklist>
+                    <icedreaper-blog-tasklist class="tasklist-sm"
+                                              show-page-button="'false'"
+                                              combine-next-status-button="'true'"
+                                              show-no-work-message="showNoWorkMessages"></icedreaper-blog-tasklist>
+                    
+                    <div ng-if="taskCount.sumOfKey('taskcount') === 0">
+                        <div class="alert alert-success m-t-1" role="alert">
+                            <h2><i class="fa fa-check"></i> Aktuell sind keine Aufgaben offen</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </cfif>
 </div>
-</cfoutput>

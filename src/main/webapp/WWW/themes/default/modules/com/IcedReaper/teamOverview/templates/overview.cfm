@@ -1,5 +1,5 @@
 <cfoutput>
-    <section class="com-Nephthys-teamOverview">
+    <section class="com-IcedReaper-teamOverview">
         <h2>Teamübersicht</h2>
 
         <cfloop from="1" to="#attributes.member.len()#" index="memberIndex">
@@ -15,7 +15,7 @@
                     <img class="card-img-top" src="#attributes.member[memberIndex].getUser().getAvatarPath()#">
                     <div class="card-block">
                         <h4 class="card-title">
-                            <a href="/User/#attributes.member[memberIndex].getUser().getUserName()#"><cfif attributes.member[memberIndex].getUser().getExtProperties().getValue("realName") NEQ null>#attributes.member[memberIndex].getUser().getExtProperties().getValue("realName")#<cfelse>#attributes.member[memberIndex].getUser().getUserName()#</cfif></a>
+                            <cf_userLink userName="#attributes.member[memberIndex].getUser().getUserName()#"><cfif attributes.member[memberIndex].getUser().getExtProperties().getValue("realName") NEQ null>#attributes.member[memberIndex].getUser().getExtProperties().getValue("realName")#<cfelse>#attributes.member[memberIndex].getUser().getUserName()#</cfif></cf_userLink>
                         </h4>
                         <cfif attributes.member[memberIndex].getUser().getExtProperties().getValue("description") NEQ null>
                             <p class="card-text">

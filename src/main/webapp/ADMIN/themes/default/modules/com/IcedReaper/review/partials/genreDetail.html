@@ -27,16 +27,16 @@
                 </div>
                 
                 <div class="row">
-                    <div class="col-md-12 m-t">
+                    <div class="col-md-12 m-t-1">
                         <button class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
                     </div>
                 </div>
             </form>
             
-            <p ng-show="genre.genreId != 0">Dieses Genre wurde am {{genre.creationDate}} angelegt von <a href="/com.Nephthys.user#/{{genre.creator.userId}}">{{genre.creator.userName}}</a></p>
-            <p ng-show="genre.genreId != 0">Dieses Genre wurde zuletzt am {{genre.creationDate}} geändert von <a href="/com.Nephthys.user#/{{genre.lastEditor.userId}}">{{genre.lastEditor.userName}}</a></p>
+            <p ng-show="genre.genreId">Dieses Genre wurde am {{genre.creationDate}} angelegt von <a href="/com.Nephthys.userManager#/{{genre.creator.userId}}">{{genre.creator.userName}}</a></p>
+            <p ng-show="genre.genreId">Dieses Genre wurde zuletzt am {{genre.creationDate}} geändert von <a href="/com.Nephthys.userManager#/{{genre.lastEditor.userId}}">{{genre.lastEditor.userName}}</a></p>
             
-            <div class="alert alert-{{message.type}} m-t" role="alert" ng-show="message">
+            <div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
                 <h3>{{message.headline}}</h3>
                 <p>{{message.text}}</p>
                 <p>{{message.errorMessage}}</p>

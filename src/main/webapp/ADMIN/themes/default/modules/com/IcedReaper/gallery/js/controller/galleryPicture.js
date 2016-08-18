@@ -1,9 +1,8 @@
 nephthysAdminApp
-    .controller('galleryPictureCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "galleryService", function ($scope, $rootScope, $routeParams, $q, galleryService) {
-        var galleryId = null;
+    .controller('galleryPictureCtrl', ["$scope", "$routeParams", "$q", "galleryService", function ($scope, $routeParams, $q, galleryService) {
         $scope.load = function () {
             return galleryService
-                    .loadPictures(galleryId)
+                    .loadPictures($routeParams.galleryId)
                     .then(function (result) {
                         $scope.pictures = result;
                     });
@@ -14,43 +13,36 @@ nephthysAdminApp
                 .updatePicture(picture);
         };
         
-        // delete
         $scope.delete = function (pictureId) {
             galleryService
-                .deletePicture(galleryId, pictureId)
+                .deletePicture($routeParams.galleryId, pictureId)
                 .then(function (result) {
                     $scope.pictures = result;
                 });
         };
         
-        // new picture functionality
-        $scope.upload = function () {
-            var uploads = [];
-            for(var i = 0; i < $scope.newPictures.length; i++) {
-                uploads.push(galleryService.uploadPicture($scope.newPictures[i],
-                                                          galleryId));
-            }
-            
-            $q.all(uploads)
-                // and merging them
-                .then($q.spread(function () {
-                    var success = true;
-                    for(var i = 0; i < arguments.length; i++) {
-                        success = success ? arguments[i] : false;
+        $scope.upload = function (files) {
+            var success = true,
+                upload = function(index) {
+                    if(index < files.length) {
+                        galleryService
+                            .uploadPicture(files[index],
+                                           $routeParams.galleryId)
+                            .then(function (suc) {
+                                success = success ? suc : false;
+                                files[index].result = true;
+                                
+                                upload(++index);
+                            });
                     }
-                    
-                    $scope.newPictures = [];
-                    
-                    $scope.load();
-                }));
-        };
-        $scope.newPictures = [];
-        
-        $rootScope.$on('gallery-loaded', function(event, galleryData) {
-            galleryId = galleryData.galleryId;
+                    else {
+                        $scope.load();
+                    }
+                };
             
-            $scope.load();
-        });
+            
+            upload(0);
+        };
         
         $scope.rowCount = function (colCount) {
             if($scope.pictures) {
@@ -60,4 +52,16 @@ nephthysAdminApp
                 return new Array(0);
             }
         };
+        
+        $scope.saveSorting = function () {
+            galleryService
+                .updatePictureSorting($scope.pictures)
+                .then(function () {
+                    for(var i = 0; i < $scope.pictures.length; ++i) {
+                        $scope.pictures[i].sortId = i + 1;
+                    }
+                });
+        }
+        
+        $scope.load();
     }]);

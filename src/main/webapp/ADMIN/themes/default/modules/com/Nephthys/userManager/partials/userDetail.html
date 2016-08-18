@@ -1,0 +1,207 @@
+<div class="row m-b-2">
+    <div class="col-md-10 col-sm-8">
+        <a href="#/" class="btn btn-secondary"><i class="fa fa-list"></i> Tasklist</a>
+        <a href="#/user/list" class="btn btn-secondary"><i class="fa fa-list"></i> Userliste</a>
+        <a href="#/blacklist/list" class="btn btn-secondary"><i class="fa fa-list"></i> Liste der geblockten Namensteile</a>
+        <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
+        <div class="pull-right">
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>User <small>{{user.username}}</small></h1>
+    </div>
+</div>
+
+<uib-tabset active="active">
+    <uib-tab heading="Details">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-block">
+                    <h3>Details</h3>
+                    <form novalidate>
+                        <div class="form-group" ng-show="! user.userId">
+                            <label for="username">Benutzername</label>
+                            <input type="text" class="form-control" id="username" ng-disabled="user.userId" placeholder="Username" ng-model="user.username">
+                        </div>
+                        <div class="form-group" ng-show="user.userId">
+                            <label for="username">Registriert am</label>
+                            <p class="form-control-static">{{user.registrationDate}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Adresse</label>
+                            <input type="email" class="form-control" id="email" placeholder="Email" ng-model="user.email">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password</label>
+                            <input type="password" class="form-control" id="password" placeholder="Password" ng-model="user.password">
+                        </div>
+                        <div class="form-group">
+                            <label for="active">Theme der Website</label>
+                            <select class="form-control" ng-model="user.wwwThemeId" ng-options="o.themeId as o.name for o in themes | filter: availableWww"></select>
+                        </div>
+                        <div class="form-group">
+                            <label for="active">Theme der Adminoberfläche</label>
+                            <select class="form-control" ng-model="user.adminThemeId" ng-options="o.themeId as o.name for o in themes | filter: availableAdmin"></select>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+                        
+                        <div ng-if="actualPermissions.admin && user.userId && ! structIsEmpty(status[ user.statusId ].nextStatus)" class="m-t-1">
+                            <h4>Status ändern in</h4>
+                            <button type="submit"
+                                    class="btn m-r-1"
+                                    ng-repeat="ps in status[ user.statusId ].nextStatus"
+                                    ng-class="statusButtonClass(status[ user.statusId ].canLogin, ps.canLogin)"
+                                    ng-click="pushToStatus(ps.statusId);">{{ps.name}}</button>
+                        </div>
+                        
+                    </form>
+                </div>
+                
+                <div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
+                    <h3>{{message.headline}}</h3>
+                    <p>{{message.text}}</p>
+                    <p>{{message.errorMessage}}</p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card card-block">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h3>Aktuelles Avatar</h3>
+                            <img alt="user avatar" class="img-fluid" ng-src="{{user.avatar}}" ng-if="user.avatar">
+                        </div>
+                        <div class="col-md-6" ng-if="user.actualUser">
+                            <h3>Neues Avatar</h3>
+                            <form novalidate>
+                                <div ng-show="user.newAvatar != undefined && user.newAvatar != ''">
+                                    <img alt="neues user avatar" class="img-fluid" ngf-src="user.newAvatar">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <input type="file" ngf-select required accept="image/*" ng-model="user.newAvatar" ngf-fix-orientation="false" class="form-control">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="row m-t-1">
+                        <div class="col-md-12">
+                           <button type="submit" class="btn btn-success" ng-click="uploadAvatar()"><i class="fa fa-upload"></i> Hochladen</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </uib-tab>
+    
+    <uib-tab heading="Erweiterte Angaben" disable="! user.userId">
+        <div class="row">
+            <div class="col-md-12" ng-controller="userExtPropertiesCtrl">
+                <div class="card card-block">
+                    <h3>Zusätzliche Angaben</h3>
+                    
+                    <form novalidate>
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Description</th>
+                                    <th>Wert</th>
+                                    <th>Öffentlich</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="form-group" ng-repeat="extProperty in extProperties">
+                                    <td>
+                                        {{extProperty.description}}
+                                    </td>
+                                    <td>
+                                        <input type="text" maxlength="255" ng-model="extProperty.value" class="form-control" ng-if="extProperty.type == 'string'">
+                                        <p class="input-group" ng-if="extProperty.type == 'date'">
+                                            <input type="text" ng-model="extProperty.value" class="form-control" uib-datepicker-popup="dd. MM. yyyy" is-open="datePicker.isOpen" datepicker-options="datePicker.options">
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default" ng-click="openDatePicker()"><i class="fa fa-calendar"></i></button>
+                                            </span>
+                                        </p>
+                                    </td>
+                                    <td>
+                                        <select ng-model="extProperty.public" class="form-control"
+                                                ng-options="o.v as o.n for o in [{ n: 'Nein', v: false }, { n: 'Ja', v: true }]">
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <button ng-click="save()" class="btn btn-success"><i class="fa fa-floppy-o"></i> Speichern</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </uib-tab>
+    
+    <uib-tab heading="Berechtigungen" ng-if="actualPermissions.admin" disable="! user.userId">
+        <div class="row">
+            <div class="col-md-12" ng-controller="userPermissionCtrl">
+                <div class="card card-block">
+                    <h3>Berechtigungen</h3>
+                    
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <fieldset class="form-group col-md-6 col-lg-4" ng-repeat="permission in permissions">
+                                <label for="permission_{{permission.moduleId}}">{{permission.moduleName}}</label>
+                                <select name="{{permission.moduleId}}" id="permission_{{permission.moduleId}}" ng-model="permission.roleId" class="form-control"
+                                        ng-options="o.roleId as o.name for o in roles">
+                                    <option value="">Nicht gesetzt</option>
+                                </select>
+                            </fieldset>
+                        </div>
+                    </div>
+                    
+                    <button ng-click="save()" class="btn btn-success"><i class="fa fa-floppy-o"></i> Speichern</button>
+                </div>
+            </div>
+        </div>
+    </uib-tab>
+    
+    <uib-tab heading="Statistiken" disable="! user.userId">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card card-block">
+                    <nephthys-user-statistics user-id    = "user.userId"
+                                              chart-type = "'line'"
+                                              headline   = "Übersicht über erfolgreiche und gescheiterte Loginversuche"></nephthys-user-statistics>
+                </div>
+            </div>
+        </div>
+    </uib-tab>
+    
+    <uib-tab heading="Genehmigungen" disable="! user.userId">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="card card-block">
+                    <h3>Statusänderungshistorie</h3>
+                    <table class="table table-striped">
+                        <thead>
+                            <th>User</th>
+                            <th>Alter Status</th>
+                            <th>Neuer Status</th>
+                            <th>Datum</th>
+                        </thead>
+                        <tbody ng-repeat="approval in user.approvalList">
+                            <td><nephthys-user-info user="approval.approver"></nephthys-user-info></td>
+                            <td>{{approval.previousStatusName}}</td>
+                            <td>{{approval.newStatusName}}</td>
+                            <td>{{approval.approvalDate}}</td>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </uib-tab>
+</uib-tabset>

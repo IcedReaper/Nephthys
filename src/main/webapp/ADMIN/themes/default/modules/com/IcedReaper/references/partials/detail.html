@@ -1,0 +1,83 @@
+<div class="row m-b-2">
+    <div class="col-md-9 col-sm-8">
+        <a href="#/" class="btn btn-secondary"><i class="fa fa-tasks"></i> Übersicht</a>
+    </div>
+    <div class="col-md-3 col-sm-4 text-md-right">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Referenzdetails <small>{{reference.name}}</small></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-block">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label" for="name">Name der Firma/Referenz</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="name" placeholder="Name" ng-model="reference.name">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label" for="homepage">Verlinkung</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="homepage" placeholder="https://" ng-model="reference.homepage">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label" for="since">Dabei/Kunde seit</label>
+                        <div class="col-md-8">
+                            <p class="input-group">
+                                <input class="form-control" ng-model="reference.since" type="text" uib-datepicker-popup="dd. MM. yyyy" is-open="sinceDate.isOpen" datepicker-options="sinceDate.options">
+                                <span class="input-group-btn">
+                                    <button type="button" class="btn btn-default" ng-click="openSinceDatePicker()"><i class="fa fa-calendar"></i></button>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-md-4 form-control-label" for="quote">Zitat</label>
+                        <div class="col-md-8">
+                            <div text-angular ng-model="reference.quote" ta-toolbar="[
+                                ['h2', 'h3', 'h4', 'h5', 'h6', 'p', 'pre', 'quote'],
+                                ['bold', 'italics', 'underline', 'strikeThrough', 'ul', 'ol', 'redo', 'undo', 'clear'],
+                                ['justifyLeft', 'justifyCenter', 'justifyRight', 'indent', 'outdent']]"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="row" ng-if="reference.imagePath">
+                        <div class="col-md-12">
+                            <h3>Aktuelles Avatar</h3>
+                            <img alt="user avatar" class="img-fluid" ng-src="{{reference.imagePath}}">
+                        </div>
+                    </div>
+                    <div>
+                        <div class="col-md-12">
+                            <h3>Neues Avatar</h3>
+                            <form novalidate>
+                                <div ng-show="reference.newImage">
+                                    <img alt="Neues Referenzimage" class="img-fluid" ngf-src="reference.newImage">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <input type="file" ngf-select required accept="image/*" ng-model="reference.newImage" ngf-fix-orientation="false" class="form-control">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <button class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

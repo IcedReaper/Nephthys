@@ -1,12 +1,10 @@
 nephthysAdminApp
-    .controller('blogCommentsCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "blogService", function ($scope, $rootScope, $routeParams, $q, blogService) {
-        var blogpostId = null;
-        
+    .controller('blogCommentsCtrl', ["$scope", "$routeParams", "$q", "blogService", function ($scope, $routeParams, $q, blogService) {
         $scope.load = function () {
             $scope.comments = [];
             
             blogService
-                .loadComments(blogpostId)
+                .loadComments($routeParams.blogpostId)
                 .then(function (result) {
                     $scope.comments = result;
                 });
@@ -14,7 +12,7 @@ nephthysAdminApp
         
         $scope.publish = function (comment, index) {
             blogService
-                .publishComment(comment.commentId)
+                .publishComment($routeParams.blogpostId, comment.commentId)
                 .then(function() {
                     $scope.comments[index].published = true;
                 });
@@ -23,12 +21,6 @@ nephthysAdminApp
         $scope.delete = function (comment, index) {
             $scope.comments.splice(index, 1);
             
-            blogService.deleteComment(comment.commentId);
+            blogService.deleteComment($routeParams.blogpostId, comment.commentId);
         };
-        
-        $rootScope.$on('blog-loaded', function(event, blogData) {
-            blogpostId = blogData.blogpostId;
-            
-            $scope.load();
-        });
     }]);

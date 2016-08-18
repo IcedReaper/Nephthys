@@ -1,0 +1,93 @@
+<div class="row m-b-2">
+    <div class="col-md-10 col-sm-8">
+        <a href="#/" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>
+        <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
+        <a href="#/sitemap" class="btn btn-secondary"><i class="fa fa-sitemap"></i> Sitemap</a>
+        <a href="#/statistic" class="btn btn-secondary"><i class="fa fa-area-chart"></i> Gesamt Statistiken</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
+        <div class="pull-right">
+            <a href="#/pages/" class="btn btn-primary">Neue Seite anlegen</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Seitenübersicht</h1>
+        
+        <div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
+            <h3>{{message.headline}}</h3>
+            <p>{{message.text}}</p>
+            <p>{{message.errorMessage}}</p>
+        </div>
+        
+        <h3>Filtern</h3>
+        <form class="form-horizontal m-b-1">
+            <div class="row">
+                <div class="col-sm-6">
+                    <div class="form-group">
+                        <label for="statusName" class="col-sm-3 control-label">Status</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" name="statusName" ng-model="search.statusName">
+                                <option value="!!">Alle</option>
+                                <option ng-repeat="ps in status" value="{{ps.name}}">{{ps.name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-inverse m-t-1">
+            <thead>
+                <th>ID</th>
+                <th>Linktext</th>
+                <th>Link</th>
+                <th>Aktuelle Version</th>
+                <th>Aktionen</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="page in pages | filter:search">
+                    <td>{{page.pageId}}</td>
+                    <td>
+                        <a href="#/pages/{{page.pageId}}">{{page.linktext}}</a>
+                    </td>
+                    <td>{{page.link}}</td>
+                    <td>
+                        <p>{{page.version}} <span class="m-l-1" ng-class="(page.isOnline ? 'text-success' : 'text-danger')">{{page.statusName}}</span></p>
+                    </td>
+                    <td>
+                        <div>
+                            <a href="#/pages/{{page.pageId}}"
+                               class="btn btn-primary"
+                               title="Seitendetails">
+                                <span class="fa fa-cog"></span>
+                            </a>
+                            
+                            <button class="btn btn-danger"
+                                    title="Die Seite wird unwiederruflich gelöscht! - Nur mit Vorsicht benutzen! - Lieber den gelöscht Status verwenden!"
+                                    ng-click="deletePage(page.pageId)"
+                                    ng-disabled="! status[page.statusId].deleteable">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                            
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Status ändern
+                                </button>
+                                <div class="dropdown-menu">
+                                    <button class="dropdown-item"
+                                            ng-repeat="ps in status[ page.statusId ].nextStatus"
+                                            ng-class="statusButtonClass(page.isOnline, ps.online)"
+                                            ng-click="pushToStatus(page.pageId, page.pageVersionId, ps.statusId);">{{ps.name}}</button>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

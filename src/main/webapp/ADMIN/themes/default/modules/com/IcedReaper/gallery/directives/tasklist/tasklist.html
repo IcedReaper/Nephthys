@@ -1,0 +1,72 @@
+<div>
+    <div class="row m-t-2" ng-repeat="status in tasklist" ng-if="status.galleries.length > 0">
+        <div class="col-md-12">
+            <h3>Gallerien <small>{{status.name}}</small></h3>
+            
+            <table class="table table-striped" ng-class="tableClass">
+                <thead>
+                    <th class="text-nowrap">ID</th>
+                    <th class="text-nowrap">Linktext</th>
+                    <th class="text-nowrap">Bilderanzahl</th>
+                    <th class="text-nowrap">Erstellt durch</th>
+                    <th class="text-nowrap">Letzte Änderungen durch</th>
+                    <th class="text-nowrap">Letztes Approval durch</th>
+                    <th class="text-nowrap" ng-if="showActions">Aktionen</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="gallery in status.galleries">
+                        <td>{{gallery.galleryId}}</td>
+                        <td>
+                            <a href="#/gallery/{{gallery.galleryId}}">{{gallery.headline}}</a>
+                        </td>
+                        <td>{{gallery.pictureCount}}</td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="gallery.creator" hide-name="true"></nephthys-user-info>
+                                <span class="text-nowrap">{{gallery.creationDate}}</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="gallery.lastEditor" hide-name="true"></nephthys-user-info>
+                                <span class="text-nowrap">{{gallery.lastEditDate}}</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="gallery.lastApprover"></nephthys-user-info>
+                                <span class="text-nowrap">{{gallery.lastApprovalDate}}</span>
+                            </p>
+                        </td>
+                        <td ng-if="showActions" class="text-nowrap">
+                            <div>
+                                <button class="btn m-r-1"
+                                        ng-repeat="ps in status.nextStatus"
+                                        ng-class="statusButtonClass(status.online, ps.online)"
+                                        ng-click="pushToStatus(gallery.galleryId, ps.statusId);"
+                                        ng-if="! combineNextStatusButton">{{ps.name}}</button>
+                                
+                                <div class="btn-group" ng-if="combineNextStatusButton">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Status ändern
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <button class="dropdown-item"
+                                                ng-repeat="ps in status.nextStatus"
+                                                ng-class="statusButtonClass(status.online, ps.online)"
+                                                ng-click="pushToStatus(gallery.galleryId, ps.statusId);">{{ps.name}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div ng-if="showNoWorkMessage && tasklist.sumOfSubArrayLength('galleries') === 0">
+        <div class="alert alert-success m-t-1" role="alert">
+            <h2><i class="fa fa-check"></i> Aktuell sind keine Aufgaben offen</h2>
+        </div>
+    </div>
+</div>

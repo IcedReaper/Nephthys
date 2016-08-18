@@ -1,0 +1,32 @@
+<div class="row">
+    <div class="col-md-12">
+        <div class="pull-right">
+            <a href="#/" class="btn btn-primary"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Berechtigungen des Moduls <small>{{moduleName}}</small></h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-block">
+            <form novalidate class="form-horizontal">
+                <div class="form-group row" ng-repeat="user in users">
+                    <label class="col-sm-2 control-label" for="userRole_{{user.userId}}">{{user.userName}}</label>
+                    <div class="col-sm-10">
+                        <select name="{{user.userId}}" class="form-control" id="userRole_{{user.userId}}" ng-model="user.roleId" ng-options="r.roleId as r.name for r in roles">
+                            <option value="">Nicht gesetzt</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button ng-click="save()" class="btn btn-success"><i class="fa fa-floppy-o"></i> Speichern</button>
+            </form>
+        </div>
+    </div>
+</div>

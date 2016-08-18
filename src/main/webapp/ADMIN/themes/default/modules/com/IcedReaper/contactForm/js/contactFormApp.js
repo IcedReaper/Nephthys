@@ -1,4 +1,5 @@
-var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute"]);
+var nephthysAdminApp = angular.module("nephthysAdminApp", ["ngRoute",
+                                                           "com.Nephthys.global.loadingBar"]);
     
 nephthysAdminApp
     .config(["$routeProvider",
@@ -8,7 +9,7 @@ nephthysAdminApp
                     templateUrl: "/themes/default/modules/com/IcedReaper/contactForm/partials/contactFormList.html",
                     controller:  "contactFormListCtrl"
                 })
-                .when("/:requestId", {
+                .when("/:contactRequestId?", {
                     templateUrl: "/themes/default/modules/com/IcedReaper/contactForm/partials/contactFormDetail.html",
                     controller:  "contactFormDetailCtrl"
                 })

@@ -1,5 +1,5 @@
 <cfoutput>
-    <article class="galleryLayout-1 <cfif galleryIndex GT 1> m-t-lg</cfif>">
+    <article class="galleryLayout-1 <cfif galleryIndex GT 1> m-t-3</cfif>">
         <header>
             <h2><a href="#request.page.getLink()##attributes.galleries[galleryIndex].getLink()#">#attributes.galleries[galleryIndex].getHeadline()#</a></h2>
             <p><small>Diese Gallerie enthält #attributes.galleries[galleryIndex].getPictureCount()# Bilder</small></p>
@@ -31,7 +31,7 @@
                                         </div>
                                     <cfelse>
                                         </div>
-                                        <div class="row m-t">
+                                        <div class="row m-t-1">
                                             <div class="col-md-12">
                                                 <img src="#attributes.galleries[galleryIndex].getRelativePath()#/#pictures[pictureIndex].getThumbnailFileName()#" title="#pictures[pictureIndex].getTitle()#" class="img-fluid">
                                             </div>
@@ -44,7 +44,7 @@
                                                 <img src="#attributes.galleries[galleryIndex].getRelativePath()#/#pictures[pictureIndex].getThumbnailFileName()#" title="#pictures[pictureIndex].getTitle()#" class="img-fluid">
                                             </div>
                                         </div>
-                                        <div class="row m-t">
+                                        <div class="row m-t-1">
                                     <cfelse>
                                         <div class="col-sm-4 col-md-4">
                                             <img src="#attributes.galleries[galleryIndex].getRelativePath()#/#pictures[pictureIndex].getThumbnailFileName()#" title="#pictures[pictureIndex].getTitle()#" class="img-fluid">
@@ -69,10 +69,10 @@
             </cfif>
         </section>
         <footer>
-            <p><small>Diese Gallerie wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.galleries[galleryIndex].getCreationDate())# von <a href="/User/#attributes.galleries[galleryIndex].getCreator().getUsername()#">#attributes.galleries[galleryIndex].getCreator().getUsername()#</a> erstellt.</small></p>
+            <p><small>Diese Gallerie wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.galleries[galleryIndex].getCreationDate())# von <cf_userLink userName="#attributes.galleries[galleryIndex].getCreator().getUsername()#">#attributes.galleries[galleryIndex].getCreator().getUsername()#</cf_userLink> erstellt.</small></p>
             <cfset categories = attributes.galleries[galleryIndex].getCategories()>
             <cfloop from="1" to="#categories.len()#" index="categoryIndex">
-                <a class="label label-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
+                <a class="tag tag-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
             </cfloop>
         </footer>
     </article>

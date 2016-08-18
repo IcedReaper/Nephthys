@@ -40,13 +40,13 @@
             </div>
         </section>
         <footer>
-            <p><small>Diese Gallerie wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.gallery.getCreationDate())# von <a href="/User/#attributes.gallery.getCreator().getUsername()#">#attributes.gallery.getCreator().getUsername()#</a> erstellt und bisher #attributes.gallery.getViewCounter()# Mal aufgerufen.</small></p>
+            <p><small>Diese Gallerie wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.gallery.getCreationDate())# von <cf_userLink userName="#attributes.gallery.getCreator().getUsername()#">#attributes.gallery.getCreator().getUsername()#</cf_userLink> erstellt und bisher #attributes.gallery.getViewCounter()# Mal aufgerufen.</small></p>
             
             <cfset categories = attributes.gallery.getCategories()>
             <cfloop from="1" to="#categories.len()#" index="categoryIndex">
-                <a class="label label-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
+                <a class="tag tag-primary" href="#request.page.getLink()#/Kategorie/#categories[categoryIndex].getName()#">#categories[categoryIndex].getName()#</a>
             </cfloop>
         </footer>
-        <cfinclude template="../general/blueimpGallery.cfm" />
+        <cfinclude template="../generic/blueimpGallery.cfm" />
     </article>
 </cfoutput>

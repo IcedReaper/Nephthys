@@ -1,0 +1,149 @@
+<div>
+    <div class="row m-t-2" ng-repeat="status in tasklist.pages" ng-if="showPages && status.pages.length > 0">
+        <div class="col-md-12">
+            <h3>Seiten <small>{{status.name}}</small></h3>
+            
+            <table class="table table-striped" ng-class="tableClass">
+                <thead>
+                    <th class="text-nowrap">ID</th>
+                    <th class="text-nowrap">Linktext</th>
+                    <th class="text-nowrap">Link</th>
+                    <th>Erstellt durch</th>
+                    <th class="text-nowrap">Letzte Änderungen durch</th>
+                    <th class="text-nowrap">Letztes Approval durch</th>
+                    <th class="text-nowrap" ng-if="showActions">Aktionen</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="page in status.pages">
+                        <td>{{page.pageId}}</td>
+                        <td>
+                            <a href="#/pages/{{page.pageId}}/version/{{page.majorVersion}}/{{page.minorVersion}}">{{page.linktext}}</a>
+                        </td>
+                        <td>{{page.link}}</td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="page.creator" hide-name="true"></nephthys-user-info>
+                                <span class="text-nowrap">{{page.creationDate}}</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="page.lastEditor" hide-name="true"></nephthys-user-info>
+                                <span class="text-nowrap">{{page.lastEditDate}}</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="page.lastApprover"></nephthys-user-info>
+                                <span class="text-nowrap">{{page.lastApprovalDate}}</span>
+                            </p>
+                        </td>
+                        <td ng-if="showActions">
+                            <div>
+                                <a href="#/pages/{{page.pageId}}"
+                                   class="btn btn-primary m-r-1"
+                                   title="Seitendetails"
+                                   ng-if="showPageButton">
+                                    <i class="fa fa-cog"></i>
+                                </a>
+                                
+                                <button class="btn m-r-1"
+                                        ng-repeat="ps in status.nextStatus"
+                                        ng-class="statusButtonClass(status.online, ps.online)"
+                                        ng-click="pushPageToStatus(page.pageId, page.pageVersionId, ps.statusId);"
+                                        ng-if="! combineNextStatusButton">{{ps.name}}</button>
+                                
+                                <div class="btn-group" ng-if="combineNextStatusButton">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Status ändern
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <button class="dropdown-item"
+                                                ng-repeat="ps in status.nextStatus"
+                                                ng-class="statusButtonClass(status.online, ps.online)"
+                                                ng-click="pushPageToStatus(page.pageId, page.pageVersionId, ps.statusId);">{{ps.name}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row m-t-2" ng-repeat="status in tasklist.sitemap" ng-if="showSitemaps && status.sitemaps.length > 0">
+        <div class="col-md-12">
+            <h3>Sitemaps <small>{{status.name}}</small></h3>
+            
+            <table class="table table-striped" ng-class="tableClass">
+                <thead>
+                    <th>ID</th>
+                    <th>Anzahl an Seiten</th>
+                    <th>Erstellt durch</th>
+                    <th>Letzte Änderungen durch</th>
+                    <th class="text-nowrap">Letztes Approval durch</th>
+                    <th ng-if="showActions">Aktionen</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="sitemap in status.sitemaps">
+                        <td>{{sitemap.sitemapId}}</td>
+                        <th>{{sitemap.pageCount}}</th>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="sitemap.creator" hide-name="true"></nephthys-user-info>
+                                <span class="text-nowrap">{{sitemap.creationDate}}</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="sitemap.lastEditor" hide-name="true"></nephthys-user-info>
+                                <span class="text-nowrap">{{sitemap.lastEditDate}}</span>
+                            </p>
+                        </td>
+                        <td>
+                            <p>
+                                <nephthys-user-info user="sitemap.lastApprover"></nephthys-user-info>
+                                <span class="text-nowrap">{{sitemap.lastApprovalDate}}</span>
+                            </p>
+                        </td>
+                        <td ng-if="showActions">
+                            <div>
+                                <a href="#/sitemap/{{sitemap.sitemapId}}"
+                                   class="btn btn-primary m-r-1"
+                                   title="Seitendetails"
+                                   ng-if="showPageButton">
+                                    <i class="fa fa-cog"></i>
+                                </a>
+                                
+                                <button class="btn m-r-1"
+                                        ng-repeat="ps in status.nextStatus"
+                                        ng-class="statusButtonClass(status.online, ps.online)"
+                                        ng-click="pushSitemapToStatus(sitemap.sitemapId, ps.statusId);"
+                                        ng-if="! combineNextStatusButton">{{ps.name}}</button>
+                                
+                                <div class="btn-group" ng-if="combineNextStatusButton">
+                                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Status ändern
+                                    </button>
+                                    <div class="dropdown-menu">
+                                        <button class="dropdown-item"
+                                                ng-repeat="ps in status.nextStatus"
+                                                ng-class="statusButtonClass(status.online, ps.online)"
+                                                ng-click="pushSitemapToStatus(sitemap.sitemapId, ps.statusId);">{{ps.name}}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div ng-if="showNoWorkMessage && ((showPages && tasklist.pages.sumOfSubArrayLength('pages') === 0 && showSitemaps && tasklist.sitemap.sumOfSubArrayLength('sitemaps') === 0) || 
+                                      (showPages && tasklist.pages.sumOfSubArrayLength('pages') === 0 && ! showSitemaps) || 
+                                      (showSitemaps && tasklist.sitemap.sumOfSubArrayLength('sitemaps') === 0 && ! showPages))">
+        <div class="alert alert-success m-t-1" role="alert">
+            <h2><i class="fa fa-check"></i> Aktuell sind keine Aufgaben offen</h2>
+        </div>
+    </div>
+</div>

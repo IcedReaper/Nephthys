@@ -1,0 +1,4 @@
+<a href="/com.Nephthys.userManager#/{{user.userId}}" target="_blank">
+    <img ng-if="user.avatar" title="{{user.userName}}" ng-src="{{user.avatar}}" class="img-rounded avatar">
+    <span ng-if="! hideName || ! user.avatar">{{user.username}}</span>
+</a>

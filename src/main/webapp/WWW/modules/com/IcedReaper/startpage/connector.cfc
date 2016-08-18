@@ -6,17 +6,17 @@ component implements="WWW.interfaces.connector" {
     public string function getName() {
         return "com.IcedReaper.startpage";
     }
+    public string function getModulePath() {
+        return getName().replace(".", "/", "ALL");
+    }
     
-    public string function render(required struct options, required string childContent) {
-        var renderedContent = "";
-        
+    public string function render(required struct options, required boolean rootElement, required string childContent) {
         request.page.setSpecialCssClass("html", "com-IcedReaper-startpage");
         
-        saveContent variable="renderedContent" {
-            module template = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/startpage/templates/index.cfm"
-                   options  = arguments.options;
-        }
-        
-        return renderedContent;
+        return application.system.settings.getValueOfKey("templateRenderer")
+            .setModulePath(getModulePath())
+            .setTemplate("index.cfm")
+            .addParam("options", arguments.options)
+            .render();
     }
 }

@@ -1,51 +1,53 @@
 component {
+    import "API.modules.com.IcedReaper.contactForm.*";
+    
     remote array function getList() {
-        var filterCtrl = createObject("component", "API.modules.com.IcedReaper.contactForm.filter").init();
+        var filterCtrl = new filter().for("contactRequest");
         var rawRequests = filterCtrl.execute()
                                     .getResult();
         
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
-        var requests = [];
+        var contactRequests = [];
         for(var i = 1; i <= arrayLen(rawRequests); ++i) {
-            requests.append({
-                "requestId"       = rawRequests[i].getRequestId(),
-                "read"            = toString(rawRequests[i].getRead()),
-                "requestDate"     = formatCtrl.formatDate(rawRequests[i].getRequestDate()),
-                "subject"         = rawRequests[i].getSubject(),
-                "requestorUserId" = rawRequests[i].getRequestorUserId(),
-                "userName"        = rawRequests[i].getUserName(),
-                "replied"         = rawRequests[i].getReplies().len() != 0,
-                "replyCount"      = rawRequests[i].getReplies().len()
+            contactRequests.append({
+                "contactRequestId" = rawRequests[i].getContactRequestId(),
+                "read"             = rawRequests[i].getRead(),
+                "requestDate"      = formatCtrl.formatDate(rawRequests[i].getRequestDate()),
+                "subject"          = rawRequests[i].getSubject(),
+                "requestorUserId"  = rawRequests[i].getRequestor().getUserId(),
+                "userName"         = rawRequests[i].getUserName(),
+                "replied"          = rawRequests[i].getReplies().len() != 0,
+                "replyCount"       = rawRequests[i].getReplies().len()
             });
         }
         
-        return requests;
+        return contactRequests;
     }
     
-    remote struct function getDetails(required numeric requestId) {
-        var cf_request = createObject("component", "API.modules.com.IcedReaper.contactForm.request").init(arguments.requestId);
+    remote struct function getDetails(required numeric contactRequestId = null) {
+        var contactRequest = new contactRequest(arguments.contactRequestId);
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
-        if(! cf_request.getRead()) {
-            cf_request.setRead(true)
-                      .save();
+        if(! contactRequest.getRead()) {
+            contactRequest.setRead(true)
+                          .save(request.user);
         }
         
         return {
-            "requestId"       = cf_request.getRequestId(),
-            "requestDate"     = formatCtrl.formatDate(cf_request.getRequestDate()),
-            "subject"         = cf_request.getSubject(),
-            "requestorUserId" = cf_request.getRequestorUserId(),
-            "email"           = cf_request.getEmail(),
-            "userName"        = cf_request.getUserName(),
-            "message"         = cf_request.getMessage()
+            "contactRequestId" = contactRequest.getContactRequestId(),
+            "requestDate"      = formatCtrl.formatDate(contactRequest.getRequestDate()),
+            "subject"          = contactRequest.getSubject(),
+            "requestorUserId"  = contactRequest.getRequestor().getUserId(),
+            "email"            = contactRequest.getEmail(),
+            "userName"         = contactRequest.getUserName(),
+            "message"          = contactRequest.getMessage()
         };
     }
     
-    remote array function getReplies(required numeric requestId) {
-        var cf_request = createObject("component", "API.modules.com.IcedReaper.contactForm.request").init(arguments.requestId);
-        var rawReplies = cf_request.getReplies();
+    remote array function getReplies(required numeric contactRequestId) {
+        var contactRequest = new contactRequest(arguments.contactRequestId);
+        var rawReplies = contactRequest.getReplies();
         var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
         
         var replies = [];
@@ -61,12 +63,11 @@ component {
         return replies;
     }
     
-    remote boolean function reply(required numeric requestId, required string message) {
-        var reply = createObject("component", "API.modules.com.IcedReaper.contactForm.reply").init(0);
+    remote boolean function reply(required numeric contactRequestId, required string message) {
+        var reply = new reply(null, new contactRequest(arguments.contactRequestId));
         
-        reply.setRequestId(arguments.requestId)
-             .setMessage(arguments.message)
-             .save();
+        reply.setMessage(arguments.message)
+             .save(request.user);
         
         return true;
     }

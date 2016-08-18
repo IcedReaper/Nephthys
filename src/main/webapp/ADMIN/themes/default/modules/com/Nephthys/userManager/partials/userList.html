@@ -1,0 +1,94 @@
+<div class="row m-b-2">
+    <div class="col-md-10 col-sm-8">
+        <a href="#/" class="btn btn-secondary"><i class="fa fa-list"></i> Tasklist</a>
+        <a href="#/blacklist/list" class="btn btn-secondary"><i class="fa fa-list"></i> Liste der geblockten Namensteile</a>
+        <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
+        <div class="pull-right">
+            <a href="#/user/" class="btn btn-primary"><i class="fa fa-user-plus"></i> Neuen Benutzer anlegen</a>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Userübersicht</h1>
+    </div>
+</div>
+
+<h3>Filtern</h3>
+<form class="form-horizontal">
+    <div class="row">
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label for="statusName" class="col-sm-3 control-label">Status</label>
+                <div class="col-sm-6">
+                    <select class="form-control" name="statusName" ng-model="search.statusId" ng-options="us.statusId as us.name for us in status">
+                        <option value="">Alle</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<table class="table table-inverse m-t-1">
+    <thead>
+        <th>ID</th>
+        <th>UserName</th>
+        <th>Email</th>
+        <th>Status</th>
+        <th>Aktionen</th>
+    </thead>
+    <tbody>
+        <tr ng-repeat="user in users"
+            ng-show="(! search.statusId || search.statusId === user.statusId)">
+            <td>{{user.userId}}</td>
+            <td>
+                <a href="#/user/{{user.userId}}">{{user.username}}</a>
+            </td>
+            <td>{{user.email}}</td>
+            <td ng-class="status[user.statusId].canLogin ? 'text-success' : 'text-danger'">{{status[user.statusId].name}}</td>
+            <td>
+                <a href="#/user/{{user.userId}}"
+                   class="btn btn-primary"
+                   title="Benutzerdetails">
+                    <i class="fa fa-cog"></i>
+                </a>
+                
+                <button class="btn btn-warning"
+                        ng-click="activate(user.userId)"
+                        ng-show="user.active == 0"
+                        title="Benutzer aktivieren">
+                    <i class="fa fa-toggle-off"></i>
+                </button>
+                <button class="btn btn-success"
+                        ng-click="deactivate(user.userId)"
+                        ng-show="user.active == 1"
+                        title="Benutzer deaktivieren">
+                    <i class="fa fa-toggle-on"></i>
+                </button>
+                
+                <button class="btn btn-danger"
+                        ng-click="delete(user.userId)"
+                        title="Benutzer löschen - Achtung: Der User wird unwiederruflich gelöscht!">
+                    <i class="fa fa-trash-o"></i>
+                </button>
+                
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Status ändern
+                    </button>
+                    <div class="dropdown-menu">
+                        <button class="dropdown-item"
+                                ng-repeat="ps in status[ user.statusId ].nextStatus"
+                                ng-class="statusButtonClass(status[user.statusId].canLogin, ps.canLogin)"
+                                ng-click="pushToStatus(user.userId, ps.statusId);">{{ps.name}}</button>
+                    </div>
+                </div>
+            </td>
+        </tr>
+    </tbody>
+</table>

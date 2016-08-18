@@ -1,4 +1,6 @@
 component implements="WWW.interfaces.connector" {
+    import "API.modules.com.IcedReaper.blog.*";
+    
     public connector function init() {
         return this;
     }
@@ -6,71 +8,74 @@ component implements="WWW.interfaces.connector" {
     public string function getName() {
         return "com.IcedReaper.blog";
     }
+    public string function getModulePath() {
+        return getName().replace(".", "/", "ALL");
+    }
     
-    public string function render(required struct options, required string childContent) {
+    public string function render(required struct options, required boolean rootElement, required string childContent) {
         // prepare the options required for the theme
         var themeIndividualizer = createObject("component", "WWW.themes." & request.user.getTheme().getFolderName() & ".modules.com.IcedReaper.blog.cfc.prepareData");
         var preparedOptions = themeIndividualizer.prepareOptions(arguments.options);
         
+        themeIndividualizer.invokeResources();
+        
         var splitParameter = listToArray(request.page.getParameter(), "/");
-        var blogpostFilterCtrl = createObject("component", "API.modules.com.IcedReaper.blog.filter").init();
+        var blogpostFilterCtrl = new filter().for("blogpost");
         
         if(! arguments.options.keyExists("maxEntries")) {
             arguments.options.maxEntries = 5;
         }
         
         if(arguments.options.keyExists("onlyLast")) {
-            blogpostFilterCtrl.setReleased(1)
+            blogpostFilterCtrl.setReleased(true)
                               .setCount(1)
                               .execute();
             
-            var renderedContent = "";
-            saveContent variable="renderedContent" {
-                module template  = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/lastEntry.cfm"
-                       options   = arguments.options
-                       blogposts = blogpostFilterCtrl.getResult();
-            }
-            
-            return renderedContent;
+            return application.system.settings.getValueOfKey("templateRenderer")
+                .setTemplate("/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/lastEntry.cfm")
+                .addParam("options", arguments.options)
+                .addParam("blogposts", blogpostFilterCtrl.getResult())
+                .addParam("rootElement",  arguments.rootElement)
+                .render();
         }
         
         if(splitParameter.len() == 0) {
-            blogpostFilterCtrl.setReleased(1)
+            blogpostFilterCtrl.setReleased(true)
                               .setCount(arguments.options.maxEntries)
                               .execute();
             
-            return renderOverview(arguments.options, blogpostFilterCtrl, 1);
+            return renderOverview(arguments.options, blogpostFilterCtrl, 1, arguments.rootElement);
         }
         else {
-            if(splitParameter[1] == "Seite" && splitParameter.len() == 2) { // todo: Seite multilingual
-                blogpostFilterCtrl.setReleased(1)
+            if(splitParameter[1] == "Seite" && splitParameter.len() == 2) {
+                blogpostFilterCtrl.setReleased(true)
                                   .setCount(arguments.options.maxEntries)
                                   .setOffset((splitParameter[2]-1) * arguments.options.maxEntries)
                                   .execute();
                 
-                return renderOverview(arguments.options, blogpostFilterCtrl, splitParameter[2]);
+                return renderOverview(arguments.options, blogpostFilterCtrl, splitParameter[2], arguments.rootElement);
             }
-            else if(splitParameter[1] == "Kategorie") { // todo: Kategorie multilingual
+            else if(splitParameter[1] == "Kategorie") {
                 if(splitParameter.len() == 2) {
-                    blogpostFilterCtrl.setReleased(1)
+                    blogpostFilterCtrl.setReleased(true)
                                       .setCategory(splitParameter[2])
                                       .setCount(arguments.options.maxEntries)
                                       .execute();
                     
-                    return renderOverview(arguments.options, blogpostFilterCtrl, 1, splitParameter[2]);
+                    return renderOverview(arguments.options, blogpostFilterCtrl, 1, arguments.rootElement, splitParameter[2]);
                 }
-                else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") { // todo: Seite multilingual
-                    blogpostFilterCtrl.setReleased(1)
+                else if(splitParameter.len() == 4 && splitParameter[3] == "Seite") {
+                    blogpostFilterCtrl.setReleased(true)
                                       .setCategory(splitParameter[2])
                                       .setCount(arguments.options.maxEntries)
                                       .setOffset((splitParameter[4]-1) * arguments.options.maxEntries)
                                       .execute();
                     
-                    return renderOverview(arguments.options, blogpostFilterCtrl, splitParameter[2]);
+                    return renderOverview(arguments.options, blogpostFilterCtrl, splitParameter[2], arguments.rootElement);
                 }
             }
             else { // Detail view
-                blogpostFilterCtrl.setReleased(1)
+                blogpostFilterCtrl.setReleased(true)
                                   .setLink(request.page.getParameter())
                                   .execute();
 
@@ -83,7 +88,7 @@ component implements="WWW.interfaces.connector" {
                     
                     var commentAdded = checkAndAddComment(blogpost);
                     
-                    return renderDetails(arguments.options, blogpost, commentAdded);
+                    return renderDetails(arguments.options, blogpost, commentAdded, arguments.rootElement);
                 }
                 else {
                     throw(type = "icedreaper.blog.notFound", message = "Could not find the blogpost " & request.page.getParameter(), detail = request.page.getParameter());
@@ -95,38 +100,40 @@ component implements="WWW.interfaces.connector" {
     private string function renderOverview(required struct  options,
                                            required filter  blogpostFilterCtrl,
                                            required numeric actualPage,
+                                           required boolean rootElement,
                                                     string  activeCategory = "") {
-        var renderedContent = "";
-        var categoryLoader = createObject("component", "API.modules.com.IcedReaper.blog.categoryLoader").init();
+        var categoryFilter = new filter().for("category").setUsed(true);
         
-        saveContent variable="renderedContent" {
-            module template           = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/overview.cfm"
-                   options            = arguments.options
-                   blogposts          = arguments.blogpostFilterCtrl.getResult()
-                   totalBlogpostCount = arguments.blogpostFilterCtrl.getResultCount()
-                   totalPageCount     = ceiling(arguments.blogpostFilterCtrl.getResultCount() / arguments.options.maxEntries)
-                   actualPage         = arguments.actualPage
-                   categories         = categoryLoader.load()
-                   activeCategory     = arguments.activeCategory;
-        }
-        
-        return renderedContent;
+        return application.system.settings.getValueOfKey("templateRenderer")
+            .setModulePath(getModulePath())
+            .setTemplate("overview.cfm")
+            .addParam("options",            arguments.options)
+            .addParam("blogposts",          arguments.blogpostFilterCtrl.getResult())
+            .addParam("totalBlogpostCount", arguments.blogpostFilterCtrl.getResultCount())
+            .addParam("totalPageCount",     ceiling(arguments.blogpostFilterCtrl.getResultCount() / arguments.options.maxEntries))
+            .addParam("actualPage",         arguments.actualPage)
+            .addParam("categories",         categoryFilter.execute().getResult())
+            .addParam("activeCategory",     arguments.activeCategory)
+            .addParam("rootElement",        arguments.rootElement)
+            .render();
     }
     
-    private string function renderDetails(required struct options, required blogpost blogpost, required boolean commentAdded) {
-        var renderedContent = "";
-        var statisticsCtrl = createObject("component", "API.modules.com.IcedReaper.blog.statistics").init();
+    private string function renderDetails(required struct options,
+                                          required blogpost blogpost,
+                                          required boolean commentAdded,
+                                          required boolean rootElement) {
+        var statisticsCtrl = new statistics();
         
         statisticsCtrl.add(arguments.blogpost.getBlogpostId());
         
-        saveContent variable="renderedContent" {
-            module template     = "/WWW/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/blogpostDetail.cfm"
-                   options      = arguments.options
-                   blogpost     = arguments.blogpost
-                   commentAdded = commentAdded;
-        }
-        
-        return renderedContent;
+        return application.system.settings.getValueOfKey("templateRenderer")
+            .setModulePath(getModulePath())
+            .setTemplate("blogpostDetail.cfm")
+            .addParam("options",      arguments.options)
+            .addParam("blogpost",     arguments.blogpost)
+            .addParam("commentAdded", commentAdded)
+            .addParam("rootElement",  arguments.rootElement)
+            .render();
     }
     
     private boolean function checkAndAddComment(required blogpost blogpost) {
@@ -134,17 +141,10 @@ component implements="WWW.interfaces.connector" {
             if(true) { // check referrer
                 if(arguments.blogpost.getCommentsActivated()) {
                     if(len(form.comment) > 0 && len(form.comment) <= 500) {
-                        // todo: check if ip/user/what ever commented > X times the last Y seconds (Spam-Protection)
-                        if(request.user.getUserId() != 0 || (arguments.blogpost.getAnonymousCommentAllowed() && validateUsername(form.anonymousUsername) && validateEmail(form.anonymousEmail))) {
-                            var newComment = createObject("component", "API.modules.com.IcedReaper.blog.comment").init(0);
+                        if(request.user.getUserId() != null || (arguments.blogpost.getAnonymousCommentAllowed() && validateUsername(form.anonymousUsername) && validateEmail(form.anonymousEmail))) {
+                            var newComment = new comment(null, arguments.blogpost);
                             
-                            newComment.setBlogpostId(arguments.blogpost.getBlogpostId())
-                                      .setComment(form.comment);
-                            
-                            if(request.user.getUserId() != 0) {
-                                newComment.setCreatorUserId(request.user.getUserId());
-                            }
-                            else {
+                            if(request.user.getStatus().getCanLogin() == 0) {
                                 newComment.setAnonymousUsername(form.anonymousUsername)
                                           .setAnonymousEmail(form.anonymousEmail);
                             }
@@ -153,7 +153,8 @@ component implements="WWW.interfaces.connector" {
                                 newComment.setPublished(true);
                             }
                             
-                            newComment.save();
+                            newComment.setComment(form.comment)
+                                      .save(request.user);
                             
                             arguments.blogpost.addComment(newComment);
                             
@@ -184,7 +185,7 @@ component implements="WWW.interfaces.connector" {
             return false;
         }
         
-        var userFilterCtrl = createObject("component", "API.modules.com.Nephthys.user.filter").init();
+        var userFilterCtrl = createObject("component", "API.modules.com.Nephthys.userManager.filter").init().for("user");
         return userFilterCtrl.setUserName(arguments.userName)
                              .execute()
                              .getResultCount() == 0;

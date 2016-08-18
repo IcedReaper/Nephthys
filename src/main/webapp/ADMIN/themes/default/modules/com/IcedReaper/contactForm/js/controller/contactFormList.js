@@ -4,14 +4,14 @@ nephthysAdminApp
             contactFormService
                 .getList()
                 .then(function (contactFormList) {
-                    $scope.requests = contactFormList;
+                    $scope.contactRequests = contactFormList;
                 });
         }
         
         $scope.requests = [];
         $scope.search = {
-            read: "",
-            replied: ""
+            read: '',
+            replied: ''
         };
         $scope.refresh();
     }]);

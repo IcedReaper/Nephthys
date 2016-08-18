@@ -1,46 +1,48 @@
 component {
-    // Galleries and their details
+    import "API.modules.com.IcedReaper.gallery.*";
+    
+    formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
+    
     remote array function getList() {
-        var galleryFilterCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.filter").init();
+        var galleryFilterCtrl = new filter().for("gallery");
         
         var galleries = galleryFilterCtrl.execute().getResult();
         var data = [];
         
         for(var i = 1; i <= galleries.len(); i++) {
-            data.append(prepareDetailStruct(galleries[i]));
+            data.append(prepareDetailStruct(galleries[i], false));
         }
         
         return data;
     }
     
-    remote struct function getDetails(required numeric galleryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+    remote struct function getDetails(required numeric galleryId = null) {
+        var gallery = new gallery(arguments.galleryId);
         
-        return prepareDetailStruct(gallery);
+        return prepareDetailStruct(gallery, true);
     }
     
-    remote array function loadPictures(required numeric galleryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+    remote array function loadPictures(required numeric galleryId = null) {
+        var gallery = new gallery(arguments.galleryId);
         
         return preparePictureStruct(gallery.getPictures(), gallery.getRelativePath() & "/");
     }
     
-    remote array function loadCategories(required numeric galleryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+    remote array function loadCategories(required numeric galleryId = null) {
+        var gallery = new gallery(arguments.galleryId);
         
         return prepareCategoryDetails(gallery.getCategories(), false);
     }
     
     remote array function loadAutoCompleteCategories(required string queryString) {
-        var categoryLoader = createObject("component", "API.modules.com.IcedReaper.gallery.categoryLoader").init();
+        var categoryFilter = new filter().for("category");
         
-        var categories = categoryLoader
-                             .setName(arguments.queryString)
-                             .load();
+        var categories = categoryFilter.setName(arguments.queryString)
+                                       .execute()
+                                       .getResult();
         
         if(categories.len() != 1 || categories[1].getName() != arguments.queryString) {
-            var dummyCategory = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(0)
-                                    .setName(arguments.queryString);
+            var dummyCategory = new category(null).setName(arguments.queryString);
             
             categories.append(dummyCategory);
         }
@@ -48,202 +50,433 @@ component {
         return prepareCategoryDetails(categories, false);
     }
     
-    remote struct function save(required numeric galleryId,
+    remote struct function save(required numeric galleryId = null,
                                 required string  headline,
                                 required string  description,
+                                required string  title,
                                 required string  link,
                                 required string  foldername,
                                 required string  introduction,
                                 required string  story,
-                                required numeric active) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+                                required boolean private) {
+        var gallery = new gallery(arguments.galleryId);
         
-        if(arguments.galleryId == 0) {
-            gallery.setFoldername(attributes.foldername);
+        if(gallery.isEditable(request.user)) {
+            if(arguments.galleryId == null) {
+                gallery.setFoldername(arguments.foldername);
+            }
+            
+            gallery.setHeadline(arguments.headline)
+                   .setDescription(arguments.description)
+                   .setTitle(arguments.title)
+                   .setLink(arguments.link)
+                   .setIntroduction(arguments.introduction)
+                   .setStory(arguments.story)
+                   .setPrivate(arguments.private)
+                   .save(request.user);
+            
+            return prepareDetailStruct(gallery, true);
         }
-        
-        gallery.setHeadline(arguments.headline)
-               .setDescription(arguments.description)
-               .setLink(arguments.link)
-               .setIntroduction(arguments.introduction)
-               .setStory(arguments.story)
-               .setActiveStatus(arguments.active)
-               .save();
-        
-        return prepareDetailStruct(gallery);
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function delete(required numeric galleryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
-        gallery.delete();
+        var gallery = new gallery(arguments.galleryId);
         
-        return true;
-    }
-    
-    remote boolean function activate(required numeric galleryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
-        gallery.setActiveStatus(1)
-               .save();
-        
-        return true;
-    }
-    
-    remote boolean function deactivate(required numeric galleryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
-        gallery.setActiveStatus(0)
-               .save();
-        
-        return true;
+        if(gallery.isEditable(request.user)) {
+            gallery.delete(request.user);
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function addCategory(required numeric galleryId,
-                                       required numeric categoryId,
-                                       required string  categoryName) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
-        var newCategory = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
-        if(arguments.categoryId == 0) {
-            newCategory.setName(arguments.categoryName)
-                       .save();
-        }
-        gallery.addCategory(newCategory)
-               .save();
+                                        required numeric categoryId,
+                                        required string  categoryName) {
+        var gallery = new gallery(arguments.galleryId);
         
-        return true;
+        if(gallery.isEditable(request.user)) {
+            var newCategory = new category(arguments.categoryId);
+            if(arguments.categoryId == null) {
+                newCategory.setName(arguments.categoryName)
+                           .save(request.user);
+            }
+            gallery.addCategory(newCategory)
+                   .save(request.user);
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function removeCategory(required numeric galleryId,
                                           required numeric categoryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = new gallery(arguments.galleryId);
         
-        gallery.removeCategory(arguments.categoryId);
-        
-        return true;
+        if(gallery.isEditable(request.user)) {
+            gallery.removeCategory(arguments.categoryId);
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function uploadPictures(required numeric galleryId) {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(arguments.galleryId);
+        var gallery = new gallery(arguments.galleryId);
         
-        var newPicture = createObject("component", "API.modules.com.IcedReaper.gallery.picture").init(0);
-        newPicture.setGalleryId(arguments.galleryId)
-                  .upload();
-        
-        gallery.addPicture(newPicture);
-        
-        return true;
+        if(gallery.isEditable(request.user)) {
+            var newPicture = new picture(null);
+            newPicture.setGalleryId(arguments.galleryId)
+                      .upload(request.user);
+            
+            gallery.addPicture(newPicture);
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote boolean function updatePicture(required numeric pictureId,
-                                         required string  caption,
-                                         required string  alt,
-                                         required string  title) {
-        var picture = createObject("component", "API.modules.com.IcedReaper.gallery.picture").init(arguments.pictureId);
+                                          required string  caption,
+                                          required string  alt,
+                                          required string  title) {
+        var picture = new picture(arguments.pictureId);
+        var gallery = new gallery(picture.getGalleryId());
         
-        picture.setCaption(arguments.caption)
-               .setAlt(arguments.alt)
-               .setTitle(arguments.title)
-               .save();
-        
-        return true;
+        if(gallery.isEditable(request.user)) {
+            picture.setCaption(arguments.caption)
+                   .setAlt(arguments.alt)
+                   .setTitle(arguments.title)
+                   .save(request.user);
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     remote array function deletePicture(required numeric pictureId) {
-        var picture = createObject("component", "API.modules.com.IcedReaper.gallery.picture").init(arguments.pictureId);
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(picture.getGalleryId());
-        gallery.removePicture(arguments.pictureId);
+        var picture = new picture(arguments.pictureId);
+        var gallery = new gallery(picture.getGalleryId());
         
-        return preparePictureStruct(gallery.getPictures(), gallery.getRelativePath() & "/");
+        if(gallery.isEditable(request.user)) {
+            gallery.removePicture(arguments.pictureId, request.user);
+            
+            return preparePictureStruct(gallery.getPictures(), gallery.getRelativePath() & "/");
+        }
+        else {
+            throw(type = "nephthys.permission.notAuthorized", message = "You are not allowed to edit this blog");
+        }
     }
     
     // categories and their details
     remote array function getCategoryList() {
-        var categoryLoader = createObject("component", "API.modules.com.IcedReaper.gallery.categoryLoader").init();
+        var categoryFilter = new filter().for("category");
         
-        return prepareCategoryDetails(categoryLoader.load(), true);
+        return prepareCategoryDetails(categoryFilter.execute().getResult(), true);
     }
     
-    remote struct function getCategoryDetails(required numeric categoryId) {
-        var category = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
+    remote struct function getCategoryDetails(required numeric categoryId = null) {
+        var category = new category(arguments.categoryId);
         
         return prepareCategoryStruct(category);
     }
     
-    remote boolean function saveCategory(required numeric categoryId,
-                                        required string  name) {
-        var category = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
-        category.setName(arguments.name)
-                .save();
+    remote numeric function saveCategory(required numeric categoryId = null,
+                                         required string  name) {
+        var category = new category(arguments.categoryId);
         
-        return true;
+        category.setName(arguments.name)
+                .save(request.user);
+        
+        return category.getCategoryId();
     }
     
     remote boolean function deleteCategory(required numeric categoryId) {
-        var category = createObject("component", "API.modules.com.IcedReaper.gallery.category").init(arguments.categoryId);
+        var category = new category(arguments.categoryId);
         
-        category.delete();
+        category.delete(request.user);
         
         return true;
     }
     
-    remote struct function getLastVisitChart(required numeric galleryId, required numeric dayCount) {
-        if(arguments.dayCount == 0) {
-            arguments.dayCount = 20;
-        }
-        
-        var statisticsCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.statistics").init();
-        var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
-        
-        var statisticsData = statisticsCtrl.load(arguments.galleryId, dateAdd("d", (dayCount - 1) * -1, now()), now());
-        
-        var labels = [];
-        var data = [];
-        for(var i = 1; i <= statisticsData.len(); i++) {
-            labels.append(formatCtrl.formatDate(statisticsData[i].date, false));
-            data.append(statisticsData[i].count);
-        }
-        
-        return {
-            "labels"  = labels,
-            "data"    = data
-        };
+    remote struct function getGalleryStatistics(required numeric galleryId = null, required string sortOrder, required string fromDate, required string toDate) {
+        var _fromDate = dateFormat(arguments.fromDate, "YYYY/MM/DD");
+        var _toDate   = dateFormat(arguments.toDate, "YYYY/MM/DD");
+
+        return new statistics().getTotal(arguments.galleryId,
+                                         arguments.sortOrder,
+                                         _fromDate,
+                                         _toDate);
     }
     
+    remote struct function getStatisticsSeparatedByGallery(required string sortOrder, required string fromDate, required string toDate) {
+        var _fromDate = dateFormat(arguments.fromDate, "YYYY/MM/DD");
+        var _toDate   = dateFormat(arguments.toDate, "YYYY/MM/DD");
+
+        return new statistics().getSplitPerGallery(arguments.sortOrder,
+                                                   _fromDate,
+                                                   _toDate);
+    }
+    
+    // STATUS 
+    remote boolean function pushToStatus(required numeric galleryId, required numeric statusId) {
+        new gallery(arguments.galleryId).pushToStatus(new status(arguments.statusId), request.user);
+        
+        return true;
+    }
+    
+    remote struct function getStatusList() {
+        var statusLoader = new filter().for("status");
+        
+        var prepStatus = {};
+        
+        for(var status in statusLoader.execute().getResult()) {
+            prepStatus[status.getStatusId()] = prepareStatus(status);
+        }
+        
+        return prepStatus;
+    }
+    
+    remote array function getStatusListAsArray() {
+        var statusLoader = new filter().for("status");
+        
+        var prepStatus = [];
+        
+        for(var status in statusLoader.execute().getResult()) {
+            prepStatus.append(prepareStatusAsArray(status));
+        }
+        
+        return prepStatus;
+    }
+    
+    remote struct function getStatusDetails(required numeric statusId = null) {
+        return prepareStatus(new status(arguments.statusId));
+    }
+    
+    remote numeric function saveStatus(required struct status) {
+        var status = new status(arguments.status.statusId);
+        
+        status.setActiveStatus(arguments.status.active)
+              .setEditable(arguments.status.editable)
+              .setName(arguments.status.name)
+              .setOnlineStatus(arguments.status.online)
+              .setDeleteable(arguments.status.deleteable)
+              .setShowInTasklist(arguments.status.showInTasklist)
+              .save(request.user);
+        
+        return status.getStatusId();
+    }
+    
+    remote boolean function deleteStatus(required numeric statusId) {
+        if(arguments.statusId == application.system.settings.getValueOfKey("com.IcedReaper.gallery.startStatus")) {
+            throw(type = "nephthys.application.notAllowed", message = "You cannot delete the start status. Please reset the start status in the system settings");
+        }
+        
+        var galleriesStillWithThisStatus = new filter().for("gallery")
+                                                       .setStatusId(arguments.statusId)
+                                                       .execute()
+                                                       .getResultCount();
+        
+        if(galleriesStillWithThisStatus == 0) {
+            new status(arguments.statusId).delete(request.user);
+            
+            return true;
+        }
+        else {
+            throw(type = "nephthys.application.notAllowed", message = "You cannot delete a status that is still used. There are still " & galleriesStillWithThisStatus & " galleries on this status.");
+        }
+    }
+    
+    remote boolean function activateStatus(required numeric statusId) {
+        var status = new status(arguments.statusId);
+        
+        status.setActiveStatus(true)
+              .save(request.user);
+        
+        return true;
+    }
+    
+    remote boolean function deactivateStatus(required numeric statusId) {
+        new status(arguments.statusId).setActiveStatus(false)
+                                      .save(request.user);
+        
+        return true;
+    }
+    
+    remote boolean function saveStatusFlow(required array statusFlow) {
+        var i = 0;
+        var j = 0;
+        var k = 0;
+        var found = false;
+        transaction {
+            for(i = 1; i <= arguments.statusFlow.len(); ++i) {
+                var status = new status(arguments.statusFlow[i].statusId);
+                
+                var nextStatus = status.getNextStatus();
+                
+                for(j = 1; j <= nextStatus.len(); ++j) {
+                    found = false;
+                    for(k = 1; k <= arguments.statusFlow[i].nextStatus.len() && ! found; ++k) {
+                        if(nextStatus[j].getStatusId() == arguments.statusFlow[i].nextStatus[k].statusId) {
+                            found = true;
+                        }
+                    }
+                    
+                    if(! found) {
+                        status.removeNextStatus(nextStatus[j].getStatusId());
+                    }
+                }
+                
+                for(j = 1; j <= arguments.statusFlow[i].nextStatus.len(); ++j) {
+                    found = false;
+                    for(k = 1; k <= nextStatus.len() && ! found; ++k) {
+                        if(nextStatus[k].getStatusId() == arguments.statusFlow[i].nextStatus[j].statusId) {
+                            found = true;
+                        }
+                    }
+                    
+                    if(! found) {
+                        status.addNextStatus(arguments.statusFlow[i].nextStatus[j].statusId);
+                    }
+                }
+                
+                status.save(request.user);
+            }
+            
+            transactionCommit();
+        }
+        
+        return true;
+    }
+    
+    remote array function getGalleriesInTasklist() {
+        var statusFilterCtrl = new filter().for("status")
+                                           .setShowInTasklist(true)
+                                           .execute();
+        
+        var galleryFilterCtrl = new filter().for("gallery");
+        
+        var statusData = [];
+        var index = 0;
+        for(var status in statusFilterCtrl.execute().getResult()) {
+            index++;
+            statusData[index] = prepareStatusAsArray(status);
+            statusData[index]["galleries"] = [];
+            
+            for(var gallery in galleryFilterCtrl.setStatusId(status.getStatusId()).execute().getResult()) {
+                var lastApproverFilter = new filter().for("approval")
+                                                     .setGalleryId(gallery.getGalleryId())
+                                                     .setLimit(1)
+                                                     .setSortDirection("DESC")
+                                                     .execute();
+                var lastApprover = {};
+                var lastApprovalDate = "";
+                if(lastApproverFilter.getResultCount() == 1) {
+                    var approval = lastApproverFilter.getResult()[1];
+                    lastApprover = getUserInformation(approval.getApprover());
+                    lastApprovalDate = formatCtrl.formatDate(approval.getApprovalDate());
+                }
+                
+                statusData[index]["galleries"].append(prepareDetailStruct(gallery, false));
+                statusData[index]["galleries"].last()["lastApprover"] = lastApprover;
+                statusData[index]["galleries"].last()["lastApprovalDate"] = lastApprovalDate;
+            }
+        }
+        
+        return statusData;
+    }
+    
+    remote array function updatePictureSorting(required array pictures) {
+        var updated = [];
+        transaction {
+            for(var i = 1; i <= arguments.pictures.len(); ++i) {
+                var pic = new picture(arguments.pictures[i].pictureId);
+                
+                if(pic.getSortId() != i) {
+                    updated.append({
+                        picId = pic.getPictureId(),
+                        oldSort = pic.getSortId(),
+                        newSort = i
+                    });
+                    
+                    pic.setSortId(i)
+                       .save(request.user);
+                }
+            }
+            
+            transactionCommit();
+        }
+        
+        return updated;
+    }
     
     // private
-    private struct function prepareDetailStruct(required gallery gallery) {
-        //var formatCtrl = application.system.settings.getValueOfKey("formatLibrary");
-        
+    private struct function prepareDetailStruct(required gallery gallery, required boolean addApprovalList) {
         var categories = [];
         var gCategories = arguments.gallery.getCategories();
         for(var c = 1; c <= gCategories.len(); c++) {
             categories.append(gCategories[c].getName());
         }
         
-        return {
+        var galleryDetails = {
             "galleryId"    = arguments.gallery.getGalleryId(),
             "headline"     = arguments.gallery.getHeadline(),
             "description"  = arguments.gallery.getDescription(),
+            "title"        = arguments.gallery.getTitle(),
             "link"         = arguments.gallery.getLink(),
             "foldername"   = arguments.gallery.getFoldername(),
             "introduction" = arguments.gallery.getIntroduction(),
             "story"        = arguments.gallery.getStory(),
-            //"releaseDate"  = formatCtrl.formatDate(arguments.gallery.getReleaseDate(), false),
-            "active"       = toString(arguments.gallery.getActiveStatus()),
             "pictureCount" = arguments.gallery.getPictureCount(),
-            "categories"   = categories
-        };
+            "categories"   = categories,
+            "private"      = arguments.gallery.getPrivate(),
+            "isEditable"   = arguments.gallery.isEditable(request.user),
+            "statusId"     = arguments.gallery.getStatus().getStatusId(),
+            "creator"      = getUserInformation(arguments.gallery.getCreator()),
+            "creationDate" = formatCtrl.formatDate(arguments.gallery.getCreationDate()),
+            "lastEditor"   = getUserInformation(arguments.gallery.getLastEditor()),
+            "lastEditDate" = formatCtrl.formatDate(arguments.gallery.getLastEditDate()),
+        }
+        
+        
+        if(arguments.addApprovalList && arguments.gallery.getGalleryId() != null) {
+            var preparedApprovalList = prepareApprovalList(new filter().for("approval")
+                                                                       .setGalleryId(arguments.gallery.getGalleryId())
+                                                                       .setSortDirection("DESC")
+                                                                       .execute()
+                                                                       .getResult());
+            
+            galleryDetails["approvalList"] = preparedApprovalList;
+        }
+        
+        return galleryDetails;
     }
     
     private array function preparePictureStruct(required array pictures, required string relativePath) {
         var gPictures = [];
         for(var p = 1; p <= arguments.pictures.len(); p++) {
             gPictures.append({
-                    "pictureId"         = arguments.pictures[p].getPictureId(),
-                    "pictureFilename"   = arguments.relativePath & arguments.pictures[p].getPictureFilename(),
-                    "thumbnailFilename" = arguments.relativePath & arguments.pictures[p].getThumbnailFilename(),
-                    "title"             = arguments.pictures[p].getTitle(),
-                    "alt"               = arguments.pictures[p].getAlt(),
-                    "caption"           = arguments.pictures[p].getCaption()
-                });
+                "pictureId"         = arguments.pictures[p].getPictureId(),
+                "sortId"            = arguments.pictures[p].getSortId(),
+                "pictureFilename"   = arguments.relativePath & arguments.pictures[p].getPictureFilename(),
+                "thumbnailFilename" = arguments.relativePath & arguments.pictures[p].getThumbnailFilename(),
+                "title"             = arguments.pictures[p].getTitle(),
+                "alt"               = arguments.pictures[p].getAlt(),
+                "caption"           = arguments.pictures[p].getCaption()
+            });
         }
         
         return gPictures;
@@ -251,7 +484,7 @@ component {
     
     private array function prepareCategoryDetails(required array categories, required boolean getGalleries = false) {
         var gCategories = [];
-        var galleryFilterCtrl = createObject("component", "API.modules.com.IcedReaper.gallery.filter").init();
+        var galleryFilterCtrl = new filter().for("gallery");
         
         for(var c = 1; c <= arguments.categories.len(); c++) {
             gCategories.append({
@@ -291,8 +524,75 @@ component {
     
     private struct function getUserInformation(required user _user) {
         return {
-            'userId'   = arguments._user.getUserId(),
-            'userName' = arguments._user.getUserName()
+            "userId"   = arguments._user.getUserId(),
+            "userName" = arguments._user.getUserName(),
+            "avatar"   = arguments._user.getAvatarPath()
         };
+    }    
+    
+    private struct function prepareStatus(required status status) {
+        var nextStatusList = {};
+        for(var nextStatus in arguments.status.getNextStatus()) {
+            if(nextStatus.isActive()) {
+                nextStatusList[nextStatus.getStatusId()] = {
+                    "statusId" = nextStatus.getStatusId(),
+                    "name"     = nextStatus.getName(),
+                    "active"   = nextStatus.isActive(),
+                    "online"   = nextStatus.isOnline(),
+                    "editable" = nextStatus.getEditable()
+                };
+            }
+        }
+        
+        return {
+            "statusId"       = arguments.status.getStatusId(),
+            "name"           = arguments.status.getName(),
+            "active"         = arguments.status.isActive(),
+            "online"         = arguments.status.isOnline(),
+            "editable"       = arguments.status.getEditable(),
+            "deleteable"     = arguments.status.getDeleteable(),
+            "showInTasklist" = arguments.status.getShowInTasklist(),
+            "nextStatus"     = nextStatusList
+        };
+    }
+    
+    private struct function prepareStatusAsArray(required status status) {
+        var nextStatusList = [];
+        for(var nextStatus in arguments.status.getNextStatus()) {
+            if(nextStatus.isActive()) {
+                nextStatusList.append({
+                    "statusId" = nextStatus.getStatusId(),
+                    "name"     = nextStatus.getName(),
+                    "active"   = nextStatus.isActive(),
+                    "online"   = nextStatus.isOnline(),
+                    "editable" = nextStatus.getEditable()
+                });
+            }
+        }
+        
+        return {
+            "statusId"       = arguments.status.getStatusId(),
+            "name"           = arguments.status.getName(),
+            "active"         = arguments.status.isActive(),
+            "online"         = arguments.status.isOnline(),
+            "editable"       = arguments.status.getEditable(),
+            "deleteable"     = arguments.status.getDeleteable(),
+            "showInTasklist" = arguments.status.getShowInTasklist(),
+            "nextStatus"     = nextStatusList
+        };
+    }
+    
+    private array function prepareApprovalList(required array approvalList) {
+        var preparedApprovalList = [];
+        for(var approval in arguments.approvalList) {
+            preparedApprovalList.append({
+                "approver"           = getUserInformation(approval.getApprover()),
+                "approvalDate"       = formatCtrl.formatDate(approval.getApprovalDate()),
+                "previousStatusName" = approval.getPrevStatus().getName(),
+                "newStatusName"      = approval.getNewStatus().getName()
+            });
+        }
+        
+        return preparedApprovalList;
     }
 }

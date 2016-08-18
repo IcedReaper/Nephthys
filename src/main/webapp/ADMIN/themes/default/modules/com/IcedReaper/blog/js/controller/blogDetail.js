@@ -3,31 +3,27 @@ var imageSizes = {};
 var fileNames  = [];
 
 nephthysAdminApp
-    .controller('blogDetailCtrl', ["$scope", "$rootScope", "$route", "$routeParams", "$q", "blogService", function ($scope, $rootScope, $route, $routeParams, $q, blogService) {
-        $rootScope.$$listeners['blog-loaded'] = null; // as the different js-files will be invoken again and again the event listeners get applied multiple times, so we reset them here
-        
-        var activePage = "detail";
+    .controller('blogDetailCtrl', ["$scope", "$route", "$routeParams", "$q", "blogService", function ($scope, $route, $routeParams, $q, blogService) {
         $scope.linkSet = false;
         // load
         $scope.load = function() {
-            return blogService
-                       .getDetails($routeParams.blogpostId)
-                       .then(function (blogDetails) {
-                           $scope.blogpost = blogDetails;
-                           
-                           if($scope.blogpost.blogpostId != 0) {
-                               $scope.linkSet = true;
-                               
-                               $rootScope.$emit('blog-loaded', {blogpostId: $scope.blogpost.blogpostId});
-                           }
-                           else {
-                               $scope.linkSet = false;
-                           }
-                       });
+            $q.all([
+                blogService.getDetails($routeParams.blogpostId),
+                blogService.getStatus()
+            ]).then($q.spread(function (blogDetails, status) {
+                $scope.blogpost = blogDetails;
+                $scope.status   = status;
+                $scope.blogpost = blogDetails;
+                
+                var dateParts = $scope.blogpost.releaseDate.split("/");
+                $scope.blogpost.releaseDate = new Date(dateParts[0], parseInt(dateParts[1], 10) - 1, dateParts[2]);
+
+                $scope.linkSet = $scope.blogpost.blogpostId;
+            }));
         };
         
         $scope.save = function () {
-            var convContent = function() { // todo: change to angular functionality
+            var convertContent = function() {
                 var ed = $('div[id^="taTextElement"]').clone();
 
                 ed.find('img[imageId]').each(function(index) {
@@ -52,21 +48,25 @@ nephthysAdminApp
             
             var blogpostCopy = {};
             for(var attrib in $scope.blogpost) {
-                blogpostCopy[attrib] = $scope.blogpost[attrib];
+                if($scope.blogpost[attrib] instanceof Date) {
+                    blogpostCopy[attrib] = new Date($scope.blogpost[attrib].valueOf());
+                }
+                else {
+                    blogpostCopy[attrib] = $scope.blogpost[attrib];
+                }
             }
-            blogpostCopy.story = convContent();
+            blogpostCopy.releaseDate = blogpostCopy.releaseDate.toAjaxFormat();
+            blogpostCopy.story = convertContent();
             
             blogService
                 .save(blogpostCopy, fileNames)
-                .then(function (result) {
-                    blogService.uploadImages(result.blogpostId, images, imageSizes)
+                .then(function (blogpostId) {
+                    blogService.uploadImages(blogpostId, images, imageSizes)
                         .then(function(uploadResult) {
                             var oldBlogpostId = $scope.blogpost.blogpostId;
-                            $scope.blogpost = result;
-                            
-                            if(oldBlogpostId == 0) {
+                            if(! oldBlogpostId) {
                                 $route.updateParams({
-                                    blogpostId: result.blogpostId
+                                    blogpostId: blogpostId
                                 });
                             }
                             
@@ -84,25 +84,50 @@ nephthysAdminApp
             }
         };
         
-        // tabs and paging
-        $scope.showPage = function (page) {
-            activePage = page;
+        $scope.openReleaseDate = function () {
+            $scope.releaseDate.isOpen = true;
         };
         
-        $scope.tabClasses = function (page) {
-            return (activePage === page ? "active" : "");
+        $scope.pushToStatus = function (newStatusId) {
+            if(newStatusId) {
+                blogService
+                    .pushToStatus($routeParams.blogpostId,
+                                  newStatusId)
+                    .then(function(isEditable) {
+                        $scope.blogpost.statusId = newStatusId;
+                        $scope.blogpost.isEditable = isEditable;
+                    });
+            }
         };
         
-        $scope.pageClasses = function (page) {
-            return (activePage === page ? "active" : "");
+        $scope.statusButtonClass = function (actualOnline, nextOnline) {
+            if(! actualOnline && nextOnline) {
+                return "btn-success";
+            }
+            if(actualOnline && ! nextOnline) {
+                return "btn-danger";
+            }
+            if(! actualOnline && ! nextOnline) {
+                return "btn-primary";
+            }
+            if(actualOnline && nextOnline) {
+                return "btn-secondary";
+            }
+            
+            return "btn-warning";
         };
         
         // init
-        $scope
-            .load()
-            .then($scope.showPage('details'));
+        $scope.releaseDate = {
+            isOpen: false,
+            options: {
+                
+            }
+        };
+        $scope.blogpost = {};
         
-        $rootScope.blogpostId = $routeParams.blogpostId;
+        $scope.load();
+        
         $scope.initialized = false;
     }])
     .config(["$provide", function ($provide) {

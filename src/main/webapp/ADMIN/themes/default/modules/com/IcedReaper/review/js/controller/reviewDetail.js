@@ -1,7 +1,5 @@
 nephthysAdminApp
-    .controller('reviewDetailCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "reviewService", "typeService", function ($scope, $rootScope, $routeParams, $q, reviewService, typeService) {
-        var activePage = "detail";
-        // load
+    .controller('reviewDetailCtrl', ["$scope", "$routeParams", "$route", "$q", "reviewService", "typeService", function ($scope, $routeParams, $route, $q, reviewService, typeService) {
         $scope.load = function() {
             return $q.all([
                     reviewService.getDetails($routeParams.reviewId),
@@ -10,8 +8,6 @@ nephthysAdminApp
                 .then($q.spread(function (reviewDetails, types) {
                     $scope.review = reviewDetails;
                     $scope.types = types;
-                    
-                    $rootScope.$emit('review-loaded', {reviewId: $scope.review.reviewId});
                 }));
         };
         
@@ -19,7 +15,14 @@ nephthysAdminApp
             reviewService
                 .save($scope.review)
                 .then(function(reviewId) {
+                    var oldReviewId = $scope.review.reviewId;
                     $scope.review.reviewId = reviewId;
+                    
+                    if(! oldReviewId) {
+                        $route.updateParams({
+                            reviewId: reviewId
+                        });
+                    }
                     
                     if($scope.newImage) {
                         return reviewService.uploadImage($scope.newImage, $scope.review.reviewId);
@@ -34,19 +37,6 @@ nephthysAdminApp
                 });
         };
         
-        // tabs and paging
-        $scope.showPage = function (page) {
-            activePage = page;
-        };
-        
-        $scope.tabClasses = function (page) {
-            return (activePage === page ? "active" : "");
-        };
-        
-        $scope.pageClasses = function (page) {
-            return (activePage === page ? "active" : "");
-        };
-        
         $scope.imageSelect = function() {
             if($scope.newImage) {
                 return $scope.newImage;
@@ -57,8 +47,7 @@ nephthysAdminApp
         };
         
         // init
-        $scope.load()
-              .then($scope.showPage('details'));
+        $scope.load();
         
         $scope.reviewId = $routeParams.reviewId;
         $scope.initialized = false;

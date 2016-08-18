@@ -1,0 +1,73 @@
+<div class="row m-b-2">
+    <div class="col-md-12 col-sm-12">
+        <a href="#/tasklist" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>
+        <a href="#/blogpost/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Blogpostübersicht</a>
+        <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
+        <a href="#/category/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Kategorieübersicht</a>
+        <a href="#/settings" class="btn btn-secondary"><i class="fa fa-cogs"></i> Einstellungen</a>
+        <a href="#/statistics" class="btn btn-secondary"><i class="fa fa-area-chart"></i> Gesamtstatistik</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Statusdetails für <small>{{status.name}}</small></h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-block">
+            <form novalidate>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="link">Name</label>
+                            <input type="text" class="form-control" id="name" ng-model="status.name">
+                        </div>
+                        <div class="form-group">
+                            <label for="active">Aktiv</label>
+                            <select class="form-control" id="active" ng-model="status.active"
+                                    ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="online" title="Blogposts, die einen Status haben, der als Offline markiert ist, werden nicht auf der Webseite angezeigt und können nicht angesurft werden.">Online</label>
+                            <select class="form-control" id="online" ng-model="status.online"
+                                    ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="deleteable" title="Blogposts, die diesen Status haben, können permanent gelöscht werden.">Blogposts in dem Status sind löschbar</label>
+                            <select class="form-control" id="deleteable" ng-model="status.deleteable"
+                                    ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="editable" title="Blogposts, die in diesem Status sind, dürfen weiterhin bearbeitet werden.">Blogposts in dem Status sind bearbeitbar</label>
+                            <select class="form-control" id="editable" ng-model="status.editable"
+                                    ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]">
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="showInTasklist" title="Blogposts, die in diesem Status sind, benötigen Aktionen">Blogposts benötigen Aktionen</label>
+                            <select class="form-control" id="showInTasklist" ng-model="status.showInTasklist"
+                                    ng-options="o.v as o.n for o in [{ n: 'Ja', v: true }, { n: 'Nein', v: false }]">
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+            </form>
+        </div>
+        
+        <div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
+            <h3>{{message.headline}}</h3>
+            <p>{{message.text}}</p>
+            <p>{{message.errorMessage}}</p>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,140 @@
+.com-IcedReaper-tileDashboard {
+    height: 100%;
+    
+    .tile {
+        padding: 15px;
+        height: 250px;
+        float: left;
+        color: #000;
+        
+        @include media-breakpoint-up(xs) {
+            width: 100%;
+        }
+        @include media-breakpoint-up(sm) {
+            width: 100%;
+        }
+        @include media-breakpoint-up(md) {
+            width: 50%;
+        }
+        @include media-breakpoint-up(lg) {
+            width: (100% / 3);
+        }
+        @include media-breakpoint-up(xl) {
+            width: 25%;
+        }
+        
+        
+        &.wide {
+            @include media-breakpoint-up(xs) {
+                width: 100%;
+            }
+            @include media-breakpoint-up(sm) {
+                width: 100%;
+            }
+            @include media-breakpoint-up(md) {
+                width: 100%;
+            }
+            @include media-breakpoint-up(lg) {
+                width: (100% / 3) * 2;
+            }
+            @include media-breakpoint-up(xl) {
+                width: 50%;
+            }
+        }
+        
+        &.wide.lg-complete {
+            @include media-breakpoint-up(lg) {
+                width: 100%;
+            }
+            @include media-breakpoint-up(xl) {
+                width: 50%;
+            }
+        }
+        
+        > div {
+            background-color: #EEE;
+            height: 100%;
+            padding: 10px;
+            text-align: center;
+            
+            h3 {
+                padding-top: 30px;
+            }
+            
+            p {
+                font-size:2rem;
+            }
+            
+            &.clickable:hover {
+                background-color: darken(#EEE, 15%);
+            }
+        }
+        
+        &.tile-primary {
+            > div {
+                background-color: $brand-primary;
+            }
+            
+            &.clickable:hover {
+                > div {
+                    background-color: lighten($brand-primary, 15%);
+                }
+            }
+        }
+        &.tile-success {
+            > div {
+                background-color: $brand-success;
+            }
+            
+            &.clickable:hover {
+                > div {
+                    background-color: lighten($brand-success, 15%);
+                }
+            }
+        }
+        &.tile-info {
+            > div {
+                background-color: $brand-info;
+            }
+            
+            &.clickable:hover {
+                > div {
+                    background-color: lighten($brand-info, 15%);
+                }
+            }
+        }
+        &.tile-warning {
+            > div {
+                background-color: $brand-warning;
+            }
+            
+            &.clickable:hover {
+                > div {
+                    background-color: lighten($brand-warning, 15%);
+                }
+            }
+        }
+        &.tile-danger {
+            > div {
+                background-color: $brand-danger;
+            }
+            
+            &.clickable:hover {
+                > div {
+                    background-color: lighten($brand-danger, 15%);
+                }
+            }
+        }
+        &.tile-inverse {
+            > div {
+                background-color: $brand-inverse;
+            }
+            
+            &.clickable:hover {
+                > div {
+                    background-color: lighten(#EEE, 15%);
+                }
+            }
+        }
+    }
+}

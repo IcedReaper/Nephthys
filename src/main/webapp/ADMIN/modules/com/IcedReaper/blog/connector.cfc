@@ -1,17 +1,7 @@
-component interface="ADMIN.interfaces.connector" {
+component extends="ADMIN.abstractClasses.connector" {
     public connector function init() {
+        variables.moduleName = "com.IcedReaper.blog";
+        
         return this;
-    }
-    
-    public string function getName() {
-        return 'com.IcedReaper.blog';
-    }
-    
-    public boolean function checkPermission(required user user) {
-        return arguments.user.hasPermission(moduleName = getName(), roleName = 'user');
-    }
-    
-    public void function render() {
-        include "/ADMIN/themes/" & request.user.getTheme().getFolderName() & "/modules/com/IcedReaper/blog/templates/index.cfm";
     }
 }

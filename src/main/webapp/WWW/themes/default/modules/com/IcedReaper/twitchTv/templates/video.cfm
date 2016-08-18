@@ -1,6 +1,6 @@
 <cfoutput>
 <cfif attributes.video.getVideoFound()>
-    <div class="com-IcedReaper-twitchTv m-t-lg">
+    <div class="com-IcedReaper-twitchTv m-t-2">
         <div class="row">
             <div class="col-md-12">
                 <header>
@@ -12,9 +12,9 @@
                     </div>
                     
                     <cfif attributes.options.keyExists("showExtInfo") AND attributes.options.showExtInfo EQ true>
-                        <div class="m-t bg-inverse p-a">
+                        <div class="m-t-1 bg-inverse p-a-1">
                             <cfif attributes.video.getDescription() NEQ "">
-                                <p class="m-b">
+                                <p class="m-b-1">
                                     #attributes.video.getDescription()#
                                 </p>
                             </cfif>

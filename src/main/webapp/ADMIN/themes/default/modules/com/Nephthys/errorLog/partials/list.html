@@ -1,0 +1,38 @@
+<div class="row">
+    <div class="col-md-12">
+        <h1>Fehlerübersicht</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="card card-block">
+            <button class="btn btn-primary pull-right"
+                    ng-click="refresh()"><i class="fa fa-refresh"></i> refresh</button>
+            <nephthys-date-picker from-date="selectedDate.fromDate"
+                                  to-date="selectedDate.toDate"
+                                  format="dd.MM.yyyy"></nephthys-date-picker>
+            
+            <nephthys-errorlog-statistics show-refresh-button = "false"
+                                          show-date-picker    = "false"
+                                          selected-date       = "selectedDate"></nephthys-errorlog-statistics>
+        </div>
+    </div>
+</div>
+
+<table class="table table-inverse m-t-1">
+    <thead>
+        <th>Exception</th>
+        <th>Insgesamt</th>
+    </thead>
+    <tbody>
+        <tr ng-repeat="error in errorList">
+            <td>
+                <a href="#/{{error.errorCode}}/{{selectedDate.fromDate.toUrlFormat()}}/{{selectedDate.toDate.toUrlFormat()}}">{{error.errorCode}}</a>
+            </td>
+            <td>
+                {{error.count}}
+            </td>
+        </tr>
+    </tbody>
+</table>

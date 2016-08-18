@@ -1,9 +1,9 @@
 <cfoutput>
 <cfif attributes.channel.getChannelFound()>
-    <div class="com-IcedReaper-twitchTv m-t-lg">
+    <div class="com-IcedReaper-twitchTv m-t-2">
         <div class="row">
             <div class="col-md-12">
-                <header class="m-a">
+                <header class="m-a-1">
                     <h2>#attributes.channel.getTitle()#</h2>
                 </header>
                 <section>
@@ -13,7 +13,7 @@
                         </div>
                         
                         <cfif attributes.options.keyExists("showExtInfo") AND attributes.options.showExtInfo EQ true>
-                            <div class="m-t bg-inverse p-a">
+                            <div class="m-t-1 bg-inverse p-a-1">
                                 <div class="row">
                                     <div class="col-md-3 col-sm-6">
                                         <p><strong>Spiel:</strong> #attributes.channel.getGame()#</p>
@@ -32,10 +32,10 @@
                         </cfif>
                     <cfelse>
                         <img src="#attributes.channel.getVideoBanner()#" class="img-fluid">
-                        <p class="m-t m-b-0">Der Channel ist gerade offline. Bitte gucke zu einem späteren Zeitpunkt nocheinmal hinein.</p>
+                        <p class="m-t-1 m-b-0">Der Channel ist gerade offline. Bitte gucke zu einem späteren Zeitpunkt nocheinmal hinein.</p>
                         
                         <cfif attributes.options.keyExists("showExtInfo") AND attributes.options.showExtInfo EQ true>
-                            <div class="m-t bg-inverse p-a">
+                            <div class="m-t-1 bg-inverse p-a-1">
                                 <div class="row">
                                     <div class="col-sm-4">
                                         <p><strong>Sprache:</strong> #attributes.channel.getLanguage()#</p>

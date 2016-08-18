@@ -44,18 +44,6 @@ nephthysAdminApp
                 });
             },
             
-            activate: function (blogpostId) {
-                return $http.post('/ajax/com/IcedReaper/blog/activate', {
-                    blogpostId: blogpostId
-                });
-            },
-            
-            deactivate: function (blogpostId) {
-                return $http.post('/ajax/com/IcedReaper/blog/deactivate', {
-                    blogpostId: blogpostId
-                });
-            },
-            
             loadCategories: function (blogpostId) {
                 return $http.get('/ajax/com/IcedReaper/blog/loadCategories', {
                     params: {
@@ -97,26 +85,71 @@ nephthysAdminApp
                 });
             },
             
-            deleteComment: function (commentId) {
+            deleteComment: function (blogpostId, commentId) {
                 return $http.delete('/ajax/com/IcedReaper/blog/deleteComment', {
                     params: {
+                        blogpostId: blogpostId,
                         commentId: commentId
                     }
                 });
             },
             
-            publishComment: function (commentId) {
+            publishComment: function (blogpostId, commentId) {
                 return $http.post('/ajax/com/IcedReaper/blog/publishComment', {
-                    commentId: commentId
+                    blogpostId: blogpostId,
+                    commentId:  commentId
                 });
             },
             
-            getLastVisitChart: function(blogpostId, dayCount) {
-                return $http.get('/ajax/com/IcedReaper/blog/getLastVisitChart', {
+            getStatus: function () {
+                return $http.get("/ajax/com/IcedReaper/blog/getStatusList");
+            },
+            
+            pushToStatus: function (blogpostId, statusId) {
+                return $http.post('/ajax/com/IcedReaper/blog/pushToStatus', {
+                    blogpostId: blogpostId,
+                    statusId:   statusId
+                });
+            },
+            
+            loadPictures: function (blogpostId) {
+                return $http.get('/ajax/com/IcedReaper/blog/loadPictures', {
+                    params: {
+                        blogpostId: blogpostId
+                    }
+                });
+            },
+            
+            uploadPicture: function (picture, blogpostId) {
+                return Upload.upload({
+                    url: '/ajax/com/IcedReaper/blog/uploadPictures',
+                    data: {
+                        picture:   picture,
+                        blogpostId: blogpostId
+                    }
+                });
+            },
+            
+            updatePicture: function (blogpostId, pictureDetails) {
+                return $http.post('/ajax/com/IcedReaper/blog/updatePicture', {
+                    blogpostId:     blogpostId,
+                    pictureDetails: pictureDetails
+                });
+            },
+            
+            deletePicture: function (blogpostId, pictureId) {
+                return $http.delete('/ajax/com/IcedReaper/blog/deletePicture', {
                     params: {
                         blogpostId: blogpostId,
-                        dayCount:   dayCount
+                        pictureId: pictureId
                     }
+                });
+            },
+            
+            updatePictureSorting: function (blogpostId, pictures) {
+                return $http.post("/ajax/com/IcedReaper/blog/updatePictureSorting", {
+                    blogpostId: blogpostId,
+                    pictures: pictures
                 });
             }
         };

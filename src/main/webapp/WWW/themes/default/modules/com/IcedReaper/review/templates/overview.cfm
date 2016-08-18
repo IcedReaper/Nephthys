@@ -29,9 +29,8 @@
         </cfif>
         
         <cfloop from="1" to="#attributes.reviews.len()#" index="reviewIndex">
-            <article<cfif reviewIndex GT 1> class="m-t-lg"</cfif>>
+            <article<cfif reviewIndex GT 1> class="m-t-2"</cfif>>
                 <header>
-                    <!-- todo optimize -->
                     <p class="pull-right">
                         <cfif attributes.reviews[reviewIndex].getRating() EQ 0.5>
                             <i class="fa fa-star-half-o"></i>
@@ -72,13 +71,13 @@
                 </section>
                 <footer>
                     <p>
-                        <small>Diese Bewertung wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.reviews[reviewIndex].getCreationDate())# von <a href="/User/#attributes.reviews[reviewIndex].getCreator().getUsername()#">#attributes.reviews[reviewIndex].getCreator().getUsername()#</a> in der Kategorie <a href="#request.page.getLink()#/Kategorie/#attributes.reviews[reviewIndex].getType().getName()#">#attributes.reviews[reviewIndex].getType().getName()#</a> erstellt.</small>
+                        <small>Diese Bewertung wurde am #application.system.settings.getValueOfKey("formatLibrary").formatDate(attributes.reviews[reviewIndex].getCreationDate())# von <cf_userLink href="#attributes.reviews[reviewIndex].getCreator().getUsername()#">#attributes.reviews[reviewIndex].getCreator().getUsername()#</cf_userLink> in der Kategorie <a href="#request.page.getLink()#/Kategorie/#attributes.reviews[reviewIndex].getType().getName()#">#attributes.reviews[reviewIndex].getType().getName()#</a> erstellt.</small>
                     </p>
                     <cfset genre = attributes.reviews[reviewIndex].getGenre()>
                     <p>
                         <strong>Genre:</strong>
                         <cfloop from="1" to="#genre.len()#" index="genreIndex">
-                            <a class="label label-primary" href="#request.page.getLink()#/Genre/#genre[genreIndex].getName()#">#genre[genreIndex].getName()#</a>
+                            <a class="tag tag-primary" href="#request.page.getLink()#/Genre/#genre[genreIndex].getName()#">#genre[genreIndex].getName()#</a>
                         </cfloop>
                     </p>
                 </footer>

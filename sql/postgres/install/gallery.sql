@@ -17,6 +17,7 @@ CREATE TABLE public.icedreaper_gallery_gallery
   story text,
   activeStatus boolean NOT NULL DEFAULT TRUE,
   viewCounter integer NOT NULL DEFAULT 0,
+  private boolean NOT NULL DEFAULT FALSE,
   creatorUserId integer NOT NULL,
   creationDate timestamp with time zone NOT NULL DEFAULT now(),
   lastEditorUserId integer NOT NULL,

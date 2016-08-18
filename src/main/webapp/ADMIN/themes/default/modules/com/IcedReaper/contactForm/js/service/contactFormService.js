@@ -5,25 +5,25 @@ nephthysAdminApp
                 return $http.get('/ajax/com/IcedReaper/contactForm/getList');
             },
             
-            getReplies: function (requestId) {
+            getReplies: function (contactRequestId) {
                 return $http.get('/ajax/com/IcedReaper/contactForm/getReplies', {
                     params: {
-                        requestId: requestId
+                        contactRequestId: contactRequestId
                     }
                 });
             },
             
-            getDetails: function (requestId) {
+            getDetails: function (contactRequestId) {
                 return $http.get('/ajax/com/IcedReaper/contactForm/getDetails', {
                     params: {
-                        requestId: requestId
+                        contactRequestId: contactRequestId
                     }
                 });
             },
             
-            reply: function (requestId, message) {
+            reply: function (contactRequestId, message) {
                 return $http.post('/ajax/com/IcedReaper/contactForm/reply', {
-                    requestId: requestId,
+                    contactRequestId: contactRequestId,
                     message: message
                 });
             }

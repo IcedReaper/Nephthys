@@ -1,0 +1,48 @@
+<div class="row m-b-2">
+    <div class="col-md-9 col-sm-8">
+    </div>
+    <div class="col-md-3 col-sm-4 text-md-right">
+        <a href="#/reference/" class="btn btn-primary"><i class="fa fa-plus"></i> Neue Referenz anlegen</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Aktuelle Referenzen</h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="table table-inverse m-t-1">
+            <thead>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Dabei/Kunde seit</th>
+                <th>Aktionen</th>
+            </thead>
+            <tbody>
+                <tr ng-repeat="reference in references">
+                    <td>{{reference.referenceId}}</td>
+                    <td>
+                        <a href="#/reference/{{reference.referenceId}}">{{reference.name}}</a>
+                    </td>
+                    <td>{{reference.since}}</td>
+                    <td>
+                        <a href="#/reference/{{reference.referenceId}}"
+                           class="btn btn-primary"
+                           title="Referenzdetails">
+                            <i class="fa fa-cog"></i>
+                        </a>
+                        
+                        <button class="btn btn-danger"
+                                ng-click="delete(reference.referenceId)"
+                                title="Referenz löschen">
+                            <i class="fa fa-trash-o"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

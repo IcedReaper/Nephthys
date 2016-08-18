@@ -1,5 +1,5 @@
 nephthysAdminApp
-    .controller('categoryDetailCtrl', ["$scope", "$routeParams", "$q", "categoryService", function ($scope, $routeParams, $q, categoryService) {
+    .controller('categoryDetailCtrl', ["$scope", "$routeParams", "$route", "$q", "categoryService", function ($scope, $routeParams, $route, $q, categoryService) {
         // load
         $scope.load = function() {
             categoryService
@@ -15,9 +15,13 @@ nephthysAdminApp
                     categoryId: $scope.category.categoryId,
                     name:       $scope.category.name
                 })
-                .then(function () {
-                    if($scope.category.categoryId == 0) {
-                        $scope.category.name = "";
+                .then(function (newCategoryId) {
+                    if($scope.category.categoryId != newCategoryId) {
+                        $scope.category.categoryId = newCategoryId;
+                        
+                        $route.updateParams({
+                            categoryId: newCategoryId
+                        });
                     }
                 });
         };

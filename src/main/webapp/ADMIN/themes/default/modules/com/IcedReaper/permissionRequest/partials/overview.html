@@ -1,0 +1,41 @@
+<div class="row m-b-2">
+    <div class="col-md-10 col-sm-8">
+        <a href="#/tasklist" class="btn btn-secondary"><i class="fa fa-list"></i> Tasklist</a>
+        <a href="#/overview" class="btn btn-secondary"><i class="fa fa-bars"></i> Übersicht</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
+    </div>
+</div>
+
+<div>
+    <div class="row m-t-2">
+        <div class="col-md-12">
+            <table class="table table-striped table-inverse" ng-class="tableClass">
+                <thead>
+                    <th>&nbsp;</th>
+                    <th class="text-nowrap">User</th>
+                    <th class="text-nowrap">Modul</th>
+                    <th class="text-nowrap">Rolle</th>
+                    <th class="text-nowrap">Erstellt am</th>
+                    <th class="text-nowrap">Status</th>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="request in requests">
+                        <td>
+                            <a class="btn btn-primary" href="#/request/{{request.requestId}}"><i class="fa fa-info"></i></a>
+                        </td>
+                        <td>
+                            <nephthys-user-info user="request.creator"></nephthys-user-info>
+                        </td>
+                        <td>{{request.module.name}}</td>
+                        <td>{{request.role.name}}</td>
+                        <td>{{request.creationDate}}</td>
+                        <td class="text-nowrap" ng-class="request.status === -1 ? 'text-danger' : (request.status === 1 ? 'text-success' : '')">
+                            {{request.status === -1 ? 'Abgelehnt' : request.status === 1 ? 'Akzeptiert' : 'Offen'}}
+                        </td> 
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

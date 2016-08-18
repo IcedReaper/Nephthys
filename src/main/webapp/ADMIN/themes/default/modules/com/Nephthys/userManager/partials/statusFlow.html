@@ -1,0 +1,70 @@
+<div class="row m-b-2">
+    <div class="col-md-10 col-sm-8">
+        <a href="#/" class="btn btn-secondary"><i class="fa fa-list"></i> Tasklist</a>
+        <a href="#/user/list" class="btn btn-secondary"><i class="fa fa-list"></i> Userliste</a>
+        <a href="#/blacklist/list" class="btn btn-secondary"><i class="fa fa-list"></i> Liste der geblockten Namensteile</a>
+        <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
+        <div class="pull-right">
+        </div>
+    </div>
+</div>
+
+<div class="alert alert-{{message.type}} m-t-1" role="alert" ng-show="message">
+    <h3>{{message.headline}}</h3>
+    <p>{{message.text}}</p>
+    <p>{{message.errorMessage}}</p>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h1>Ablauf zwischen den Status</h1>
+        
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="card card-block">
+                    <div class="row m-b-2" ng-repeat="p in rowCount(3) track by $index">
+                        <div class="col-sm-4" ng-repeat="status in statusList | limitTo:3:$index*3">
+                            <h4>{{status.name}}</h4>
+                            <div ui-tree="treeOptions" id="ui-tree-template" data-nodrag="true">
+                                <ol ui-tree-nodes ng-model="status.nextStatus">
+                                    <li ui-tree-node ng-repeat="status in status.nextStatus">
+                                        <div ui-tree-handle class="tree-node tree-node-content">
+                                            <span class="title">{{status.name}}</span>
+                                            
+                                            <a class="pull-right btn btn-danger btn-sm" data-nodrag ng-click="remove(this)"><span
+                                                class="fa fa-remove"></span></a>
+                                        </div>
+                                    </li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="card card-block">
+                    <h4>Verfügbare Status</h4>
+                    <div ui-tree id="ui-tree-template" data-nodrop-enabled="true" data-clone-enabled="true">
+                        <ol ui-tree-nodes ng-model="allStatusList">
+                            <li ui-tree-node ng-repeat="status in allStatusList">
+                                <div ui-tree-handle class="tree-node tree-node-content">
+                                    <span class="title">{{status.name}}</span>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="pull-right">
+                    <button class="btn btn-primary" ng-click="save()"><i class="fa fa-floppy-o"></i> Speichern</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

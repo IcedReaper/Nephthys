@@ -7,13 +7,11 @@ nephthysAdminApp
             
             save: function (settings) {
                 return $http.post('/ajax/com/Nephthys/system/saveSettings', {
-                    settings: JSON.stringify(settings)
+                    settings: settings
                 });
+            },
+            getModuleList: function () {
+                return $http.get('/ajax/com/Nephthys/moduleManager/getList');
             }
-            /*,
-            
-            getEncryptionMethods: function() {
-                return $http.get('/ajax/com/Nephthys/system/getEncryptionMethods');
-            }*/
         };
     });

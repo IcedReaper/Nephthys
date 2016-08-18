@@ -1,10 +1,8 @@
 nephthysAdminApp
-    .controller('reviewGenreCtrl', ["$scope", "$rootScope", "$routeParams", "$q", "reviewService", function ($scope, $rootScope, $routeParams, $q, reviewService) {
-        var reviewId = null;
-        
+    .controller('reviewGenreCtrl', ["$scope", "$routeParams", "$q", "reviewService", function ($scope, $routeParams, $q, reviewService) {
         $scope.load = function () {
             return reviewService
-                .loadGenres(reviewId)
+                .loadGenres($routeParams.reviewId)
                 .then(function (genres) {
                     $scope.genres = [];
                     for(var c = 0; c < genres.length; c++) {
@@ -18,7 +16,7 @@ nephthysAdminApp
         
         $scope.add = function (genre) {
             reviewService
-                .addGenre(reviewId, genre.id, genre.text)
+                .addGenre($routeParams.reviewId, genre.id, genre.text)
                 .then(function (newGenreId) {
                     if(! genre.id) {
                         genre.id = newGenreId;
@@ -27,7 +25,7 @@ nephthysAdminApp
         };
         
         $scope.delete = function (genre) {
-            reviewService.removeGenre(reviewId, genre.id);
+            reviewService.removeGenre($routeParams.reviewId, genre.id);
         };
         
         $scope.loadAutoCompleteGenres = function (queryString) {
@@ -44,10 +42,4 @@ nephthysAdminApp
                    return genreList;
                });
         };
-        
-        $rootScope.$on('review-loaded', function(event, reviewData) {
-            reviewId = reviewData.reviewId;
-            
-            $scope.load();
-        });
     }]);

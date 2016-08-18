@@ -1,4 +1,6 @@
 component {
+    import "API.modules.com.Nephthys.userManager.user";
+    
     public picture function init(required numeric pictureId) {
         variables.pictureId = arguments.pictureId;
         
@@ -9,9 +11,9 @@ component {
         return this;
     }
     
-    // S E T T E R
+    
     public picture function setGalleryId(required numeric galleryId) {
-        if(variables.pictureId == 0 || variables.galleryId == arguments.galleryId) {
+        if(variables.pictureId == null || variables.galleryId == arguments.galleryId) {
             variables.galleryId = arguments.galleryId;
         }
         
@@ -36,13 +38,19 @@ component {
         
         return this;
     }
+    public picture function setSortId(required numeric sortId) {
+        variables.sortId = arguments.sortId;
+        variables.attributesChanged = true;
+        
+        return this;
+    }
     
-    public picture function upload() {
-        if(variables.pictureId != 0) {
+    public picture function upload(required user user) {
+        if(variables.pictureId != null) {
             deleteFiles();
         }
         
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(variables.galleryId);
+        var gallery = new gallery(variables.galleryId);
         
         var uploaded = fileUpload(gallery.getAbsolutePath(), "picture", "image/*", "MakeUnique");
         var newFilename = uploaded.serverFile;
@@ -53,17 +61,66 @@ component {
         }
         
         var imageEditor = application.system.settings.getValueOfKey("imageEditLibrary");
-        imageEditor.resize(gallery.getAbsolutePath() & "/" & newFilename, 575, gallery.getAbsolutePath() & "/tn_" & newFilename);
+        imageEditor.resize(source        = gallery.getAbsolutePath() & "/" & newFilename,
+                           width         = 575,
+                           target        = gallery.getAbsolutePath() & "/tn_" & newFilename,
+                           interpolation = "bilinear");
         
         variables.pictureFilename   = newFilename;
         variables.thumbnailFilename = "tn_" & newFilename;
         
-        save();
+        var exifReader = application.system.settings.getValueOfKey("exifReader");
+        exifReader.setImagePath(gallery.getAbsolutePath() & "/" & variables.pictureFilename);
+        var jpegComment      = exifReader.getExifKey("JPEG Comment");
+        var imageDescription = exifReader.getExifKey("Image Description");
+        var userComment      = exifReader.getExifKey("User Comment");
+        
+        if(variables.title == "") {
+            if(jpegComment != "") {
+                variables.title = jpegComment;
+            }
+            else {
+                if(imageDescription != "") {
+                    variables.title = imageDescription;
+                }
+                else {
+                    variables.title = userComment;
+                }
+            }
+        }
+        if(variables.alt == "") {
+            variables.alt = uploaded.serverFile;
+            
+            if(jpegComment != "") {
+                variables.alt &= (variables.alt != "" ? " - " : "") & jpegComment;
+            }
+            else {
+                if(imageDescription != "") {
+                    variables.alt &= (variables.alt != "" ? " - " : "") & imageDescription;
+                }
+                else {
+                    variables.alt &= (variables.alt != "" ? " - " : "") & userComment;
+                }
+            }
+        }
+        if(variables.caption == "") {
+            if(jpegComment != "") {
+                variables.caption = jpegComment;
+            }
+            if(imageDescription != "") {
+                variables.caption &= (variables.caption != "" ? " - " : "") & imageDescription;
+            }
+            if(userComment != "") {
+                variables.caption &= (variables.caption != "" ? " - " : "") & userComment;
+            }
+        }
+        
+        save(arguments.user);
         
         return this;
     }
     
-    // G E T T E R
+    
     public numeric function getPictureId() {
         return variables.pictureId;
     }
@@ -85,56 +142,82 @@ component {
     public string function getCaption() {
         return variables.caption;
     }
+    public numeric function getSortId() {
+        return variables.sortId;
+    }
+    public user function getCreator() {
+        return duplicate(variables.creator);
+    }
+    public date function getCreationDate() {
+        return variables.creationDate;
+    }
+    public user function getLastEditor() {
+        return duplicate(variables.lastEditor);
+    }
+    public date function getLastEditDate() {
+        return variables.lastEditDate;
+    }
     
-    // C R U D
-    public picture function save() {
-        if(variables.pictureId == 0) {
-            variables.pictureId = new Query().setSQL("INSERT INTO IcedReaper_gallery_picture
-                                                                  (
-                                                                      galleryId,
-                                                                      pictureFileName,
-                                                                      thumbnailFileName,
-                                                                      title,
-                                                                      alt,
-                                                                      caption,
-                                                                      sortId
-                                                                  )
-                                                           VALUES (
-                                                                      :galleryId,
-                                                                      :pictureFileName,
-                                                                      :thumbnailFileName,
-                                                                      :title,
-                                                                      :alt,
-                                                                      :caption,
-                                                                      (SELECT max(sortId)+1 newSortId FROM IcedReaper_gallery_picture WHERE galleryId = :galleryId)
-                                                                  );
-                                                      SELECT currval('seq_icedreaper_gallery_picture_id' :: regclass) newPictureId;")
-                                             .addParam(name = "galleryId",         value = variables.galleryId,         cfsqltype = "cf_sql_numeric")
-                                             .addParam(name = "pictureFileName",   value = variables.pictureFileName,   cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "thumbnailFileName", value = variables.thumbnailFileName, cfsqltype = "cf_sql_varchar")
-                                             .addParam(name = "title",             value = variables.title,             cfsqltype = "cf_sql_varchar", null = variables.title == "")
-                                             .addParam(name = "alt",               value = variables.alt,               cfsqltype = "cf_sql_varchar", null = variables.alt == "")
-                                             .addParam(name = "caption",           value = variables.caption,           cfsqltype = "cf_sql_varchar", null = variables.caption == "")
-                                             .execute()
-                                             .getResult()
-                                             .newPictureId[1];
+    
+    public picture function save(required user user) {
+        var qSave = new query().addParam(name = "pictureFileName",   value = variables.pictureFileName,    cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "thumbnailFileName", value = variables.thumbnailFileName,  cfsqltype = "cf_sql_varchar")
+                               .addParam(name = "title",             value = left(variables.title, 250),   cfsqltype = "cf_sql_varchar", null = variables.title == "")
+                               .addParam(name = "alt",               value = left(variables.alt, 250),     cfsqltype = "cf_sql_varchar", null = variables.alt == "")
+                               .addParam(name = "caption",           value = left(variables.caption, 300), cfsqltype = "cf_sql_varchar", null = variables.caption == "")
+                               .addParam(name = "userId",            value = arguments.user.getUserId(),   cfsqltype = "cf_sql_numeric");
+        
+        if(variables.pictureId == null) {
+            variables.pictureId = qSave.setSQL("INSERT INTO IcedReaper_gallery_picture
+                                                            (
+                                                                galleryId,
+                                                                pictureFileName,
+                                                                thumbnailFileName,
+                                                                title,
+                                                                alt,
+                                                                caption,
+                                                                sortId,
+                                                                creatorUserId,
+                                                                lastEditorUserId
+                                                            )
+                                                     VALUES (
+                                                                :galleryId,
+                                                                :pictureFileName,
+                                                                :thumbnailFileName,
+                                                                :title,
+                                                                :alt,
+                                                                :caption,
+                                                                (SELECT CASE
+                                                                          WHEN max(sortId) IS NOT NULL THEN
+                                                                            max(sortId)+1
+                                                                          ELSE
+                                                                            1
+                                                                        END newSortId
+                                                                   FROM IcedReaper_gallery_picture
+                                                                  WHERE galleryId = :galleryId),
+                                                                :userId,
+                                                                :userId
+                                                            );
+                                                SELECT currval('seq_icedreaper_gallery_picture_id') newPictureId;")
+                                       .addParam(name = "galleryId", value = variables.galleryId, cfsqltype = "cf_sql_numeric")
+                                       .execute()
+                                       .getResult()
+                                       .newPictureId[1];
         }
         else {
             if(variables.attributesChanged) {
-                new Query().setSQL("UPDATE IcedReaper_gallery_picture
-                                       SET pictureFileName   = :pictureFileName,
-                                           thumbnailFileName = :thumbnailFileName,
-                                           title             = :title,
-                                           alt               = :alt,
-                                           caption           = :caption
-                                     WHERE pictureId = :pictureId")
-                           .addParam(name = "pictureId",         value = variables.pictureId,         cfsqltype = "cf_sql_numeric")
-                           .addParam(name = "pictureFileName",   value = variables.pictureFileName,   cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "thumbnailFileName", value = variables.thumbnailFileName, cfsqltype = "cf_sql_varchar")
-                           .addParam(name = "title",             value = variables.title,             cfsqltype = "cf_sql_varchar", null = variables.title == "")
-                           .addParam(name = "alt",               value = variables.alt,               cfsqltype = "cf_sql_varchar", null = variables.alt == "")
-                           .addParam(name = "caption",           value = variables.caption,           cfsqltype = "cf_sql_varchar", null = variables.caption == "")
-                           .execute();
+                qSave.setSQL("UPDATE IcedReaper_gallery_picture
+                                 SET pictureFileName   = :pictureFileName,
+                                     thumbnailFileName = :thumbnailFileName,
+                                     title             = :title,
+                                     alt               = :alt,
+                                     caption           = :caption,
+                                     sortId            = :sortId,
+                                     lastEditorUserId  = :userId
+                               WHERE pictureId = :pictureId")
+                     .addParam(name = "pictureId", value = variables.pictureId, cfsqltype = "cf_sql_numeric")
+                     .addParam(name = "sortId",    value = variables.sortId,    cfsqltype = "cf_sql_numeric")
+                     .execute();
             }
         }
         
@@ -143,7 +226,7 @@ component {
         return this;
     }
     
-    public void function delete() {
+    public void function delete(required user user) {
         deleteFiles();
         
         new Query().setSQL("DELETE FROM IcedReaper_gallery_picture
@@ -151,12 +234,12 @@ component {
                    .addParam(name = "pictureId", value = variables.pictureId, cfsqltype = "cf_sql_numeric")
                    .execute();
         
-        variables.pictureId = 0;
+        variables.pictureId = null;
     }
     
-    // I N T E R N A L
+    
     private void function loadDetails() {
-        if(variables.pictureId != 0 && variables.pictureId != null) {
+        if(variables.pictureId != null) {
             var qPicture = new Query().setSQL("SELECT *
                                                  FROM IcedReaper_gallery_picture
                                                 WHERE pictureId = :pictureId")
@@ -171,23 +254,33 @@ component {
                 variables.title             = qPicture.title[1];
                 variables.alt               = qPicture.alt[1];
                 variables.caption           = qPicture.caption[1];
+                variables.sortId            = qPicture.sortId[1];
+                variables.creator           = new user(qPicture.creatorUserId[1]);
+                variables.creationDate      = qPicture.creationDate[1];
+                variables.lastEditor        = new user(qPicture.lastEditorUserId[1]);
+                variables.lastEditDate      = qPicture.lastEditDate[1];
             }
             else {
                 throw(type = "pictureNotFound", message = "Could not find the imahe", detail = variables.pictureId);
             }
         }
         else {
-            variables.galleryId         = 0;
+            variables.galleryId         = null;
             variables.pictureFileName   = "";
             variables.thumbnailFileName = "";
             variables.title             = "";
             variables.alt               = "";
             variables.caption           = "";
+            variables.sortId            = 0;
+            variables.creator           = request.user;
+            variables.creationDate      = now();
+            variables.lastEditor        = request.user;
+            variables.lastEditDate      = now();
         }
     }
     
     private void function deleteFiles() {
-        var gallery = createObject("component", "API.modules.com.IcedReaper.gallery.gallery").init(variables.galleryId);
+        var gallery = new gallery(variables.galleryId);
         fileDelete(gallery.getAbsolutePath() & "/" & variables.pictureFilename);
         fileDelete(gallery.getAbsolutePath() & "/" & variables.thumbnailFilename);
     }

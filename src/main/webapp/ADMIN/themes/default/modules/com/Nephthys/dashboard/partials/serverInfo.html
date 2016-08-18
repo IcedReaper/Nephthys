@@ -1,0 +1,57 @@
+<div ng-controller="serverInfoCtrl">
+    <h2>Serverinformationen</h2>
+    <div class="row m-b-1">
+        <div class="col-md-3">
+            <strong>Status</strong>
+        </div>
+        <div class="col-md-9" ng-class="serverInfo.onlineStatus ? 'text-success' : 'text-danger'">
+            <strong>{{serverInfo.onlineStatus ? 'Online' : 'Offline'}}</strong>
+        </div>
+    </div>
+    
+    <div class="row m-b-1">
+        <div class="col-md-3">
+            <strong>Serveruptime</strong>
+        </div>
+        <div class="col-md-6">
+            {{serverInfo.uptime.formatAsTimeSince()}}
+        </div>
+    </div>
+    
+    <div class="row m-b-1">
+        <div class="col-md-3">
+            <strong>Wartungsmodus</strong>
+        </div>
+        <div class="col-md-9" ng-class="serverInfo.maintenanceMode ? 'text-danger' : 'text-success'">
+            <strong>{{serverInfo.maintenanceMode ? 'Aktiv' : 'Inaktiv'}}</strong>
+        </div>
+    </div>
+    
+    <div class="row m-b-1">
+        <div class="col-md-3">
+            <strong>Installationsdatum</strong>
+        </div>
+        <div class="col-md-9">
+            {{serverInfo.installDate}}
+        </div>
+    </div>
+    
+    <div class="row m-b-1">
+        <div class="col-md-3">
+            <strong>Aktuell installierte Nephthys-Version</strong>
+        </div>
+        <div class="col-md-9">
+            {{serverInfo.installedVersion}}
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <strong>Aktuelle Speicherauslastung</strong>
+        </div>
+        <div class="col-md-6">
+            {{serverInfo.memory.used}}MB / {{serverInfo.memory.total}}MB<br>
+            <progress class="progress" ng-class="getUsedMemoryClass()" ng-value="serverInfo.memory.used" max="{{serverInfo.memory.total}}">{{serverInfo.memory.percentageUsed}}%</progress>
+        </div>
+    </div>
+</div>

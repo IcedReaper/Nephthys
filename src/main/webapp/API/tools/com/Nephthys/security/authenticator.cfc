@@ -1,4 +1,6 @@
 component interface="API.interfaces.authenticator" {
+    import "API.modules.com.Nephthys.userManager.*";
+    
     public authenticator function init() {
         return this;
     }
@@ -9,21 +11,14 @@ component interface="API.interfaces.authenticator" {
                                 application.system.settings.getValueOfKey("encryptionKey"),
                                 encryptionMethodLoader.getAlgorithm(application.system.settings.getValueOfKey("encryptionMethodId")));
         
-        var userId = new Query().setSQL("SELECT userid
-                                           FROM nephthys_user
-                                          WHERE username = :username
-                                            AND password = :password
-                                            AND active   = :active")
-                                .addParam(name = "username", value = arguments.username, cfsqltype = "cf_sql_varchar")
-                                .addParam(name = "password", value = _password,          cfsqltype = "cf_sql_varchar")
-                                .addParam(name = "active",   value = '1',                cfsqltype = "cf_sql_bit")
-                                .execute()
-                                .getResult()
-                                .userid[1];
+        var user = new filter().for("user")
+                               .setUsername(arguments.username)
+                               .setPassword(_password)
+                               .setActive(true)
+                               .execute()
+                               .getResult();
         
-        var successful = userId != null;
-        // check to move somewhero elso into the statistics
-        new Query().setSQL("INSERT INTO nephthys_statistics_login
+        new Query().setSQL("INSERT INTO nephthys_user_statistics
                                         (
                                             username,
                                             successful
@@ -33,9 +28,9 @@ component interface="API.interfaces.authenticator" {
                                             :successful
                                         )")
                    .addParam(name = "username",   value = arguments.username, cfsqltype = "cf_sql_varchar")
-                   .addParam(name = "successful", value = successful,        cfsqltype = "cf_sql_bit")
+                   .addParam(name = "successful", value = user.len() == 1,    cfsqltype = "cf_sql_bit")
                    .execute();
         
-        return userId;
+        return user.len() == 1 ? user[1].getUserId() : null;
     }
 }

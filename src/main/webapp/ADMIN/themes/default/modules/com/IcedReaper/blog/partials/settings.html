@@ -1,8 +1,13 @@
-<div class="row">
-    <div class="col-md-12">
-        <div class="pull-right">
-            <a href="#/" class="btn btn-primary"><i class="fa fa-chevron-left"></i> Zurück zur Übersicht</a>
-        </div>
+<div class="row m-b-2">
+    <div class="col-md-10 col-sm-8">
+        <a href="#/tasklist" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>
+        <a href="#/blogpost/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Blogpostübersicht</a>
+        <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
+        <a href="#/category/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Kategorieübersicht</a>
+        <a href="#/statistics" class="btn btn-secondary"><i class="fa fa-area-chart"></i> Gesamtstatistik</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
     </div>
 </div>
 
@@ -14,26 +19,7 @@
 <div class="row">
     <div class="col-md-12">
         <div class="card card-block">
-            <form>
-                <div class="form-group row" ng-repeat="(settingName, settingData) in settings">
-                    <label for="{{settingName}}" class="col-sm-5 form-control-label">{{settingData.description}}</label>
-                    <div class="col-sm-7">
-                        <input type="input" class="form-control" id="{{settingName}}" maxLength="100" ng-model="settingData.rawValue" ng-show="settingData.type.toLowerCase() == 'number' || settingData.type.toLowerCase() == 'string'">
-                        <select class="form-control" id="{{settingName}}" ng-model="settingData.rawValue" ng-show="settingData.type.toLowerCase() == 'bit'">
-                            <option value="1">Ja</option>
-                            <option value="0">Nein</option>
-                            <option value="null">null *</option>
-                        </select>
-                        <select class="form-control" id="{{settingName}}" ng-model="settingData.rawValue" ng-show="settingData.type.toLowerCase() == 'boolean'">
-                            <option value="true">Ja</option>
-                            <option value="false">Nein</option>
-                            <option value="null">null *</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <button class="btn btn-success" ng-click="save()"><i class="fa fa-floppy-o"></i> Einstellungen speichern</button>
-            </form>
+            <nephthys-sytem-modulesettings module-name="'com.IcedReaper.blog'"></nephthys-sytem-modulesettings>
         </div>
     </div>
 </div>

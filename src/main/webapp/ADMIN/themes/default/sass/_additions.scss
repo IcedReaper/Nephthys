@@ -1,93 +1,416 @@
 body {
     background: #2c3644 url("../img/pattern_hexagon_dark_2x.png") repeat scroll 0px -1px / 46px 26px;
     color: #EEEEEE;
-    padding-top: 50px;
-}
-
-.sidebar {
-    position: fixed;
-    top: 54px;
-    bottom: 0px;
-    left: 0px;
-    z-index: 1000;
-    display: block;
-    padding: 20px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    background-color: #1A1A1A;
-    border-right: 1px solid #EEE;
-    font-weight: bold;
-}
-
-.main {
-    padding: 20px 40px;
-}
-
-.container-fluid {
-    & .margin-top {
-        margin-top: 3%;
-    }
-
-    & .margin-bottom {
-        margin-bottom: 3%;
-    }
-}
-
-.container {
-    & .margin-top {
-        margin-top: 15px;
-    }
-
-    & .margin-bottom {
-        margin-bottom: 15px;
-    }
-}
-
-.card {
-    color: #000000;
-}
-
-.icedreaper-gallery-introduction > .ta-root > .ta-editor {
-    max-height: 120px;
-    min-height: 120px;
-}
-
-.clickable {
-    cursor: pointer;
-}
-
-.nav-tabs .nav-link {
-    color: #FFFFFF;
-}
-
-.tab-content .tab-pane {
-    .card {
-        border-top: 0;
-    }
-    &.active:first-child .card {
-        border-top-left-radius: 0;
-    }
-}
-
-@keyframes spin {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-}
-
-.loadingWheel {
-    animation-name: spin; 
-    animation-duration: 3s; /* 3 seconds */
-    animation-iteration-count: infinite; 
-    animation-timing-function: linear;
+    padding-top: 54px;
     
-    width: 50px;
+    & > footer {
+        border-top: 1px solid #e5e5e5;
+        color: #767676;
+        padding-bottom: 40px;
+        padding-top: 40px;
+        text-align: center;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 54px;
+        bottom: 0px;
+        left: 0px;
+        z-index: 1000;
+        display: block;
+        padding: 20px;
+        overflow-x: hidden;
+        overflow-y: auto;
+        background-color: rgba(#1A1A1A, 0.7);
+        border-right: 1px solid #EEE;
+        font-weight: bold;
+    }
+
+    .main {
+        padding: 0;
+        
+        > div:not(.loadingBar) {
+            margin: 20px 40px;
+        }
+        
+        div.loadingBar {
+            > div {
+                height: 4px;
+                width: 100%;
+                position: relative;
+                overflow: hidden;
+                background-color: #ddd;
+                
+                &.line {
+                    &:before{
+                        display: block;
+                        position: absolute;
+                        content: "";
+                        left: -200px;
+                        width: 200px;
+                        height: 4px;
+                        background-color: $brand-primary;
+                        animation: loading 2s linear infinite;
+                    }
+
+                    @keyframes loading {
+                        from {left: -200px; width: 30%;}
+                        50% {width: 30%;}
+                        70% {width: 70%;}
+                        80% { left: 50%;}
+                        95% {left: 120%;}
+                        to {left: 100%;}
+                    }
+                }
+                
+                &.dots {
+                    div {
+                        width: 4px;
+                        height: 4px;
+                        position: absolute;
+                        left: -5px;
+                        background-color: $brand-primary;
+                        animation: move 4s infinite cubic-bezier(.2,.64,.81,.23);
+                    }
+                    div:nth-child(2) {
+                        animation-delay: 100ms;
+                    }
+                    div:nth-child(3) {
+                        animation-delay: 200ms;
+                    }
+                    div:nth-child(4) {
+                        animation-delay: 300ms;
+                    }
+                    @keyframes move {
+                        0% {left: 0%;}
+                        75% {left:100%;}
+                        100% {left:100%;}
+                    }
+                }
+            }
+        }
+    }
+
+    .container-fluid {
+        & .margin-top {
+            margin-top: 3%;
+        }
+
+        & .margin-bottom {
+            margin-bottom: 3%;
+        }
+    }
+
+    .container {
+        & .margin-top {
+            margin-top: 15px;
+        }
+
+        & .margin-bottom {
+            margin-bottom: 15px;
+        }
+    }
+
+    .card {
+        color: #000000;
+    }
+
+    .icedreaper-gallery-introduction > .ta-root > .ta-editor {
+        max-height: 120px;
+        min-height: 120px;
+    }
+
+    .clickable {
+        cursor: pointer;
+    }
+
+    .modal-title,
+    .modal-body {
+        color: #000000;
+    }
+
+    .form-group select {
+        margin: 2px 0 1px;
+    }
+    
+    .nav.nav-tabs {
+        .uib-tab {
+            > a {
+                background-color: $highlight-color;
+                color: $highlight-font-color;
+                border-color: #dddddd #dddddd transparent;
+            }
+            &.active {
+                > a {
+                    background-color: $body-bg;
+                    color: $body-color;
+                    border-color: #dddddd #dddddd transparent;
+                }
+            }
+            &.disabled {
+                > a {
+                    background-color: $btn-link-disabled-color;
+                    border-color: #dddddd #dddddd transparent;
+                    color: #ffffff;
+                    opacity: 0.5;
+                }
+            }
+        }
+    }
+    
+    .tab-content {
+        .tab-pane {
+            &.active {
+                .row:first-child {
+                    .card.card-block {
+                        border-top-left-radius: 0;
+                        border-top-right-radius: 0;
+                    }
+                }
+            }
+        }
+    }
+    
+    img.avatar {
+        width: 50px;
+    }
+    
+    canvas.chart-responsive {
+        width: 100%;
+        max-width: 100%;
+    }
+    
+    .tasklist-sm {
+        font-size: $font-size-sm;
+        
+        .btn, .dropdown-menu .dropdown-item {
+            font-size: 0.875rem;
+            padding: 0.25rem 0.5rem;
+        }
+    }
+    
+    .dropdown-item {
+        &.btn-primary {
+            color: $btn-primary-color;
+            background-color: $btn-primary-bg;
+            border: $btn-primary-border;
+        }
+        
+        &.btn-secondary {
+            color: $btn-secondary-color;
+            background-color: $btn-secondary-bg;
+            border: $btn-secondary-border;
+        }
+        
+        &.btn-info {
+            color: $btn-info-color;
+            background-color: $btn-info-bg;
+            border: $btn-info-border;
+        }
+        
+        &.btn-success {
+            color: $btn-success-color;
+            background-color: $btn-success-bg;
+            border: $btn-success-border;
+        }
+        
+        &.btn-warning {
+            color: $btn-warning-color;
+            background-color: $btn-warning-bg;
+            border: $btn-warning-border;
+        }
+        
+        &.btn-danger {
+            color: $btn-danger-color;
+            background-color: $btn-danger-bg;
+            border: $btn-danger-border;
+        }
+    }
+    
+    .angular-ui-tree {
+        .btn {
+            margin-right: 8px;
+        }
+        .angular-ui-tree-handle {
+            background: #f8faff none repeat scroll 0 0;
+            border: 1px solid #dae2ea;
+            padding: 10px;
+        }
+        .angular-ui-tree-handle:hover {
+            background: #f4f6f7 none repeat scroll 0 0;
+            border-color: #dce2e8;
+            color: #438eb9;
+        }
+        .angular-ui-tree-placeholder {
+            background: #f0f9ff none repeat scroll 0 0;
+            border: 2px dashed #bed2db;
+            box-sizing: border-box;
+        }
+        tr.angular-ui-tree-empty {
+            height: 100px;
+        }
+        .group-title {
+            background-color: #687074 !important;
+            color: #fff !important;
+        }
+        .tree-node {
+            background: #f8faff none repeat scroll 0 0;
+            border: 1px solid #dae2ea;
+        }
+        .nodrop {
+            background-color: #f2dede;
+        }
+        .tree-node-content {
+            margin: 10px 0;
+            height: 50px;
+        }
+        .tree-handle {
+            background: #428bca none repeat scroll 0 0;
+            color: #fff;
+            margin-right: 10px;
+            padding: 10px;
+        }
+        .angular-ui-tree-handle:hover {
+        }
+        .angular-ui-tree-placeholder {
+            background: #f0f9ff none repeat scroll 0 0;
+            border: 2px dashed #bed2db;
+            box-sizing: border-box;
+        }
+        
+        .title {
+            color: #000000;
+        }
+        
+        
+        [data-no-drag="true"].angular-ui-tree-handle {
+            cursor: auto;
+        }
+    }
 }
 
-.modal-title,
-.modal-body {
-    color: #000000;
-}
+html.error {
+    &.error404 {
+        background: url("../img/lost-background-2.jpg") no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        height: 100%;
+        
+        body {
+            color: $gray-dark;
+            
+            a, a:hover, a:link, a:visited, a:active {
+                color: $gray-dark;
+                font-weight: bold;
+            }
+        }
+    }
+    
+    &.error500 {
+        $color: #FFF;
+        background: url("../img/lost-background-1.png") no-repeat center center fixed; 
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        height: 100%;
+        
+        body {
+            color: $color;
+            
+            a, a:hover, a:link, a:visited, a:active {
+                color: $color;
+                font-weight: bold;
+            }
+        }
+    }
 
-.form-group select {
-    margin: 2px 0 1px;
+    body {
+        height: 100%;
+        background: none;
+        padding: 0;
+        margin: 0;
+        
+        header {
+            position: absolute;
+            width: 100%;
+            
+            > nav {
+                position: relative;
+                top: 5rem;
+                background: none;
+                
+                .navbar-header {
+                    display: none;
+                }
+                
+                .pull-right {
+                    display: none;
+                }
+                
+                .container {
+                    text-align: center;
+                }
+                
+                .navbar-nav,
+                .navbar-nav .nav-item {
+                    float: none;
+                    display: inline-block;
+                    *display: inline; /* ie7 fix */
+                    *zoom: 1; /* hasLayout ie7 trigger */
+                    vertical-align: top;
+                    
+                    .nav-link {
+                        color: $gray-dark;
+                    }
+                }
+                
+                .navbar-nav .nav-item {
+                    $highlight-size: 0.2rem; // copied from _additions.scss
+                    
+                    &:hover,
+                    &.active {
+                        border-bottom: $highlight-size solid $gray-dark;
+                    }
+                }
+            }
+        }
+        
+        main {
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            height: 100%;
+            min-height: 100%;
+            max-height: 100%;
+            min-width: 100%;
+            max-width: 100%;
+            display: table;
+            
+            .site-wrapper {
+                vertical-align: middle;
+                display: table-cell;
+                
+                h1 {
+                    text-align: center;
+                    font-size: 4rem;
+                    font-family: "Architects Daughter";
+                }
+
+                @include media-breakpoint-down(sm) {
+                    h1 {
+                        font-size: 2rem;
+                    }
+                }
+            }
+        }
+        
+        > footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    }
 }

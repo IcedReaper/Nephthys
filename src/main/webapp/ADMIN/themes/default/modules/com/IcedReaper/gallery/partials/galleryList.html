@@ -1,8 +1,15 @@
-<div class="row">
-    <div class="col-md-12">
+<div class="row m-b-2">
+    <div class="col-md-10 col-sm-8">
+        <a href="#/tasklist" class="btn btn-secondary"><i class="fa fa-tasks"></i> Aufgabenliste</a>
+        <a href="#/status/list" class="btn btn-secondary"><i class="fa fa-list"></i> Statusübersicht</a>
+        <a href="#/status/flow" class="btn btn-secondary"><i class="fa fa-code-fork"></i> Statusflow</a>
+        <a href="#/category/list" class="btn btn-secondary"><i class="fa fa-tags"></i> Kategorieübersicht</a>
+        <a href="#/settings" class="btn btn-secondary"><i class="fa fa-cogs"></i> Einstellungen</a>
+        <a href="#/statistics" class="btn btn-secondary"><i class="fa fa-area-chart"></i> Gesamtstatistik</a>
+    </div>
+    <div class="col-md-2 col-sm-4">
         <div class="pull-right">
-            <a href="#/categories" class="btn btn-secondary"><i class="fa fa-tags"></i> Kategorieübersicht</a>
-            <a href="#/0" class="btn btn-primary">Neue Gallery anlegen</a>
+            <a href="#/gallery/" class="btn btn-primary">Neue Gallery anlegen</a>
         </div>
     </div>
 </div>
@@ -15,73 +22,47 @@
 
 <div class="row">
     <div class="col-md-12">
-        <h3>Filtern</h3>
-        <form class="form-horizontal">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="filterActiveStatus" class="col-sm-3 control-label">Aktiv</label>
-                        <div class="col-sm-6">
-                            <select class="form-control" name="filterActiveStatus" ng-model="search.active">
-                                <option value="">Alle</option>
-                                <option value="1">Aktiv</option>
-                                <option value="0">Inaktiv</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
-
-<div class="row">
-    <div class="col-md-12">
-        <table class="table table-inverse m-t">
+        <table class="table table-inverse m-t-1">
             <thead>
-                <th>ID</th>
-                <th>Überschrift</th>
-                <th>Interner Link</th>
-                <!--<th>Veröffentlichungsdatum</th>-->
-                <th>Bilderanzahl</th>
-                <th>Kategorien</th>
-                <th>Aktionen</th>
+                <th class="text-nowrap">ID</th>
+                <th class="text-nowrap">Überschrift</th>
+                <th class="text-nowrap">Interner Link</th>
+                <th class="text-nowrap">Bilderanzahl</th>
+                <th class="text-nowrap">Kategorien</th>
+                <th class="text-nowrap">Aktueller Status</th>
+                <th class="text-nowrap">Aktionen</th>
             </thead>
             <tbody>
-                <tr ng-repeat="gallery in galleries | filter:search"> <!-- change indicator to published -->
+                <tr ng-repeat="gallery in galleries">
                     <td>{{gallery.galleryId}}</td>
                     <td>
-                        <a href="#/{{gallery.galleryId}}">{{gallery.headline}}</a>
+                        <i class="fa fa-star" ng-if="gallery.private"></i>
+                        <i class="fa fa-lock" ng-if="! gallery.isEditable"></i>
+                        <a href="#/gallery/{{gallery.galleryId}}">{{gallery.headline}}</a>
                     </td>
                     <td>{{gallery.link}}</td>
-                    <!--<td>{{gallery.releaseDate}}</td>-->
                     <td>{{gallery.pictureCount}}</td>
                     <td>{{gallery.categories.join(', ')}}</td>
-                    <td>
-                        <a href="#/{{gallery.galleryId}}"
-                           class="btn btn-primary"
-                           title="Galleriedetails">
-                            <i class="fa fa-cog"></i>
-                        </a>
-                        
-                        <button class="btn btn-success"
-                                ng-click="activate(gallery.galleryId)"
-                                ng-show="gallery.active == 0"
-                                title="Gallerie aktivieren">
-                            <i class="fa fa-toggle-on"></i>
-                        </button>
-                        <button class="btn btn-warning"
-                                ng-click="deactivate(gallery.galleryId)"
-                                ng-show="gallery.active == 1"
-                                title="Gallerie deaktivieren">
-                            <i class="fa fa-toggle-off"></i>
-                        </button>
-                        
+                    <td ng-class="(status[ gallery.statusId ].online ? 'text-success' : 'text-danger')">{{status[ gallery.statusId ].name}}</td>
+                    <td class="text-nowrap">
                         <button class="btn btn-danger"
                                 ng-click="delete(gallery.galleryId)"
-                                title="Gallerie löschen">
+                                title="Gallerie löschen"
+                                ng-disabled="! gallery.isEditable"
+                                ng-if="status[ gallery.statusId ].deleteable">
                             <i class="fa fa-trash-o"></i>
                         </button>
+                        <div class="btn-group m-l-1">
+                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Status ändern
+                            </button>
+                            <div class="dropdown-menu">
+                                <button class="dropdown-item"
+                                        ng-repeat="ps in status[ gallery.statusId ].nextStatus"
+                                        ng-class="statusButtonClass(status[ gallery.statusId ].online, ps.online)"
+                                        ng-click="pushToStatus(gallery.galleryId, ps.statusId);">{{ps.name}}</button>
+                            </div>
+                        </div>
                     </td>
                 </tr>
             </tbody>
