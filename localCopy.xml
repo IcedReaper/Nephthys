@@ -1,5 +1,5 @@
 <project name="Dev-Deployment" basedir="." default="buildProject">
-    <target name="buildProject" depends="init,syncWWW,syncAPI">
+    <target name="buildProject" depends="init,syncWWW,syncAPI,syncInstall">
         <echo>Build done</echo>
     </target>
     
@@ -89,5 +89,18 @@
         </sync>
         
         <echo>API Files synchronised${line.separator}from: ${api.path.source.root}${line.separator}to: ${api.path.target.root}</echo>
+    </target>
+    
+    <target name="syncInstall">
+        <echo message="Syncing Install" />
+        
+        <property name="install.path.source.root" location="${path.sourceCode.root}\install" />
+        <property name="install.path.target.root" location="${path.deployment.root}\install" />
+        
+        <sync toDir="${install.path.target.root}" includeEmptyDirs="true">
+            <fileset dir="${install.path.source.root}" />
+        </sync>
+        
+        <echo>Install files synchronised${line.separator}from: ${install.path.source.root}${line.separator}to: ${install.path.target.root}</echo>
     </target>
 </project>
