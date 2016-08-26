@@ -1285,3 +1285,4 @@ create trigger trg_updateLastEditDate BEFORE UPDATE ON nephthys_user_status FOR 
 
 alter table nephthys_module add column actualVersion character varying(25) not null default '1.0';
 alter table nephthys_module add column actualVersionNumber integer not null default 1;
+alter table nephthys_serversetting alter column description TYPE character varying(150);

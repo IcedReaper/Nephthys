@@ -1,0 +1,10 @@
+[
+    {
+        "ID": 1,
+        "Name": "default",
+        "folderName": "default",
+        "anonymousAvatarFilename": "anonymous.png",
+        "availableWww": true,
+        "availableAdmin": true
+    }
+]

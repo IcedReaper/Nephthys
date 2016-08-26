@@ -1,0 +1,125 @@
+[
+    {
+        "errorcode": "default",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": false
+    },
+    {
+        "errorcode": "database",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": true
+    },
+    {
+        "errorcode": "Application",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": true
+    },
+    {
+        "errorcode": "Object",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": true
+    },
+    {
+        "errorcode": "missingInclude",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": true
+    },
+    {
+        "errorcode": "expression",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": true
+    },
+    {
+        "errorcode": "404",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "404",
+        "log": false
+    },
+    
+    {
+        "errorcode": "nephthys.application.alreadyExists",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": false
+    },
+    {
+        "errorcode": "nephthys.application.uploadFailed",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": true
+    },
+    {
+        "errorcode": "nephthys.application.deleteFailed",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": true
+    },
+    {
+        "errorcode": "nephthys.application.reloadFailed",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": true
+    },
+    {
+        "errorcode": "nephthys.application.invalidResource",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": true
+    },
+    {
+        "errorcode": "nephthys.application.notAllowed",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": true
+    },
+    {
+        "errorcode": "nephthys.application.invalidFormat",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": true
+    },
+    {
+        "errorcode": "nephthys.application.invalidContent",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": true
+    },
+    
+    {
+        "errorcode": "nephthys.notFound.page",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "404",
+        "log": false
+    },
+    {
+        "errorcode": "nephthys.notFound.module",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": true
+    },
+    {
+        "errorcode": "nephthys.notFound.user",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "404",
+        "log": true
+    },
+    {
+        "errorcode": "nephthys.notFound.validation",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": true
+    },
+    
+    {
+        "errorcode": "nephthys.critical.installation",
+        "errortemplate": "errorTemplate.cfm",
+        "errortype": "500",
+        "log": true
+    }
+]

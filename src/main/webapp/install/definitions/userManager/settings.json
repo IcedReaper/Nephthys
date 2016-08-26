@@ -1,0 +1,62 @@
+[
+    {
+        "key":                 "com.Nephthys.userManager.defaultStatus",
+        "type":                "foreignKey",
+        "value":               "1",
+        "description":         "Status neuer registrierter Benutzer",
+        "systemKey":           false,
+        "readonly":            false,
+        "enumOptions":         "",
+        "foreignTableOptions": "{\"Table\": \"nephthys_user_status\",\"IDfield\": \"statusId\",\"ValueField\": \"name\",\"Condition\": \"WHERE active = TRUE \",\"OrderBy\": \"ORDER BY name ASC\",\"IDType\": \"cf_sql_numeric\"}",
+        "hidden":              false,
+        "alwaysRevalidate":    false,
+        "sortOrder":           1,
+        "moduleId":            3,
+        "application":         ""
+    },
+    {
+        "key":                 "com.Nephthys.userManager.guestStatus",
+        "type":                "foreignKey",
+        "value":               "1",
+        "description":         "guestStatus",
+        "systemKey":           false,
+        "readonly":            false,
+        "enumOptions":         "",
+        "foreignTableOptions": "{\"Table\": \"nephthys_user_status\",\"IDfield\": \"statusId\",\"ValueField\": \"name\",\"Condition\": \"WHERE active = TRUE \",\"OrderBy\": \"ORDER BY name ASC\",\"IDType\": \"cf_sql_numeric\"}",
+        "hidden":              false,
+        "alwaysRevalidate":    false,
+        "sortOrder":           2,
+        "moduleId":            3,
+        "application":         ""
+    },
+    {
+        "key":                 "encryptionMethodId",
+        "type":                "foreignKey",
+        "value":               "1",
+        "description":         "Verschlüsselungsmethodik",
+        "systemKey":           false,
+        "readonly":            false,
+        "enumOptions":         "",
+        "foreignTableOptions": "{\"Table\": \"nephthys_encryptionMethod\",\"IDfield\": \"encryptionMethodId\",\"ValueField\": \"algorithm\",\"Condition\": \"WHERE active = TRUE \",\"OrderBy\": \"ORDER BY algorithm ASC\",\"IDType\": \"cf_sql_numeric\"}",
+        "hidden":              false,
+        "alwaysRevalidate":    false,
+        "sortOrder":           3,
+        "moduleId":            3,
+        "application":         ""
+    },
+    {
+        "key":                 "encryptionKey",
+        "type":                "string",
+        "value":               "generateDESEDEKey",
+        "description":         "Verschlüsselungskey",
+        "systemKey":           false,
+        "readonly":            true,
+        "enumOptions":         "",
+        "foreignTableOptions": "{\"Table\": \"nephthys_encryptionMethod\",\"IDfield\": \"encryptionMethodId\",\"ValueField\": \"algorithm\",\"Condition\": \"WHERE active = TRUE \",\"OrderBy\": \"ORDER BY algorithm ASC\",\"IDType\": \"cf_sql_numeric\"}",
+        "hidden":              true,
+        "alwaysRevalidate":    false,
+        "sortOrder":           4,
+        "moduleId":            3,
+        "application":         ""
+    }
+]

@@ -1,0 +1,18 @@
+[
+    {
+        "ID": 1,
+        "algorithm": "DESEDE"
+    },
+    {
+        "ID": 2,
+        "algorithm": "DES"
+    },
+    {
+        "ID": 3,
+        "algorithm": "BLOWFISH"
+    },
+    {
+        "ID": 4,
+        "algorithm": "AES"
+    }
+]

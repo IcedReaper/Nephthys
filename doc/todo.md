@@ -2,7 +2,11 @@
 
 ## V0.6 Tasks
     1. Installationssystem
+        * Update der Installations-SQL-Skripte
         * Datasources bei der Installation im cfAdmin eintragen
+        * Definitionen in JSON Files auslagern
+        * Ausgabe mit flush, etc
+        * Allgemein #20
     2. Updatesystem
     3. Resource provider
     4. Module-/Thememanagement
@@ -44,6 +48,7 @@
     17. required approvals
     18. +Attribut zu Module => Uses permissions (if false hide in permission screens)
     19. Globale Tasklist (dashboard | com.IcedReaper.tileDashboard) variabel gestalten
+    20. Server Settings checken, was passiert, wenn mehrere Module den gleichen Keynamen verwenden - Abändern, dass es funktioniert. Aktuell dürfte es nicht funktionieren, daher haben die Einstellungen den Modulnamen als Prefix, was allerdings blöde ist.
 
 ## Website
     1. Codeoptimierung

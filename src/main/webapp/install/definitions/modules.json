@@ -1,0 +1,337 @@
+[
+    {
+        "moduleId":                      1,
+        "moduleName":                    "com.Nephthys.dashboard",
+        "description":                   "Dashboard",
+        "sortOrder":                     1,
+        "availableWww":                  false,
+        "availableAdmin":                true,
+        "useDynamicUrlSuffix":           false,
+        "integratedSearch":              false,
+        "canBeRootElement":              false,
+        "canBeRootElementMultipleTimes": false,
+        
+        "options": [],
+        
+        "subModules": []
+    },
+    {
+        "moduleId":                      1,
+        "moduleName":                    "com.Nephthys.moduleManager",
+        "description":                   "Modulverwaltung",
+        "sortOrder":                     2,
+        "availableWww":                  false,
+        "availableAdmin":                true,
+        "useDynamicUrlSuffix":           false,
+        "integratedSearch":              false,
+        "canBeRootElement":              false,
+        "canBeRootElementMultipleTimes": false,
+        
+        "options": [],
+        
+        "subModules": []
+    },
+    {
+        "moduleId":                      3,
+        "moduleName":                    "com.Nephthys.userManager",
+        "description":                   "Modulverwaltung",
+        "sortOrder":                     3,
+        "availableWww":                  true,
+        "availableAdmin":                true,
+        "useDynamicUrlSuffix":           true,
+        "integratedSearch":              true,
+        "canBeRootElement":              true,
+        "canBeRootElementMultipleTimes": false,
+        
+        "options": [],
+        
+        "subModules": []
+    },
+    {
+        "moduleId":                      4,
+        "moduleName":                    "com.Nephthys.themeManager",
+        "description":                   "Modulverwaltung",
+        "sortOrder":                     4,
+        "availableWww":                  false,
+        "availableAdmin":                true,
+        "useDynamicUrlSuffix":           false,
+        "integratedSearch":              false,
+        "canBeRootElement":              false,
+        "canBeRootElementMultipleTimes": false,
+        
+        "options": [],
+        
+        "subModules": []
+    },
+    {
+        "moduleId":                      5,
+        "moduleName":                    "com.Nephthys.pageManager",
+        "description":                   "Seitenverwaltung",
+        "sortOrder":                     5,
+        "availableWww":                  false,
+        "availableAdmin":                true,
+        "useDynamicUrlSuffix":           true,
+        "integratedSearch":              false,
+        "canBeRootElement":              false,
+        "canBeRootElementMultipleTimes": false,
+        
+        "options": [],
+        
+        "subModules": []
+    },
+    {
+        "moduleId":                      6,
+        "moduleName":                    "com.Nephthys.system",
+        "description":                   "Serververwaltung",
+        "sortOrder":                     6,
+        "availableWww":                  false,
+        "availableAdmin":                true,
+        "useDynamicUrlSuffix":           false,
+        "integratedSearch":              false,
+        "canBeRootElement":              false,
+        "canBeRootElementMultipleTimes": false,
+        
+        "options": [],
+        
+        "subModules": []
+    },
+    {
+        "moduleId":                      7,
+        "moduleName":                    "com.Nephthys.errorLog",
+        "description":                   "Fehlerübersicht",
+        "sortOrder":                     7,
+        "availableWww":                  false,
+        "availableAdmin":                true,
+        "useDynamicUrlSuffix":           false,
+        "integratedSearch":              false,
+        "canBeRootElement":              false,
+        "canBeRootElementMultipleTimes": false,
+        
+        "options": [],
+        
+        "subModules": []
+    },
+    
+    
+    {
+        "moduleId":                      101,
+        "moduleName":                    "com.Nephthys.container",
+        "description":                   "Containertemplate",
+        "sortOrder":                     1001,
+        "availableWww":                  true,
+        "availableAdmin":                false,
+        "useDynamicUrlSuffix":           false,
+        "integratedSearch":              false,
+        "canBeRootElement":              true,
+        "canBeRootElementMultipleTimes": true,
+        
+        "options": [
+            {
+                "optionName": "background-class",
+                "description": "Hintergrunddesign",
+                "type": "text",
+                "selectOptions": "",
+                "sortOrder": 1,
+                "multiple": false
+            },
+            {
+                "optionName": "fullWidth",
+                "description": "Volle Breite",
+                "type": "boolean",
+                "selectOptions": "",
+                "sortOrder": 2,
+                "multiple": false
+            },
+            {
+                "optionName": "fullWidthOnlyBackground",
+                "description": "Nur Hintergrund auf voller Breite",
+                "type": "boolean",
+                "selectOptions": "",
+                "sortOrder": 3,
+                "multiple": false
+            },
+            {
+                "optionName": "roleName",
+                "description": "Berechtigung",
+                "type": "query",
+                "selectOptions": "{\"idColumn\":\"name\", \"labelColumn\":\"name\",\"table\":\"nephthys_user_permissionRole\"}",
+                "sortOrder": 4,
+                "multiple": false
+            },
+            {
+                "optionName": "onlyVisibleToLoggedInUser",
+                "description": "Nur für eingeloggte User sichtbar",
+                "type": "boolean",
+                "selectOptions": "",
+                "sortOrder": 5,
+                "multiple": false
+            },
+            {
+                "optionName": "onlyVisibleToLoggedOutUser",
+                "description": "Nur für nicht eingeloggte User sichtbar",
+                "type": "boolean",
+                "selectOptions": "",
+                "sortOrder": 6,
+                "multiple": false
+            }
+        ],
+        
+        "subModules": [
+            102,
+            104
+        ]
+    },
+    {
+        "moduleId":                      102,
+        "moduleName":                    "com.Nephthys.row",
+        "description":                   "Rowtemplate",
+        "sortOrder":                     1002,
+        "availableWww":                  true,
+        "availableAdmin":                false,
+        "useDynamicUrlSuffix":           false,
+        "integratedSearch":              false,
+        "canBeRootElement":              false,
+        "canBeRootElementMultipleTimes": false,
+        
+        "options": [
+            {
+                "optionName": "roleName",
+                "description": "Berechtigung",
+                "type": "query",
+                "selectOptions": "{\"idColumn\":\"name\", \"labelColumn\":\"name\",\"table\":\"nephthys_user_permissionRole\"}",
+                "sortOrder": 1,
+                "multiple": false
+            }
+        ],
+        
+        "subModules": [
+            103
+        ]
+    },
+    {
+        "moduleId":                      103,
+        "moduleName":                    "com.Nephthys.col",
+        "description":                   "Columntemplate",
+        "sortOrder":                     1003,
+        "availableWww":                  true,
+        "availableAdmin":                false,
+        "useDynamicUrlSuffix":           false,
+        "integratedSearch":              false,
+        "canBeRootElement":              false,
+        "canBeRootElementMultipleTimes": false,
+        
+        "options": [
+            {
+                "optionName": "width-xs",
+                "description": "Geräte mit sehr kleiner Auflösung (Breite von weniger als 544 Pixel)",
+                "type": "select",
+                "selectOptions": "[{\"value\": \"8%\",\"description\": \"8%\"}, {\"value\": \"16%\",\"description\": \"16%\"}, {\"value\": \"25%\",\"description\": \"25%\"}, {\"value\": \"33%\",\"description\": \"33%\"}, {\"value\": \"41%\",\"description\": \"41%\"}, {\"value\": \"50%\",\"description\": \"50%\"}, {\"value\": \"58%\",\"description\": \"58%\"}, {\"value\": \"66%\",\"description\": \"66%\"}, {\"value\": \"75%\",\"description\": \"75%\"}, {\"value\": \"83%\",\"description\": \"83%\"}, {\"value\": \"91%\",\"description\": \"91%\"}, {\"value\": \"100%\",\"description\": \"100%\"}]",
+                "sortOrder": 1,
+                "multiple": false
+            },
+            {
+                "optionName": "width-sm",
+                "description": "Geräte mit kleiner Auflösung (Breite von 544 Pixel bis 767 Pixel)",
+                "type": "select",
+                "selectOptions": "[{\"value\": \"8%\",\"description\": \"8%\"}, {\"value\": \"16%\",\"description\": \"16%\"}, {\"value\": \"25%\",\"description\": \"25%\"}, {\"value\": \"33%\",\"description\": \"33%\"}, {\"value\": \"41%\",\"description\": \"41%\"}, {\"value\": \"50%\",\"description\": \"50%\"}, {\"value\": \"58%\",\"description\": \"58%\"}, {\"value\": \"66%\",\"description\": \"66%\"}, {\"value\": \"75%\",\"description\": \"75%\"}, {\"value\": \"83%\",\"description\": \"83%\"}, {\"value\": \"91%\",\"description\": \"91%\"}, {\"value\": \"100%\",\"description\": \"100%\"}]",
+                "sortOrder": 2,
+                "multiple": false
+            },
+            {
+                "optionName": "width-md",
+                "description": "Geräte mit mittlerer Auflösung (Breite von 768 Pixel bis 991 Pixel)",
+                "type": "select",
+                "selectOptions": "[{\"value\": \"8%\",\"description\": \"8%\"}, {\"value\": \"16%\",\"description\": \"16%\"}, {\"value\": \"25%\",\"description\": \"25%\"}, {\"value\": \"33%\",\"description\": \"33%\"}, {\"value\": \"41%\",\"description\": \"41%\"}, {\"value\": \"50%\",\"description\": \"50%\"}, {\"value\": \"58%\",\"description\": \"58%\"}, {\"value\": \"66%\",\"description\": \"66%\"}, {\"value\": \"75%\",\"description\": \"75%\"}, {\"value\": \"83%\",\"description\": \"83%\"}, {\"value\": \"91%\",\"description\": \"91%\"}, {\"value\": \"100%\",\"description\": \"100%\"}]",
+                "sortOrder": 3,
+                "multiple": false
+            },
+            {
+                "optionName": "width-lg",
+                "description": "Geräte mit hoher Auflösung (Breite von 992 Pixel bis 1199 Pixel)",
+                "type": "select",
+                "selectOptions": "[{\"value\": \"8%\",\"description\": \"8%\"}, {\"value\": \"16%\",\"description\": \"16%\"}, {\"value\": \"25%\",\"description\": \"25%\"}, {\"value\": \"33%\",\"description\": \"33%\"}, {\"value\": \"41%\",\"description\": \"41%\"}, {\"value\": \"50%\",\"description\": \"50%\"}, {\"value\": \"58%\",\"description\": \"58%\"}, {\"value\": \"66%\",\"description\": \"66%\"}, {\"value\": \"75%\",\"description\": \"75%\"}, {\"value\": \"83%\",\"description\": \"83%\"}, {\"value\": \"91%\",\"description\": \"91%\"}, {\"value\": \"100%\",\"description\": \"100%\"}]",
+                "sortOrder": 4,
+                "multiple": false
+            },
+            {
+                "optionName": "width-xl",
+                "description": "Geräte mit sehr hoher Auflösung (Breite mit mehr 1200 oder mehr Pixel)",
+                "type": "select",
+                "selectOptions": "[{\"value\": \"8%\",\"description\": \"8%\"}, {\"value\": \"16%\",\"description\": \"16%\"}, {\"value\": \"25%\",\"description\": \"25%\"}, {\"value\": \"33%\",\"description\": \"33%\"}, {\"value\": \"41%\",\"description\": \"41%\"}, {\"value\": \"50%\",\"description\": \"50%\"}, {\"value\": \"58%\",\"description\": \"58%\"}, {\"value\": \"66%\",\"description\": \"66%\"}, {\"value\": \"75%\",\"description\": \"75%\"}, {\"value\": \"83%\",\"description\": \"83%\"}, {\"value\": \"91%\",\"description\": \"91%\"}, {\"value\": \"100%\",\"description\": \"100%\"}]",
+                "sortOrder": 5,
+                "multiple": false
+            },
+            {
+                "optionName": "roleName",
+                "description": "Berechtigung",
+                "type": "query",
+                "selectOptions": "{\"idColumn\":\"name\", \"labelColumn\":\"name\",\"table\":\"nephthys_user_permissionRole\"}",
+                "sortOrder": 6,
+                "multiple": false
+            }
+        ],
+        
+        "subModules": [
+            102,
+            104
+        ]
+    },
+    {
+        "moduleId":                      104,
+        "moduleName":                    "com.Nephthys.text",
+        "description":                   "Texttemplate",
+        "sortOrder":                     1004,
+        "availableWww":                  true,
+        "availableAdmin":                false,
+        "useDynamicUrlSuffix":           false,
+        "integratedSearch":              false,
+        "canBeRootElement":              false,
+        "canBeRootElementMultipleTimes": false,
+        
+        "options": [
+            {
+                "optionName": "centered",
+                "description": "Zentriert",
+                "type": "boolean",
+                "selectOptions": "",
+                "sortOrder": 1,
+                "multiple": false
+            },
+            {
+                "optionName": "content",
+                "description": "Inhalt",
+                "type": "wysiwyg",
+                "selectOptions": "",
+                "sortOrder": 2,
+                "multiple": false
+            },
+            {
+                "optionName": "roleName",
+                "description": "Berechtigung",
+                "type": "query",
+                "selectOptions": "{\"idColumn\":\"name\", \"labelColumn\":\"name\",\"table\":\"nephthys_user_permissionRole\"}",
+                "sortOrder": 3,
+                "multiple": false
+            }
+        ],
+        
+        "subModules": [
+            
+        ]
+    },
+    {
+        "moduleId":                      105,
+        "moduleName":                    "com.Nephthys.search",
+        "description":                   "Suche",
+        "sortOrder":                     1005,
+        "availableWww":                  true,
+        "availableAdmin":                false,
+        "useDynamicUrlSuffix":           true,
+        "integratedSearch":              false,
+        "canBeRootElement":              true,
+        "canBeRootElementMultipleTimes": false,
+        
+        "options": [],
+        "subModules": []
+    }
+]

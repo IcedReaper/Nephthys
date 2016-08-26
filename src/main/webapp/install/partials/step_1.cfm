@@ -3,6 +3,7 @@
         <h1>Willkommen zur Einrichtung Ihrer Nephthys Installation.</h1>
         <p>Bitte seien Sie sich sicher, dass Sie folgende Installationen bereits installiert haben:</p>
         <ul>
+            <li>Weiterleitungseinstellungen im Nginx/Apache/Tomcat8</li>
             <li>SQL Datenbank (Aktuell Unterstütze Daternbanken: Postgres ab V9.0)</li>
             <li>Den Luceeadminuser eingerichtet</li>
         </ul>

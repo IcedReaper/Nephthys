@@ -53,7 +53,7 @@
                 <li>UPDATE</li>
                 <li>DELETE</li>
             </ul>
-                
+            
             <div class="form-group row">
                 <label for="dbUserUsername" class="col-xs-4 col-md-2">Username</label>
                 <div class="col-xs-8 col-md-10">
