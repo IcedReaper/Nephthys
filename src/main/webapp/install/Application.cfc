@@ -1,6 +1,7 @@
 component {
     public boolean function onApplicationStart() {
         application.actualStep = 1;
+        application.dbDriver = "";
         
         return true;
     }
@@ -74,13 +75,14 @@ component {
     private void function setupDatasources() {
         // https://github.com/lucee/Lucee/blob/master/core/src/main/cfml/context/admin/services.datasource.create.cfm
         var hashedPassword = "";
+        application.dbDriver = "PostgreSql";
         
         var driverNames = structnew("linked");
         driverNames = componentListPackageAsStruct("lucee-server.admin.dbdriver", driverNames);
         driverNames = componentListPackageAsStruct("lucee.admin.dbdriver", driverNames);
         driverNames = componentListPackageAsStruct("dbdriver", driverNames);
         
-        var driver = createObject("component", driverNames["PostgreSql"]);
+        var driver = createObject("component", driverNames[application.dbDriver]);
         
         admin action         = "hashPassword"
               type           = "server"
@@ -127,7 +129,7 @@ component {
               allowed_grant  = "true"
               verify         = "true"
               custom         = ""
-              dbdriver       = "PostgreSql";
+              dbdriver       = application.dbDriver;
         
         admin action   = "updateDatasource"
               type     = "server"
@@ -165,19 +167,38 @@ component {
               allowed_grant  = "false"
               verify         = "true"
               custom         = ""
-              dbdriver       = "PostgreSql";
+              dbdriver       = application.dbDriver;
     }
     
     // S T E P   3
     private void function setupDatabase() {
+        /*
+        functions           ✓
+        theme               ✓
+        userManager         ✓
+        module              ✓
+        error               ✓
+        encryptMethod       ✓
+        search              ✓
+        pageManager         ✓
+        serverSettings      ✓
+        */
+        var sqlScripts = directoryList(expandPath("/sql/" & application.dbDriver), false, "path", "*.sql", "asc");
         
+        for(var sqlScript in sqlScripts) {
+            var sqlCommand = fileRead(sqlScript);
+            
+            new query().setDatasource("nephthys_admin")
+                       .setSQL(sqlCommand)
+                       .execute();
+        }
     }
     
     private void function setupEncryptionMethods() {
         var encryptionMethods = deserializeJSON(fileRead(expandPath("/definitions/encryptionMethods.json")));
         
         for(var encryptionMethod in encryptionMethods) {
-            new query().setupDatabase("nephthys_admin")
+            new query().setDatasource("nephthys_admin")
                        .setSQL("INSERT INTO nephthys_encryptionMethod
                                             (
                                                 encryptionMethodId,
@@ -202,7 +223,7 @@ component {
         var themes = deserializeJSON(fileRead(expandPath("/definitions/themes.json")));
         
         for(var theme in themes) {
-            new query().setupDatabase("nephthys_admin")
+            new query().setDatasource("nephthys_admin")
                        .setSQL("INSERT INTO nephthys_theme
                                             (
                                                 id,
@@ -239,7 +260,7 @@ component {
         var modules = deserializeJSON(fileRead(expandPath("/definitions/modules.json")));
         
         for(var module in modules) {
-            new query().setupDatabase("nephthys_admin")
+            new query().setDatasource("nephthys_admin")
                        .setSQL("INSERT INTO nephthys_theme
                                             (
                                                 id,
@@ -276,7 +297,7 @@ component {
         var errorSettings = deserializeJSON(fileRead(expandPath("/definitions/errorSettings.json")));
         
         for(var errorSetting in errorSettings) {
-            new query().setupDatabase("nephthys_admin")
+            new query().setDatasource("nephthys_admin")
                        .setSQL("INSERT INTO nephthys_errorSettings
                                             (
                                                 errorcode,
@@ -308,9 +329,7 @@ component {
     }
     
     private void function setupServerSettings() {
-        var settings = deserializeJSON(fileRead(expandPath("/definitions/settings.json")));
-        
-        saveSettings(settings);
+        saveSettings(expandPath("/definitions/settings.json"));
     }
     
     // S T E P   4
@@ -329,7 +348,7 @@ component {
     }
     
     private void function setupUserManagerSettings() {
-        // read from json
+        saveSettings(expandPath("/definitions/userManager/settings.json"));
     }
     
     // S T E P    5
@@ -338,16 +357,18 @@ component {
         // update sequence to 10
     }
     private void function setupPageManagerSettings() {
-        // read from json
+        saveSettings(expandPath("/definitions/pageManager/settings.json"));
     }
     private void function setupDefaultPages() {
         // TBD
     }
     
     
-    private void function saveSettings(required array settings) {
-        for(var setting in arguments.settings) {
-            var qInsSetting = new query().setupDatabase("nephthys_admin")
+    private void function saveSettings(required string filePath) {
+        var settings = deserializeJSON(fileRead(arguments.filePath));
+        
+        for(var setting in settings) {
+            var qInsSetting = new query().setDatasource("nephthys_admin")
                                          .setSQL("INSERT INTO nephthys_serverSettings
                                                               (
                                                                   key,
