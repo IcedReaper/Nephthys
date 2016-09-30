@@ -10,6 +10,7 @@ component {
     
     public boolean function onApplicationStart() {
         if(directoryExists(expandPath("install"))) {
+            // TODO: show message / page / redirect to install page
             return false;
         }
         

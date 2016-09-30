@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html ng-app="nephthysInstallApp">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,37 +8,32 @@
     <title>Welcome to the installation routine of the Nephthys.CMS</title>
     
     <link rel="stylesheet" href="/install/css/main.css">
+    <link rel="stylesheet" href="/install/css/additions.css">
     
-    <script src="/install/js/jquery-2.1.4.min.js"></script>
-    <script src="/install/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/install/js/jQuery/jquery-2.1.4.min.js"></script>
+    <script type="text/javascript" src="/install/js/bootstrap/bootstrap.min.js"></script>
+    
+    <script type="text/javascript" src="/install/js/angularJs/angular.min.js"></script>
+    <script type="text/javascript" src="/install/js/angularJs/angular-route.min.js"></script>
+    
 </head>
-<body>
-    <cfoutput>#application.actualStep#</cfoutput>
-    <main class="m-t-2">
+<body ng-controller="nephthysInstallCtrl">
+    <header class="m-t-2">
         <div class="container">
             <div class="row">
                 <div class="col-sm-12">
                     <ul class="nav nav-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link <cfif application.actualStep eq 1>active<cfelse>disabled</cfif>" href="#">Schritt 1</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <cfif application.actualStep eq 2>active<cfelse>disabled</cfif>" href="#">Schritt 2</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <cfif application.actualStep eq 3>active<cfelse>disabled</cfif>" href="#">Schritt 3</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <cfif application.actualStep eq 4>active<cfelse>disabled</cfif>" href="#">Schritt 4</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link <cfif application.actualStep eq 5>active<cfelse>disabled</cfif>" href="#">Schritt 5</a>
+                        <li class="nav-item" ng-repeat="step in wizardSteps">
+                            <a class="nav-link" ng-class="((actualStep == $index + 1) ? 'active' : ((actualStep > $index + 1) ? 'success disabled' : 'disabled'))" href="#">{{step}}</a>
                         </li>
                     </ul>
                 </div>
             </div>
-            
-            <cfinclude template="partials/step_#application.actualStep#.cfm">
+        </div>
+    </header>
+    <main class="m-t-2">
+        <div class="container">
+            <div ng-include="actualView"></>
         </div>
     </main>
     <footer>
@@ -60,5 +55,7 @@
             </div>
         </div>
     </footer>
+    
+    <script type="text/javascript" src="/install/js/nephthysInstall.js"></script>
 </body>
 </html>

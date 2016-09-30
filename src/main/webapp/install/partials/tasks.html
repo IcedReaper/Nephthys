@@ -1,0 +1,5 @@
+<ul>
+    <li ng-repeat="task in actualTasks">
+        {{task.description}}&nbsp;<i class="fa" ng-class="((task.status == null) ? 'fa-spinner' : (task.status ? 'fa-check-cirle text-success' : 'fa-exclamation-circle text-danger'))"></i>
+    </li>
+</ul>

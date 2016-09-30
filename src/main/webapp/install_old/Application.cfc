@@ -13,9 +13,16 @@ component {
         }
         
         if(url.keyExists("proceed") && (url.keyExists("step") && url.step == application.actualStep) && (application.actualStep == 1 || ! form.isEmpty())) {
+            request.progressRenderer = new progress.progress();
+            
             switch(application.actualStep) {
                 case 2: {
+                    request.progressRenderer.setTitle("Einrichtung der Datasourcen");
+                    request.progressRenderer.setDescription("<h1>Einrichtung der Datasource im ColdFusion Admin</h1>");
+                    
+                    request.progressRenderer.start();
                     setupDatasources();
+                    request.progressRenderer.finish();
                     
                     break;
                 }
@@ -84,6 +91,8 @@ component {
         
         var driver = createObject("component", driverNames[application.dbDriver]);
         
+        request.progressRenderer.startPart("Connect to Admin");
+        
         admin action         = "hashPassword"
               type           = "server"
               pw             = "#form.luceeAdminPassword#"
@@ -92,6 +101,10 @@ component {
         admin action   = "connect"
               type     = "server"
               password = "#hashedPassword#";
+        
+        request.progressRenderer.finishPart();
+        
+        request.progressRenderer.startPart("Admin Datasource");
         
         admin action   = "updateDatasource"
               type     = "server"
@@ -131,6 +144,10 @@ component {
               custom         = ""
               dbdriver       = application.dbDriver;
         
+        request.progressRenderer.finishPart();
+        
+        request.progressRenderer.startPart("WWW Datasource");
+        
         admin action   = "updateDatasource"
               type     = "server"
               password = "#hashedPassword#"
@@ -168,6 +185,8 @@ component {
               verify         = "true"
               custom         = ""
               dbdriver       = application.dbDriver;
+        
+        request.progressRenderer.finishPart();
     }
     
     // S T E P   3

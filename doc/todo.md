@@ -49,6 +49,8 @@
     18. +Attribut zu Module => Uses permissions (if false hide in permission screens)
     19. Globale Tasklist (dashboard | com.IcedReaper.tileDashboard) variabel gestalten
     20. Server Settings checken, was passiert, wenn mehrere Module den gleichen Keynamen verwenden - Abändern, dass es funktioniert. Aktuell dürfte es nicht funktionieren, daher haben die Einstellungen den Modulnamen als Prefix, was allerdings blöde ist.
+    21. Statistikabfragen in Funktionen auslagern um die Doppelpunkte für den Variablentyp entfernt zu bekommen
+    22. "AntiVirus" prüfung => prüfen auf evaluate, base64_decode, etc
 
 ## Website
     1. Codeoptimierung
