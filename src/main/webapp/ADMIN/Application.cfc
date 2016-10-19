@@ -11,7 +11,7 @@ component {
     this.datasource = "nephthys_admin";
     
     public boolean function onApplicationStart() {
-        if(directoryExists(expandPath("install"))) {
+        if(directoryExists(expandPath("../install"))) {
             return false;
         }
         

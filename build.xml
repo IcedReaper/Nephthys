@@ -92,7 +92,7 @@
     </target>
     
     <target name="syncInstall">
-        <echo message="Syncing Install">
+        <echo message="Syncing Install" />
         
         <property name="install.path.source.root" location="${path.sourceCode.root}\install" />
         <property name="install.path.target.root" location="${path.deployment.root}\install" />

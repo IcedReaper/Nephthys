@@ -33,7 +33,7 @@
     </header>
     <main class="m-t-2">
         <div class="container">
-            <div ng-include="actualView"></>
+            <div ng-view></div>
         </div>
     </main>
     <footer>

@@ -1,5 +1,9 @@
-<ul>
-    <li ng-repeat="task in actualTasks">
-        {{task.description}}&nbsp;<i class="fa" ng-class="((task.status == null) ? 'fa-spinner' : (task.status ? 'fa-check-cirle text-success' : 'fa-exclamation-circle text-danger'))"></i>
+<ul class="list-group m-b-2">
+    <li class="list-group-item"
+        ng-repeat="task in actualTasks"
+        ng-class="task.status === 1 ? 'list-group-item-success' : (task.status === -1 ? 'list-group-item-danger' : '')">
+        <i class="fa m-r-1"
+           ng-class="task.status === 1 ? 'fa-check-circle' : (task.status === 2 ? 'fa-spinner fa-pulse' : (task.status === -1 ? 'fa-exclamation-circle' : 'fa-clock-o'))"></i>
+        {{task.description}}
     </li>
 </ul>

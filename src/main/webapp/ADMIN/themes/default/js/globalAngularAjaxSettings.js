@@ -8,7 +8,7 @@ var globalAngularAjaxSettings = function($httpProvider) {
         }
         
         return {
-            "request": function(config) {
+            request: function(config) {
                 if(isServiceCall(config)) {
                     if(++activeAjaxCalls === 1) {
                         $rootScope.$broadcast("nephthys-loading-bar-show", {});
@@ -22,7 +22,7 @@ var globalAngularAjaxSettings = function($httpProvider) {
                 return config;
             },
             
-            "response": function (response) {
+            response: function (response) {
                 if(! isServiceCall(response.config)) {
                     return response;
                 }
@@ -39,7 +39,7 @@ var globalAngularAjaxSettings = function($httpProvider) {
                 }
             },
             
-            "responseError": function (rejection) {
+            responseError: function (rejection) {
                 if(isServiceCall(rejection.config)) {
                     if(--activeAjaxCalls === 0) {
                         $rootScope.$broadcast("nephthys-loading-bar-hide", {});

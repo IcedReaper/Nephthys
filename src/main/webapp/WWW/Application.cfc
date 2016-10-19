@@ -9,7 +9,7 @@ component {
     this.datasource = "nephthys_user";
     
     public boolean function onApplicationStart() {
-        if(directoryExists(expandPath("install"))) {
+        if(directoryExists(expandPath("../install"))) {
             // TODO: show message / page / redirect to install page
             return false;
         }
